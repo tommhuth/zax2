@@ -4,3 +4,10 @@ html {
     font-size: 1em;
     color: var(--text-color);
 }
+
+@font-face {
+    font-family: "joystix";
+    font-weight: 400;
+    font-style: normal;
+    src: url(/fonts/joystix.woff) format("woff");
+} 

@@ -1,5 +1,5 @@
 import { Frustum, Object3D, Vector3 } from "three"
-import create from "zustand"
+import {create} from "zustand"
 import { Tuple3 } from "../types"
 import {
     Barrel, Building, Bullet, Explosion, Instance, Particle,
