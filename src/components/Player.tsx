@@ -19,7 +19,7 @@ let _edgemax = new Vector3(WORLD_RIGHT_EDGE, WORLD_TOP_EDGE, 100)
 
 let depth = 2
 
-console.log("player")
+console.log("playerxx")
 
 interface PlayerProps {
     size?: Tuple3

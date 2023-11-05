@@ -10,8 +10,7 @@ root.render(<App />)
 let updateSW = registerSW({ 
     onNeedRefresh() {
         alert("New services worker ready")
-        updateSW()
-        window.location.reload()
+        updateSW() 
     },
     onOfflineReady() {
         alert("Ready to work offline")
