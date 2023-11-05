@@ -9,7 +9,7 @@ export default defineConfig({
         react(),
         glsl(),
         VitePWA({
-            registerType: "autoUpdate",
+            registerType: "autoUpdate", 
             includeAssets: ["fonts/*.woff", "models/*.glb", "textures/*.png"],
             manifest: {
                 name: "Zax",

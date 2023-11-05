@@ -1,21 +1,14 @@
 import { createRoot } from "react-dom/client"
-// import { Workbox } from "workbox-window"
-
-// import Config from "./data/Config"
+import { registerSW } from "virtual:pwa-register" 
 import { lazy } from "react"
 
 const App = lazy(() => import("./App"))
-const root = createRoot(document.getElementById("canvas"))
+const root = createRoot(document.getElementById("canvas") as Element)
 
 root.render(<App />)
 
-/*
-if (Config.REGISTER_SERVICEWORKER) {
-    let worker = new Workbox("/serviceworker.js")
-
-    worker.addEventListener("installed", e => {
-        alert(`Service worker ${e.isUpdate ? "updated" : "installed"}`)
-    })
-    worker.register()
-}
-*/
+registerSW({ 
+    onNeedRefresh() {
+        alert("New services worker ready")
+    },
+})
