@@ -9,8 +9,22 @@ export default defineConfig({
         react(),
         glsl(),
         VitePWA({
-            registerType: "autoUpdate", 
-            includeAssets: ["fonts/*.woff", "models/*.glb", "textures/*.png"]
+            registerType: "autoUpdate",
+            includeAssets: ["fonts/*.woff", "models/*.glb", "textures/*.png"],
+            manifest: {
+                name: "Zax",
+                short_name: "Zax",
+                description: "Zax",
+                theme_color: "#000000",
+                icons: [
+                    {
+                        "src": "/icons/pwa-icon.png",
+                        "sizes": "512x512",
+                        "type": "image/png",
+                        "purpose": "any maskable"
+                    },
+                ]
+            }
         })
     ],
 })
