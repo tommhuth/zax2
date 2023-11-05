@@ -11,13 +11,13 @@ export default function Floor1(props) {
             <group>
                 <mesh
                     receiveShadow
-                    geometry={nodes.Plane001.geometry}
+                    geometry={nodes.Plane001?.geometry}
                 >
                     <MeshLambertFogMaterial color={floorColor} />
                 </mesh>
                 <mesh
                     receiveShadow
-                    geometry={nodes.Plane001_1.geometry}
+                    geometry={nodes.Plane001_1?.geometry}
                 >
                     <MeshLambertFogMaterial color={floorColorHi} />
                 </mesh>
