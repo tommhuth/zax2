@@ -17,9 +17,7 @@ import { MeshLambertFogMaterial } from "./world/MeshLambertFogMaterial"
 let _edgemin = new Vector3(WORLD_LEFT_EDGE, WORLD_BOTTOM_EDGE, -100)
 let _edgemax = new Vector3(WORLD_RIGHT_EDGE, WORLD_TOP_EDGE, 100)
 
-let depth = 2
-
-console.log("playerxx")
+let depth = 2 
 
 interface PlayerProps {
     size?: Tuple3
