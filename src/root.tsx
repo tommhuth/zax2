@@ -7,8 +7,13 @@ const root = createRoot(document.getElementById("canvas") as Element)
 
 root.render(<App />)
 
-registerSW({ 
+let updateSW = registerSW({ 
     onNeedRefresh() {
         alert("New services worker ready")
+        updateSW()
+        window.location.reload()
+    },
+    onOfflineReady() {
+        alert("Ready to work offline")
     },
 })
