@@ -10,6 +10,7 @@ import { Tuple3 } from "../../../types"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
 import { removeBarrel } from "../../../data/store/world"
 import { barellParticleColor, barellcolor } from "../../../data/theme"
+import { useWorldPart } from "../WorldPartWrapper"
 
 let _size = new Vector3()
 
@@ -65,12 +66,13 @@ export default function Barrel({
         setTimeout(() => removeBarrel(id), 300)
         removed.current = true
     }
+    let partPosition = useWorldPart()
 
     useLayoutEffect(() => { 
         if (health === 0) {
             startTransition(() => {
                 remove()
-                explode(position, size, barellParticleColor)
+                explode(position, size, barellParticleColor, partPosition)
             })
         }
     }, [health])
@@ -81,7 +83,7 @@ export default function Barrel({
         if (instance && typeof index === "number" && !removed.current) {
             aabb.setFromCenterAndSize(position, _size.set(...size))
 
-            if (!world.frustum.intersectsBox(aabb) && player.object && position.z > player.object.position.z) {
+            if (!world.frustum.intersectsBox(aabb) && player.object && position.z < player.object.position.z) {
                 remove()
             }
         }

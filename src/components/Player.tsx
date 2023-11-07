@@ -3,7 +3,7 @@ import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
 import { Group, Mesh, Vector3 } from "three"
 import { Tuple3 } from "../types"
 import { WORLD_BOTTOM_EDGE, WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_TOP_EDGE } from "./world/World"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
 import { useCollisionDetection, useShader } from "../data/hooks"
 import { Owner } from "../data/types"
@@ -27,7 +27,7 @@ interface PlayerProps {
 
 export default function Player({
     size = [1.5, .5, depth],
-    z = 0,
+    z = -20,
     y = 1.5
 }: PlayerProps) {
     let playerGroupRef = useRef<Group | null>(null)
@@ -183,12 +183,12 @@ export default function Player({
     })
 
     useEffect(()=> {
-        if (models && playerGroupRef.current) {
+        if (playerGroupRef.current) { 
             playerGroupRef.current.position.x = WORLD_CENTER_X
             playerGroupRef.current.position.y = y
             playerGroupRef.current.position.z = z
         }
-    }, [position, models])
+    }, [])
 
     // movement
     useFrame((state, delta) => {

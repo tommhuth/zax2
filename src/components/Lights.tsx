@@ -47,12 +47,22 @@ export default function Lights() {
     })
 
     return (
-        <>  
+        <>
             <directionalLight
-                color={"#89daff"}  
+                color={"#89daff"}
                 position={[-10, 20, -25]}
-                intensity={.7}
-            /> 
+                intensity={0}
+            />
+            <directionalLight
+                color={"#001aff"}
+                position={[-10, 0, 0]}
+                intensity={1.8}
+            />
+            <directionalLight
+                color={"#00eacb"}
+                position={[0, 0, -10]}
+                intensity={1.8}
+            />
             <directionalLight
                 ref={lightRef}
                 color={"#e8f6ff"}
@@ -74,7 +84,8 @@ export default function Lights() {
                 ref={explosionLightRef}
                 distance={8}
             />
-            <hemisphereLight intensity={.5} color={"white"} groundColor={"blue"} />
+            <hemisphereLight intensity={.0} color={"#00bfff"} groundColor={"blue"} />
+            <ambientLight intensity={.5} color={"#00f"} />
         </>
     )
 }

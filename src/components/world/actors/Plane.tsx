@@ -15,6 +15,7 @@ import { store, useStore } from "../../../data/store"
 import { damageBarrel } from "../../../data/store/world"
 import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createParticles } from "../../../data/store/effects"
+import { planeColor } from "../../../data/theme"
 
 let _size = new Vector3()
 
@@ -36,7 +37,7 @@ function explode(position: Vector3) {
         normal: [0, 0, -.5],
         count: [4, 8],
         radius: [.1, .45],
-        color: "yellow",
+        color: planeColor,
     })
 }
 
@@ -66,7 +67,7 @@ function Plane({
     }), [])
     let bottomY = 0
     let grid = useStore(i => i.world.grid)
-    let [index, instance] = useInstance("box", { color: "yellow" })
+    let [index, instance] = useInstance("box", { color: planeColor })
     let remove = () => {
         removePlane(id)
         data.removed = true
@@ -96,7 +97,7 @@ function Plane({
         if (health && health !== 100 && instance && typeof index === "number") {
             return animate({
                 from: "#FFFFFF",
-                to: "#ffff00",
+                to: planeColor,
                 duration: 200,
                 render(color) {
                     setColorAt(instance, index as number, color)
@@ -129,19 +130,19 @@ function Plane({
         let canShoot = position.y > playerPosition.y - 3 && health > 0
 
         if (!shootDisabled && canShoot && data.shootTimer > data.nextShotAt + heightPenalty * fireFrequency * 4) {
-            let bulletSpeed = 20
+            let bulletSpeed = 30
 
             startTransition(() => {
                 createBullet({
                     position: [
                         position.x,
                         position.y,
-                        position.z + 2
+                        position.z - 3
                     ],
                     damage: 15,
                     color: "red",
                     speed: bulletSpeed,
-                    rotation: Math.PI * .5,
+                    rotation: -Math.PI * .5,
                     owner: Owner.ENEMY
                 })
                 data.shootTimer = 0

@@ -6,11 +6,13 @@ import { useWorldPart } from "../WorldPartWrapper"
 interface TurretProps {
     position?: Tuple3
     fireFrequency?: number
+    rotation?: number
 }
 
 export default function Turret({
     fireFrequency,
-    position = [0, 0, 0]
+    position = [0, 0, 0],
+    rotation = 0
 }: TurretProps) {
     let partPosition = useWorldPart()
 
@@ -18,7 +20,11 @@ export default function Turret({
         let id: string
 
         startTransition(() => { 
-            id = createTurret(fireFrequency, [position[0], position[1], partPosition[2] + position[2]])
+            id = createTurret({ 
+                fireFrequency, 
+                position: [position[0], position[1], partPosition[2] + position[2]],
+                rotation
+            })
         })
 
         return () => {

@@ -1,6 +1,6 @@
 import { useLoader } from "@react-three/fiber"
 import InstancedMesh from "../../InstancedMesh"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 import { barellcolor, deviceColor, plantColor, plantColorEnd, plantColorStart, platformColor, rocketColor, turretColor } from "../../../data/theme"
 import { DoubleSide, Mesh } from "three"
 import { glsl } from "../../../data/utils"
@@ -45,27 +45,27 @@ export default function Instances() {
                 <MeshLambertFogMaterial />
             </InstancedMesh>
 
-            <InstancedMesh name="barrel1" count={15}>
+            <InstancedMesh name="barrel1" count={25}>
                 <primitive object={(barrel1.nodes.barrel as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial color={barellcolor} emissive={barellcolor} emissiveIntensity={.2} />
             </InstancedMesh>
 
-            <InstancedMesh name="barrel2" count={15}>
+            <InstancedMesh name="barrel2" count={25}>
                 <primitive object={(barrel2.nodes.barrel2 as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial color={barellcolor} emissive={barellcolor} emissiveIntensity={.2} />
             </InstancedMesh>
 
-            <InstancedMesh name="barrel3" count={15}>
+            <InstancedMesh name="barrel3" count={25}>
                 <primitive object={(barrel3.nodes.barrel3 as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial color={barellcolor} emissive={barellcolor} emissiveIntensity={.2} />
             </InstancedMesh>
 
-            <InstancedMesh name="barrel4" count={15}>
+            <InstancedMesh name="barrel4" count={25}>
                 <primitive object={(barrel4.nodes.barrel4 as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial color={barellcolor} emissive={barellcolor} emissiveIntensity={.2} />
             </InstancedMesh>
  
-            <InstancedMesh name="turret" count={15}>
+            <InstancedMesh name="turret" count={25}>
                 <primitive object={(turret2.nodes.turret2 as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial color={turretColor} isInstance />
             </InstancedMesh>
@@ -111,8 +111,8 @@ export default function Instances() {
                         transformed.y += cos((globalPosition.y) * .3 + uTime * timeScale) * heightScale * offsetSize * 1.25 * .5;  
                     `}
                     fragmentShader={glsl`
-                        vec3 start = mix(gl_FragColor.rgb, vec3(${plantColorStart.toArray().map(i => i + .001).join(", ")}), .5);
-                        vec3 end = mix(gl_FragColor.rgb, vec3(${plantColorEnd.toArray().map(i => i + .001).join(", ")}), .5);
+                        vec3 start = mix(gl_FragColor.rgb, vec3(${plantColorStart.toArray().map(i => i + .001).join(", ")}), .25);
+                        vec3 end = mix(gl_FragColor.rgb, vec3(${plantColorEnd.toArray().map(i => i + .001).join(", ")}), .25);
  
                         gl_FragColor.rgb = mix(start, end, easeInOutCubic(clamp(length(vPosition) / 5., 0., 1.)));
                     `}

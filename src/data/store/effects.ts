@@ -183,7 +183,7 @@ export function createParticles({
     color = "#FFFFFF",
     radius = [.15, .25],
 }: CreateParticlesParams) {
-    let instance = store.getState().instances[name]
+    let instance = store.getState().instances[name] 
     let particles: Particle[] = new Array(typeof count === "number" ? count : random.integer(...count)).fill(null).map((i, index, list) => {
         let velocity = new Vector3(
             (normal[0] + random.float(...normalOffset[0])) * random.float(...speed) + random.float(...speedOffset[0]),
@@ -191,11 +191,13 @@ export function createParticles({
             (normal[2] + random.float(...normalOffset[2])) * random.float(...speed) + random.float(...speedOffset[2]),
         )
 
+        let j =  instance.index.next() 
+
         return {
             id: random.id(),
             instance,
             mounted: false,
-            index: instance.index.next(),
+            index: j,
             position: new Vector3(...position.map((i, index) => i + random.float(...positionOffset[index]))),
             acceleration: new Vector3(...gravity),
             rotation: new Vector3(

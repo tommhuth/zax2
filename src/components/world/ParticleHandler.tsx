@@ -28,7 +28,7 @@ function ParticleHandler() {
                 particles[i].mounted = true
             }
 
-            if (particle.lifetime > particle.maxLifetime || position.z > diagonal * .75) {
+            if (particle.lifetime > particle.maxLifetime ) {
                 dead.push(particle)
                 continue
             }

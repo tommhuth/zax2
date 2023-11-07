@@ -31,7 +31,7 @@ export function useWorldPart() {
     return useContext(context)
 }
 
-export function RootWorld({children }) {
+export function RootWorld({ children }) {
     return (
         <context.Provider value={[0,0,0]}>
             {children}

@@ -9,7 +9,7 @@ import Building from "./actors/Building"
 import Barrel from "./actors/Barrel"
 import ParticleHandler from "./ParticleHandler"
 import BulletHandler from "./BulletHandler"
-import { WorldPartDefault, WorldPartBuildingsGap, WorldPartType, WorldPartBuildingsLow, WorldPartAirstrip } from "../../data/types"
+import { WorldPartDefault, WorldPartBuildingsGap, WorldPartType, WorldPartBuildingsLow, WorldPartAirstrip, WorldPartStart } from "../../data/types"
 import BuildingsGap from "./parts/BuildingsGap"
 import BuildingsLow from "./parts/BuildingsLow"
 import Rocket from "./actors/Rocket"
@@ -17,6 +17,7 @@ import { createWorldPart } from "../../data/store/world"
 import ExplosionsHandler from "./ExplosionsHandler"
 import ShimmerHandler from "./ShimmerHandler"
 import Airstrip from "./parts/Airstrip"
+import Start from "./parts/Start"
 
 export const WORLD_CENTER_X = -1
 export const WORLD_LEFT_EDGE = -5
@@ -45,6 +46,8 @@ export default function World() {
                 switch (i.type) {
                     case WorldPartType.DEFAULT:
                         return <Default key={i.id} {...i as WorldPartDefault} />
+                    case WorldPartType.START:
+                        return <Start key={i.id} {...i as WorldPartStart} />
                     case WorldPartType.BUILDINGS_GAP:
                         return <BuildingsGap key={i.id} {...i as WorldPartBuildingsGap} />
                     case WorldPartType.BUILDINGS_LOW:

@@ -160,10 +160,11 @@ export function removePlane(id: string) {
 }
 
 
-export function createTurret(
+export function createTurret({
     fireFrequency = random.integer(1500, 2200),
-    [x = 0, y = 0, z = -10] = [],
-) {
+    position: [x = 0, y = 0, z = -10] = [],
+    rotation = 0
+}) {
     let id = random.id()
     let size = [1.65, 1.5, 1.65] as Tuple3
     let position = new Vector3(x, y + size[1] / 2, z)
@@ -173,8 +174,7 @@ export function createTurret(
         position.toArray(),
         [...size],
         { type: "turret", id, size, position }
-    )
-    let rotation = random.pick(Math.PI * 2, Math.PI * .5, Math.PI, Math.PI * 1.5)
+    ) 
 
     updateWorld({
         turrets: [

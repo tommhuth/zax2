@@ -28,7 +28,7 @@ body::after {
     content: "";
     bottom: 0;
     pointer-events: none;
-    background-image: linear-gradient(to top right, rgba(0,0,255,0) 40%,  blue 100%); 
-    opacity: .6;
-    mix-blend-mode: screen;
+    background-image: linear-gradient(to top right, rgb(0, 173, 9) 0%,  rgb(0, 173, 161)100%); 
+    opacity: .95;
+    mix-blend-mode: saturation;
 }

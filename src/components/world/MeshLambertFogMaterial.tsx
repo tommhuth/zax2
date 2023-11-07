@@ -11,6 +11,8 @@ export function MeshLambertFogMaterial({
     usesTime = false,
     fragmentShader = "",
     vertexShader = "",
+    debug,
+    fogDensity = .75,
     ...rest
 }) {
     let { onBeforeCompile, uniforms } = useShader({
@@ -46,18 +48,17 @@ export function MeshLambertFogMaterial({
                 ${easings}
             `,
             main: glsl` 
-                ${fragmentShader}
+                ${fragmentShader} 
 
-                float fogDensity = .75;
+                float fogDensity = ${fogDensity};
                 vec3 bottomColor = mix(uFogColorStart, gl_FragColor.rgb , 1. - fogDensity); 
                 float heightDistance = 2.8;
-                
                 
                 gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, easeOutCubic(clamp(vGlobalPosition.y / heightDistance, .0, 1.)));
             
             `
         }
-    })
+    }) 
 
     useFrame((state, delta) => {
         if (usesTime) {

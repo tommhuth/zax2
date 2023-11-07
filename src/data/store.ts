@@ -5,7 +5,7 @@ import {
     Barrel, Building, Bullet, Explosion, Instance, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
 } from "./types"
-import { makeDefault } from "./generators"
+import { makeAirstrip, makeBuildingsGap, makeBuildingsLow, makeDefault, makeStart } from "./generators"
 import { SpatialHashGrid3D } from "./SpatialHashGrid3D"
 
 export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
@@ -56,7 +56,7 @@ const store = create<Store>(() => ({
         grid: new SpatialHashGrid3D([4, 3, 4]),
         frustum: new Frustum(),
         parts: [
-            makeDefault({ position: new Vector3(0, 0, 0), size: [0, 0] }),
+            makeStart({ position: new Vector3(0, 0, 0), size: [0, 0] }),
         ],
         buildings: [],
         planes: [],

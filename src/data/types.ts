@@ -105,6 +105,7 @@ export enum WorldPartType {
     BUILDINGS_GAP = "gapbuildings",
     BUILDINGS_LOW = "lowbuildings",
     AIRSTRIP = "airstrip",
+    START = "start",
 }
 
 export interface WorldPart {
@@ -150,6 +151,9 @@ export interface WorldPartBuildingsGap extends WorldPart {
 
 export interface WorldPartDefault extends WorldPart {
     type: WorldPartType.DEFAULT
+}
+export interface WorldPartStart extends WorldPart {
+    type: WorldPartType.START
 }
 
 export interface WorldPartBuildingsLow extends WorldPart {

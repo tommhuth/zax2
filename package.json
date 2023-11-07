@@ -14,16 +14,14 @@
         "@huth/random": "^4.0.0",
         "@react-three/drei": "^9.88.11",
         "@react-three/fiber": "^8.15.9",
-        "@types/three": "^0.158.1",
+        "@types/three": "^0.158.1", 
         "node-sass": "^9.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "sass": "^1.69.5",
         "three": "^0.158.0",
         "vite-plugin-glsl": "^1.1.2",
-        "vite-plugin-pwa": "^0.16.7"
-    },
-    "devDependencies": {
+        "vite-plugin-pwa": "^0.16.7",
         "@types/react": "^18.2.15",
         "@types/react-dom": "^18.2.7",
         "@typescript-eslint/eslint-plugin": "^6.0.0",

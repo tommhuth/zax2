@@ -1,10 +1,10 @@
 import { startTransition, useEffect, useMemo, useRef } from "react"
-import { AdditiveBlending, BufferAttribute, Color, Sprite } from "three"
+import { BufferAttribute, Color, Sprite } from "three"
 import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
 import { useShader } from "../../data/hooks"
 import { useFrame, useLoader, useThree } from "@react-three/fiber"
 import InstancedMesh from "../InstancedMesh"
-import { TextureLoader } from "three/src/loaders/TextureLoader"
+import { TextureLoader } from "three/src/loaders/TextureLoader.js"
 import { useStore } from "../../data/store"
 import { removeExplosion } from "../../data/store/effects"
 import { explosionColor, explosionEndColor, explosionMidColor, explosionStartColor } from "../../data/theme"
@@ -27,8 +27,7 @@ function blend(values = [75, 100, 0], t = 0, threshold = .5) {
 export default function ExplosionsHandler() {
     let latestExplosion = useStore(i => i.effects.explosions[0])
     let glowMap = useLoader(TextureLoader, "/textures/glow.png")
-    let ref = useRef<Sprite>(null)
-    let { camera } = useThree()
+    let ref = useRef<Sprite>(null) 
     let centerAttributes = useMemo(() => {
         return new Float32Array(new Array(100 * 3).fill(0))
     }, [])
