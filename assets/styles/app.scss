@@ -20,7 +20,7 @@ canvas {
 
 .title {
     line-height: .8;
-    font-size: 22vw;
+    font-size: min(22vw, 33vh);
     transition: opacity 1.5s .15s;
     background-color: #000;
     font-weight: 400;
