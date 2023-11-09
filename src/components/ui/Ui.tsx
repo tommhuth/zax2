@@ -36,7 +36,7 @@ export default function Ui() {
     let currentHeightRef = useRef<HTMLDivElement>(null)
     let bars = 5
 
-    useEffect(()=> {
+    useEffect(() => {
         window.addEventListener("click", () => {
             setState("running")
         })
@@ -46,25 +46,25 @@ export default function Ui() {
         let player = useStore.getState().player.object
 
         if (player && currentHeightRef.current) {
-            let height = (player.position.y - WORLD_BOTTOM_EDGE) / (WORLD_TOP_EDGE - WORLD_BOTTOM_EDGE) 
+            let height = (player.position.y - WORLD_BOTTOM_EDGE) / (WORLD_TOP_EDGE - WORLD_BOTTOM_EDGE)
 
             currentHeightRef.current.style.height = (height * 100 + 1).toFixed(1) + "%"
         }
     })
 
     return (
-        <>  
-            <h1 
-                className="title"
-                style={{  
-                    opacity: state === "intro" ? 1 : 0, 
-                    display: loaded ? undefined : "none"
+        <>
+            <div
+                className="intro"
+                style={{
+                    display: state === "intro" && loaded ? undefined : "none"
                 }}
             >
-                Untitled arcade knockoff   
-            </h1> 
-            
-            <div 
+                <h1 className="title">Untitled arcade knockoff   </h1>
+                <p className="start">Tap to start</p>
+            </div>
+
+            <div
                 className="height"
                 style={{
                     opacity: state === "intro" ? 0 : 1
@@ -75,7 +75,7 @@ export default function Ui() {
                     className="height__current"
                     ref={currentHeightRef}
                 />
-                {new Array(bars).fill(null).map((i, index) => { 
+                {new Array(bars).fill(null).map((i, index) => {
 
                     return (
                         <div
@@ -89,8 +89,8 @@ export default function Ui() {
                 })}
                 <div className="height__bottom">L</div>
             </div>
-            <div 
-                className="ui" 
+            <div
+                className="ui"
                 style={{
                     opacity: state === "intro" ? 0 : 1
                 }}

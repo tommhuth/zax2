@@ -1,6 +1,6 @@
 import Camera from "./components/Camera"
 import { Suspense, useEffect, useState } from "react"
-import { Canvas } from "@react-three/fiber" 
+import { Canvas } from "@react-three/fiber"
 import Player from "./components/Player"
 import World from "./components/world/World"
 import { Only } from "./data/utils"
@@ -32,18 +32,10 @@ export default function Wrapper() {
         return () => {
             window.removeEventListener("resize", onResize)
         }
-    }, []) 
+    }, [])
 
     return (
-        <div
-            style={{
-                left: 0,
-                top: 0,
-                right: 0,
-                bottom: 0,
-                position: "fixed",
-            }}
-        >
+        <>
             <Ui />
             <Canvas
                 gl={{
@@ -58,6 +50,9 @@ export default function Wrapper() {
                     height: size[1],
                     width: size[0],
                     opacity: loaded ? 1 : 0,
+                    left: 0,
+                    top: 0,
+                    position: "fixed",
                 }}
                 shadows={{
                     type: BasicShadowMap,
@@ -70,19 +65,19 @@ export default function Wrapper() {
                 }}
                 dpr={dpr}
             >
-                <Only if={Config.DEBUG}> 
+                <Only if={Config.DEBUG}>
                 </Only>
 
                 <EdgeOverlay />
                 <Camera />
                 <Lights />
 
-                <Suspense fallback={null}> 
+                <Suspense fallback={null}>
                     <Models />
                     <World />
                     <Player />
                 </Suspense>
             </Canvas>
-        </div>
+        </>
     )
 }

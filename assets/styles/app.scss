@@ -6,6 +6,20 @@ canvas {
     image-rendering: crisp-edges;
     image-rendering: pixelated;
 }
+
+
+body::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    top: 0;   
+    height: 100%; 
+    width: 100%; 
+    z-index: 1;
+    //background-image: linear-gradient(to top right, red 30%, blue 70%) ;
+    //opacity: .5;
+    display: none;
+}
   
 #shoot { 
     right: 0; 
@@ -18,15 +32,8 @@ canvas {
     z-index: 10000000; 
 } 
 
-.title {
-    line-height: .8;
-    font-size: min(22vw, 33vh);
-    transition: opacity 1.5s .15s;
-    background-color: #000;
-    font-weight: 400;
-    color: #fff;
-    mix-blend-mode: multiply; 
-    font-family: edunline;
+.intro {
+    pointer-events: none;
     text-align: center;
     position: fixed;
     left: 0;
@@ -40,11 +47,46 @@ canvas {
     width: 100%; 
     z-index: 100;
     top: 0; 
+    background-color: #000;
+    color: #fff;
+    flex-direction: column;
+    mix-blend-mode: multiply; 
+}
+
+.start {
+    font-family: joystix;
+    margin-top: 4em;
+    font-size: clamp(1em, min(3.5vw, 3.5vh), 1.25em);
+    letter-spacing: .1em;
+    white-space: nowrap;
+
+    @media (max-width: 800px) {
+        position: absolute;
+        left: 50%;
+        bottom: 10vh;
+        transform: translateX(-50%);
+    }
+}
+
+.title {
+    font-size: min(20vw, 29vh); 
+    font-weight: 400;
+    font-family: edunline;
+    line-height: .8;
+    margin-bottom: -2rem;
+
+    @media (max-width: 700px), (max-height: 500px) { 
+        line-height: .9;
+    }
+
+    @media (max-width: 700px) {
+        margin-bottom: 0; 
+    }
 }
 
 #loading {
     position: absolute;
-    font-size: 1.25em;
+    font-size: clamp(1em, min(1vw, 1vh), 1.25em);
     top: 50%;
     left: 50%;
     z-index: 1000;
