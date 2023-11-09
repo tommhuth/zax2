@@ -4,6 +4,7 @@ import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../world/World"
 import RotateMe from "./RotateMe"
 
 import "./Ui.scss"
+import { setState } from "../../data/store/utils"
 
 const useAnimationFrame = callback => {
     // Use useRef for mutable variables that we want to persist
@@ -29,9 +30,17 @@ const useAnimationFrame = callback => {
 }
 
 export default function Ui() {
+    let state = useStore(i => i.state)
     let player = useStore(i => i.player)
+    let loaded = useStore(i => i.loaded)
     let currentHeightRef = useRef<HTMLDivElement>(null)
     let bars = 5
+
+    useEffect(()=> {
+        window.addEventListener("click", () => {
+            setState("running")
+        })
+    }, [])
 
     useAnimationFrame(() => {
         let player = useStore.getState().player.object
@@ -44,10 +53,23 @@ export default function Ui() {
     })
 
     return (
-        <>
-            <RotateMe />
+        <>  
+            <h1 
+                className="title"
+                style={{  
+                    opacity: state === "intro" ? 1 : 0, 
+                    display: loaded ? undefined : "none"
+                }}
+            >
+                Untitled arcade knockoff   
+            </h1> 
             
-            <div className="height">
+            <div 
+                className="height"
+                style={{
+                    opacity: state === "intro" ? 0 : 1
+                }}
+            >
                 <div className="height__top">H</div>
                 <div
                     className="height__current"
@@ -67,7 +89,12 @@ export default function Ui() {
                 })}
                 <div className="height__bottom">L</div>
             </div>
-            <div className="ui">
+            <div 
+                className="ui" 
+                style={{
+                    opacity: state === "intro" ? 0 : 1
+                }}
+            >
                 {player.health.toFixed(0)}%
 
                 <div>{player.score.toLocaleString("en")}</div>

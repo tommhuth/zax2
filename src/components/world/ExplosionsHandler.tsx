@@ -178,8 +178,8 @@ export default function ExplosionsHandler() {
         if (ref.current && latestExplosion) {
             ref.current.position.set(...latestExplosion.position)
             ref.current.position.y += 6
-            ref.current.position.x += 5
-            ref.current.position.z += 5
+            ref.current.position.x -= 5
+            ref.current.position.z -= 5
             ref.current.material.opacity = .8
         }
     }, [latestExplosion])
@@ -211,7 +211,9 @@ export default function ExplosionsHandler() {
             <sprite ref={ref} scale={10} >
                 <spriteMaterial
                     depthWrite={false}
-                    color={explosionColor}
+                    color={"#ff00d4"}
+                    
+
                     map={glowMap}
                     transparent 
                 />

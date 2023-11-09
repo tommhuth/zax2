@@ -1,11 +1,34 @@
 import { useFrame } from "@react-three/fiber"
 import { useStore } from "../data/store"
-import { useRef } from "react"
+import { useEffect, useLayoutEffect, useRef } from "react"
 import { Group } from "three"
+import animate from "@huth/animate"
 
+function easeOutCubic(x: number): number {
+    return 1 - Math.pow(1 - x, 5)
+}
 
 export default function EdgeOverlay() {
     let groupRef = useRef<Group>(null)
+    let state = useStore(i => i.state)
+
+    useLayoutEffect(() => {
+        groupRef.current.children[0].position.x = 16
+        groupRef.current.children[1].position.x = -36
+
+        if (state === "running") {
+            animate({
+                from: { left: 16, right: -36 },
+                to: { left: 6, right: -26 },
+                duration: 600,
+                easing: easeOutCubic,
+                render({ left, right }) {
+                    groupRef.current.children[0].position.x = left
+                    groupRef.current.children[1].position.x = right
+                }
+            })
+        }
+    }, [state])
 
     useFrame(() => {
         let player = useStore.getState().player.object
@@ -20,7 +43,6 @@ export default function EdgeOverlay() {
             <mesh
                 rotation-x={-Math.PI / 2}
                 position-y={13}
-                position-x={6}
                 rotation-y={-.65}
             >
                 <planeGeometry args={[12, 100, 1, 1]} />

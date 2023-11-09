@@ -72,7 +72,7 @@ export function makeAirstrip(previous: BaseWorldPart): WorldPartAirstrip {
 
 const types = makeCycler<Exclude<WorldPartType, WorldPartType.START>>(
     Object.values(WorldPartType).filter(i => i !== WorldPartType.START),
-    .1
+    .35
 )  
 
 types.next()

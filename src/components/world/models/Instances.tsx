@@ -70,7 +70,7 @@ export default function Instances() {
                 <MeshLambertFogMaterial color={turretColor} isInstance />
             </InstancedMesh>
 
-            <InstancedMesh name="rocket" count={15}>
+            <InstancedMesh name="rocket" count={15} castShadow={false}>
                 <primitive object={(rocket.nodes.rocket as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial color={rocketColor} />
             </InstancedMesh>

@@ -39,6 +39,7 @@ export default function Player({
     let keys = useMemo<Record<string, boolean>>(() => ({}), [])
     let weapon = useStore(i => i.player.weapon)
     let lastImpactLocation = useStore(i => i.player.lastImpactLocation)
+    let state = useStore(i => i.state)
     let targetPosition = useMemo(() => new Vector3(WORLD_CENTER_X, _edgemin.y, z), [])
     let models = useLoader(GLTFLoader, "/models/space.glb")
     let position = useMemo(() => new Vector3(), [])
@@ -206,8 +207,7 @@ export default function Player({
 
             position.copy(playerGroup.position)
             client.position = position.toArray()
-            grid.updateClient(client)
-            console.log(playerGroup.position.x)
+            grid.updateClient(client) 
         }
     })
 
@@ -220,6 +220,7 @@ export default function Player({
             <group
                 ref={handleRef}
                 scale={.75}
+                visible={state !== "intro"}
             >
                 <primitive
                     object={models.nodes.plane}

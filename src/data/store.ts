@@ -5,7 +5,7 @@ import {
     Barrel, Building, Bullet, Explosion, Instance, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
 } from "./types"
-import { makeAirstrip, makeBuildingsGap, makeBuildingsLow, makeDefault, makeStart } from "./generators"
+import { makeStart } from "./generators"
 import { SpatialHashGrid3D } from "./SpatialHashGrid3D"
 
 export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
@@ -15,6 +15,7 @@ export const bulletSize: Tuple3 = [.2, .2, 1.5]
 
 export interface Store {
     loaded: boolean
+    state: "intro" | "running" | "gameover"
     world: {
         parts: WorldPart[]
         frustum: Frustum
@@ -52,6 +53,7 @@ export interface Store {
 
 const store = create<Store>(() => ({
     loaded: false,
+    state: "intro",
     world: {
         grid: new SpatialHashGrid3D([4, 3, 4]),
         frustum: new Frustum(),

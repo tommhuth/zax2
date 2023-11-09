@@ -22,6 +22,8 @@ export function Only(props: { if: any, children: React.ReactNode, once?: boolean
 
     if (props.once && firstIf.current) {
         return <>{props.children}</>
+    } else if (props.once) {
+        return null
     }
 
     return props.if ? <>{props.children}</> : null

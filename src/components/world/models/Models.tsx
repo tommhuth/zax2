@@ -5,9 +5,9 @@ import { useEffect } from "react"
 
 export default function Models() {
     useEffect(() => {
-        setTimeout(() => {
-            console.log("MODELS READY")
-            setLoaded()
+        setTimeout(() => { 
+            setLoaded() 
+            document.getElementById("loading")?.remove()
         }, 250)
     }, [])
 

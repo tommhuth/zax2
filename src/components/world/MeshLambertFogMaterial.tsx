@@ -10,8 +10,7 @@ export function MeshLambertFogMaterial({
     isInstance = true,
     usesTime = false,
     fragmentShader = "",
-    vertexShader = "",
-    debug,
+    vertexShader = "", 
     fogDensity = .75,
     ...rest
 }) {

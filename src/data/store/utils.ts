@@ -11,6 +11,12 @@ export function updateWorld(data: Partial<Store["world"]>) {
     })
 }
 
+export function setState(state: Store["state"]) {
+    store.setState({
+        state,
+    })
+}
+
 export function setRepeater(name: string, meshes: Object3D[], count: number) {
     store.setState({
         repeaters: {
