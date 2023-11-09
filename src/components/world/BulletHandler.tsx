@@ -51,7 +51,7 @@ function BulletHandler() {
         if (!instances.line || !player.object || !instances.device) {
             return
         }
-
+ 
         for (let i = 0; i < bullets.length; i++) {
             let bullet = bullets[i]
             let bulletDiagonal = Math.sqrt((bullet.size[2] * .5) ** 2 + bullet.size[2] ** 2)
@@ -74,6 +74,7 @@ function BulletHandler() {
 
             for (let i = 0; i < collisions.length; i++) {
                 let client = collisions[i]
+                let hasHit = true
 
                 if (client.data.type === "building") {
                     let intersection = intersect(instances.device.mesh, bullet.position, movement)
@@ -156,6 +157,12 @@ function BulletHandler() {
                         damageBarrel(client.data.id, 100)
                         increaseScore(1000)
                     }
+                } else {
+                    hasHit = false
+                }
+
+                if (hasHit) {
+                    break
                 }
             }
 
