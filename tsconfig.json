@@ -12,16 +12,14 @@
         ],
         "module": "ESNext",
         "skipLibCheck": true,
-        /* Bundler mode */
         "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
         "jsx": "react-jsx",
-        /* Linting */
         "strict": true,
-        "noImplicitAny": false, 
+        "noImplicitAny": false,
         "noUnusedLocals": true,
         "noUnusedParameters": false,
         "noFallthroughCasesInSwitch": true
