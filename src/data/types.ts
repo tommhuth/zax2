@@ -1,5 +1,5 @@
 import { Box3, InstancedMesh, Object3D, Vector3 } from "three"
-import { OBB } from "three/examples/jsm/math/OBB"
+import { OBB } from "three/examples/jsm/math/OBB.js"
 import { Tuple2, Tuple3 } from "../types"
 import Counter from "./Counter"
 import { Client } from "./SpatialHashGrid3D"

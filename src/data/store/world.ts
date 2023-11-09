@@ -1,4 +1,4 @@
-import { OBB } from "three/examples/jsm/math/OBB"
+import { OBB } from "three/examples/jsm/math/OBB.js"
 import { Tuple3 } from "../../types"
 import { store } from "../store"
 import { Barrel } from "../types"

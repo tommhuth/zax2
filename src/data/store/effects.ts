@@ -4,7 +4,7 @@ import { Store, store } from "../store"
 import { Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
-import { clamp } from "three/src/math/MathUtils"
+import { clamp } from "../utils"
 
 function updateEffects(data: Partial<Store["effects"]>) {
     store.setState({
