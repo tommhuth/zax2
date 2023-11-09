@@ -4,14 +4,11 @@ import Turret from "../spawner/Turret"
 import EdgeBuilding from "../decoration/EdgeBuilding"
 import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
-import Rocket from "../spawner/Rocket"
-import { WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "../World"
+import Rocket from "../spawner/Rocket" 
 import { useState } from "react"
 import random from "@huth/random"
 import makeCycler from "../../../data/cycler"
-import Floor from "../decoration/Floor"
-import Plant from "../decoration/Plant"
-import { AsteroidStart } from "../decoration/AsteroidStart"
+import Floor from "../decoration/Floor" 
 
 
 let t = makeCycler(["floor1", "floor2"], .35)
@@ -30,48 +27,48 @@ export default function Default({
             id={id}
         >
             <Building
-                position={[WORLD_RIGHT_EDGE, 0, 10]}
+                position={[3, 0, 10]}
                 size={[5, 2, 5]}
             />
             <Turret
-                position={[WORLD_RIGHT_EDGE, 2, 10]}
+                position={[3, 2, 10]}
                 rotation={-Math.PI / 2}
             />
 
             <Building
-                position={[WORLD_CENTER_X - .5, 0, 9]}
+                position={[-.5, 0, 9]}
                 size={[4, 1, 3]}
             />
             <Building
-                position={[WORLD_CENTER_X + 3, 0, 6]}
+                position={[3, 0, 6]}
                 size={[3, 1, 3]}
             />
             <Turret
-                position={[WORLD_RIGHT_EDGE - 1, 1, 6]}
+                position={[3, 1, 6]}
                 rotation={-Math.PI / 2}
             />
             <Rocket
-                position={[WORLD_LEFT_EDGE + 2, 0, 4]}
+                position={[-3, 0, 4]}
             />
             <Barrel
-                position={[WORLD_CENTER_X - 1, 1, 9]}
+                position={[-1, 1, 9]}
             />
             <Barrel
-                position={[WORLD_LEFT_EDGE + 3, 0, 16]}
+                position={[-4, 0, 16]}
             />
             <Barrel
-                position={[WORLD_RIGHT_EDGE + 2, 0, 1]}
+                position={[5, 0, 2]}
             />
 
 
             <Rocket
-                position={[WORLD_RIGHT_EDGE + 1, 0, 17]}
+                position={[4, 0, 17]}
             />
 
             <Floor
                 type={"floor1"}
                 scale={[random.pick(-1, 1), 1, random.pick(-1, 1)]}
-                position={[position.x + WORLD_CENTER_X, 0, size[1] / 2]}
+                position={[position.x, 0, size[1] / 2]}
             />
             <EdgeBuilding z={size[1] / 2} />
         </WorldPartWrapper>

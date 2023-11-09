@@ -1,23 +1,23 @@
-import { useFrame, useLoader, useThree } from "@react-three/fiber"
+import { useFrame, useLoader } from "@react-three/fiber"
 import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
 import { Group, Mesh, Vector3 } from "three"
 import { Tuple3 } from "../types"
 import { WORLD_BOTTOM_EDGE, WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_TOP_EDGE } from "./world/World"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
-import { useCollisionDetection, useShader } from "../data/hooks"
+import { useCollisionDetection } from "../data/hooks"
 import { Owner } from "../data/types"
-import { bulletSize, pixelSize, useStore } from "../data/store"
+import { bulletSize, useStore } from "../data/store"
 import { damagePlayer, setPlayerObject } from "../data/store/player"
 import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/store/actors"
-import { damageBarrel } from "../data/store/world" 
+import { damageBarrel } from "../data/store/world"
 import { playerColor } from "../data/theme"
 import { MeshLambertFogMaterial } from "./world/MeshLambertFogMaterial"
 
-let _edgemin = new Vector3(WORLD_LEFT_EDGE, WORLD_BOTTOM_EDGE, -100)
-let _edgemax = new Vector3(WORLD_RIGHT_EDGE, WORLD_TOP_EDGE, 100)
+let _edgemin = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -100)
+let _edgemax = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, 100)
 
-let depth = 2 
+let depth = 2
 
 interface PlayerProps {
     size?: Tuple3
@@ -60,7 +60,7 @@ export default function Player({
 
         playerGroupRef.current = object
         setPlayerObject(object)
-    }, []) 
+    }, [])
 
     useCollisionDetection({
         position,
@@ -101,15 +101,15 @@ export default function Player({
             delete keys[e.code]
         }
         // shoot 
-        let onTouchStartShoot = () => {
+        let onTouchStartShoot = () => { 
             keys.Space = true
         }
-        let onTouchEndShoot = () => {
+        let onTouchEndShoot = () => { 
             delete keys.Space
         }
 
         window.addEventListener("keydown", onKeyDown)
-        window.addEventListener("keyup", onKeyUp)
+        window.addEventListener("keyup", onKeyUp) 
 
         shootDiv.addEventListener("touchstart", onTouchStartShoot)
         shootDiv.addEventListener("touchend", onTouchEndShoot)
@@ -163,7 +163,7 @@ export default function Player({
     })
 
     // shoot
-    useFrame(() => { 
+    useFrame(() => {
         if (Date.now() - lastShotAt.current > weapon.fireFrequency && keys.Space) {
             startTransition(() => {
                 createBullet({
@@ -173,7 +173,7 @@ export default function Player({
                         position.z + (depth / 2 + bulletSize[2] / 2) * 1.5
                     ],
                     owner: Owner.PLAYER,
-                    damage: weapon.damage, 
+                    damage: weapon.damage,
                     rotation: Math.PI * .5,
                     speed: weapon.speed,
                 })
@@ -182,8 +182,8 @@ export default function Player({
         }
     })
 
-    useEffect(()=> {
-        if (playerGroupRef.current) { 
+    useEffect(() => {
+        if (playerGroupRef.current) {
             playerGroupRef.current.position.x = WORLD_CENTER_X
             playerGroupRef.current.position.y = y
             playerGroupRef.current.position.z = z
@@ -207,8 +207,9 @@ export default function Player({
             position.copy(playerGroup.position)
             client.position = position.toArray()
             grid.updateClient(client)
+            console.log(playerGroup.position.x)
         }
-    }) 
+    })
 
     return (
         <>
@@ -218,7 +219,7 @@ export default function Player({
             </mesh>
             <group
                 ref={handleRef}
-                scale={.75} 
+                scale={.75}
             >
                 <primitive
                     object={models.nodes.plane}
@@ -250,7 +251,7 @@ export default function Player({
                         }
 
                         if (isMovingUp.current) {
-                            targetPosition.y += (currentPosition.z - e.point.z)
+                            targetPosition.y += (e.point.z - currentPosition.z)
                         }
 
                         targetPosition.x += (e.point.x - currentPosition.x) * 1.5

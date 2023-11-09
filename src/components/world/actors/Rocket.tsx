@@ -73,7 +73,7 @@ function explode(position: Vector3, size: Tuple3) {
 
             createParticles({
                 position: position.toArray(),
-                speed: [12, 20],
+                speed: [5, 20],
                 speedOffset: [[-0, 0], [-0, 0], [-0, 0]],
                 positionOffset: [[-.5, .5], [-1, 1], [-.5, .5]],
                 normal: [0, 0, 0],

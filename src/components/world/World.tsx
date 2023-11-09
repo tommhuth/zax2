@@ -19,9 +19,9 @@ import ShimmerHandler from "./ShimmerHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
 
-export const WORLD_CENTER_X = -1
-export const WORLD_LEFT_EDGE = -5
-export const WORLD_RIGHT_EDGE = 3
+export const WORLD_CENTER_X = 0
+export const WORLD_LEFT_EDGE = 5
+export const WORLD_RIGHT_EDGE = -4
 export const WORLD_TOP_EDGE = 5
 export const WORLD_BOTTOM_EDGE = 1
 

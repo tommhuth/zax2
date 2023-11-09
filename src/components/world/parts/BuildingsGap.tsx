@@ -4,8 +4,8 @@ import WorldPartWrapper from "../WorldPartWrapper"
 import Plane from "../spawner/Plane"
 import Turret from "../spawner/Turret"
 import Floor from "../decoration/Floor"
-import { WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "../World"
 import Building from "../spawner/Building"
+import { Only } from "../../../data/utils"
 
 export default function BuildingsGap({
     id,
@@ -18,22 +18,34 @@ export default function BuildingsGap({
             size={size}
             id={id}
         >
-            <Floor
-                position={[position.x + WORLD_CENTER_X, 0, size[1] / 2]}
-                scale={[random.pick(-1, 1), 1, .5 * random.pick(-1, 1)]}
-                type="floor3"
-            />
             <Plane position={[3, 5, 10]} />
             <Plane position={[-3, 4, 15]} />
             <Turret
-                position={[WORLD_RIGHT_EDGE + 2, 1, 7]}
-                rotation={random.pick(0, -Math.PI  )}
+                position={[5, 1, 7]}
+                rotation={random.pick(-Math.PI / 2, Math.PI)}
             />
             <Turret
-                position={[WORLD_LEFT_EDGE + 3, 0, 4]}
+                position={[-3, 0, 4]}
                 rotation={random.pick(0, -Math.PI / 2)}
             />
- 
+            <Floor
+                position={[position.x, 0, size[1] / 2]}
+                scale={[random.pick(-1, 1), 1, .5 * random.pick(-1, 1)]}
+                type="floor3"
+            />
+
+            <Only if={random.boolean(.5)} once>
+                <Building
+                    position={[-3, 0, 8]}
+                    size={[2, 1, 3]}
+                />
+            </Only>
+            <Only if={random.boolean(.5)} once>
+                <Building
+                    position={[2, 0, 3]}
+                    size={[4, 1, 3]}
+                />
+            </Only>
         </WorldPartWrapper>
     )
 } 

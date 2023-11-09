@@ -63,7 +63,7 @@ function Plane({
         tilt: random.float(0.001, 0.05),
         shootTimer: random.float(0, fireFrequency),
         nextShotAt: fireFrequency * .5,
-        liftOffDuration: random.integer(5000, 7_000)
+        liftOffDuration: random.integer(4000, 6_000)
     }), [])
     let bottomY = 0
     let grid = useStore(i => i.world.grid)

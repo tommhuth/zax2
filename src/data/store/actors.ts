@@ -3,12 +3,12 @@ import { bulletSize, store } from "../store"
 import { Plane, Turret } from "../types"
 import { Box3, Vector3 } from "three"
 import { Tuple3 } from "../../types"
-import { OBB } from "three/examples/jsm/math/OBB"
+import { OBB } from "three/examples/jsm/math/OBB.js"
 import { updateWorld } from "./utils"
 
 export function createBullet({
     position = [0, 0, 0],
-    rotation,
+    rotation = 0,
     owner,
     size = bulletSize,
     speed = 10,

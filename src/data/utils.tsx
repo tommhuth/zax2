@@ -1,4 +1,4 @@
-import React, { createContext } from "react"
+import React, { createContext, useRef } from "react"
 import { Color, ColorRepresentation, Euler, InstancedMesh, Matrix4, Quaternion, Vector3 } from "three"
 import { Tuple3, Tuple4 } from "../types"
 
@@ -17,7 +17,13 @@ export function map(value: number, inMin: number, inMax: number, outMin: number,
     return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }
 
-export function Only(props: { if: any, children: React.ReactNode }) {
+export function Only(props: { if: any, children: React.ReactNode, once?: boolean }) {
+    let firstIf = useRef(props.if)
+
+    if (props.once && firstIf.current) {
+        return <>{props.children}</>
+    }
+
     return props.if ? <>{props.children}</> : null
 }
 

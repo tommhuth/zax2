@@ -15,12 +15,13 @@
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
     appearance: none; 
     touch-action: none;   
+    -webkit-user-select: none;
 }  
 
 html, 
 body {
-    height: 100vh;
-    overflow: hidden;
+    height: 100vh; 
+    overflow: hidden; 
     background-color: var(--background-color);
 }
 

@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { useRepeater } from "../../RepeaterMesh"
-import { WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "../World"
+import { WORLD_LEFT_EDGE } from "../World"
 import random from "@huth/random"
 import { RepeaterName } from "../../../data/types"
 import { useWorldPart } from "../WorldPartWrapper"
@@ -23,7 +23,7 @@ export default function EdgeBuilding({
 
     useEffect(() => {
         if (building?.mesh) { 
-            building.mesh.position.set(x + WORLD_RIGHT_EDGE + 4.5, y, z + partPosition[2])
+            building.mesh.position.set(x + WORLD_LEFT_EDGE + 4, y, z + partPosition[2])
             building.mesh.rotation.y = Math.PI
         }
     }, [building])

@@ -2,8 +2,7 @@ import { WorldPartBuildingsLow } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import Turret from "../spawner/Turret"
 import Barrel from "../spawner/Barrel"
-import Building from "../spawner/Building"
-import { WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "../World"
+import Building from "../spawner/Building" 
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
 import Grass from "../decoration/Grass"
@@ -19,47 +18,51 @@ export default function BuildingsLow({
             size={size}
             position={position}
             id={id}
-        >
-
+        > 
             <Plant
-                position={[WORLD_LEFT_EDGE - 2, 0, 0]}
+                position={[7, 0, 0]}
                 scale={[1.5, 1.5, 1.5]}
             />
 
-            <Turret position={[WORLD_LEFT_EDGE + 4, 0, 2]} />
-            <Turret position={[WORLD_CENTER_X + 4, 0, 10]}
+            <Turret position={[-3, 0, 2]} />
+            <Turret position={[4, 0, 10]}
                 rotation={-Math.PI/2}
             />
 
             <Barrel
-                position={[WORLD_CENTER_X - 3, 0, 10]}
+                position={[-3, 0, 10]}
             />
             <Barrel
-                position={[WORLD_CENTER_X - 2, 0, 14]}
+                position={[2, 0, 14]}
             />
 
             <Grass
-                position={[WORLD_RIGHT_EDGE + 6, 0, size[1] / 2]}
+                position={[-8, 0, size[1] / 2 - 2]}
             />
             <Building
-                position={[WORLD_CENTER_X, 0, size[1] - 2]}
+                position={[0, 0, size[1] - 2]}
                 size={[3, 1, 3]}
             />
             <Grass
-                position={[WORLD_LEFT_EDGE - 5, 0, size[1] / 2]}
+                position={[9, 0, size[1] / 2]}
             />
             
             <Turret 
-                position={[WORLD_CENTER_X, 1, size[1] - 2]}
+                position={[0, 1, size[1] - 2]}
                 rotation={-Math.PI / 2}
             />
 
             <Plant
-                position={[WORLD_RIGHT_EDGE + 4, 0, size[1]]}
+                position={[-4, 0, size[1]]}
                 scale={[1, 1, 1]}
             />
+
+            <Plant
+                position={[7, 0, size[1] - 1.5]}
+                scale={[1.25, 1.25, 1.25]}
+            />
             <Floor
-                position={[position.x + WORLD_CENTER_X, 0, size[1] / 2]}
+                position={[position.x  , 0, size[1] / 2]}
                 scale={[random.pick(-1, 1), 1, random.pick(-1, 1)]}
                 type="floor3"
             />

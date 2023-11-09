@@ -16,19 +16,4 @@ canvas {
     top: 0;
     bottom: 0; 
     z-index: 10000000; 
-}
-
-
-body::after {
-    display: none;
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    content: "";
-    bottom: 0;
-    pointer-events: none;
-    background-image: linear-gradient(to top right, rgb(0, 173, 9) 0%,  rgb(0, 173, 161)100%); 
-    opacity: .95;
-    mix-blend-mode: saturation;
-}
+} 
