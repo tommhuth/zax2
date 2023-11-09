@@ -9,7 +9,7 @@ import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
 import { removeBarrel } from "../../../data/store/world"
-import { barellParticleColor, barellcolor } from "../../../data/theme"
+import { barellParticleColor } from "../../../data/theme"
 import { useWorldPart } from "../WorldPartWrapper"
 
 let _size = new Vector3()

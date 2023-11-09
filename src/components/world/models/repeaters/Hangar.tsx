@@ -2,11 +2,11 @@ import { useGLTF } from "@react-three/drei"
 import { buildingBase, buildingHi } from "../../../../data/theme"
 import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
 
-export default function Hangar(props) {
+export default function Hangar() {
     const { nodes }: { nodes: any } = useGLTF("/models/hangar.glb")
 
     return (
-        <group {...props} dispose={null}>
+        <group dispose={null}>
             <mesh
                 receiveShadow
                 geometry={nodes.Cube.geometry}

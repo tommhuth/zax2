@@ -5,7 +5,7 @@ import { Tuple3 } from "../types"
 import { WORLD_BOTTOM_EDGE, WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_TOP_EDGE } from "./world/World"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
-import { useCollisionDetection } from "../data/hooks"
+import { useCollisionDetection, useWindowEvent } from "../data/hooks"
 import { Owner } from "../data/types"
 import { bulletSize, useStore } from "../data/store"
 import { damagePlayer, setPlayerObject } from "../data/store/player"
@@ -63,6 +63,13 @@ export default function Player({
         setPlayerObject(object)
     }, [])
 
+    useWindowEvent("keydown", (e: KeyboardEvent) => {
+        keys[e.code] = true
+    })
+    useWindowEvent("keyup", (e: KeyboardEvent) => {
+        delete keys[e.code]
+    }) 
+
     useCollisionDetection({
         position,
         size,
@@ -94,32 +101,20 @@ export default function Player({
     })
 
     useEffect(() => {
-        let shootDiv = document.getElementById("shoot") as HTMLElement
-        let onKeyDown = (e: KeyboardEvent) => {
-            keys[e.code] = true
-        }
-        let onKeyUp = (e: KeyboardEvent) => {
-            delete keys[e.code]
-        }
+        let shootDiv = document.getElementById("shoot") as HTMLElement 
         // shoot 
         let onTouchStartShoot = () => { 
             keys.Space = true
         }
         let onTouchEndShoot = () => { 
             delete keys.Space
-        }
-
-        window.addEventListener("keydown", onKeyDown)
-        window.addEventListener("keyup", onKeyUp) 
+        } 
 
         shootDiv.addEventListener("touchstart", onTouchStartShoot)
         shootDiv.addEventListener("touchend", onTouchEndShoot)
         shootDiv.addEventListener("touchcancel", onTouchEndShoot)
 
-        return () => {
-            window.removeEventListener("keydown", onKeyDown)
-            window.removeEventListener("keyup", onKeyUp)
-
+        return () => {  
             shootDiv.removeEventListener("touchstart", onTouchStartShoot)
             shootDiv.removeEventListener("touchend", onTouchEndShoot)
             shootDiv.removeEventListener("touchcancel", onTouchEndShoot)

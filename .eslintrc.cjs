@@ -8,12 +8,14 @@ module.exports = {
     ],
     ignorePatterns: ['dist', '.eslintrc.cjs'],
     parser: '@typescript-eslint/parser',
-    plugins: ['react-refresh'],
+    // plugins: ['react-refresh'],
     rules: {
+        /*
         'react-refresh/only-export-components': [
             'warn',
             { allowConstantExport: true },
         ],
+        */
         "react-hooks/exhaustive-deps": "off",
         "padding-line-between-statements": [
             "error",

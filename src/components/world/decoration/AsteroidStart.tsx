@@ -1,13 +1,12 @@
 import { useGLTF } from "@react-three/drei"
 import { MeshLambertFogMaterial } from "../MeshLambertFogMaterial"
-import { floorColor, fogColorEnd, plantColorStart } from "../../../data/theme"
+import { floorColor } from "../../../data/theme"
 import { glsl } from "../../../data/utils"
 import { useShader } from "../../../data/hooks"
-import { useFrame } from "@react-three/fiber"
 
 export function AsteroidStart(props) {
     const { nodes, materials } = useGLTF("/models/ast.glb")
-    let { onBeforeCompile, uniforms } = useShader({
+    let { onBeforeCompile } = useShader({
         uniforms: {
             uTime: { value: 0 }, 
         },
@@ -61,19 +60,4 @@ export function AsteroidStart(props) {
             </group>
         </group>
     )
-}
-
-/*
-
-                    <meshLambertMaterial color="red" />
-
-                    <MeshLambertFogMaterial
-                        fogDensity={.0}  
-                        attach="material"
-                        isInstance={false}
-                        debug
-                        fragmentShader={glsl`
-                            gl_FragColor.rgb = mix(vec3(1., 0., 0.), vec3(0., 0., 1.), clamp(-vPosition.y / 3., 0., 1.));
-                        `}
-                    />
-                    */
+} 

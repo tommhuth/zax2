@@ -1,13 +1,12 @@
 import { useGLTF } from "@react-three/drei"
-import { buildingBase, buildingHi, floorColor, floorColorHi } from "../../../../data/theme"
+import { buildingBase, buildingHi } from "../../../../data/theme"
 import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
-import { Mesh } from "three"
 
-export  default function Building3(props) {
+export  default function Building3() {
     const { nodes }: { nodes: any } = useGLTF("/models/building3.glb")
 
     return (
-        <group {...props} dispose={null} scale={.3}>
+        <group dispose={null} scale={.3}>
             <mesh
                 // castShadow
                 // receiveShadow

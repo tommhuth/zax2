@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber"
 import { useStore } from "../data/store"
-import { useEffect, useLayoutEffect, useRef } from "react"
+import { useLayoutEffect, useRef } from "react"
 import { Group } from "three"
 import animate from "@huth/animate"
 

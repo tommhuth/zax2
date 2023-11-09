@@ -4,7 +4,7 @@ import InstancedMesh from "../InstancedMesh"
 import { startTransition } from "react"
 import { useStore } from "../../data/store"
 import { removeShimmer } from "../../data/store/effects"
-import { explosionMidColor, shimmerColor } from "../../data/theme"
+import { shimmerColor } from "../../data/theme"
 
 function easeInOutCubic(x: number): number {
     return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2

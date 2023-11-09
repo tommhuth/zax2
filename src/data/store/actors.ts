@@ -162,7 +162,7 @@ export function removePlane(id: string) {
 
 export function createTurret({
     fireFrequency = random.integer(1500, 2200),
-    position: [x = 0, y = 0, z = -10] = [],
+    position: [x = 0, y = 0, z = -10] = [0, 0, 0],
     rotation = 0
 }) {
     let id = random.id()

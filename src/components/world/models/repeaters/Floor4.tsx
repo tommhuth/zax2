@@ -3,11 +3,11 @@ import { floorColor, floorColorHi } from "../../../../data/theme"
 import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
 import { Mesh } from "three"
 
-export default function Floor4(props) {
-    const { nodes, materials } = useGLTF("/models/floor4.glb")
+export default function Floor4() {
+    const { nodes } = useGLTF("/models/floor4.glb")
 
     return (
-        <group {...props} dispose={null}>
+        <group dispose={null}>
             <mesh
                 receiveShadow
                 geometry={(nodes["Combined-Shape005"] as Mesh).geometry}

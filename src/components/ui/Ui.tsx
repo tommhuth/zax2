@@ -1,33 +1,10 @@
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { useStore } from "../../data/store"
-import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../world/World"
-import RotateMe from "./RotateMe"
+import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../world/World" 
 
 import "./Ui.scss"
 import { setState } from "../../data/store/utils"
-
-const useAnimationFrame = callback => {
-    // Use useRef for mutable variables that we want to persist
-    // without triggering a re-render on their change
-    const requestRef = useRef<number>()
-    const previousTimeRef = useRef<number>()
-
-    const animate = time => {
-        if (previousTimeRef.current != undefined) {
-            const deltaTime = time - previousTimeRef.current
-
-            callback(deltaTime)
-        }
-        previousTimeRef.current = time
-        requestRef.current = requestAnimationFrame(animate)
-    }
-
-    useEffect(() => {
-        requestRef.current = requestAnimationFrame(animate)
-
-        return () => cancelAnimationFrame(requestRef.current as number)
-    }, []) // Make sure the effect runs only once
-}
+import { useAnimationFrame, useWindowEvent } from "../../data/hooks"
 
 export default function Ui() {
     let state = useStore(i => i.state)
@@ -36,11 +13,11 @@ export default function Ui() {
     let currentHeightRef = useRef<HTMLDivElement>(null)
     let bars = 5
 
-    useEffect(() => {
-        window.addEventListener("click", () => {
+    useWindowEvent(["click", "touchstart"], () => {
+        if (state === "intro") {
             setState("running")
-        })
-    }, [])
+        }
+    }, [state]) 
 
     useAnimationFrame(() => {
         let player = useStore.getState().player.object
@@ -60,7 +37,7 @@ export default function Ui() {
                     display: state === "intro" && loaded ? undefined : "none"
                 }}
             >
-                <h1 className="title">Untitled arcade knockoff   </h1>
+                <h1 className="title">Untitled arcade knockoff</h1>
                 <p className="start">Tap to start</p>
             </div>
 

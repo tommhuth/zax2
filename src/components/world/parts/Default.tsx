@@ -4,22 +4,15 @@ import Turret from "../spawner/Turret"
 import EdgeBuilding from "../decoration/EdgeBuilding"
 import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
-import Rocket from "../spawner/Rocket" 
-import { useState } from "react"
-import random from "@huth/random"
-import makeCycler from "../../../data/cycler"
-import Floor from "../decoration/Floor" 
-
-
-let t = makeCycler(["floor1", "floor2"], .35)
+import Rocket from "../spawner/Rocket"  
+import random from "@huth/random" 
+import Floor from "../decoration/Floor"  
 
 export default function Default({
     id,
     position,
     size,
-}: WorldPartDefault) {
-    let [floort] = useState(() => t.next())
-
+}: WorldPartDefault) { 
     return (
         <WorldPartWrapper
             size={size}

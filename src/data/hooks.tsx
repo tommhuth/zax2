@@ -1,11 +1,34 @@
 import { useFrame } from "@react-three/fiber"
-import { useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { Box3, IUniform, Matrix4, Quaternion, Shader, Vector3 } from "three"
-import { OBB } from "three/examples/jsm/math/OBB" 
+import { OBB } from "three/examples/jsm/math/OBB.js"
 import { SpatialHashGrid3D, Client } from "./SpatialHashGrid3D"
 import { useStore } from "./store"
 import { Tuple3 } from "../types"
 import { glsl } from "./utils"
+
+export const useAnimationFrame = (callback: (delta: number) => void) => {
+    // Use useRef for mutable variables that we want to persist
+    // without triggering a re-render on their change
+    const requestRef = useRef<number>()
+    const previousTimeRef = useRef<number>()
+
+    const animate = (time: number) => {
+        if (previousTimeRef.current != undefined) {
+            const deltaTime = time - previousTimeRef.current
+
+            callback(deltaTime)
+        }
+        previousTimeRef.current = time
+        requestRef.current = requestAnimationFrame(animate)
+    }
+
+    useEffect(() => {
+        requestRef.current = requestAnimationFrame(animate)
+
+        return () => cancelAnimationFrame(requestRef.current as number)
+    }, []) // Make sure the effect runs only once
+}
 
 interface ShaderPart {
     head?: string
@@ -18,8 +41,26 @@ interface UseShaderParams {
     fragment?: ShaderPart
 }
 
+export function useWindowEvent(name: string | string[], func: (e: any) => void, deps: any[] = []) {
+    useEffect(() => {
+        if (Array.isArray(name)) {
+            name.forEach(name => window.addEventListener(name, func))
+        } else {
+            window.addEventListener(name, func)
+        }
+
+        return () => {
+            if (Array.isArray(name)) {
+                name.forEach(name => window.removeEventListener(name, func))
+            } else {
+                window.removeEventListener(name, func)
+            }
+        }
+    }, deps)
+}
+
 export function useShader({
-    uniforms: incomingUniforms = {}, 
+    uniforms: incomingUniforms = {},
     vertex = {
         head: "",
         main: "",
@@ -41,7 +82,7 @@ export function useShader({
             shader.uniforms = {
                 ...shader.uniforms,
                 ...uniforms
-            } 
+            }
 
             shader.vertexShader = shader.vertexShader.replace("#include <common>", glsl`
                 #include <common>
@@ -66,7 +107,7 @@ export function useShader({
         }
     }
 }
- 
+
 interface CollisionObject {
     position: Vector3
     size: Tuple3
@@ -98,7 +139,7 @@ export function getCollisions({
     grid,
     position,
     size,
-    source, 
+    source,
 }: Omit<UseCollisionDetectionParams, "actions" | "predicate" | "interval"> & { grid: SpatialHashGrid3D }) {
     let near = grid.findNear(position.toArray(), size)
     let result: Client[] = []

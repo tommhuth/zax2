@@ -1,7 +1,6 @@
 import { useGLTF } from "@react-three/drei"
-import { buildingBase, buildingHi, floorColor, floorColorHi } from "../../../../data/theme"
+import { buildingBase, buildingHi } from "../../../../data/theme"
 import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
-import { Mesh } from "three"
 
 export default function Building1() {
     const { nodes }: { nodes: any } = useGLTF("/models/building1.glb")
