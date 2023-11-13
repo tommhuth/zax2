@@ -24,7 +24,7 @@ export default function Airstrip({
                 targetY={WORLD_TOP_EDGE}
             />
             <Plane
-                position={[ 2.25, .5, 30]}
+                position={[ 2.25, .5, 35]}
                 targetY={WORLD_TOP_EDGE - 2}
             />
             <Plane

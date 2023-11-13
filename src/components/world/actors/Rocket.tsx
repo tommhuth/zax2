@@ -79,7 +79,7 @@ function explode(position: Vector3, size: Tuple3) {
                 normal: [0, 0, 0],
                 normalOffset: [[-1, 1], [-1, 1], [-1, 1]],
                 count: [10, 15],
-                radius: [.1, .45],
+                radius: [.1, .55],
                 color: "#fff",
             })
         }, 320)

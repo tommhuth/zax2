@@ -94,6 +94,7 @@ export interface Plane {
     client: Client
     aabb: Box3
     targetY: number
+    takeoffDistance: number;
     startY: number
     health: number
     fireFrequency: number

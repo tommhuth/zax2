@@ -50,11 +50,12 @@ function Plane({
     aabb,
     client,
     health,
+    takeoffDistance,
     fireFrequency = 300,
     speed
 }: Plane) {
     let data = useMemo(() => ({
-        time: random.integer(-4000, -2000),
+        time: 0,
         removed: false,
         grounded: false,
         gravity: 0,
@@ -63,7 +64,7 @@ function Plane({
         tilt: random.float(0.001, 0.05),
         shootTimer: random.float(0, fireFrequency),
         nextShotAt: fireFrequency * .5,
-        liftOffDuration: random.integer(4000, 6_000)
+        liftOffDuration: random.integer(3000, 5_000)
     }), [])
     let bottomY = 0
     let grid = useStore(i => i.world.grid)
@@ -205,13 +206,15 @@ function Plane({
                 data.actualSpeed *= .9
                 position.y = (bottomY + .5 / 2)
             }
-        } else { 
+        } else {
             let t = clamp(data.time / data.liftOffDuration, 0, 1)
             
             position.y = easeInOutCubic(t) * (targetY - startY) + startY
         }
-
-        data.time += delta * 1000 
+        
+        if (takeoffDistance > position.z) { 
+            data.time += delta * 1000 
+        } 
     })
 
     return null

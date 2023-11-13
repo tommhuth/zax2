@@ -37,7 +37,7 @@ function explode(position: Vector3, size: Tuple3) {
         speedOffset: [[-10, 10], [0, 5], [-10, 10]],
         normal: [0, 1, 0],
         count: [8, 12],
-        radius: [.1, .45],
+        radius: [.1, .5],
         color: turretParticleColor,
     })
 }

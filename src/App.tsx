@@ -1,5 +1,5 @@
 import Camera from "./components/Camera"
-import { Suspense, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { Canvas } from "@react-three/fiber"
 import Player from "./components/Player"
 import World from "./components/world/World"
@@ -10,8 +10,7 @@ import Lights from "./components/Lights"
 import { BasicShadowMap, NoToneMapping } from "three"
 import { dpr, isSmallScreen, pixelSize, useStore } from "./data/store"
 import Models from "./components/world/models/Models"
-import EdgeOverlay from "./components/EdgeOverlay"
-import { useWindowEvent } from "./data/hooks"
+import EdgeOverlay from "./components/EdgeOverlay" 
 
 export default function Wrapper() {
     let getSize = () => [
@@ -19,11 +18,19 @@ export default function Wrapper() {
         Math.ceil(window.innerHeight / pixelSize) * pixelSize
     ]
     let [size, setSize] = useState(() => getSize())
-    let loaded = useStore(i => i.loaded)
+    let loaded = useStore(i => i.loaded) 
 
-    useWindowEvent("resize", () => {
-        setSize(getSize())
-    }) 
+    useEffect(()=> {
+        let update = () => setSize(getSize()) 
+
+        screen.orientation.addEventListener("change", update)
+        window.addEventListener("resize", update)
+
+        return () => {
+            screen.orientation.removeEventListener("change", update)
+            window.removeEventListener("resize", update)
+        }
+    }, [])
 
     return (
         <>

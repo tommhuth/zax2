@@ -199,6 +199,7 @@ interface CreatePlaneParams {
     position: Tuple3
     targetY?: number 
     speed?: number 
+    takeoffDistance?: number
     fireFrequency?: number
 }
 
@@ -206,7 +207,8 @@ export function createPlane({
     position: [x, y, z] = [0, 0, -10],
     targetY = y,
     speed = random.float(4, 5),
-    fireFrequency = 850,
+    fireFrequency = random.integer(550, 700),
+    takeoffDistance = random.integer(5, 15),
 }: CreatePlaneParams) {
     let id = random.id()
     let size = [1, 1.5, 2] as Tuple3
@@ -227,6 +229,7 @@ export function createPlane({
                 health: 20,
                 fireFrequency,
                 id,
+                takeoffDistance: position.z - takeoffDistance,
                 targetY,
                 startY: y,
                 speed,

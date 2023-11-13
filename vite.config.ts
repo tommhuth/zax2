@@ -17,7 +17,9 @@ export default defineConfig({
             manifest: {
                 name: "Zax",
                 short_name: "Zax",
+                display: "fullscreen",
                 description: "Zax",
+                orientation: "landscape",
                 theme_color: "#000000",
                 icons: [
                     {
