@@ -1,9 +1,10 @@
-import { Color } from "three"
+import { Color, MeshLambertMaterial } from "three"
 import { useShader } from "../../data/hooks"
 import { bcolor, fogColorEnd, fogColorStart } from "../../data/theme"
 import easings from "../../shaders/easings.glsl"
 import { glsl } from "../../data/utils"
 import { useFrame } from "@react-three/fiber"
+import { useEffect, useRef } from "react"
 
 export function MeshLambertFogMaterial({
     color = bcolor,
@@ -14,6 +15,7 @@ export function MeshLambertFogMaterial({
     fogDensity = .75,
     ...rest
 }) {
+    let ref = useRef<MeshLambertMaterial>(null)
     let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
             uTime: { value: 0 },
@@ -59,6 +61,12 @@ export function MeshLambertFogMaterial({
         }
     }) 
 
+    useEffect(()=> {
+        if (ref.current) {
+            ref.current.needsUpdate = true
+        }
+    }, [])
+
     useFrame((state, delta) => {
         if (usesTime) {
             uniforms.uTime.value += delta * .2
@@ -72,6 +80,7 @@ export function MeshLambertFogMaterial({
             color={color}
             attach={"material"}
             dithering
+            ref={ref}
             {...rest}
         />
     )

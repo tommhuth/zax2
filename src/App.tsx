@@ -39,47 +39,44 @@ export default function Wrapper() {
     return (
         <>
             <Ui />
-            <Canvas
-                gl={{
-                    antialias: false,
-                    depth: true,
-                    stencil: false,
-                    alpha: false,
-                    powerPreference: "high-performance",
-                    toneMapping: NoToneMapping
-                }}
-                style={{
-                    height: size[1],
-                    width: size[0],
-                    opacity: loaded ? 1 : 0,
-                    left: 0,
-                    top: 0,
-                    position: "fixed",
-                }}
-                shadows={{
-                    type: BasicShadowMap,
-                }}
-                orthographic
-                camera={{
-                    zoom: isSmallScreen ? 40 : 70,
-                    near: 0,
-                    far: 150
-                }}
-                dpr={dpr}
-            >
-                <Only if={Config.DEBUG}>
-                </Only>
+            <Suspense fallback={null}>
+                <Canvas
+                    gl={{
+                        antialias: false,
+                        depth: true,
+                        stencil: false,
+                        alpha: false,
+                        powerPreference: "high-performance",
+                        toneMapping: NoToneMapping
+                    }}
+                    style={{
+                        height: size[1],
+                        width: size[0],
+                        opacity: loaded ? 1 : 0,
+                        left: 0,
+                        top: 0,
+                        position: "fixed",
+                    }}
+                    shadows={{
+                        type: BasicShadowMap,
+                    }}
+                    orthographic
+                    camera={{
+                        zoom: isSmallScreen ? 40 : 70,
+                        near: 0,
+                        far: 150
+                    }}
+                    dpr={dpr}
+                >
+                    <EdgeOverlay />
+                    <Camera />
+                    <Lights />
 
-                <EdgeOverlay />
-                <Camera />
-                <Lights />
-
-                <Suspense fallback={null}>
                     <Models />
                     <World />
                     <Player />
-                </Suspense>
-            </Canvas>
+                </Canvas>
+            </Suspense>
         </>
     )
 }

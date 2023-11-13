@@ -12,31 +12,31 @@ export default function Floor4() {
                 receiveShadow
                 geometry={(nodes["Combined-Shape005"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial color="white" />
+                <MeshLambertFogMaterial isInstance={false} color="white" />
             </mesh>
             <mesh
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_1"] as Mesh).geometry}
-            >
-                <MeshLambertFogMaterial color={floorColorHi} />
+            >  
+                <MeshLambertFogMaterial isInstance={false} color={floorColorHi} />
             </mesh>
             <mesh
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_2"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial color="white" />
+                <MeshLambertFogMaterial isInstance={false} color="white" />
             </mesh>
             <mesh
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_3"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial color="white" />
+                <MeshLambertFogMaterial isInstance={false} color="white" />
             </mesh>
             <mesh
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_4"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial color={floorColor} />
+                <MeshLambertFogMaterial isInstance={false} color={floorColor} />
             </mesh>
         </group>
     )

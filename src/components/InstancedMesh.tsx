@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { setColorAt, setMatrixAt, setMatrixNullAt } from "../data/utils"
-import { ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
+import { BufferGeometry, ColorRepresentation, InstancedMesh as InstancedMeshThree, Material, Vector3 } from "three"
 import { Tuple3, Tuple4 } from "../types"
 import { useStore } from "../data/store"
 import { setInstance } from "../data/store/utils"
@@ -79,7 +79,7 @@ export default function InstancedMesh({
     userData = {}
 }: InstancedMeshProps) {
     let colorData = useMemo(() => new Float32Array(count * 3).fill(1), [])
-    let handleRef = useCallback((mesh: InstancedMeshThree) => {
+    let handleRef = useCallback((mesh: InstancedMeshThree<BufferGeometry, Material>) => { 
         if (mesh) {
             setInstance(name, mesh, count)
 
@@ -87,7 +87,7 @@ export default function InstancedMesh({
                 setMatrixAt({ instance: mesh, index: i, scale: 0 })
             }
         }
-    }, [])
+    }, [])  
 
     return (
         <instancedMesh

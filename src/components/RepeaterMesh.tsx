@@ -38,7 +38,7 @@ export function useRepeater(name: RepeaterName) {
         mesh: repeater,
         release
     }
-} 
+}
 
 interface RepeaterMeshProps {
     children: React.ReactNode
@@ -46,23 +46,23 @@ interface RepeaterMeshProps {
     count: number
 }
 
-export default function RepeaterMesh({ name, count, children }: RepeaterMeshProps) { 
-    let ref = useRef<Group>(null)
+export default function RepeaterMesh({ name, count, children }: RepeaterMeshProps) {
+    let [ref, setRef] = useState<Group | null>(null)
 
     useEffect(() => {
-        if (!ref.current) {
+        if (!ref) {
             return
-        } 
+        }
 
-        ref.current.children.forEach(i => {
-            i.visible = false
-        }) 
+        ref.children.forEach(i => {
+            i.visible = false 
+        })
 
-        setRepeater(name, ref.current.children, count)
-    }, [])
+        setRepeater(name, ref.children, count)
+    }, [ref])
 
     return (
-        <group ref={ref}>
+        <group ref={setRef}>
             {new Array(count).fill(null).map((i, index) => cloneElement(children as any, { key: index }))}
         </group>
     )

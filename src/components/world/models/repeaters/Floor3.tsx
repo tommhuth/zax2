@@ -11,7 +11,7 @@ export default function Floor3() {
                 receiveShadow
                 geometry={nodes.floor3.geometry}
             >
-                <MeshLambertFogMaterial color={floorColor} />
+                <MeshLambertFogMaterial isInstance={false} color={floorColor} />
             </mesh>
         </group>
     )
