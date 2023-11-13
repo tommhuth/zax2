@@ -10,7 +10,7 @@ import Lights from "./components/Lights"
 import { BasicShadowMap, NoToneMapping } from "three"
 import { dpr, isSmallScreen, pixelSize, useStore } from "./data/store"
 import Models from "./components/world/models/Models"
-import EdgeOverlay from "./components/EdgeOverlay" 
+import EdgeOverlay from "./components/EdgeOverlay"
 
 export default function Wrapper() {
     let getSize = () => [
@@ -18,10 +18,14 @@ export default function Wrapper() {
         Math.ceil(window.innerHeight / pixelSize) * pixelSize
     ]
     let [size, setSize] = useState(() => getSize())
-    let loaded = useStore(i => i.loaded) 
+    let loaded = useStore(i => i.loaded)
 
-    useEffect(()=> {
-        let update = () => setSize(getSize()) 
+    useEffect(() => {
+        let tid: ReturnType<typeof setTimeout>
+        let update = () => {
+            clearTimeout(tid)
+            tid = setTimeout(() => setSize(getSize()), 50)
+        }
 
         screen.orientation.addEventListener("change", update)
         window.addEventListener("resize", update)
