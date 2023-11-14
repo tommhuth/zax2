@@ -208,7 +208,7 @@ export function createPlane({
     targetY = y,
     speed = random.float(4, 5),
     fireFrequency = random.integer(550, 700),
-    takeoffDistance = random.integer(5, 15),
+    takeoffDistance = random.integer(2, 5),
 }: CreatePlaneParams) {
     let id = random.id()
     let size = [1, 1.5, 2] as Tuple3

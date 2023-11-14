@@ -19,20 +19,20 @@ export const turretParticleColor = "#e4f6ff" // "#529fbe" // "#141E46"
 export const deviceColor = "#e2eef5" // "#6fbad8" // "#141E46" 
 export const platformColor = "#e1f6ff" // "#6fbad8" // "#141E46" 
 
-export const floorColor = "#e7fffd" // "#d7dde8"
-export const floorColorHi = "#70c5f0"
+export const floorColor = "#ff00bf" // "#d7dde8"
+export const floorColorHi = "#6b1455"
 
-export const fogColorStart = "#fff"
+export const fogColorStart = "#ff00bf"
 export const fogColorEnd = "#0b9198"
 
-export const explosionStartColor = "#ffc400"
+export const explosionStartColor = "#ffe600"
 export const explosionMidColor = "#002aff"
-export const explosionEndColor = "#ff6600"
+export const explosionEndColor = "#ffffff"
 
-export const explosionColor = "#ff00aa"
+export const explosionColor = "#ffffff"
 
-export const shimmerColor = "#ff0077"
+export const shimmerColor = "#ffffff"
 
-export const plantColor = "#00ffd5"
-export const plantColorStart = new Color("#00927c")
-export const plantColorEnd = new Color("#00ffae") 
+export const plantColor = "#00c3ff"
+export const plantColorStart = new Color("#1800b5")
+export const plantColorEnd = new Color("#4ea1ff") 

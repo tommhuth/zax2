@@ -111,8 +111,8 @@ export default function Instances() {
                         transformed.y += cos((globalPosition.y) * .3 + uTime * timeScale) * heightScale * offsetSize * 1.25 * .5;  
                     `}
                     fragmentShader={glsl`
-                        vec3 start = mix(gl_FragColor.rgb, vec3(${plantColorStart.toArray().map(i => i + .001).join(", ")}), .25);
-                        vec3 end = mix(gl_FragColor.rgb, vec3(${plantColorEnd.toArray().map(i => i + .001).join(", ")}), .25);
+                        vec3 start = mix(gl_FragColor.rgb, vec3(${plantColorStart.toArray().map(i => i + .001).join(", ")}), .9);
+                        vec3 end = mix(gl_FragColor.rgb, vec3(${plantColorEnd.toArray().map(i => i + .001).join(", ")}), .9);
  
                         gl_FragColor.rgb = mix(start, end, easeInOutCubic(clamp(length(vPosition) / 5., 0., 1.)));
                     `}
@@ -142,7 +142,7 @@ export default function Instances() {
                     `}
                     fragmentShader={glsl`
                         float height = 1.75;
-                        vec3 start = mix(gl_FragColor.rgb, vec3(${plantColorStart.toArray().map(i => i + .001).join(", ")}), .2);
+                        vec3 start = mix(gl_FragColor.rgb, vec3(${plantColorStart.toArray().map(i => i + .001).join(", ")}), .9);
                         vec3 end = mix(gl_FragColor.rgb, vec3(${plantColorEnd.toArray().map(i => i + .001).join(", ")}), .9);
 
                         gl_FragColor.rgb = mix(start, end, (clamp((vPosition.y) / height, 0., 1.)));

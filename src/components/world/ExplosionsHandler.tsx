@@ -1,5 +1,5 @@
 import { startTransition, useEffect, useMemo, useRef } from "react"
-import { BufferAttribute, Color, Sprite } from "three"
+import { AdditiveBlending, BufferAttribute, Color, Sprite } from "three"
 import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
 import { useShader } from "../../data/hooks"
 import { useFrame, useLoader } from "@react-three/fiber"
@@ -8,6 +8,8 @@ import { TextureLoader } from "three/src/loaders/TextureLoader.js"
 import { useStore } from "../../data/store"
 import { removeExplosion } from "../../data/store/effects"
 import { explosionColor, explosionEndColor, explosionMidColor, explosionStartColor } from "../../data/theme"
+import random from "@huth/random"
+import easings from "../../shaders/easings.glsl"
 
 function easeOutQuart(x: number): number {
     return 1 - Math.pow(1 - x, 4)
@@ -27,11 +29,14 @@ function blend(values = [75, 100, 0], t = 0, threshold = .5) {
 export default function ExplosionsHandler() {
     let latestExplosion = useStore(i => i.effects.explosions[0])
     let glowMap = useLoader(TextureLoader, "/textures/glow.png")
-    let ref = useRef<Sprite>(null) 
+    let ref = useRef<Sprite>(null)
     let centerAttributes = useMemo(() => {
         return new Float32Array(new Array(100 * 3).fill(0))
     }, [])
     let lifetimeAttributes = useMemo(() => {
+        return new Float32Array(new Array(100).fill(0))
+    }, [])
+    let radiusAttributes = useMemo(() => {
         return new Float32Array(new Array(100).fill(0))
     }, [])
     let instance = useStore(i => i.instances.fireball?.mesh)
@@ -44,86 +49,60 @@ export default function ExplosionsHandler() {
         vertex: {
             head: glsl` 
                 attribute vec3 aCenter;   
+                attribute float aRadius;   
+                varying float vRadius;
                 varying float vDistance;
                 varying float vLifetime;
                 varying vec3 vPosition;
                 attribute float aLifetime;  
                 varying vec3 vGlobalNormal;  
-                
-                float easeInOutQuint(float x) {
-                    return x < 0.5 ? 16. * x * x * x * x * x : 1. - pow(-2. * x + 2., 5.) / 2.;
-                }
-
-                float easeInOutCubic(float x) {
-                    return x < 0.5 ? 4. * x * x * x : 1. - pow(-2. * x + 2., 3.) / 2.;
-                }
-
-                float easeOutQuint(float x) {
-                    return 1. - pow(1. - x, 5.);
-                }
-
+                 
+                ${easings}
             `,
             main: glsl`
-                vec4 globalPosition = instanceMatrix * vec4(transformed, 1.);  
-                float radius = 6.;
+                vec4 globalPosition = instanceMatrix * vec4(transformed, 1.);   
  
-                vDistance = clamp(length(globalPosition.xyz - aCenter) / radius, 0., 1.); // );
+                vDistance = clamp(length(globalPosition.xyz - aCenter) / aRadius, 0., 1.); // );
                 vLifetime = aLifetime;
-                vPosition = globalPosition.xyz;  
+                vPosition = globalPosition.xyz; 
+                vRadius = aRadius; 
             `
         },
         fragment: {
             head: glsl`  
                 varying float vDistance; 
                 varying float vLifetime;
+                varying float vRadius;
                 varying vec3 vPosition; 
                 uniform vec3 uStartColor; 
                 uniform vec3 uMidColor; 
                 uniform vec3 uEndColor;  
-                varying vec3 vGlobalNormal;  
-                
-                float easeInOutCubic(float x) {
-                    return x < 0.5 ? 4. * x * x * x : 1. - pow(-2. * x + 2., 3.) / 2.;
-                }
-
-                float easeOutQuart(float x) {
-                    return 1. - pow(1. - x, 2.);
-                }
-
-                float easeInCubic(float x) {
-                    return x * x * x;
-                }
+                varying vec3 vGlobalNormal;   
+                 
+                ${easings}
             `,
             main: glsl`     
-                /*
-                    vec3 c1 = mix(uStartColor, uMidColor, easeInOutCubic(vDistance));
-                    vec3 c2 = mix(c1, uEndColor, (vLifetime));
-                    vec3 cameraLook = vec3(-59.23724356957945, -50.000000000000014, -53.08744356953773);
-                    
-                    float a = clamp(-dot(vGlobalNormal, normalize(cameraLook)), 0., 1.);
-    
-                    vec3 xx = gl_FragColor.rgb;
-                    xx.r = 0.;
-                    xx.g *= a;
-                    xx.b *= a;
+                vec3 baseColor = mix(uEndColor, gl_FragColor.rgb, easeOutQuart(vDistance));
 
-                    gl_FragColor = vec4(xx, 1.);
-                */
-                    gl_FragColor = vec4(mix(gl_FragColor.rgb, uEndColor, 1. - vDistance), 1.);
+                gl_FragColor = vec4(baseColor, easeOutQuart(1. - vDistance));
             `
         }
-    }) 
+    })
 
     useEffect(() => {
         if (!instance || !latestExplosion) {
             return
         }
 
-        let attribute = instance.geometry.attributes.aCenter as BufferAttribute
+        let centerAttribute = instance.geometry.attributes.aCenter as BufferAttribute
+        let radiusAttribute = instance.geometry.attributes.aRadius as BufferAttribute
 
         for (let fireball of latestExplosion.fireballs) {
-            attribute.setXYZ(fireball.index, ...latestExplosion.position)
-            attribute.needsUpdate = true
+            centerAttribute.setXYZ(fireball.index, ...latestExplosion.position)
+            centerAttribute.needsUpdate = true
+
+            radiusAttribute.set([random.float(4, 7)], fireball.index)
+            radiusAttribute.needsUpdate = true
         }
     }, [latestExplosion])
 
@@ -201,23 +180,49 @@ export default function ExplosionsHandler() {
                     />
                     <instancedBufferAttribute
                         needsUpdate={true}
+                        attach="attributes-aRadius"
+                        args={[radiusAttributes, 1, false, 1]}
+                    />
+                    <instancedBufferAttribute
+                        needsUpdate={true}
                         attach="attributes-aLifetime"
                         args={[lifetimeAttributes, 1, false, 1]}
                     />
                 </sphereGeometry>
-                <meshPhongMaterial transparent onBeforeCompile={onBeforeCompile} color={explosionColor} />
+                <meshPhongMaterial
+                    transparent
+                    onBeforeCompile={onBeforeCompile}
+                    color={explosionColor}
+                    emissive={"#FFF"}
+                    emissiveIntensity={.35}
+                />
             </InstancedMesh>
 
             <sprite ref={ref} scale={10} >
                 <spriteMaterial
                     depthWrite={false}
-                    color={"#ff00d4"}
-                    
-
+                    color={"#fff"}
+                    blending={AdditiveBlending}
                     map={glowMap}
-                    transparent 
+                    transparent
                 />
             </sprite>
         </>
     )
 }
+
+
+/*
+    vec3 c1 = mix(uStartColor, uMidColor, easeInOutCubic(vDistance));
+    vec3 c2 = mix(c1, uEndColor, (vLifetime));
+    vec3 cameraLook = vec3(-59.23724356957945, -50.000000000000014, -53.08744356953773);
+    
+    float a = clamp(-dot(vGlobalNormal, normalize(cameraLook)), 0., 1.);
+ 
+    vec3 xx = gl_FragColor.rgb;
+    xx.r = 0.;
+    xx.g *= a;
+    xx.b *= a;
+
+    gl_FragColor = vec4(xx, 1.);
+*/

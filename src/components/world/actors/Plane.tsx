@@ -157,9 +157,11 @@ function Plane({
     // move
     useFrame((state, delta) => {
         if (instance && typeof index === "number" && !data.removed) {
-            let { world, player } = useStore.getState() 
+            let { world, player } = useStore.getState()
+            let playerZ = player.object?.position.z || -Infinity
+            let shouldMoveForward = targetY === startY || position.z - 20 < playerZ
 
-            position.z -= data.actualSpeed * ndelta(delta)
+            position.z -= shouldMoveForward ? data.actualSpeed * ndelta(delta) : 0
             aabb.setFromCenterAndSize(position, _size.set(...size))
 
             setMatrixAt({
@@ -175,11 +177,11 @@ function Plane({
             } else {
                 client.position = position.toArray()
                 grid.updateClient(client)
-            } 
+            }
         }
     })
 
-    useFrame((state, delta) => { 
+    useFrame((state, delta) => {
         if (health === 0) {
             if (!data.grounded) {
                 let nd = ndelta(delta)
@@ -208,13 +210,13 @@ function Plane({
             }
         } else {
             let t = clamp(data.time / data.liftOffDuration, 0, 1)
-            
+
             position.y = easeInOutCubic(t) * (targetY - startY) + startY
         }
-        
-        if (takeoffDistance > position.z) { 
-            data.time += delta * 1000 
-        } 
+
+        if (takeoffDistance > position.z) {
+            data.time += delta * 1000
+        }
     })
 
     return null
