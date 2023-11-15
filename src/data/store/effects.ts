@@ -5,6 +5,7 @@ import { Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
 import { clamp } from "../utils"
+import { easeInQuad, easeOutCubic, easeOutQuart } from "../shaping"
 
 function updateEffects(data: Partial<Store["effects"]>) {
     store.setState({
@@ -86,18 +87,18 @@ export function createExplosion({
     let shockwaveInstance = store.getState().instances.shockwave
     let { cameraShake, object } = store.getState().player
     let playerZ = object?.position.z || 0
-    let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 8, 0, .75)
+    let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 5, 0, 1)
 
-    radius *= random.float(1, 1.15)
+    radius *= random.float(1, 1.15) 
 
-    setCameraShake(Math.min(cameraShake + .15 + .25 * shake, 1)) 
+    setCameraShake(Math.min(cameraShake + easeOutCubic(shake), 1)) 
     updateEffects({
         explosions: [
             {
                 position,
                 id: random.id(),
                 shockwave: {
-                    lifetime: baseLifetime, //random.integer(baseLifetime * .65, baseLifetime * .75),
+                    lifetime: baseLifetime, 
                     radius: radius * random.float(5, 6),
                     time: 0,
                     index: shockwaveInstance.index.next(),

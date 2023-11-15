@@ -1,10 +1,18 @@
 export function easeOutQuart(x: number): number {
     return 1 - Math.pow(1 - x, 4)
 }
- 
+
 export function easeInQuint(x: number): number {
     return x * x * x
-} 
+}
+
+export function easeInQuad(x: number): number {
+    return x * x
+}
+
+export function easeOutCubic(x: number): number {
+    return 1 - Math.pow(1 - x, 3)
+}
 
 export function easeOutElastic(x: number): number {
     const c4 = (2 * Math.PI) / 3
