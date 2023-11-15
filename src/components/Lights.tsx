@@ -1,14 +1,12 @@
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
-import { DirectionalLight, PointLight } from "three"
+import { DirectionalLight } from "three"
 import { useStore } from "../data/store"
 
 export default function Lights() {
-    let lightRef = useRef<DirectionalLight>(null)
-    let explosionLightRef = useRef<PointLight>(null)
+    let lightRef = useRef<DirectionalLight>(null) 
     let { scene, viewport } = useThree()
-    let ticks = useRef(0)
-    let explosion = useStore(i => i.effects.explosions[0])
+    let ticks = useRef(0) 
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
 
     useEffect(() => {
@@ -17,18 +15,7 @@ export default function Lights() {
         }
 
         scene.add(lightRef.current.target)
-    }, [scene])
-
-    useEffect(() => {
-        if (explosionLightRef.current && explosion) {
-            explosionLightRef.current.intensity = 30
-            explosionLightRef.current.position.set(
-                explosion.position[0],
-                explosion.position[1] + 2,
-                explosion.position[2],
-            )
-        }
-    }, [explosion])
+    }, [scene]) 
 
     useFrame((state, delta) => {
         let player = useStore.getState().player.object
@@ -39,11 +26,7 @@ export default function Lights() {
             ticks.current = 0
         } else {
             ticks.current += delta * 1000
-        }
-
-        if (explosionLightRef.current) {
-            explosionLightRef.current.intensity *= .8
-        }
+        } 
     })
 
     return (
@@ -73,13 +56,8 @@ export default function Lights() {
                 shadow-camera-bottom={-diagonal * 1.75}
                 shadow-mapSize={[512, 512]}
                 shadow-bias={-0.001}
-            />
-            <pointLight
-                color={"blue"}
-                ref={explosionLightRef}
-                distance={8}
             /> 
-            <ambientLight intensity={.5} color={"#00bfff"} />
+            <hemisphereLight intensity={.5} color={"#00bfff"} groundColor={"#ff0000"} />
         </>
     )
 }

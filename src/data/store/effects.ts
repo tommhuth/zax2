@@ -82,7 +82,8 @@ export function createExplosion({
     fireballCount = 0, 
 }: CreateExplosionParams) {
     let baseLifetime = random.integer(1600, 1800)
-    let instance = store.getState().instances.fireball
+    let fireBallInstance = store.getState().instances.fireball
+    let shockwaveInstance = store.getState().instances.shockwave
     let { cameraShake, object } = store.getState().player
     let playerZ = object?.position.z || 0
     let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 8, 0, .75)
@@ -95,10 +96,16 @@ export function createExplosion({
             {
                 position,
                 id: random.id(),
+                shockwave: {
+                    lifetime: baseLifetime, //random.integer(baseLifetime * .65, baseLifetime * .75),
+                    radius: radius * random.float(5, 6),
+                    time: 0,
+                    index: shockwaveInstance.index.next(),
+                },
                 fireballs: [
                     {
                         id: random.id(),
-                        index: instance.index.next(),
+                        index: fireBallInstance.index.next(),
                         position,
                         startRadius: radius * .25,
                         maxRadius: radius,
@@ -109,7 +116,7 @@ export function createExplosion({
                         let tn = index / (fireballCount - 1)
 
                         return {
-                            index: instance.index.next(),
+                            index: fireBallInstance.index.next(),
                             id: random.id(),
                             position: [
                                 fireballStart[0] + tn * fireballDirection[0] + random.float(-.25, .25),
@@ -126,7 +133,7 @@ export function createExplosion({
                         let startRadius = (index / list.length) * (radius * 1.5 - radius * .25) + radius * .25
 
                         return {
-                            index: instance.index.next(),
+                            index: fireBallInstance.index.next(),
                             position: [
                                 random.pick(-radius, radius) + position[0],
                                 random.float(0, radius * 3) + position[1],
