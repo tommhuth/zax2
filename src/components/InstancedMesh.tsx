@@ -4,7 +4,7 @@ import { BufferGeometry, ColorRepresentation, InstancedMesh as InstancedMeshThre
 import { Tuple3, Tuple4 } from "../types"
 import { useStore } from "../data/store"
 import { setInstance } from "../data/store/utils"
-import { InstancedName } from "../data/types"
+import { InstanceName } from "../data/types"
 
 interface UseInstanceOptions {
     reset?: boolean
@@ -14,7 +14,7 @@ interface UseInstanceOptions {
     position?: Vector3 | Tuple3
 }
 
-export function useInstance(name: InstancedName, {
+export function useInstance(name: InstanceName, {
     reset = true,
     color,
     scale,
@@ -65,7 +65,7 @@ interface InstancedMeshProps {
     castShadow?: boolean
     colors?: boolean
     count: number
-    name: InstancedName
+    name: InstanceName
     userData?: Record<string, any>
 }
 

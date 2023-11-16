@@ -2,7 +2,7 @@ import { useFrame } from "@react-three/fiber"
 import { startTransition, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { Vector3 } from "three"
 import { useStore } from "../../../data/store"
-import { Barrel, InstancedName } from "../../../data/types"
+import { Barrel, InstanceName } from "../../../data/types"
 import { useInstance } from "../../InstancedMesh"
 import random from "@huth/random"
 import Config from "../../../data/Config"
@@ -26,9 +26,10 @@ function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({
         position: [position.x, 0, position.z],
         count: 10,
-        radius: .65,
+        radius: random.float(.65, .75),
         fireballPath: [[position.x, 1, position.z], [0, 4, 0]],
         fireballCount: random.pick(0, 5),
+        shockwave: false,
     })
     createParticles({
         position: [position.x, 1, position.z],
@@ -55,7 +56,7 @@ export default function Barrel({
             .fill(null)
             .map((i, index, list) => (index / list.length) * Math.PI * 2)
     ))
-    let model: InstancedName = useMemo(() => {
+    let model: InstanceName = useMemo(() => {
         return random.pick("barrel1", "barrel2", "barrel3", "barrel4")
     }, [])
     let [index, instance] = useInstance(model, {

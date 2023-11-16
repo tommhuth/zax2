@@ -1,22 +1,23 @@
 import { startTransition, useEffect, useMemo, useRef } from "react"
-import { AdditiveBlending, BufferAttribute, Color, Sprite } from "three"
+import { AdditiveBlending, BufferAttribute, Color, Sprite, Vector3 } from "three"
 import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
 import { useShader } from "../../data/hooks"
-import { useFrame, useLoader } from "@react-three/fiber"
+import { useFrame, useLoader, useThree } from "@react-three/fiber"
 import InstancedMesh from "../InstancedMesh"
 import { TextureLoader } from "three/src/loaders/TextureLoader.js"
 import { useStore } from "../../data/store"
 import { removeExplosion } from "../../data/store/effects"
 import { explosionColor, explosionEndColor, explosionMidColor, explosionStartColor } from "../../data/theme"
-import random from "@huth/random"
 import easings from "../../shaders/easings.glsl"
-import { blend, easeInQuint, easeOutElastic, easeOutQuart } from "../../data/shaping"
+import noise from "../../shaders/noise.glsl"
+import { blend, easeInQuint, easeOutExpo, easeOutQuart } from "../../data/shaping"
 
 export default function ExplosionsHandler() {
-    let count = 100
+    let count = 200
     let latestExplosion = useStore(i => i.effects.explosions[0])
     let glowMap = useLoader(TextureLoader, "/textures/glow.png")
     let glowRef = useRef<Sprite>(null)
+    let {camera} = useThree()
     let opacityAttributes = useMemo(() => {
         return new Float32Array(new Array(count).fill(0))
     }, [count])
@@ -30,11 +31,12 @@ export default function ExplosionsHandler() {
         return new Float32Array(new Array(count).fill(0))
     }, [count])
     let instance = useStore(i => i.instances.fireball?.mesh)
-    let { onBeforeCompile } = useShader({
+    let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
             uStartColor: { value: new Color(explosionStartColor) },
             uMidColor: { value: new Color(explosionMidColor) },
-            uEndColor: { value: new Color(explosionEndColor) },
+            uEndColor: { value: new Color(explosionEndColor) }, 
+            uCameraDirection: { value: new Vector3() }, 
         },
         vertex: {
             head: glsl` 
@@ -43,7 +45,7 @@ export default function ExplosionsHandler() {
                 varying float vRadius;
                 varying float vDistance;
                 varying float vLifetime;
-                varying vec3 vPosition;
+                varying vec3 vGlobalPosition;
                 attribute float aLifetime;  
                 varying vec3 vGlobalNormal;  
                  
@@ -54,8 +56,9 @@ export default function ExplosionsHandler() {
  
                 vDistance = clamp(length(globalPosition.xyz - aCenter) / aRadius, 0., 1.); // );
                 vLifetime = aLifetime;
-                vPosition = globalPosition.xyz; 
+                vGlobalPosition = globalPosition.xyz; 
                 vRadius = aRadius; 
+                vGlobalNormal = normal; // (instanceMatrix * vec4(normal, .1)).xyz;
             `
         },
         fragment: {
@@ -63,18 +66,26 @@ export default function ExplosionsHandler() {
                 varying float vDistance; 
                 varying float vLifetime;
                 varying float vRadius;
-                varying vec3 vPosition; 
+                varying vec3 vGlobalPosition; 
                 uniform vec3 uStartColor; 
                 uniform vec3 uMidColor; 
                 uniform vec3 uEndColor;  
                 varying vec3 vGlobalNormal;   
+                uniform vec3 uCameraDirection;
                  
                 ${easings}
+                ${noise}
             `,
             main: glsl`     
-                vec3 baseColor = mix(uEndColor, gl_FragColor.rgb, easeOutQuart(vDistance));
-
-                gl_FragColor = vec4(baseColor, easeOutQuart(1. - vDistance));
+                vec3 baseColor = mix(uEndColor, gl_FragColor.rgb, easeOutQuart(vDistance)); 
+                vec3 cam = vec3(-57.2372, 50., -61.237);
+                float angleOpacity = 1. - clamp(1. - dot(normalize(cam), vGlobalNormal), .0, 1.);
+                float noiseEffect = (noise(vGlobalPosition * .85) + 1.) / 2.;
+ 
+                gl_FragColor = vec4(
+                    mix(baseColor, vec3(1., .0, .79), easeInCubic(noiseEffect) * .6), 
+                    easeOutQuart(1. - vDistance) //(easeOutQuart(angleOpacity) * anglee) //     - 
+                );
             `
         }
     })
@@ -102,12 +113,13 @@ export default function ExplosionsHandler() {
             main: glsl`      
                 
                 gl_FragColor = vec4(
-                    mix(vec3(.0, 1., 0.), vec3(0., 0., 1.), easeInQuart(vDistanceFromCenter)), 
+                    mix(vec3(.0, .0, 1.), vec3(1., 1., 1.), 1. - easeOutQuart(vDistanceFromCenter)), 
+
                     easeInCubic(vOpacity * vDistanceFromCenter)
                 ); 
             `
         }
-    })
+    })  
 
     useEffect(() => {
         if (!instance || !latestExplosion) {
@@ -121,43 +133,54 @@ export default function ExplosionsHandler() {
             centerAttribute.setXYZ(fireball.index, ...latestExplosion.position)
             centerAttribute.needsUpdate = true
 
-            radiusAttribute.set([random.float(4, 7)], fireball.index)
+            radiusAttribute.set([latestExplosion.radius], fireball.index)
             radiusAttribute.needsUpdate = true
         }
     }, [latestExplosion])
+
+
+    useFrame(()=> {
+        uniforms.uCameraDirection.value = camera.position
+        uniforms.uCameraDirection.needsUpdate = true
+    })
 
     useFrame((state, delta) => {
         if (!instance) {
             return
         }
-
-        let explosions = useStore.getState().effects.explosions
-        let shockwave = useStore.getState().instances.shockwave
+        let { 
+            effects: { explosions }, 
+            instances: { shockwave: shockwaveInstance } 
+        } = useStore.getState()
         let dead: string[] = []
 
-        for (let explosion of explosions) {
-            if (explosion.fireballs[0].time > explosion.fireballs[0].lifetime) {
+        for (let {shockwave, ...explosion } of explosions) {
+            let fireballs = explosion.fireballs
+            let shockwaveDone = shockwave ? shockwave.time > shockwave.lifetime : true
+
+            if (fireballs[0].time > fireballs[0].lifetime && shockwaveDone) {
                 dead.push(explosion.id)
                 continue
             }
 
-            let t = clamp(explosion.shockwave.time / (explosion.shockwave.lifetime), 0, 1) 
+            if (shockwave) {
+                let t = clamp(shockwave.time / (shockwave.lifetime), 0, 1)
+                let opacityAttribute = shockwaveInstance.mesh.geometry.attributes.aOpacity as BufferAttribute
+    
+                opacityAttribute.set([easeInQuint(1 - t)], shockwave.index)
+                opacityAttribute.needsUpdate = true
+    
+                setMatrixAt({
+                    instance: shockwaveInstance.mesh,
+                    index: shockwave.index,
+                    position: [explosion.position[0], explosion.position[1] + 1, explosion.position[2]],
+                    scale: easeOutExpo(t) * shockwave.radius + 2,
+                })
+    
+                shockwave.time += ndelta(delta) * 1000
+            }
 
-            let opacityAttribute = shockwave.mesh.geometry.attributes.aOpacity as BufferAttribute
-
-            opacityAttribute.set([easeInQuint(1 - t)], explosion.shockwave.index)
-            opacityAttribute.needsUpdate = true
-
-            setMatrixAt({
-                instance: shockwave.mesh,
-                index: explosion.shockwave.index,
-                position: [explosion.position[0], explosion.position[1] + 2, explosion.position[2]],
-                scale: easeOutElastic(t) * explosion.shockwave.radius + .1,
-            })
-
-            explosion.shockwave.time += ndelta(delta) * 1000 
-
-            for (let sphere of explosion.fireballs) {
+            for (let sphere of fireballs) {
                 let t = clamp(sphere.time / sphere.lifetime, 0, 1)
                 let scale = blend([sphere.startRadius, sphere.maxRadius, 0], easeOutQuart(t))
 
@@ -228,6 +251,7 @@ export default function ExplosionsHandler() {
                     onBeforeCompile={shockwaveShader.onBeforeCompile}
                 />
             </InstancedMesh>
+
             <InstancedMesh
                 castShadow={false}
                 receiveShadow={false}
@@ -256,7 +280,7 @@ export default function ExplosionsHandler() {
                     onBeforeCompile={onBeforeCompile}
                     color={explosionColor}
                     emissive={"#FFF"}
-                    emissiveIntensity={.35}
+                    emissiveIntensity={.45}
                 />
             </InstancedMesh>
 

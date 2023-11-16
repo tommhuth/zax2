@@ -27,8 +27,9 @@ function explode(position: Vector3, size: Tuple3) {
     })
     createExplosion({
         position: [position.x, 0, position.z],
-        count: 10,
-        radius: .65
+        count: 16,
+        radius: random.float(.6, .7),
+        shockwave: false,
     })
     createParticles({
         position: [position.x, 0, position.z],

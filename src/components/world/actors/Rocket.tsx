@@ -37,21 +37,23 @@ function explode(position: Vector3, size: Tuple3) {
             normal: [0, 1, 0],
             normalOffset: [[-.5, .5], [0, 0], [-.5, .5]],
             count: [10, 15],
-            radius: [.1, .45],
+            radius: [.2, .6],
             color: "#fff",
         })
 
         createExplosion({
             position: [position.x, 0, position.z],
-            count: 10,
+            count: 16,
+            shockwave: false,
             radius: random.float(.65, .75),
-            fireballCount: 5,
-            fireballPath: [[position.x, 0, position.z], [0, 7, 0]]
+            fireballCount: 8,
+            fireballPath: [[position.x, 0, position.z], [0, 6, 0]]
         })
     } else {
-        let explosions: [delay: number, offset: Tuple3, radius: number][] = [
+        type ExplosionPart = [delay: number, offset: Tuple3, radius: number]
+        let explosions: ExplosionPart[] = [
             [125, [.2, size[1] / 2 - .2, .3], .2],
-            [0, [-.2, -size[1] / 2, -.25], .35]
+            [0, [-.2, -size[1] / 2, -.25], .3]
         ] 
 
         for (let [delay, [x, y, z], radius] of explosions) {
@@ -59,6 +61,7 @@ function explode(position: Vector3, size: Tuple3) {
                 createExplosion({
                     position: [position.x + x, position.y + y, position.z + z],
                     count: 10,
+                    shockwave: false,
                     radius,
                 })
             }, delay)
@@ -67,8 +70,8 @@ function explode(position: Vector3, size: Tuple3) {
         setTimeout(() => {
             createExplosion({
                 position: [position.x, position.y, position.z],
-                count: 16,
-                radius: random.float(.6, .8),
+                count: 20,
+                radius: random.float(.8, 1),
             }) 
 
             createParticles({

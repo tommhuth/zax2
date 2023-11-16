@@ -4,12 +4,13 @@ import { Tuple2, Tuple3 } from "../types"
 import Counter from "./Counter"
 import { Client } from "./SpatialHashGrid3D"
 
-export type InstancedName = "line" | "box" | "sphere" | "device"
+export type InstanceName = "line" | "box" | "sphere" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball"
     | "turret" | "rocket" | "platform" | "cylinder" | "shimmer"
     | "grass" | "plant" | "shockwave"
 
-export type RepeaterName = "building1" | "building2" | "building3" | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"  
+export type RepeaterName = "building1" | "building2" | "building3"
+    | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
 
 export interface Fireball {
     isPrimary?: boolean
@@ -24,13 +25,14 @@ export interface Fireball {
 
 export interface Explosion {
     position: Tuple3
+    radius: number
     id: string
     shockwave: {
-        radius: number 
-        lifetime: number 
-        time: number 
+        radius: number
+        lifetime: number
+        time: number
         index: number
-    }
+    } | null
     fireballs: Fireball[]
 }
 

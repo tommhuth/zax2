@@ -2,7 +2,7 @@ import { Frustum, Object3D, Vector3 } from "three"
 import {create} from "zustand"
 import { Tuple3 } from "../types"
 import {
-    Barrel, Building, Bullet, Explosion, Instance, InstancedName, Particle,
+    Barrel, Building, Bullet, Explosion, Instance, InstanceName, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
 } from "./types"
 import { makeStart } from "./generators"
@@ -32,7 +32,7 @@ export interface Store {
         shimmer: Shimmer[]
         explosions: Explosion[]
     }
-    instances: Record<InstancedName, Instance>
+    instances: Record<InstanceName, Instance>
     repeaters: Record<string, RepeaterMesh>
     player: {
         speed: number

@@ -1,10 +1,10 @@
 import { useInstance } from "../../InstancedMesh"
-import { Building, InstancedName } from "../../../data/types"
+import { Building, InstanceName } from "../../../data/types"
 import random from "@huth/random"
 import { buildingBase } from "../../../data/theme"
 
 export default function Building({ size, position }: Building) {
-    let type: InstancedName = size[1] > 1 ? "device" : "device"
+    let type: InstanceName = size[1] > 1 ? "device" : "device"
 
     useInstance(type, {
         color: buildingBase,

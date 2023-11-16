@@ -6,10 +6,14 @@ float easeInOutSine(float x) { return -(cos(3.14159 * x) - 1.) / 2.; }
 
 float easeInOutQuad(float x) {
   return x < 0.5 ? 2. * x * x : 1. - pow(-2. * x + 2., 2.) / 2.;
-}
+} 
 
 float easeInQuart(float x) {
   return x * x * x * x;
+}
+
+float easeOutQuad(float x) {
+  return 1. - (1. - x) * (1. - x);
 }
 
 float easeInQuad(float x) { return x * x; }

@@ -26,8 +26,9 @@ function easeInOutCubic(x: number): number {
 function explode(position: Vector3) {
     createExplosion({
         position: [position.x, position.y - 1, position.z],
-        count: 10,
-        radius: .4
+        count: 16,
+        radius: .55,
+        shockwave: false,
     })
     createParticles({
         position: position.toArray(),
@@ -197,10 +198,11 @@ function Plane({
                     startTransition(() => {
                         createExplosion({
                             position: [position.x, -.5, position.z],
-                            count: 8,
-                            radius: .3,
+                            count: 18, 
+                            shockwave: false,
+                            radius: .6,
                             fireballCount: 5,
-                            fireballPath: [[position.x, 0, position.z], [0, 0, 2]]
+                            fireballPath: [[position.x, 0, position.z], [0, 4, 0]]
                         })
                     })
                 }
