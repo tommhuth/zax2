@@ -80,10 +80,10 @@ export default function ExplosionsHandler() {
                 vec3 baseColor = mix(uEndColor, gl_FragColor.rgb, easeOutQuart(vDistance)); 
                 vec3 cam = vec3(-57.2372, 50., -61.237);
                 float angleOpacity = 1. - clamp(1. - dot(normalize(cam), vGlobalNormal), .0, 1.);
-                float noiseEffect = (noise(vGlobalPosition * .85) + 1.) / 2.;
+                float noiseEffect = (noise(vGlobalPosition * .65) + 1.) / 2.;
  
                 gl_FragColor = vec4(
-                    mix(baseColor, vec3(1., .0, .79), easeInCubic(noiseEffect) * .6), 
+                    mix(baseColor, vec3(1., .0, .79), easeInCubic(noiseEffect) * .6) * 1.05, 
                     easeOutQuart(1. - vDistance) //(easeOutQuart(angleOpacity) * anglee) //     - 
                 );
             `
