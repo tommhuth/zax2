@@ -3,7 +3,7 @@ import { Color, ColorRepresentation, Euler, InstancedMesh, Matrix4, Quaternion, 
 import { Tuple3, Tuple4 } from "../types"
 
 export function ndelta(delta: number) {
-    let nDelta = clamp(delta, 1 / 120, 1 / 30)
+    let nDelta = clamp(delta, 0, 1 / 30)
 
     return nDelta
 }

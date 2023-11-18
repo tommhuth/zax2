@@ -7,7 +7,7 @@ import { Client } from "./SpatialHashGrid3D"
 export type InstanceName = "line" | "box" | "sphere" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball"
     | "turret" | "rocket" | "platform" | "cylinder" | "shimmer"
-    | "grass" | "plant" | "shockwave"
+    | "grass" | "plant" | "shockwave" | "blast"
 
 export type RepeaterName = "building1" | "building2" | "building3"
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
@@ -27,6 +27,12 @@ export interface Explosion {
     position: Tuple3
     radius: number
     id: string
+    blast: {
+        radius: number
+        lifetime: number
+        time: number
+        index: number
+    }
     shockwave: {
         radius: number
         lifetime: number
@@ -48,7 +54,7 @@ export interface Rocket {
 export interface Shimmer {
     position: Vector3
     id: string
-    speed: Tuple3
+    speed: Vector3
     index: number
     time: number
     gravity: number

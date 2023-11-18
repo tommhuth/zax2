@@ -5,7 +5,7 @@ import { Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
 import { clamp } from "../utils"
-import { easeInQuad, easeOutCubic, easeOutQuart } from "../shaping"
+import { easeOutCubic } from "../shaping"
 
 function updateEffects(data: Partial<Store["effects"]>) {
     store.setState({
@@ -50,10 +50,10 @@ export function createShimmer({
                     index: instance.index.next(),
                     opacity: random.float(.4, 1),
                     gravity: random.float(.1, 1.5),
-                    speed: speed.toArray(),
+                    speed,
                     time: random.integer(-400, 0),
                     radius: random.float(...radius),
-                    lifetime: random.integer(1500, 6000),
+                    lifetime: random.integer(2500, 5000),
                     friction: random.float(.2, .6),
                     position: new Vector3(...position),
                 }
@@ -88,6 +88,7 @@ export function createExplosion({
     let baseLifetime = random.integer(1600, 1800)
     let fireBallInstance = store.getState().instances.fireball
     let shockwaveInstance = store.getState().instances.shockwave
+    let blastInstance = store.getState().instances.blast
     let { cameraShake, object } = store.getState().player
     let playerZ = object?.position.z || 0
     let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 5, 0, 1) 
@@ -98,7 +99,13 @@ export function createExplosion({
             {
                 position,
                 id: random.id(),
-                radius: radius * 7 + (fireballCount ? 1.5 : 0),
+                radius: radius * 7 + (fireballCount ? 1.5 : 0), 
+                blast: { 
+                    lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5), 
+                    radius: radius * 5,
+                    time: 0, 
+                    index: blastInstance.index.next(),
+                },
                 shockwave: shockwave ? {
                     lifetime: random.float(baseLifetime * 1.15, baseLifetime * 1.5), 
                     radius: radius * random.float(3, 5),

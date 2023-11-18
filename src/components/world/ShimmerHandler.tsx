@@ -4,8 +4,8 @@ import InstancedMesh from "../InstancedMesh"
 import { startTransition, useMemo } from "react"
 import { useStore } from "../../data/store"
 import { removeShimmer } from "../../data/store/effects"
-import { shimmerColor } from "../../data/theme" 
-import { useShader } from "../../data/hooks" 
+import { shimmerColor } from "../../data/theme"
+import { useShader } from "../../data/hooks"
 import { BufferAttribute } from "three"
 import { easeInQuad } from "../../data/shaping"
 
@@ -14,8 +14,8 @@ export default function ShimmerHandler() {
     let player = useStore(i => i.player.object)
     let count = 100
     let opacityData = useMemo(() => new Float32Array(count).fill(0), [])
-    let getDistanceTo = (value: number, prop: "x" | "y" | "z", threshold = 4.5) => {
-        return player ? 1 - clamp(Math.abs(value - player.position[prop]) / threshold, 0, 1) : 0
+    let getDistanceTo = (length: number, threshold = 4) => {
+        return 1 - clamp(length / threshold, 0, 1)
     }
     let { onBeforeCompile } = useShader({
         vertex: {
@@ -52,36 +52,29 @@ export default function ShimmerHandler() {
                 continue
             }
 
+            let scale = (1 - clamp(shimmer.time / shimmer.lifetime, 0, 1)) * shimmer.radius
             let opacityAttribute = instance.geometry.attributes.aOpacity as BufferAttribute
+            let explodeEffect = shimmer.time > 0 ? easeInQuad(1 - clamp(shimmer.time / (shimmer.lifetime * .25), 0, 1)) : 0
+            let dragEffect = getDistanceTo(shimmer.position.distanceToSquared(player.position))
 
             opacityAttribute.set([shimmer.opacity * (1 - clamp(shimmer.time / shimmer.lifetime, 0, 1))], shimmer.index)
             opacityAttribute.needsUpdate = true
 
-            let explodeEffect = shimmer.time > 0 ? easeInQuad(1 - clamp(shimmer.time / (shimmer.lifetime * .25), 0, 1)) : 0
-            let scale = (1 - clamp(shimmer.time / shimmer.lifetime, 0, 1)) * shimmer.radius
-            let dragEffect = getDistanceTo(shimmer.position.x, "x")
-                * getDistanceTo(shimmer.position.y, "y")
-                * getDistanceTo(shimmer.position.z, "z")
+            shimmer.position.x += shimmer.speed.x * explodeEffect * d * shimmer.friction * 5
+            shimmer.position.y += shimmer.speed.y * explodeEffect * d * shimmer.friction * 5
+            shimmer.position.z += shimmer.speed.z * explodeEffect * d * shimmer.friction * 5
 
-            shimmer.position.x += shimmer.speed[0] * explodeEffect * d * shimmer.friction * 5
-            shimmer.position.y += shimmer.speed[1] * explodeEffect * d * shimmer.friction * 5
-            shimmer.position.z += shimmer.speed[2] * explodeEffect * d * shimmer.friction * 5
-
-            shimmer.position.z +=  (dragEffect) * d * 8
+            shimmer.position.z += (dragEffect) * d * 8
             shimmer.position.y -= shimmer.gravity * (1 - explodeEffect) * d
             shimmer.position.y = Math.max(shimmer.position.y, shimmer.radius)
 
             shimmer.time += d * 1000
 
-            if (shimmer.time < 0) {
-                scale = 0
-            }
-
             setMatrixAt({
                 instance,
                 index: shimmer.index,
                 position: shimmer.position.toArray(),
-                scale
+                scale: shimmer.time < 0 ? 0 : scale
             })
         }
 

@@ -24,9 +24,7 @@ export const floorColorHi = "#6b1455"
 
 export const fogColorStart = "#ff00bf"
 export const fogColorEnd = "#0b9198"
-
-export const explosionStartColor = "#ffe600"
-export const explosionMidColor = "#002aff"
+ 
 export const explosionEndColor = "#ffffff"
 
 export const explosionColor = "#ffffff"
