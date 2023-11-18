@@ -1,25 +1,41 @@
-import { clamp, ndelta, setMatrixAt } from "../../data/utils"
+import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
 import { useFrame } from "@react-three/fiber"
 import InstancedMesh from "../InstancedMesh"
-import { startTransition } from "react"
+import { startTransition, useMemo } from "react"
 import { useStore } from "../../data/store"
 import { removeShimmer } from "../../data/store/effects"
-import { shimmerColor } from "../../data/theme"
-
-function easeInOutCubic(x: number): number {
-    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
-}
-
-function easeInQuad(x: number): number {
-    return x * x
-}
+import { shimmerColor } from "../../data/theme" 
+import { useShader } from "../../data/hooks" 
+import { BufferAttribute } from "three"
+import { easeInQuad } from "../../data/shaping"
 
 export default function ShimmerHandler() {
     let instance = useStore(i => i.instances.shimmer?.mesh)
     let player = useStore(i => i.player.object)
-    let getDistanceTo = (value: number, prop: "x" | "y" | "z", threshold = 3.5) => {
+    let count = 100
+    let opacityData = useMemo(() => new Float32Array(count).fill(0), [])
+    let getDistanceTo = (value: number, prop: "x" | "y" | "z", threshold = 4.5) => {
         return player ? 1 - clamp(Math.abs(value - player.position[prop]) / threshold, 0, 1) : 0
-    } 
+    }
+    let { onBeforeCompile } = useShader({
+        vertex: {
+            head: glsl`
+                varying float vOpacity;
+                attribute float aOpacity;
+            `,
+            main: glsl`
+                vOpacity = aOpacity;
+            `
+        },
+        fragment: {
+            head: glsl` 
+                varying float vOpacity;
+            `,
+            main: glsl`
+                gl_FragColor.a = vOpacity;
+            `
+        }
+    })
 
     useFrame((state, delta) => {
         if (!instance || !player) {
@@ -36,6 +52,11 @@ export default function ShimmerHandler() {
                 continue
             }
 
+            let opacityAttribute = instance.geometry.attributes.aOpacity as BufferAttribute
+
+            opacityAttribute.set([shimmer.opacity * (1 - clamp(shimmer.time / shimmer.lifetime, 0, 1))], shimmer.index)
+            opacityAttribute.needsUpdate = true
+
             let explodeEffect = shimmer.time > 0 ? easeInQuad(1 - clamp(shimmer.time / (shimmer.lifetime * .25), 0, 1)) : 0
             let scale = (1 - clamp(shimmer.time / shimmer.lifetime, 0, 1)) * shimmer.radius
             let dragEffect = getDistanceTo(shimmer.position.x, "x")
@@ -46,7 +67,7 @@ export default function ShimmerHandler() {
             shimmer.position.y += shimmer.speed[1] * explodeEffect * d * shimmer.friction * 5
             shimmer.position.z += shimmer.speed[2] * explodeEffect * d * shimmer.friction * 5
 
-            shimmer.position.z -= easeInOutCubic(dragEffect) * d * 5
+            shimmer.position.z +=  (dragEffect) * d * 8
             shimmer.position.y -= shimmer.gravity * (1 - explodeEffect) * d
             shimmer.position.y = Math.max(shimmer.position.y, shimmer.radius)
 
@@ -74,14 +95,18 @@ export default function ShimmerHandler() {
             castShadow={false}
             receiveShadow={false}
             name="shimmer"
-            count={100}
+            count={count}
             colors={false}
         >
             <meshBasicMaterial
                 attach={"material"}
                 color={shimmerColor}
+                transparent
+                onBeforeCompile={onBeforeCompile}
             />
-            <sphereGeometry args={[1, 6, 6]} />
+            <sphereGeometry args={[1, 6, 6]} >
+                <instancedBufferAttribute attach={"attributes-aOpacity"} args={[opacityData, 1, false, 1]} />
+            </sphereGeometry>
         </InstancedMesh>
     )
 }

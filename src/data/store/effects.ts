@@ -43,17 +43,18 @@ export function createShimmer({
                 let speed = offsetPosition.clone()
                     .sub(new Vector3(...position))
                     .normalize()
-                    .multiplyScalar(4)
+                    .multiplyScalar(5)
 
                 return {
                     id: random.id(),
                     index: instance.index.next(),
+                    opacity: random.float(.4, 1),
                     gravity: random.float(.1, 1.5),
                     speed: speed.toArray(),
-                    time: random.integer(-300, -250),
+                    time: random.integer(-400, 0),
                     radius: random.float(...radius),
                     lifetime: random.integer(1500, 6000),
-                    friction: random.float(.3, .5),
+                    friction: random.float(.2, .6),
                     position: new Vector3(...position),
                 }
             })

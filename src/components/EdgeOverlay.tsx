@@ -3,10 +3,8 @@ import { useStore } from "../data/store"
 import { useLayoutEffect, useRef } from "react"
 import { Group } from "three"
 import animate from "@huth/animate"
+import { easeOutCubic } from "../data/shaping"
 
-function easeOutCubic(x: number): number {
-    return 1 - Math.pow(1 - x, 5)
-}
 
 export default function EdgeOverlay() {
     let groupRef = useRef<Group>(null)

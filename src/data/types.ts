@@ -54,6 +54,7 @@ export interface Shimmer {
     gravity: number
     friction: number
     lifetime: number
+    opacity: number
     radius: number
 }
 
