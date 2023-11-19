@@ -17,12 +17,12 @@ export default function Grass({
 
     useEffect(() => {
         if (typeof index === "number") {
-            let flip = random.pick(-1, 1)
+            let flip = 1 // random.pick(-1, 1)
 
             setMatrixAt({
                 index,
                 instance,
-                rotation: [0, random.pick(-.5, .25, 0, .25, .5), 0],
+                // rotation: [0, random.pick(-.5, .25, 0, .25, .5), 0],
                 scale: [flip, 1.75, flip],
                 position: [position[0], position[1], partPosition[2] + position[2]]
             })

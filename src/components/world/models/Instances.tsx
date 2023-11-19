@@ -93,6 +93,7 @@ export default function Instances() {
                 <primitive object={(plant.nodes.plant as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial
                     usesTime
+                    usesPlayerPosition
                     color={plantColor}
                     side={DoubleSide}
                     vertexShader={glsl`
@@ -130,12 +131,24 @@ export default function Instances() {
                     usesTime
                     color={plantColor}
                     side={DoubleSide}
+                    usesPlayerPosition
                     transparent
                     vertexShader={glsl`
                         float height = 1.75;
                         float heightScale = easeInQuad(clamp(position.y / height, 0., 1.));
                         float offsetSize = .4;
                         float timeScale = 8.;
+                        vec3 playerPosition = vec3(uPlayerPosition.x, vGlobalPosition.y, uPlayerPosition.z);
+                        vec3 offsetNormal = normalize(vGlobalPosition - playerPosition);
+                        float playerRadius = 6.;
+                        float offsetEffect = 1. - clamp(length(playerPosition - vGlobalPosition) / playerRadius, 0., 1.);
+                        float offsetHeightEffect = 1. - clamp((uPlayerPosition.y - 1.) / (height * 2. - 1.), 0., 1.);
+
+                        transformed += offsetNormal 
+                            * easeInCubic(offsetEffect) 
+                            * easeOutCubic(offsetHeightEffect) 
+                            * clamp(position.y / height, 0., 1.) 
+                            * 2.; 
 
                         transformed.x += cos((globalPosition.x) * .5 + uTime * timeScale) * heightScale * offsetSize;
                         transformed.x += cos((globalPosition.z) * .4 + uTime * timeScale) * heightScale * 1.1 * offsetSize; 

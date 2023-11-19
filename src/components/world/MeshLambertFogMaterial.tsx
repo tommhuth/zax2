@@ -1,24 +1,28 @@
-import { Color, MeshLambertMaterial } from "three"
+import { Color, MeshLambertMaterial, Vector3 } from "three"
 import { useShader } from "../../data/hooks"
 import { bcolor, fogColorEnd, fogColorStart } from "../../data/theme"
 import easings from "../../shaders/easings.glsl"
 import { glsl } from "../../data/utils"
 import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
+import { useStore } from "../../data/store"
 
 export function MeshLambertFogMaterial({
     color = bcolor,
     isInstance = true,
     usesTime = false,
+    usesPlayerPosition = false,
     fragmentShader = "",
     vertexShader = "", 
     fogDensity = .75,
     ...rest
 }) {
     let ref = useRef<MeshLambertMaterial>(null)
+    let player = useStore(i => i.player.object)
     let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
             uTime: { value: 0 },
+            uPlayerPosition: { value: new Vector3() },
             uFogColorStart: { value: new Color(fogColorStart) },
             uFogColorEnd: { value: new Color(fogColorEnd) },
         },
@@ -27,6 +31,7 @@ export function MeshLambertFogMaterial({
                 varying vec3 vPosition;   
                 varying vec3 vGlobalPosition;    
                 uniform float uTime; 
+                uniform vec3 uPlayerPosition; 
 
                 ${easings}
             `,
@@ -71,6 +76,11 @@ export function MeshLambertFogMaterial({
         if (usesTime) {
             uniforms.uTime.value += delta * .2
             uniforms.uTime.needsUpdate = true
+        }
+
+        if (usesPlayerPosition && player) {
+            uniforms.uPlayerPosition.value = player.position.toArray()
+            uniforms.uPlayerPosition.needsUpdate = true
         }
     })
 
