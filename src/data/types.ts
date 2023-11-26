@@ -122,6 +122,7 @@ export enum WorldPartType {
     BUILDINGS_LOW = "lowbuildings",
     AIRSTRIP = "airstrip",
     START = "start",
+    BOSS = "boss",
 }
 
 export interface WorldPart {
@@ -171,6 +172,10 @@ export interface WorldPartDefault extends WorldPart {
 export interface WorldPartStart extends WorldPart {
     type: WorldPartType.START
 }
+export interface WorldPartBoss extends WorldPart {
+    type: WorldPartType.BOSS
+    counter: number
+}
 
 export interface WorldPartBuildingsLow extends WorldPart {
     type: WorldPartType.BUILDINGS_LOW
@@ -193,8 +198,7 @@ export interface Bullet {
     index: number
     rotation: number
     mounted: boolean
-    size: Tuple3
-    obb: OBB
+    size: Tuple3 
     aabb: Box3
     color: string
     damage: number

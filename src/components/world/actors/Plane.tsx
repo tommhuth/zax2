@@ -6,16 +6,17 @@ import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
-import { useCollisionDetection } from "../../../data/hooks"
+import { useCollisionDetection, useBulletCollision } from "../../../data/hooks"
 import { Vector3 } from "three"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../World"
 import { Owner, Plane } from "../../../data/types"
-import { createBullet, damageTurret, removePlane } from "../../../data/store/actors"
+import { createBullet, damagePlane, damageTurret, removePlane } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
 import { damageBarrel } from "../../../data/store/world"
 import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createParticles } from "../../../data/store/effects"
 import { planeColor } from "../../../data/theme"
+import { intersect } from "../BulletHandler"
 
 let _size = new Vector3()
 
@@ -74,6 +75,32 @@ function Plane({
         removePlane(id)
         data.removed = true
     }
+
+    useBulletCollision({
+        name: "bulletcollision:plane",
+        handler: ({ detail: { bullet, movement, client } }) => {
+            if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
+                return
+            }
+
+            let { instances } = store.getState()
+            let intersection = intersect(instances.box.mesh, bullet.position, movement)
+
+            if (intersection) {
+                createParticles({
+                    position: intersection.point.toArray(),
+                    count: [1, 3],
+                    speed: [8, 12],
+                    positionOffset: [[0, 0], [0, 0], [0, 0]],
+                    speedOffset: [[-5, 5], [0, 0], [5, 18]],
+                    normal: [0, -1, 0],
+                    color: "yellow",
+                })
+            }
+
+            damagePlane(id, bullet.damage)
+        }
+    })
 
     useCollisionDetection({
         position,
@@ -198,7 +225,7 @@ function Plane({
                     startTransition(() => {
                         createExplosion({
                             position: [position.x, -.5, position.z],
-                            count: 18, 
+                            count: 18,
                             shockwave: false,
                             radius: .6,
                             fireballCount: 5,

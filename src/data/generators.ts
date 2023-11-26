@@ -2,7 +2,8 @@ import random from "@huth/random"
 import { Vector3 } from "three"
 import { Tuple2 } from "../types"
 import makeCycler from "./cycler"
-import { WorldPart, WorldPartDefault, WorldPartBuildingsLow, WorldPartBuildingsGap, WorldPartType, WorldPartAirstrip, WorldPartStart } from "./types"
+import { WorldPart, WorldPartDefault, WorldPartBuildingsLow, WorldPartBuildingsGap, WorldPartType, WorldPartAirstrip, WorldPartStart, WorldPartBoss } from "./types"
+import { store } from "./store"
 
 export type BaseWorldPart = { size: Tuple2, position: Vector3 }
 
@@ -49,6 +50,21 @@ export function makeStart(previous: BaseWorldPart): WorldPartStart {
     }
 }
 
+
+let counter = 1
+
+export function makeBoss(previous: BaseWorldPart): WorldPartBoss {
+    let depth = 80
+
+    return {
+        ...baseProps(previous),
+        size: [10, depth] as Tuple2,
+        color: Math.random() * 0xffffff,
+        type: WorldPartType.BOSS,
+        counter: counter++,
+    }
+}
+
 export function makeBuildingsLow(previous: BaseWorldPart): WorldPartBuildingsLow {
     let depth = 20
 
@@ -59,6 +75,7 @@ export function makeBuildingsLow(previous: BaseWorldPart): WorldPartBuildingsLow
         type: WorldPartType.BUILDINGS_LOW,
     }
 }
+
 export function makeAirstrip(previous: BaseWorldPart): WorldPartAirstrip {
     let depth = 48
 
@@ -72,18 +89,48 @@ export function makeAirstrip(previous: BaseWorldPart): WorldPartAirstrip {
 
 const types = makeCycler<Exclude<WorldPartType, WorldPartType.START>>(
     Object.values(WorldPartType).filter(i => i !== WorldPartType.START),
-    .35
-)  
+    .25
+)
 
 types.next()
 
+let lastBossAt = new Date()
+let bossInterval = 30_000
+
+const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
+    [WorldPartType.DEFAULT]: () => true,
+    [WorldPartType.BUILDINGS_GAP]: () => true,
+    [WorldPartType.BUILDINGS_LOW]: () => {
+        let { world } = store.getState()
+
+        return world.parts.every(i=> i.type !== WorldPartType.BUILDINGS_LOW)
+    },
+    [WorldPartType.AIRSTRIP]: () => true,
+    [WorldPartType.BOSS]: () => {
+        if (new Date().getTime() - lastBossAt.getTime() > bossInterval) {
+            lastBossAt = new Date()
+
+            return true
+        }
+
+        return false
+    },
+    [WorldPartType.START]: () => true,
+}
+
 export function getNextWorldPart(previous: WorldPart): WorldPart {
     let type = types.next()
+
+    while (!validator[type](previous)) { 
+        type = types.next()
+    }
+
     let generators: Record<Exclude<WorldPartType, WorldPartType.START>, (prev: WorldPart) => WorldPart> = {
         [WorldPartType.DEFAULT]: makeDefault,
         [WorldPartType.BUILDINGS_GAP]: makeBuildingsGap,
         [WorldPartType.BUILDINGS_LOW]: makeBuildingsLow,
-        [WorldPartType.AIRSTRIP]: makeAirstrip
+        [WorldPartType.AIRSTRIP]: makeAirstrip,
+        [WorldPartType.BOSS]: makeBoss,
     }
 
     return generators[type](previous)

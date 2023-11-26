@@ -6,6 +6,7 @@ import { SpatialHashGrid3D, Client } from "./SpatialHashGrid3D"
 import { useStore } from "./store"
 import { Tuple3 } from "../types"
 import { glsl } from "./utils"
+import { Bullet } from "./types"
 
 export const useAnimationFrame = (callback: (delta: number) => void) => {
     // Use useRef for mutable variables that we want to persist
@@ -169,7 +170,7 @@ export function getCollisions({
                     result.push(client)
                 }
             } else {
-                // if no narrowphase, assume broadphase is enough
+                // if no narrowphase, broadphase is narrowphase
                 result.push(client)
             }
         }
@@ -213,4 +214,30 @@ export function useCollisionDetection({
 
         tick.current++
     })
+}
+
+interface CollisionEventDetails {
+    client: Client
+    bullet: Bullet
+    movement: Tuple3
+}
+
+interface UseCollisionEventParams {
+    name: string,
+    handler: (e: CustomEvent<CollisionEventDetails>) => void,
+    deps?: any[]
+}
+
+export function useBulletCollision({
+    name,
+    handler,
+    deps = []
+}: UseCollisionEventParams) {
+    useEffect(() => {
+        window.addEventListener(name, handler as EventListener)
+
+        return () => {
+            window.removeEventListener(name, handler as EventListener) 
+        }
+    }, deps)
 }

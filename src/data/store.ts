@@ -1,12 +1,12 @@
-import { Frustum, Object3D, Vector3 } from "three"
-import {create} from "zustand"
+import { Box3, Frustum, Object3D, Vector3 } from "three"
+import { create } from "zustand"
 import { Tuple3 } from "../types"
 import {
     Barrel, Building, Bullet, Explosion, Instance, InstanceName, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
 } from "./types"
 import { makeStart } from "./generators"
-import { SpatialHashGrid3D } from "./SpatialHashGrid3D"
+import { Client, SpatialHashGrid3D } from "./SpatialHashGrid3D"
 
 export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
 export const pixelSize = isSmallScreen ? 4 : 5
@@ -34,6 +34,20 @@ export interface Store {
     }
     instances: Record<InstanceName, Instance>
     repeaters: Record<string, RepeaterMesh>
+    boss: {
+        active: boolean
+        pauseAt: number
+        health: number
+        position: Vector3
+        aabb: Box3
+        client: Client
+        parts: {
+            name: string
+            id: number
+            aabb: Box3
+            client: Client
+        }[]
+    } | null,
     player: {
         speed: number
         cameraShake: number
@@ -72,8 +86,9 @@ const store = create<Store>(() => ({
         particles: [],
         shimmer: [],
     },
-    instances: {},
+    instances: {} as Store["instances"],
     repeaters: {},
+    boss: null,
     player: {
         speed: 0,
         cameraShake: 0,

@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { useInstance } from "../../InstancedMesh"
-import { setMatrixAt, setMatrixNullAt } from "../../../data/utils"
-import random from "@huth/random"
+import { setMatrixAt, setMatrixNullAt } from "../../../data/utils" 
 import { Tuple3 } from "../../../types"
 import { useWorldPart } from "../WorldPartWrapper"
 
@@ -17,7 +16,7 @@ export default function Grass({
 
     useEffect(() => {
         if (typeof index === "number") {
-            let flip = 1 // random.pick(-1, 1)
+            let flip = 1 // random.pick(-1, 1) 
 
             setMatrixAt({
                 index,

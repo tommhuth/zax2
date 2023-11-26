@@ -78,11 +78,11 @@ export default function WorldPartWrapper({
                 <Only if={Config.DEBUG}>
                     <mesh
                         position-y={-1}
-                        position-z={position.z - depth / 2}
+                        position-z={position.z + depth / 2}
                         position-x={WORLD_CENTER_X}
                     >
                         <boxGeometry args={[width, 2, depth, 1, 1, 1]} />
-                        <meshBasicMaterial wireframe color="hotpink" />
+                        <meshBasicMaterial wireframe color="green" />
                     </mesh>
                 </Only>
             </context.Provider>

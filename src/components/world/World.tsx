@@ -9,7 +9,7 @@ import Building from "./actors/Building"
 import Barrel from "./actors/Barrel"
 import ParticleHandler from "./ParticleHandler"
 import BulletHandler from "./BulletHandler"
-import { WorldPartDefault, WorldPartBuildingsGap, WorldPartType, WorldPartBuildingsLow, WorldPartAirstrip, WorldPartStart } from "../../data/types"
+import { WorldPartDefault, WorldPartBuildingsGap, WorldPartType, WorldPartBuildingsLow, WorldPartAirstrip, WorldPartStart, WorldPartBoss } from "../../data/types"
 import BuildingsGap from "./parts/BuildingsGap"
 import BuildingsLow from "./parts/BuildingsLow"
 import Rocket from "./actors/Rocket"
@@ -18,6 +18,7 @@ import ExplosionsHandler from "./ExplosionsHandler"
 import ShimmerHandler from "./ShimmerHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
+import BossPart from "./parts/Boss"
 
 export const WORLD_CENTER_X = 0
 export const WORLD_LEFT_EDGE = 5
@@ -31,12 +32,12 @@ export default function World() {
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
 
     useFrame(() => {
-        let { world: { parts }, player: { object: player } } = store.getState()
+        let { world: { parts }, boss, player: { object: player } } = store.getState()
         let forwardWorldPart = parts[parts.length - 1]
         let lastPartIsAtEdge = forwardWorldPart && player && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
 
-        if (lastPartIsAtEdge || !forwardWorldPart) {
-            startTransition(createWorldPart) 
+        if ((lastPartIsAtEdge || !forwardWorldPart) && !boss) {
+            startTransition(createWorldPart)
         }
     })
 
@@ -54,6 +55,8 @@ export default function World() {
                         return <BuildingsLow key={i.id} {...i as WorldPartBuildingsLow} />
                     case WorldPartType.AIRSTRIP:
                         return <Airstrip key={i.id} {...i as WorldPartAirstrip} />
+                    case WorldPartType.BOSS:
+                        return <BossPart key={i.id} {...i as WorldPartBoss} />
                     default:
                         throw new Error(`Unknown type: ${i.type}`)
                 }

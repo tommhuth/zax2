@@ -2,15 +2,16 @@ import { useFrame } from "@react-three/fiber"
 import { startTransition, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { Vector3 } from "three"
 import { useStore } from "../../../data/store"
-import { Barrel, InstanceName } from "../../../data/types"
+import { Barrel, InstanceName, Owner } from "../../../data/types"
 import { useInstance } from "../../InstancedMesh"
 import random from "@huth/random"
 import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
-import { removeBarrel } from "../../../data/store/world"
-import { barellParticleColor } from "../../../data/theme"
-import { useWorldPart } from "../WorldPartWrapper"
+import { damageBarrel, removeBarrel } from "../../../data/store/world"
+import { barellParticleColor } from "../../../data/theme" 
+import { useBulletCollision } from "../../../data/hooks"
+import { increaseScore } from "../../../data/store/player"
 
 let _size = new Vector3()
 
@@ -66,14 +67,26 @@ export default function Barrel({
     let remove = () => {
         setTimeout(() => removeBarrel(id), 300)
         removed.current = true
-    }
-    let partPosition = useWorldPart()
+    } 
 
-    useLayoutEffect(() => { 
+
+    useBulletCollision({
+        name: "bulletcollision:barrel",
+        handler: ({ detail: { bullet, client } }) => {
+            if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
+                return
+            }
+
+            damageBarrel(id, 100)
+            increaseScore(1000)
+        }
+    })
+
+    useLayoutEffect(() => {
         if (health === 0) {
             startTransition(() => {
                 remove()
-                explode(position, size, barellParticleColor, partPosition)
+                explode(position, size, barellParticleColor)
             })
         }
     }, [health])

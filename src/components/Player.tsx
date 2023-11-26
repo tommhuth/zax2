@@ -5,10 +5,10 @@ import { Tuple3 } from "../types"
 import { WORLD_BOTTOM_EDGE, WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_TOP_EDGE } from "./world/World"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
-import { useCollisionDetection, useWindowEvent } from "../data/hooks"
+import { useCollisionDetection, useBulletCollision, useWindowEvent } from "../data/hooks"
 import { Owner } from "../data/types"
 import { bulletSize, useStore } from "../data/store"
-import { damagePlayer, setPlayerObject } from "../data/store/player"
+import { damagePlayer, increaseScore, setPlayerObject } from "../data/store/player"
 import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/store/actors"
 import { damageBarrel } from "../data/store/world"
 import { playerColor } from "../data/theme"
@@ -36,13 +36,14 @@ export default function Player({
     let isMovingUp = useRef(false)
     let impactRef = useRef<Mesh>(null)
     let grid = useStore(i => i.world.grid)
+    let boss = useStore(i => i.boss)
     let keys = useMemo<Record<string, boolean>>(() => ({}), [])
     let weapon = useStore(i => i.player.weapon)
     let lastImpactLocation = useStore(i => i.player.lastImpactLocation)
     let state = useStore(i => i.state)
     let targetPosition = useMemo(() => new Vector3(WORLD_CENTER_X, _edgemin.y, z), [])
     let models = useLoader(GLTFLoader, "/models/space.glb")
-    let position = useMemo(() => new Vector3(), [])
+    let position = useMemo(() => new Vector3(0, y, z), [])
     let client = useMemo(() => {
         return grid.newClient([0, 0, z], size, {
             type: "player",
@@ -51,8 +52,8 @@ export default function Player({
             position,
         })
     }, [grid])
-    let currentPosition = useMemo(() => new Vector3(), [])
-    let originalPosition = useMemo(() => new Vector3(), [])
+    let currentPointerPosition = useMemo(() => new Vector3(), [])
+    let originalPointerPosition = useMemo(() => new Vector3(), [])
     let speed = 7
     let handleRef = useCallback((object: Group) => {
         if (!object) {
@@ -66,9 +67,22 @@ export default function Player({
     useWindowEvent("keydown", (e: KeyboardEvent) => {
         keys[e.code] = true
     })
+
     useWindowEvent("keyup", (e: KeyboardEvent) => {
         delete keys[e.code]
-    }) 
+    })
+
+    useBulletCollision({
+        name: "bulletcollision:player",
+        handler: ({ detail: { bullet } }) => {
+            if (bullet.owner !== Owner.PLAYER) {
+                return
+            }
+
+            damagePlayer(bullet.damage)
+            increaseScore(-10)
+        }
+    })
 
     useCollisionDetection({
         position,
@@ -79,21 +93,21 @@ export default function Player({
             position,
         },
         actions: {
-            building: () => {
+            building: () => { 
                 damagePlayer(100)
             },
-            turret: (data) => {
+            turret: (data) => { 
                 damagePlayer(100)
                 damageTurret(data.id, 100)
             },
-            barrel: (data) => {
+            barrel: (data) => { 
                 damageBarrel(data.id, 100)
             },
-            plane: (data) => {
+            plane: (data) => { 
                 damagePlayer(100)
                 damagePlane(data.id, 100)
             },
-            rocket: (data) => {
+            rocket: (data) => { 
                 damagePlayer(100)
                 damageRocket(data.id, 100)
             }
@@ -101,20 +115,20 @@ export default function Player({
     })
 
     useEffect(() => {
-        let shootDiv = document.getElementById("shoot") as HTMLElement 
+        let shootDiv = document.getElementById("shoot") as HTMLElement
         // shoot 
-        let onTouchStartShoot = () => { 
+        let onTouchStartShoot = () => {
             keys.Space = true
         }
-        let onTouchEndShoot = () => { 
+        let onTouchEndShoot = () => {
             delete keys.Space
-        } 
+        }
 
         shootDiv.addEventListener("touchstart", onTouchStartShoot)
         shootDiv.addEventListener("touchend", onTouchEndShoot)
         shootDiv.addEventListener("touchcancel", onTouchEndShoot)
 
-        return () => {  
+        return () => {
             shootDiv.removeEventListener("touchstart", onTouchStartShoot)
             shootDiv.removeEventListener("touchend", onTouchEndShoot)
             shootDiv.removeEventListener("touchcancel", onTouchEndShoot)
@@ -195,14 +209,19 @@ export default function Player({
 
             playerGroup.position.x += (targetPosition.x - playerGroup.position.x) * (.09 * 60 * nd)
             playerGroup.position.y += (y - playerGroup.position.y) * (.08 * 60 * nd)
-            playerGroup.position.z += speed * nd
 
-            currentPosition.z += speed * nd
+
+            if (!boss || (boss && boss.pauseAt >= playerGroup.position.z)) {
+                playerGroup.position.z += speed * nd
+
+                currentPointerPosition.z += speed * nd
+            }
+
             hitboxRef.current.position.z = playerGroup.position.z
 
             position.copy(playerGroup.position)
             client.position = position.toArray()
-            grid.updateClient(client) 
+            grid.updateClient(client)
         }
     })
 
@@ -238,27 +257,27 @@ export default function Player({
                 onPointerUp={() => {
                     isMovingUp.current = false
                 }}
-                onPointerMove={(e) => {
-                    if (e.pointerType === "touch") {
+                onPointerMove={({ pointerType, point }) => {
+                    if (pointerType === "touch") {
                         let depthThreshold = 2
 
-                        if (Math.abs(originalPosition.z - e.point.z) > depthThreshold) {
+                        if (Math.abs(originalPointerPosition.z - point.z) > depthThreshold) {
                             isMovingUp.current = true
                         }
 
                         if (isMovingUp.current) {
-                            targetPosition.y += (e.point.z - currentPosition.z)
+                            targetPosition.y += (point.z - currentPointerPosition.z)
                         }
 
-                        targetPosition.x += (e.point.x - currentPosition.x) * 1.5
+                        targetPosition.x += (point.x - currentPointerPosition.x) * 1.5
                         targetPosition.clamp(_edgemin, _edgemax)
-                        currentPosition.copy(e.point)
+                        currentPointerPosition.copy(point)
                     }
                 }}
                 onPointerDown={(e) => {
                     if (e.pointerType === "touch") {
-                        currentPosition.set(e.point.x, 0, e.point.z)
-                        originalPosition.set(0, 0, e.point.z)
+                        currentPointerPosition.set(e.point.x, 0, e.point.z)
+                        originalPointerPosition.set(0, 0, e.point.z)
                     }
                 }}
             >

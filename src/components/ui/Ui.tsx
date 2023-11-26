@@ -10,6 +10,7 @@ export default function Ui() {
     let state = useStore(i => i.state)
     let player = useStore(i => i.player)
     let loaded = useStore(i => i.loaded)
+    let boss = useStore(i => i.boss)
     let currentHeightRef = useRef<HTMLDivElement>(null)
     let bars = 5
 
@@ -75,6 +76,19 @@ export default function Ui() {
                 {player.health.toFixed(0)}%
 
                 <div>{player.score.toLocaleString("en")}</div>
+            </div>
+            <div 
+                className="boss"
+                style={{
+                    display: boss ? undefined : "none",
+                }}
+            >
+                <div 
+                    className="boss__bar" 
+                    style={{
+                        width: boss?.health + "%",
+                    }}
+                /> 
             </div>
         </>
     )

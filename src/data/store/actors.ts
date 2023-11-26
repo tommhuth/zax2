@@ -1,10 +1,11 @@
 import random from "@huth/random"
 import { bulletSize, store } from "../store"
 import { Plane, Turret } from "../types"
-import { Box3, Vector3 } from "three"
+import { Box3, Matrix4, Quaternion, Vector3 } from "three"
 import { Tuple3 } from "../../types"
-import { OBB } from "three/examples/jsm/math/OBB.js"
 import { updateWorld } from "./utils"
+
+let _mat4 = new Matrix4()
 
 export function createBullet({
     position = [0, 0, 0],
@@ -14,18 +15,22 @@ export function createBullet({
     speed = 10,
     damage,
     color = "#fff",
-}) { 
+}) {
     let id = random.id()
-    let obb = new OBB(new Vector3(...position), new Vector3(...size.map(i => i / 2)))
     let aabb = new Box3().setFromCenterAndSize(new Vector3(...position), new Vector3(0, 0, 0))
     let { instances } = store.getState()
+
+    aabb.applyMatrix4(_mat4.compose(
+        new Vector3(),
+        new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), rotation),
+        new Vector3(1, 1, 1),
+    ))
 
     updateWorld({
         bullets: [
             {
                 position: new Vector3(...position),
                 id,
-                obb,
                 damage,
                 mounted: false,
                 index: instances.line.index.next(),
@@ -174,7 +179,7 @@ export function createTurret({
         position.toArray(),
         [...size],
         { type: "turret", id, size, position }
-    ) 
+    )
 
     updateWorld({
         turrets: [
@@ -197,8 +202,8 @@ export function createTurret({
 
 interface CreatePlaneParams {
     position: Tuple3
-    targetY?: number 
-    speed?: number 
+    targetY?: number
+    speed?: number
     takeoffDistance?: number
     fireFrequency?: number
 }

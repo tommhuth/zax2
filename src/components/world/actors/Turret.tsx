@@ -1,7 +1,7 @@
 import { memo, startTransition, useLayoutEffect, useRef } from "react"
 
 import { useFrame, useThree } from "@react-three/fiber"
-import { useEffect } from "react" 
+import { useEffect } from "react"
 import { useInstance } from "../../InstancedMesh"
 import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import animate from "@huth/animate"
@@ -11,10 +11,13 @@ import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../World"
 import { Owner, Turret } from "../../../data/types"
 import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
-import { createBullet, removeTurret } from "../../../data/store/actors"
+import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
 import { explosionColor, turretColor, turretParticleColor } from "../../../data/theme"
+import { useBulletCollision } from "../../../data/hooks"
+import { intersect } from "../BulletHandler"
+import { setLastImpactLocation } from "../../../data/store/player"
 
 function explode(position: Vector3, size: Tuple3) {
     createShimmer({
@@ -47,7 +50,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
     let removed = useRef(false)
     let { viewport } = useThree()
     let [index, instance] = useInstance("turret", {
-        color: turretColor,  
+        color: turretColor,
     })
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
     let shootTimer = useRef(0)
@@ -57,9 +60,37 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
         setTimeout(() => removeTurret(id), 350)
         removed.current = true
     }
-    
-    useFrame(()=> {
-        if (instance && typeof index === "number") {  
+
+    useBulletCollision({
+        name: "bulletcollision:turret",
+        handler: ({ detail: { bullet, movement, client } }) => {
+            if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
+                return
+            }
+
+            let { instances } = store.getState()
+            let intersection = intersect(instances.turret.mesh, bullet.position, movement)
+
+            if (intersection?.face) {
+                setLastImpactLocation(...intersection.point.toArray())
+                createParticles({
+                    position: intersection.point.toArray(),
+                    positionOffset: [[0, 0], [0, 0], [0, 0]],
+                    count: [1, 2],
+                    speed: [11, 22],
+                    speedOffset: [[-5, 5], [0, 0], [-5, 5]],
+                    normal: intersection.face.normal.toArray(),
+                    normalOffset: [[0, 0], [0, 0], [0, 0]],
+                    color: "white"
+                })
+            }
+
+            damageTurret(id, bullet.damage)
+        }
+    })
+
+    useFrame(() => {
+        if (instance && typeof index === "number") {
             offset.current *= .85
 
             setMatrixAt({
@@ -67,9 +98,9 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
                 rotation: [0, -rotation + Math.PI * .5, 0],
                 index,
                 position: [
-                    position.x + random.float(-.125, .125) * offset.current, 
-                    position.y - .1, 
-                    position.z + random.float(-.125, .125) * offset.current, 
+                    position.x + random.float(-.125, .125) * offset.current,
+                    position.y - .1,
+                    position.z + random.float(-.125, .125) * offset.current,
                 ]
             })
         }
@@ -77,7 +108,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
     })
 
     useEffect(() => {
-        if (health !== 100 && instance && typeof index === "number") {  
+        if (health !== 100 && instance && typeof index === "number") {
             offset.current = 1
 
             return animate({
@@ -121,7 +152,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
                         position.x + offsetx,
                         position.y + size[1] / 2 - .15,
                         position.z + offsetz
-                    ], 
+                    ],
                     damage: 5,
                     speed: bulletSpeed,
                     rotation: rotation,

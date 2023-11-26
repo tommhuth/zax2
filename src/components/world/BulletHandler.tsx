@@ -1,22 +1,19 @@
 import { useFrame } from "@react-three/fiber"
 import { memo, startTransition } from "react"
-import { InstancedMesh, Matrix4, Object3D, Quaternion, Raycaster, Vector3 } from "three" 
-import { Bullet, Owner } from "../../data/types"
+import { InstancedMesh, Matrix4, Object3D, Quaternion, Raycaster, Vector3 } from "three"
+import { Bullet } from "../../data/types"
 import { Tuple3 } from "../../types"
 import { getCollisions } from "../../data/hooks"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../data/utils"
 import { store } from "../../data/store"
-import { damagePlayer, increaseScore, setLastImpactLocation } from "../../data/store/player"
-import { createParticles } from "../../data/store/effects"
-import { damagePlane, damageRocket, damageTurret, removeBullet } from "../../data/store/actors"
-import { damageBarrel } from "../../data/store/world"
+import { removeBullet } from "../../data/store/actors"
 
 let _origin = new Vector3()
 let _direction = new Vector3()
 let _speed = new Vector3()
 let _raycaster = new Raycaster(_origin, _direction, 0, 4)
 
-function intersect(object: Object3D, position: Vector3, movement: Tuple3) {
+export function intersect(object: Object3D, position: Vector3, movement: Tuple3) {
     _raycaster.set(
         _origin.copy(position).sub(
             _speed.set(movement[0], .1, movement[2])
@@ -51,7 +48,7 @@ function BulletHandler() {
         if (!instances.line || !player.object || !instances.device) {
             return
         }
- 
+
         for (let i = 0; i < bullets.length; i++) {
             let bullet = bullets[i]
             let bulletDiagonal = Math.sqrt((bullet.size[2] * .5) ** 2 + bullet.size[2] ** 2)
@@ -62,8 +59,7 @@ function BulletHandler() {
                 source: {
                     position: bullet.position,
                     rotation: bullet.rotation,
-                    size: [bulletDiagonal, bullet.size[1], bulletDiagonal],
-                    obb: bullet.obb,
+                    size: [bulletDiagonal, bullet.size[1], bulletDiagonal], 
                 }
             })
             let movement: Tuple3 = [
@@ -73,97 +69,19 @@ function BulletHandler() {
             ]
 
             for (let i = 0; i < collisions.length; i++) {
-                let client = collisions[i]
-                let hasHit = true
+                let client = collisions[i] 
 
-                if (client.data.type === "building") {
-                    let intersection = intersect(instances.device.mesh, bullet.position, movement)
-
-                    if (intersection?.face) {
-                        setLastImpactLocation(...intersection.point.toArray())
-                        createParticles({
-                            position: intersection.point.toArray(),
-                            positionOffset: [[0, 0], [0, 0], [0, 0]],
-                            speed: [7, 14],
-                            speedOffset: [[-2, 2], [-2, 2], [-2, 2]],
-                            normal: intersection.face.normal.toArray(),
-                            count: [1, 2],
-                            radius: [.1, .2],
-                            friction: [.8, .95],
-                            color: "#fff",
-                        })
+                window.dispatchEvent(new CustomEvent("bulletcollision:" + client.data.type, {
+                    bubbles: false,
+                    cancelable: false,
+                    detail: {
+                        client,
+                        bullet,
+                        movement,
                     }
-                } else if (client.data.type === "plane") {
-                    if (bullet.owner === Owner.PLAYER) {
-                        let intersection = intersect(instances.box.mesh, bullet.position, movement)
+                })) 
 
-                        if (intersection) {
-                            createParticles({
-                                position: intersection.point.toArray(),
-                                count: [1, 3],
-                                speed: [8, 12],
-                                positionOffset: [[0, 0], [0, 0], [0, 0]],
-                                speedOffset: [[-5, 5], [0, 0], [5, 18]],
-                                normal: [0, -1, 0],
-                                color: "yellow",
-                            })
-                        }
-
-                        damagePlane(client.data.id, bullet.damage)
-                    }
-                } else if (client.data.type === "rocket") {
-                    if (bullet.owner === Owner.PLAYER) {
-                        let intersection = intersect(instances.cylinder.mesh, bullet.position, movement)
-
-                        if (intersection) {
-                            createParticles({
-                                position: intersection.point.toArray(),
-                                count: [2, 4],
-                                speed: [8, 12],
-                                positionOffset: [[0, 0], [0, 0], [0, 0]],
-                                speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                                normal: intersection.face?.normal.toArray() as Tuple3,
-                                color: "purple",
-                            })
-                        }
-
-                        damageRocket(client.data.id, bullet.damage)
-                    }
-                } else if (client.data.type === "turret") {
-                    if (bullet.owner === Owner.PLAYER) {
-                        let intersection = intersect(instances.turret.mesh, bullet.position, movement)
-
-                        if (intersection?.face) {
-                            setLastImpactLocation(...intersection.point.toArray())
-                            createParticles({
-                                position: intersection.point.toArray(),
-                                positionOffset: [[0, 0], [0, 0], [0, 0]],
-                                count: [1, 2],
-                                speed: [11, 22],
-                                speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                                normal: intersection.face.normal.toArray(),
-                                normalOffset: [[0, 0], [0, 0], [0, 0]],
-                                color: "white"
-                            })
-                        }
-
-                        damageTurret(client.data.id, bullet.damage)
-                    }
-                } else if (client.data.type === "player") {
-                    damagePlayer(bullet.damage)
-                    increaseScore(-10)
-                } else if (client.data.type === "barrel") {
-                    if (bullet.owner === Owner.PLAYER) {
-                        damageBarrel(client.data.id, 100)
-                        increaseScore(1000)
-                    }
-                } else {
-                    hasHit = false
-                }
-
-                if (hasHit) {
-                    break
-                }
+                break
             }
 
             bullet.position.x += movement[0] * ndelta(delta)

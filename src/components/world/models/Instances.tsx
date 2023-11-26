@@ -124,7 +124,7 @@ export default function Instances() {
                 castShadow={false}
                 receiveShadow={false}
                 colors={false}
-                count={6}
+                count={4}
             >
                 <primitive object={(grass.nodes.grass as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial

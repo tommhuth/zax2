@@ -32,7 +32,9 @@ export default function Camera({ startPosition = [0, 15, 0] }: { startPosition?:
         setCameraShake(player.cameraShake * .9) 
 
         if (player.object) {
-            camera.position.z = (basePosition.z + player.object.position.z + 6) + player.cameraShake * random.float(-1, 1)
+            let targetZ = (basePosition.z + player.object.position.z + 6)
+
+            camera.position.z +=  (targetZ -  camera.position.z ) * .06 + player.cameraShake * random.float(-1, 1)
             camera.position.x = basePosition.x + player.cameraShake * random.float(-1, 1)
         }
     })

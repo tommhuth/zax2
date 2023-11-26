@@ -1,5 +1,5 @@
 import { startTransition, useLayoutEffect, useMemo, useRef } from "react"
-import { Rocket } from "../../../data/types"
+import { Owner, Rocket } from "../../../data/types"
 import { useInstance } from "../../InstancedMesh"
 import { useFrame } from "@react-three/fiber"
 import { ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
@@ -8,10 +8,12 @@ import random from "@huth/random"
 import { Tuple3 } from "../../../types"
 import { WORLD_TOP_EDGE } from "../World"
 import Config from "../../../data/Config"
-import { useStore } from "../../../data/store"
+import { store, useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
-import { removeRocket } from "../../../data/store/actors"
+import { damageRocket, removeRocket } from "../../../data/store/actors"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
+import { useBulletCollision } from "../../../data/hooks"
+import { intersect } from "../BulletHandler"
 
 let _size = new Vector3()
 
@@ -27,8 +29,8 @@ function explode(position: Vector3, size: Tuple3) {
         count: [30, 50],
         size: [3, 6, 3]
     })
-  
-    if (shouldDoFireball) { 
+
+    if (shouldDoFireball) {
         createParticles({
             position: position.toArray(),
             speed: [15, 25],
@@ -54,7 +56,7 @@ function explode(position: Vector3, size: Tuple3) {
         let explosions: ExplosionPart[] = [
             [125, [.2, size[1] / 2 - .2, .3], .2],
             [0, [-.2, -size[1] / 2, -.25], .3]
-        ] 
+        ]
 
         for (let [delay, [x, y, z], radius] of explosions) {
             setTimeout(() => {
@@ -72,7 +74,7 @@ function explode(position: Vector3, size: Tuple3) {
                 position: [position.x, position.y, position.z],
                 count: 20,
                 radius: random.float(.8, 1),
-            }) 
+            })
 
             createParticles({
                 position: position.toArray(),
@@ -110,6 +112,32 @@ export default function Rocket({
         removeRocket(id)
         setMatrixNullAt(rocketInstance, rocketIndex as number)
     }
+
+    useBulletCollision({
+        name: "bulletcollision:rocket",
+        handler: ({ detail: { bullet, movement, client } }) => {
+            if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
+                return
+            }
+
+            let { instances } = store.getState()
+            let intersection = intersect(instances.cylinder.mesh, bullet.position, movement)
+
+            if (intersection) {
+                createParticles({
+                    position: intersection.point.toArray(),
+                    count: [2, 4],
+                    speed: [8, 12],
+                    positionOffset: [[0, 0], [0, 0], [0, 0]],
+                    speedOffset: [[-5, 5], [0, 0], [-5, 5]],
+                    normal: intersection.face?.normal.toArray() as Tuple3,
+                    color: "purple",
+                })
+            } 
+
+            damageRocket(id, bullet.damage)
+        }
+    })
 
     useInstance("platform", {
         color: "#ddd",
