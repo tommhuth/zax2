@@ -95,7 +95,7 @@ const types = makeCycler<Exclude<WorldPartType, WorldPartType.START>>(
 types.next()
 
 let lastBossAt = new Date()
-let bossInterval = 30_000
+let bossInterval = 1_000
 
 const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
     [WorldPartType.DEFAULT]: () => true,
@@ -107,7 +107,9 @@ const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
     },
     [WorldPartType.AIRSTRIP]: () => true,
     [WorldPartType.BOSS]: () => {
-        if (new Date().getTime() - lastBossAt.getTime() > bossInterval) {
+        let { boss } = store.getState()
+
+        if (new Date().getTime() - lastBossAt.getTime() > bossInterval && !boss) {
             lastBossAt = new Date()
 
             return true

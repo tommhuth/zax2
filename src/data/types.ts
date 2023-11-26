@@ -119,10 +119,10 @@ export interface Plane {
 export enum WorldPartType {
     DEFAULT = "default",
     BUILDINGS_GAP = "gapbuildings",
+    BOSS = "boss",
     BUILDINGS_LOW = "lowbuildings",
     AIRSTRIP = "airstrip",
     START = "start",
-    BOSS = "boss",
 }
 
 export interface WorldPart {

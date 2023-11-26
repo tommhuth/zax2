@@ -2,13 +2,14 @@ import Camera from "./components/Camera"
 import { Suspense, useEffect, useState } from "react"
 import { Canvas } from "@react-three/fiber"
 import Player from "./components/Player"
-import World from "./components/world/World" 
+import World from "./components/world/World"
 import Ui from "./components/ui/Ui"
 import Lights from "./components/Lights"
 import { BasicShadowMap, NoToneMapping } from "three"
 import { dpr, isSmallScreen, pixelSize, useStore } from "./data/store"
 import Models from "./components/world/models/Models"
 import EdgeOverlay from "./components/EdgeOverlay"
+import { Text3D } from "@react-three/drei"
 
 export default function Wrapper() {
     let getSize = () => [
@@ -66,6 +67,12 @@ export default function Wrapper() {
                     }}
                     dpr={dpr}
                 >
+                    <Text3D
+                        font="/fonts/roboto.json"
+                        position-z={-10_000}
+                    >
+                        L
+                    </Text3D>
                     <EdgeOverlay />
                     <Camera />
                     <Lights />

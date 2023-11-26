@@ -29,7 +29,7 @@ export default function Camera({ startPosition = [0, 15, 0] }: { startPosition?:
         _matrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
         world.frustum.setFromProjectionMatrix(_matrix)
 
-        setCameraShake(player.cameraShake * .9) 
+        setCameraShake(player.cameraShake * .9)  
 
         if (player.object) {
             let targetZ = (basePosition.z + player.object.position.z + 6)

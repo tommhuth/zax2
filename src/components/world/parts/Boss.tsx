@@ -35,7 +35,7 @@ export default function BossPart({
             size: bossSize,
             position: bossPosition,
         })
-    }, [grid])
+    }, [grid]) 
 
     useBulletCollision({
         name: "bulletcollision:boss",
@@ -163,9 +163,9 @@ export default function BossPart({
             <Text3D
                 font="/fonts/roboto.json"
                 scale={[3, 3, 8]}
-                position-z={position.z + textZ  } 
-                position-y={-1} 
-                position-x={12} 
+                position-z={position.z + textZ}
+                position-y={-1}
+                position-x={12}
                 rotation-y={Math.PI}
                 rotation-x={Math.PI * .5}
                 lineHeight={.55}
@@ -180,7 +180,7 @@ export default function BossPart({
                 font="/fonts/roboto.json"
                 scale={[5.5, 5.5, 8]}
                 rotation-x={Math.PI * .5}
-                position-z={position.z + textZ }
+                position-z={position.z + textZ}
                 position-x={6}
                 position-y={-1}
                 rotation-y={Math.PI}
@@ -191,7 +191,7 @@ export default function BossPart({
                 0{counter + 1}
                 <meshLambertMaterial color="blue" />
             </Text3D>
-
+ 
             <Floor
                 type={"floor1"}
                 scale={[1, 1, 4]}
