@@ -117,9 +117,7 @@ interface CollisionObject {
 }
 
 
-interface UseCollisionDetectionParams {
-    position: Vector3
-    size: Tuple3
+interface UseCollisionDetectionParams {  
     interval?: number
     source: CollisionObject
     predicate?: () => boolean
@@ -137,12 +135,10 @@ let _y = new Vector3(0, 1, 0)
 let _scale = new Vector3(1, 1, 1)
 
 export function getCollisions({
-    grid,
-    position,
-    size,
+    grid,  
     source,
 }: Omit<UseCollisionDetectionParams, "actions" | "predicate" | "interval"> & { grid: SpatialHashGrid3D }) {
-    let near = grid.findNear(position.toArray(), size)
+    let near = grid.findNear(source.position.toArray(), source.size)
     let result: Client[] = []
 
     for (let i = 0; i < near.length; i++) {
@@ -179,26 +175,22 @@ export function getCollisions({
     return result
 }
 
-export function useCollisionDetection({
-    position,
-    interval = 1,
-    size,
+export function useCollisionDetection({ 
+    interval = 1, 
     source,
     actions,
     predicate = () => true,
 }: UseCollisionDetectionParams) {
     let grid = useStore(i => i.world.grid)
     let tick = useRef(0)
-    let types = Object.keys(actions)
+    let types = Object.keys(actions) 
 
     useFrame(() => {
         if (predicate() && tick.current % interval === 0) {
             let collisions = getCollisions({
-                grid,
-                position,
-                size,
+                grid, 
                 source
-            })
+            })   
 
             for (let i = 0; i < collisions.length; i++) {
                 let client = collisions[i]
@@ -206,7 +198,7 @@ export function useCollisionDetection({
 
                 if (!types.includes(client.data.type)) {
                     continue
-                }
+                } 
 
                 action(client.data)
             }

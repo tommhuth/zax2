@@ -102,9 +102,7 @@ function Plane({
         }
     })
 
-    useCollisionDetection({
-        position,
-        size,
+    useCollisionDetection({ 
         predicate() {
             return health === 0
         },

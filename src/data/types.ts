@@ -79,6 +79,15 @@ export interface Building {
     aabb: Box3
 }
 
+export interface HeatSeaker {
+    position: Vector3
+    speed: Vector3
+    client: Client
+    size: Tuple3
+    id: string
+    index: number
+}
+
 export interface Turret {
     id: string
     position: Vector3

@@ -95,7 +95,7 @@ const types = makeCycler<Exclude<WorldPartType, WorldPartType.START>>(
 types.next()
 
 let lastBossAt = new Date()
-let bossInterval = 1_000
+let bossInterval = 20_000
 
 const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
     [WorldPartType.DEFAULT]: () => true,

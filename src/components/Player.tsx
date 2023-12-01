@@ -13,6 +13,7 @@ import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/s
 import { damageBarrel } from "../data/store/world"
 import { playerColor } from "../data/theme"
 import { MeshLambertFogMaterial } from "./world/MeshLambertFogMaterial"
+import { removeHeatSeaker } from "../data/store/boss"
 
 let _edgemin = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -100)
 let _edgemax = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, 100)
@@ -84,16 +85,14 @@ export default function Player({
         }
     })
 
-    useCollisionDetection({
-        position,
-        size,
-        interval: 3,
+    useCollisionDetection({ 
+        interval: 1,
         source: {
             size,
             position,
         },
         actions: {
-            building: () => { 
+            building: () => {  
                 damagePlayer(100)
             },
             turret: (data) => { 
@@ -110,10 +109,14 @@ export default function Player({
             rocket: (data) => { 
                 damagePlayer(100)
                 damageRocket(data.id, 100)
+            },
+            heatseaker: (data) => {  
+                damagePlayer(25)
+                removeHeatSeaker(data.id)
             }
         }
-    })
-
+    }) 
+    
     useEffect(() => {
         let shootDiv = document.getElementById("shoot") as HTMLElement
         // shoot 

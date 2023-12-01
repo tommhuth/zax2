@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import { useStore } from "../../data/store"
-import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../world/World" 
+import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../world/World"
 
 import "./Ui.scss"
 import { setState } from "../../data/store/utils"
@@ -18,7 +18,7 @@ export default function Ui() {
         if (state === "intro") {
             setState("running")
         }
-    }, [state]) 
+    }, [state])
 
     useAnimationFrame(() => {
         let player = useStore.getState().player.object
@@ -77,18 +77,18 @@ export default function Ui() {
 
                 <div>{player.score.toLocaleString("en")}</div>
             </div>
-            <div 
+            <div
                 className="boss"
                 style={{
                     display: boss ? undefined : "none",
                 }}
             >
-                <div 
-                    className="boss__bar" 
+                <div
+                    className="boss__bar"
                     style={{
-                        width: boss?.health + "%",
+                        width: boss ? (boss.health / boss.maxHealth) * 100 + "%" : 0,
                     }}
-                /> 
+                />
             </div>
         </>
     )

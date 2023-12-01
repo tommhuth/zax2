@@ -68,7 +68,11 @@ export class SpatialHashGrid3D<T = any> {
                     let cell = this.grid.get(key)
 
                     if (cell) {
-                        result.push(...cell)
+                        for (let client of cell) {
+                            if (!result.includes(client)) { 
+                                result.push(client)
+                            }  
+                        } 
                     }
                 }
             }
