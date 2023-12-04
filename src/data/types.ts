@@ -81,7 +81,7 @@ export interface Building {
 
 export interface HeatSeaker {
     position: Vector3
-    speed: Vector3
+    velocity: Vector3
     client: Client
     size: Tuple3
     id: string

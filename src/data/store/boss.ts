@@ -55,7 +55,7 @@ export function createHeatSeaker([x, y, z]: Tuple3) {
                     {
                         id,
                         client,
-                        speed: new Vector3(),
+                        velocity: new Vector3(),
                         size,
                         position,
                         index: instances.sphere.index.next(),

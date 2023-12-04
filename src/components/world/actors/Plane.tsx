@@ -166,7 +166,7 @@ function Plane({
                         position.y,
                         position.z - 3
                     ],
-                    damage: 15,
+                    damage: 10,
                     color: "red",
                     speed: bulletSpeed,
                     rotation: -Math.PI * .5,
