@@ -1,12 +1,12 @@
-import { Box3, Frustum, Object3D, Vector3 } from "three"
+import { Frustum, Object3D, Vector3 } from "three"
 import { create } from "zustand"
 import { Tuple3 } from "../types"
 import {
     Barrel, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
 } from "./types"
-import { makeBoss, makeStart } from "./generators"
-import { Client, SpatialHashGrid3D } from "./SpatialHashGrid3D"
+import { makeStart } from "./generators"
+import { SpatialHashGrid3D } from "./SpatialHashGrid3D"
 
 export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
 export const pixelSize = isSmallScreen ? 4 : 5
@@ -66,7 +66,7 @@ const store = create<Store>(() => ({
         grid: new SpatialHashGrid3D([4, 3, 4]),
         frustum: new Frustum(),
         parts: [
-            makeBoss({ position: new Vector3(0, 0, 0), size: [0, 0] }),
+            makeStart({ position: new Vector3(0, 0, 0), size: [0, 0] }),
         ],
         buildings: [],
         planes: [],
