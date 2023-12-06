@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber"
 import { memo, startTransition } from "react"
-import { InstancedMesh, Matrix4, Object3D, Quaternion, Raycaster, Vector3 } from "three"
+import { Box3, Ray, Vector3 } from "three"
 import { Bullet } from "../../data/types"
 import { Tuple3 } from "../../types"
 import { getCollisions } from "../../data/hooks"
@@ -8,36 +8,28 @@ import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../data/uti
 import { store } from "../../data/store"
 import { removeBullet } from "../../data/store/actors"
 
+let _box3 = new Box3()
+let _ray = new Ray()
+let _center = new Vector3()
+let _size = new Vector3()
 let _origin = new Vector3()
 let _direction = new Vector3()
-let _speed = new Vector3()
-let _raycaster = new Raycaster(_origin, _direction, 0, 4)
+let _intersection = new Vector3()
 
-export function intersect(object: Object3D, position: Vector3, movement: Tuple3) {
-    _raycaster.set(
-        _origin.copy(position).sub(
-            _speed.set(movement[0], .1, movement[2])
-                .normalize()
-                .multiplyScalar(2.5)
-        ),
-        _direction.set(...movement).normalize()
-    )
+interface BoxParams {
+    position: Tuple3
+    size: Tuple3
+}
+interface RayParams {
+    position: Vector3
+    direction: Tuple3
+}
 
-    let [intersection] = _raycaster.intersectObject(object, false) || []
+function boxRayIntersection(box: BoxParams, ray:RayParams) {
+    _box3.setFromCenterAndSize(_center.set(...box.position), _size.set(...box.size))
+    _ray.set(_origin.copy(ray.position), _direction.set(...ray.direction))
 
-    if (object instanceof InstancedMesh && intersection?.instanceId && intersection.face) {
-        const quaternion = new Quaternion()
-        const instanceMatrix = new Matrix4()
-
-        object.getMatrixAt(intersection.instanceId, instanceMatrix)
-        instanceMatrix.decompose(new Vector3(), quaternion, new Vector3())
-
-        intersection.face.normal.applyMatrix4(
-            new Matrix4().makeRotationFromQuaternion(quaternion)
-        )
-    }
-
-    return intersection
+    return _ray.intersectBox(_box3, _intersection)?.toArray()
 }
 
 function BulletHandler() {
@@ -54,12 +46,10 @@ function BulletHandler() {
             let bulletDiagonal = Math.sqrt((bullet.size[2] * .5) ** 2 + bullet.size[2] ** 2)
             let collisions = getCollisions({
                 grid,
-                position: bullet.position,
-                size: bullet.size,
                 source: {
                     position: bullet.position,
                     rotation: bullet.rotation,
-                    size: [bulletDiagonal, bullet.size[1], bulletDiagonal], 
+                    size: [bulletDiagonal, bullet.size[1], bulletDiagonal],
                 }
             })
             let movement: Tuple3 = [
@@ -69,7 +59,7 @@ function BulletHandler() {
             ]
 
             for (let i = 0; i < collisions.length; i++) {
-                let client = collisions[i] 
+                let client = collisions[i]
 
                 window.dispatchEvent(new CustomEvent("bulletcollision:" + client.data.type, {
                     bubbles: false,
@@ -77,9 +67,18 @@ function BulletHandler() {
                     detail: {
                         client,
                         bullet,
-                        movement,
+                        intersection: boxRayIntersection(
+                            {
+                                position: client.position,
+                                size: client.size,
+                            },
+                            { 
+                                direction: movement,
+                                position: bullet.position
+                            } 
+                        )
                     }
-                })) 
+                }))
 
                 break
             }

@@ -68,30 +68,27 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
 
     useBulletCollision({
         name: "bulletcollision:boss",
-        handler: ({ detail: { bullet } }) => {
+        handler: ({ detail: { bullet, intersection } }) => {
             if (data.dead || bullet.owner !== Owner.PLAYER) {
                 return
             }
 
-            let hit: Tuple3 = [
-                bullet.position.x,
-                bullet.position.y,
-                position.z - bossSize[2] / 2
-            ]
-
             damageBoss(10)
-            setLastImpactLocation(...hit)
-            createParticles({
-                position: hit,
-                positionOffset: [[0, 0], [0, 0], [0, 0]],
-                speed: [3, 29],
-                speedOffset: [[0, 0], [0, 0], [0, 0]],
-                normal: [0, 0, -1],
-                count: [0, 3],
-                radius: [.1, .3],
-                friction: [.8, .95],
-                color: "#00f",
-            })
+
+            if (intersection) {
+                setLastImpactLocation(...intersection)
+                createParticles({
+                    position: intersection,
+                    positionOffset: [[0, 0], [0, 0], [0, 0]],
+                    speed: [3, 29],
+                    speedOffset: [[0, 0], [0, 0], [0, 0]],
+                    normal: [0, 0, -1],
+                    count: [0, 3],
+                    radius: [.1, .3],
+                    friction: [.8, .95],
+                    color: "#00f",
+                })
+            }
         }
     })
 

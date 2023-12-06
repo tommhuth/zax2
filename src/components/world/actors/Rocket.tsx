@@ -8,12 +8,11 @@ import random from "@huth/random"
 import { Tuple3 } from "../../../types"
 import { WORLD_TOP_EDGE } from "../World"
 import Config from "../../../data/Config"
-import { store, useStore } from "../../../data/store"
+import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
 import { damageRocket, removeRocket } from "../../../data/store/actors"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
 import { useBulletCollision } from "../../../data/hooks"
-import { intersect } from "../BulletHandler"
 
 let _size = new Vector3()
 
@@ -115,25 +114,22 @@ export default function Rocket({
 
     useBulletCollision({
         name: "bulletcollision:rocket",
-        handler: ({ detail: { bullet, movement, client } }) => {
+        handler: ({ detail: { bullet, intersection, client } }) => {
             if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
                 return
             }
 
-            let { instances } = store.getState()
-            let intersection = intersect(instances.cylinder.mesh, bullet.position, movement)
-
             if (intersection) {
                 createParticles({
-                    position: intersection.point.toArray(),
+                    position: intersection,
                     count: [2, 4],
                     speed: [8, 12],
                     positionOffset: [[0, 0], [0, 0], [0, 0]],
                     speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                    normal: intersection.face?.normal.toArray() as Tuple3,
+                    normal: [0, 0, -1],
                     color: "purple",
                 })
-            } 
+            }
 
             damageRocket(id, bullet.damage)
         }

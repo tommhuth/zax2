@@ -7,6 +7,7 @@ import { useLayoutEffect } from "react"
 import { createExplosion } from "../../../data/store/effects"
 import random from "@huth/random"
 import { HeatSeaker } from "../../../data/types"
+import { useBulletCollision } from "../../../data/hooks"
 
 let _dir = new Vector3()
 let _mat4 = new Matrix4()
@@ -21,6 +22,15 @@ export default function HeatSeaker({
     velocity
 }: HeatSeaker) {
     let grid = useStore(i => i.world.grid)
+
+    useBulletCollision({
+        name: "bulletcollision:heatseaker",
+        handler: ({ detail: { bullet } }) => {
+            if (bullet.owner === "player") {
+                removeHeatSeaker(id)
+            }
+        }
+    })
 
     useFrame((state, delta) => {
         let { player, world, instances } = store.getState()

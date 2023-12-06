@@ -1,5 +1,4 @@
 import { memo, startTransition, useLayoutEffect, useRef } from "react"
-
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../../InstancedMesh"
@@ -16,7 +15,6 @@ import { store, useStore } from "../../../data/store"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
 import { explosionColor, turretColor, turretParticleColor } from "../../../data/theme"
 import { useBulletCollision } from "../../../data/hooks"
-import { intersect } from "../BulletHandler"
 import { setLastImpactLocation } from "../../../data/store/player"
 
 function explode(position: Vector3, size: Tuple3) {
@@ -63,23 +61,20 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
 
     useBulletCollision({
         name: "bulletcollision:turret",
-        handler: ({ detail: { bullet, movement, client } }) => {
+        handler: ({ detail: { bullet, intersection, client } }) => {
             if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
                 return
-            }
+            } 
 
-            let { instances } = store.getState()
-            let intersection = intersect(instances.turret.mesh, bullet.position, movement)
-
-            if (intersection?.face) {
-                setLastImpactLocation(...intersection.point.toArray())
+            if (intersection) {
+                setLastImpactLocation(...intersection)
                 createParticles({
-                    position: intersection.point.toArray(),
+                    position: intersection ,
                     positionOffset: [[0, 0], [0, 0], [0, 0]],
                     count: [1, 2],
                     speed: [11, 22],
                     speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                    normal: intersection.face.normal.toArray(),
+                    normal: [0, 0, -1],
                     normalOffset: [[0, 0], [0, 0], [0, 0]],
                     color: "white"
                 })

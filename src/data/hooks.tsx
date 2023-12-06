@@ -212,6 +212,7 @@ interface CollisionEventDetails {
     client: Client
     bullet: Bullet
     movement: Tuple3
+    intersection: Tuple3
 }
 
 interface UseCollisionEventParams {

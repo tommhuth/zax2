@@ -16,7 +16,6 @@ import { damageBarrel } from "../../../data/store/world"
 import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createParticles } from "../../../data/store/effects"
 import { planeColor } from "../../../data/theme"
-import { intersect } from "../BulletHandler"
 
 let _size = new Vector3()
 
@@ -78,17 +77,16 @@ function Plane({
 
     useBulletCollision({
         name: "bulletcollision:plane",
-        handler: ({ detail: { bullet, movement, client } }) => {
+        handler: ({ detail: { bullet, client, intersection } }) => {
             if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
                 return
             }
 
-            let { instances } = store.getState()
-            let intersection = intersect(instances.box.mesh, bullet.position, movement)
+            damagePlane(id, bullet.damage)
 
             if (intersection) {
                 createParticles({
-                    position: intersection.point.toArray(),
+                    position: intersection,
                     count: [1, 3],
                     speed: [8, 12],
                     positionOffset: [[0, 0], [0, 0], [0, 0]],
@@ -96,13 +94,11 @@ function Plane({
                     normal: [0, -1, 0],
                     color: "yellow",
                 })
-            }
-
-            damagePlane(id, bullet.damage)
+            } 
         }
     })
 
-    useCollisionDetection({ 
+    useCollisionDetection({
         predicate() {
             return health === 0
         },
