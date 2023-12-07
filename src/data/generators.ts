@@ -87,12 +87,17 @@ export function makeAirstrip(previous: BaseWorldPart): WorldPartAirstrip {
     }
 }
 
-const types = makeCycler<Exclude<WorldPartType, WorldPartType.START>>(
-    Object.values(WorldPartType).filter(i => i !== WorldPartType.START),
-    .25
-)
+const staticParts = [WorldPartType.START] as const
 
-types.next()
+type DynamicWorldPartType = Exclude<WorldPartType, typeof staticParts[number]>
+
+const types = makeCycler<DynamicWorldPartType>(
+    Object.values(WorldPartType).filter((i): i is DynamicWorldPartType => {
+        return !staticParts.includes(i as any)
+    }),
+    .25,
+    1
+) 
 
 let lastBossAt = new Date()
 let bossInterval = 20_000
@@ -103,7 +108,7 @@ const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
     [WorldPartType.BUILDINGS_LOW]: () => {
         let { world } = store.getState()
 
-        return world.parts.every(i=> i.type !== WorldPartType.BUILDINGS_LOW)
+        return world.parts.every(i => i.type !== WorldPartType.BUILDINGS_LOW)
     },
     [WorldPartType.AIRSTRIP]: () => true,
     [WorldPartType.BOSS]: () => {
@@ -123,7 +128,7 @@ const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
 export function getNextWorldPart(previous: WorldPart): WorldPart {
     let type = types.next()
 
-    while (!validator[type](previous)) { 
+    while (!validator[type](previous)) {
         type = types.next()
     }
 

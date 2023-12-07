@@ -11,8 +11,8 @@ import Config from "../../../data/Config"
 import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
 import { damageRocket, removeRocket } from "../../../data/store/actors"
-import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
-import { useBulletCollision } from "../../../data/hooks"
+import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects" 
+import { useBulletCollision } from "../../../data/collisions"
 
 let _size = new Vector3()
 

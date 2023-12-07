@@ -5,8 +5,7 @@ import { useInstance } from "../../InstancedMesh"
 import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
-import { Tuple3 } from "../../../types"
-import { useCollisionDetection, useBulletCollision } from "../../../data/hooks"
+import { Tuple3 } from "../../../types" 
 import { Vector3 } from "three"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../World"
 import { Owner, Plane } from "../../../data/types"
@@ -16,6 +15,7 @@ import { damageBarrel } from "../../../data/store/world"
 import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createParticles } from "../../../data/store/effects"
 import { planeColor } from "../../../data/theme"
+import { useBulletCollision, useCollisionDetection } from "../../../data/collisions"
 
 let _size = new Vector3()
 

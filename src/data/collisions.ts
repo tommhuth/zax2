@@ -1,0 +1,108 @@
+import { useFrame } from "@react-three/fiber"
+import { useEffect, useRef } from "react"
+import { Box3, Vector3 } from "three" 
+import { SpatialHashGrid3D, Client, ClientData } from "./SpatialHashGrid3D"
+import { useStore } from "./store"
+import { Tuple3 } from "../types"
+import { Bullet, CollisionObjectType } from "./types"
+
+interface CollisionObject {
+    position: Vector3
+    size: Tuple3 
+}
+
+
+interface UseCollisionDetectionParams {  
+    interval?: number
+    source: CollisionObject
+    predicate?: () => boolean
+    actions: Partial<Record<CollisionObjectType, (data: ClientData) => void>>
+}
+
+
+let _box1 = new Box3()
+let _box2 = new Box3()
+let _size1 = new Vector3()
+let _size2 = new Vector3()
+let _center1 = new Vector3() 
+
+export function getCollisions({
+    grid,  
+    source,
+}: Omit<UseCollisionDetectionParams, "actions" | "predicate" | "interval"> & { grid: SpatialHashGrid3D }) {
+    let near = grid.findNear(source.position.toArray(), source.size)
+    let result: Client[] = []
+
+    for (let i = 0; i < near.length; i++) {
+        let client = near[i]
+
+        _box1.setFromCenterAndSize(_center1.set(...client.position), _size1.set(...client.size as Tuple3))
+        _box2.setFromCenterAndSize(source.position, _size2.set(...source.size))
+  
+        if (_box1.intersectsBox(_box2)) { 
+            result.push(client) 
+        }
+    }
+
+    return result
+}
+
+export function useCollisionDetection({ 
+    interval = 1, 
+    source,
+    actions,
+    predicate = () => true,
+}: UseCollisionDetectionParams) {
+    let grid = useStore(i => i.world.grid)
+    let tick = useRef(0)
+    let types = Object.keys(actions) 
+
+    useFrame(() => {
+        if (predicate() && tick.current % interval === 0) {
+            let collisions = getCollisions({
+                grid, 
+                source
+            })   
+
+            for (let i = 0; i < collisions.length; i++) {
+                let client = collisions[i]
+                let action = actions[client.data.type]
+
+                if (!types.includes(client.data.type)) {
+                    continue
+                } 
+
+                action?.(client.data)
+            }
+        }
+
+        tick.current++
+    })
+}
+
+interface CollisionEventDetails {
+    client: Client
+    bullet: Bullet
+    movement: Tuple3
+    intersection: Tuple3
+}
+
+interface UseCollisionEventParams {
+    name: string,
+    handler: (e: CustomEvent<CollisionEventDetails>) => void,
+    deps?: any[]
+}
+
+export function useBulletCollision({
+    name,
+    handler,
+    deps = []
+}: UseCollisionEventParams) {
+    useEffect(() => {
+        window.addEventListener(name, handler as EventListener)
+
+        return () => {
+            window.removeEventListener(name, handler as EventListener) 
+        }
+    }, deps)
+}

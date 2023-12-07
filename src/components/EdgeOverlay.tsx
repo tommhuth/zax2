@@ -11,6 +11,10 @@ export default function EdgeOverlay() {
     let state = useStore(i => i.state)
 
     useLayoutEffect(() => {
+        if (!groupRef.current) {
+            return
+        }
+
         groupRef.current.children[0].position.x = 16
         groupRef.current.children[1].position.x = -36
 
@@ -21,8 +25,10 @@ export default function EdgeOverlay() {
                 duration: 600,
                 easing: easeOutCubic,
                 render({ left, right }) {
-                    groupRef.current.children[0].position.x = left
-                    groupRef.current.children[1].position.x = right
+                    if (groupRef.current) {
+                        groupRef.current.children[0].position.x = left
+                        groupRef.current.children[1].position.x = right
+                    }
                 }
             })
         }

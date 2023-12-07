@@ -1,8 +1,7 @@
-import { OBB } from "three/examples/jsm/math/OBB.js"
 import { Tuple3 } from "../../types"
-import { store } from "../store"
+import { store } from "."
 import { Barrel } from "../types"
-import { Box3, Matrix3, Vector3 } from "three"
+import { Box3, Vector3 } from "three"
 import random from "@huth/random"
 import { getNextWorldPart } from "../generators"
 import { updateWorld } from "./utils"
@@ -47,23 +46,17 @@ export function createBarrel({
 }: CreateBarrelParams) {
     let id = random.id()
     let size = [2, 1.85, 2] as Tuple3
-    let position = new Vector3(x, y + size[1] / 2, z)
-    let obb = new OBB(new Vector3(x, y, z), new Vector3(...size.map(i => i / 2)), new Matrix3().rotate(rotation))
+    let position = new Vector3(x, y + size[1] / 2, z) 
     let aabb = new Box3().setFromCenterAndSize(new Vector3(z, y, z), new Vector3(...size))
     let { instances, world: { grid, barrels } } = store.getState()
-    let client = grid.newClient(
-        position.toArray(),
-        [...size],
-        { type: "barrel", id, size, position }
-    )
+    let client = grid.createClient(position.toArray(), [...size], { type: "barrel", id })
 
     updateWorld({
         barrels: [
             {
                 position,
                 id,
-                client,
-                obb,
+                client, 
                 health,
                 index: instances.line.index.next(),
                 aabb,
@@ -113,12 +106,12 @@ export function createBuilding(
 ) {
     let id = random.id()
     let position = new Vector3(x, y + size[1] / 2, z)
-    let box = new Box3().setFromCenterAndSize(new Vector3(x, y + size[1] / 2, z), new Vector3(...size))
+    let box = new Box3().setFromCenterAndSize(new Vector3(x, y , z), new Vector3(...size))
     let { grid, buildings } = store.getState().world
-    let client = grid.newClient(
-        [position.x, position.y + size[1] / 2, position.z],
+    let client = grid.createClient(
+        [position.x, position.y, position.z],
         [...size],
-        { type: "building", id, size, position }
+        { type: "building", id }
     )
 
     updateWorld({

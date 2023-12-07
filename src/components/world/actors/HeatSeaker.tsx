@@ -6,8 +6,8 @@ import { setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { useLayoutEffect } from "react"
 import { createExplosion } from "../../../data/store/effects"
 import random from "@huth/random"
-import { HeatSeaker } from "../../../data/types"
-import { useBulletCollision } from "../../../data/hooks"
+import { HeatSeaker } from "../../../data/types" 
+import { useBulletCollision } from "../../../data/collisions"
 
 let _dir = new Vector3()
 let _mat4 = new Matrix4()

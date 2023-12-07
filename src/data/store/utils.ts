@@ -1,6 +1,6 @@
 import { InstancedMesh, Object3D } from "three"
 import Counter from "../Counter"
-import { Store, store } from "../store"
+import { Store, store } from "."
 
 export function updateWorld(data: Partial<Store["world"]>) {
     store.setState({

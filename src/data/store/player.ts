@@ -1,5 +1,5 @@
 import { Object3D } from "three"
-import { store } from "../store"
+import { store } from "."
 
 export function setLastImpactLocation(x: number, y: number, z: number) {
     store.setState({

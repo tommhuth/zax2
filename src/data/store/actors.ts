@@ -1,5 +1,5 @@
 import random from "@huth/random"
-import { bulletSize, store } from "../store"
+import { bulletSize, store } from "."
 import { Plane, Turret } from "../types"
 import { Box3, Matrix4, Quaternion, Vector3 } from "three"
 import { Tuple3 } from "../../types"
@@ -175,10 +175,10 @@ export function createTurret({
     let position = new Vector3(x, y + size[1] / 2, z)
     let aabb = new Box3().setFromCenterAndSize(position, new Vector3(...size))
     let { grid, turrets } = store.getState().world
-    let client = grid.newClient(
+    let client = grid.createClient(
         position.toArray(),
         [...size],
-        { type: "turret", id, size, position }
+        { type: "turret", id }
     )
 
     updateWorld({
@@ -220,10 +220,10 @@ export function createPlane({
     let position = new Vector3(x, y, z)
     let aabb = new Box3().setFromCenterAndSize(position, new Vector3(...size))
     let { grid, planes } = store.getState().world
-    let client = grid.newClient(
+    let client = grid.createClient(
         position.toArray(),
         [size[0], size[1], size[2]],
-        { type: "plane", id, size, position }
+        { type: "plane", id }
     )
 
     updateWorld({
@@ -270,10 +270,10 @@ export function createRocket(
     let position = new Vector3(x, y - size[1], z)
     let aabb = new Box3().setFromCenterAndSize(position, new Vector3(...size))
     let { grid, rockets } = store.getState().world
-    let client = grid.newClient(
+    let client = grid.createClient(
         position.toArray(),
         [...size],
-        { type: "rocket", id, size, position }
+        { type: "rocket", id }
     )
 
     updateWorld({

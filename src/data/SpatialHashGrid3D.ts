@@ -1,15 +1,21 @@
 import { Tuple3 } from "../types"
+import { CollisionObjectType } from "./types"
 
-export interface Client<T = any> {
+export interface Client {
     position: Tuple3
     size: Tuple3
-    data: T
     min: Tuple3
     max: Tuple3
+    data: ClientData
 }
 
-export class SpatialHashGrid3D<T = any> {
-    private grid = new Map<string, Client<T>[]>()
+export interface ClientData {
+    id: string
+    type: CollisionObjectType
+}
+
+export class SpatialHashGrid3D {
+    private grid = new Map<string, Client[]>()
     private cellSize: Tuple3
 
     constructor(cellSize: Tuple3) {
@@ -35,7 +41,7 @@ export class SpatialHashGrid3D<T = any> {
         return `${ix},${iy},${iz}`
     }
 
-    private insert(client: Client<T>) {
+    private insert(client: Client) {
         const [min, max] = this.getCellBounds(client.position, client.size)
 
         client.min = min
@@ -59,7 +65,7 @@ export class SpatialHashGrid3D<T = any> {
 
     public findNear(position: Tuple3, size: Tuple3) {
         let [min, max] = this.getCellBounds(position, size)
-        let result: Client<T>[] = []
+        let result: Client[] = []
 
         for (let x = min[0]; x <= max[0]; x++) {
             for (let y = min[1]; y <= max[1]; y++) {
@@ -69,10 +75,10 @@ export class SpatialHashGrid3D<T = any> {
 
                     if (cell) {
                         for (let client of cell) {
-                            if (!result.includes(client)) { 
+                            if (!result.includes(client)) {
                                 result.push(client)
-                            }  
-                        } 
+                            }
+                        }
                     }
                 }
             }
@@ -81,7 +87,7 @@ export class SpatialHashGrid3D<T = any> {
         return result
     }
 
-    public newClient(position: Tuple3, size: Tuple3, data: T) {
+    public createClient(position: Tuple3, size: Tuple3, data: ClientData) {
         let client = {
             position,
             size,
@@ -95,7 +101,7 @@ export class SpatialHashGrid3D<T = any> {
         return client
     }
 
-    public remove(client: Client<T>) {
+    public remove(client: Client) {
         for (let x = client.min[0]; x <= client.max[0]; x++) {
             for (let y = client.min[1]; y <= client.max[1]; y++) {
                 for (let z = client.min[2]; z <= client.max[2]; z++) {
@@ -112,7 +118,7 @@ export class SpatialHashGrid3D<T = any> {
         }
     }
 
-    public updateClient(client: Client<T>) {
+    public updateClient(client: Client) {
         const [min, max] = this.getCellBounds(client.position, client.size)
 
         if (

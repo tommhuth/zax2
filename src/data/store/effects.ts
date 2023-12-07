@@ -1,6 +1,6 @@
 import random from "@huth/random"
 import { Tuple2, Tuple3 } from "../../types"
-import { Store, store } from "../store"
+import { Store, store } from "."
 import { Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"

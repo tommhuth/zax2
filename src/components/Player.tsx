@@ -5,7 +5,7 @@ import { Tuple3 } from "../types"
 import { WORLD_BOTTOM_EDGE, WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_TOP_EDGE } from "./world/World"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
-import { useCollisionDetection, useBulletCollision, useWindowEvent } from "../data/hooks"
+import { useWindowEvent } from "../data/hooks"
 import { Owner } from "../data/types"
 import { bulletSize, useStore } from "../data/store"
 import { damagePlayer, increaseScore, setPlayerObject } from "../data/store/player"
@@ -14,6 +14,7 @@ import { damageBarrel } from "../data/store/world"
 import { playerColor } from "../data/theme"
 import { MeshLambertFogMaterial } from "./world/MeshLambertFogMaterial"
 import { removeHeatSeaker } from "../data/store/boss"
+import { useBulletCollision, useCollisionDetection } from "../data/collisions"
 
 let _edgemin = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -100)
 let _edgemax = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, 100)
@@ -46,16 +47,14 @@ export default function Player({
     let models = useLoader(GLTFLoader, "/models/space.glb")
     let position = useMemo(() => new Vector3(0, y, z), [])
     let client = useMemo(() => {
-        return grid.newClient([0, 0, z], size, {
+        return grid.createClient([0, 0, z], size, {
             type: "player",
-            id: "player",
-            size,
-            position,
+            id: "player", 
         })
     }, [grid])
     let currentPointerPosition = useMemo(() => new Vector3(), [])
     let originalPointerPosition = useMemo(() => new Vector3(), [])
-    let speed = 7
+    let speed = .7
     let handleRef = useCallback((object: Group) => {
         if (!object) {
             return
@@ -113,6 +112,9 @@ export default function Player({
             heatseaker: (data) => {  
                 damagePlayer(25)
                 removeHeatSeaker(data.id)
+            },
+            boss: () => {
+                damagePlayer(100) 
             }
         }
     }) 

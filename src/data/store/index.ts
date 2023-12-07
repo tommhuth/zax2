@@ -1,12 +1,12 @@
 import { Frustum, Object3D, Vector3 } from "three"
 import { create } from "zustand"
-import { Tuple3 } from "../types"
+import { Tuple3 } from "../../types"
 import {
     Barrel, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
-} from "./types"
-import { makeStart } from "./generators"
-import { SpatialHashGrid3D } from "./SpatialHashGrid3D"
+} from "../types"
+import { makeStart } from "../generators"
+import { SpatialHashGrid3D } from "../SpatialHashGrid3D"
 
 export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
 export const pixelSize = isSmallScreen ? 4 : 5
@@ -34,8 +34,7 @@ export interface Store {
     }
     instances: Record<InstanceName, Instance>
     repeaters: Record<string, RepeaterMesh>
-    boss: {
-        active: boolean
+    boss: { 
         pauseAt: number
         health: number
         position: Vector3 

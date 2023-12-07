@@ -3,10 +3,10 @@ import { memo, startTransition } from "react"
 import { Box3, Ray, Vector3 } from "three"
 import { Bullet } from "../../data/types"
 import { Tuple3 } from "../../types"
-import { getCollisions } from "../../data/hooks"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../data/utils"
 import { store } from "../../data/store"
 import { removeBullet } from "../../data/store/actors"
+import { getCollisions } from "../../data/collisions"
 
 let _box3 = new Box3()
 let _ray = new Ray()
@@ -25,7 +25,7 @@ interface RayParams {
     direction: Tuple3
 }
 
-function boxRayIntersection(box: BoxParams, ray:RayParams) {
+function boxRayIntersection(box: BoxParams, ray: RayParams) {
     _box3.setFromCenterAndSize(_center.set(...box.position), _size.set(...box.size))
     _ray.set(_origin.copy(ray.position), _direction.set(...ray.direction))
 
@@ -48,14 +48,13 @@ function BulletHandler() {
                 grid,
                 source: {
                     position: bullet.position,
-                    rotation: bullet.rotation,
                     size: [bulletDiagonal, bullet.size[1], bulletDiagonal],
                 }
             })
-            let movement: Tuple3 = [
-                Math.cos(bullet.rotation) * bullet.speed,
+            let direction: Tuple3 = [
+                Math.cos(bullet.rotation),
                 0,
-                Math.sin(bullet.rotation) * bullet.speed
+                Math.sin(bullet.rotation)
             ]
 
             for (let i = 0; i < collisions.length; i++) {
@@ -67,24 +66,18 @@ function BulletHandler() {
                     detail: {
                         client,
                         bullet,
-                        intersection: boxRayIntersection(
-                            {
-                                position: client.position,
-                                size: client.size,
-                            },
-                            { 
-                                direction: movement,
-                                position: bullet.position
-                            } 
-                        )
+                        intersection: boxRayIntersection(client, {
+                            direction,
+                            position: bullet.position
+                        })
                     }
                 }))
 
                 break
             }
 
-            bullet.position.x += movement[0] * ndelta(delta)
-            bullet.position.z += movement[2] * ndelta(delta)
+            bullet.position.x += direction[0] * bullet.speed * ndelta(delta)
+            bullet.position.z += direction[2] * bullet.speed * ndelta(delta)
 
             setMatrixAt({
                 instance: instances.line.mesh,

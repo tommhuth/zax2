@@ -1,5 +1,4 @@
-import { Box3, InstancedMesh, Object3D, Vector3 } from "three"
-import { OBB } from "three/examples/jsm/math/OBB.js"
+import { Box3, InstancedMesh, Object3D, Vector3 } from "three" 
 import { Tuple2, Tuple3 } from "../types"
 import Counter from "./Counter"
 import { Client } from "./SpatialHashGrid3D"
@@ -12,6 +11,8 @@ export type InstanceName = "line" | "box" | "sphere" | "device"
 export type RepeaterName = "building1" | "building2" | "building3"
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
 
+export type CollisionObjectType = "barrel" | "player" | "boss" | "heatseaker" | "plane" | "turret" | "building" | "rocket"
+    
 export interface Fireball {
     isPrimary?: boolean
     position: Tuple3
@@ -104,8 +105,7 @@ export interface Barrel {
     position: Vector3
     size: Tuple3
     client: Client
-    aabb: Box3
-    obb: OBB
+    aabb: Box3 
     index: number
     rotation: number
     health: number

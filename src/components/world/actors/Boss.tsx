@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef } from "react"
-import { createHeatSeaker, damageBoss, registerBoss, removeBoss } from "../../../data/store/boss"
-import { useBulletCollision } from "../../../data/hooks"
+import { createHeatSeaker, damageBoss, registerBoss, removeBoss } from "../../../data/store/boss" 
 import { Group, Vector3 } from "three"
 import { useStore } from "../../../data/store"
 import { Tuple3 } from "../../../types"
@@ -11,6 +10,7 @@ import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
 import { createBullet } from "../../../data/store/actors"
 import { Owner } from "../../../data/types"
+import { useBulletCollision } from "../../../data/collisions"
 
 let bossSize: Tuple3 = [4, 3, 2]
 
@@ -33,11 +33,9 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
     }, [])
     let position = useMemo(() => new Vector3(...startPosition), startPosition)
     let client = useMemo(() => {
-        return grid.newClient([...startPosition], bossSize, {
+        return grid.createClient([...startPosition], bossSize, {
             type: "boss",
-            id: "boss",
-            size: bossSize,
-            position,
+            id: "boss", 
         })
     }, [grid, ...startPosition])
 
@@ -160,8 +158,7 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
 
     useEffect(() => {
         registerBoss({
-            pauseAt,
-            size: bossSize,
+            pauseAt, 
             position,
         })
     }, [])

@@ -13,9 +13,9 @@ import { Tuple3 } from "../../../types"
 import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
-import { explosionColor, turretColor, turretParticleColor } from "../../../data/theme"
-import { useBulletCollision } from "../../../data/hooks"
+import { explosionColor, turretColor, turretParticleColor } from "../../../data/theme" 
 import { setLastImpactLocation } from "../../../data/store/player"
+import { useBulletCollision } from "../../../data/collisions"
 
 function explode(position: Vector3, size: Tuple3) {
     createShimmer({

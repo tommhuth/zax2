@@ -3,8 +3,8 @@ import { Building, InstanceName } from "../../../data/types"
 import random from "@huth/random"
 import { buildingBase } from "../../../data/theme"
 import { setLastImpactLocation } from "../../../data/store/player"
-import { createParticles } from "../../../data/store/effects"
-import { useBulletCollision } from "../../../data/hooks"
+import { createParticles } from "../../../data/store/effects" 
+import { useBulletCollision } from "../../../data/collisions"
 
 export default function Building({ size, id, position }: Building) {
     let type: InstanceName = size[1] > 1 ? "device" : "device"
