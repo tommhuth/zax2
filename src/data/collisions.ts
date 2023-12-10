@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
-import { Box3, Vector3 } from "three" 
-import { SpatialHashGrid3D, Client, ClientData } from "./SpatialHashGrid3D"
+import { Box3, Ray, Vector3 } from "three" 
+import { SpatialHashGrid3D, Client, ClientData } from "./world/SpatialHashGrid3D"
 import { useStore } from "./store"
 import { Tuple3 } from "../types"
 import { Bullet, CollisionObjectType } from "./types"
@@ -84,7 +84,7 @@ interface CollisionEventDetails {
     client: Client
     bullet: Bullet
     movement: Tuple3
-    intersection: Tuple3
+    intersection?: Tuple3
 }
 
 interface UseCollisionEventParams {
@@ -105,4 +105,29 @@ export function useBulletCollision({
             window.removeEventListener(name, handler as EventListener) 
         }
     }, deps)
+}
+
+let _box3 = new Box3()
+let _ray = new Ray()
+let _center = new Vector3()
+let _size = new Vector3()
+let _origin = new Vector3()
+let _direction = new Vector3()
+let _intersection = new Vector3()
+
+interface BoxParams {
+    position: Tuple3
+    size: Tuple3
+}
+
+interface RayParams {
+    position: Vector3
+    direction: Tuple3
+}
+
+export function boxRayIntersection(box: BoxParams, ray: RayParams) {
+    _box3.setFromCenterAndSize(_center.set(...box.position), _size.set(...box.size))
+    _ray.set(_origin.copy(ray.position), _direction.set(...ray.direction)) 
+
+    return _ray.intersectBox(_box3, _intersection)?.toArray()
 }

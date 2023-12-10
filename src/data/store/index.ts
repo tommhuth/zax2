@@ -5,8 +5,8 @@ import {
     Barrel, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
 } from "../types"
-import { makeStart } from "../generators"
-import { SpatialHashGrid3D } from "../SpatialHashGrid3D"
+import { makeStart } from "../world/generators"
+import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D"
 
 export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
 export const pixelSize = isSmallScreen ? 4 : 5

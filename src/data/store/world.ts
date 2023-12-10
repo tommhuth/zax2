@@ -2,9 +2,9 @@ import { Tuple3 } from "../../types"
 import { store } from "."
 import { Barrel } from "../types"
 import { Box3, Vector3 } from "three"
-import random from "@huth/random"
-import { getNextWorldPart } from "../generators"
+import random from "@huth/random" 
 import { updateWorld } from "./utils"
+import { getNextWorldPart } from "../world/getNextWorldPart"
 
 export function createWorldPart() {
     let world = store.getState().world

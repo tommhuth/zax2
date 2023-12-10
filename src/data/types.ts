@@ -1,7 +1,7 @@
 import { Box3, InstancedMesh, Object3D, Vector3 } from "three" 
 import { Tuple2, Tuple3 } from "../types"
-import Counter from "./Counter"
-import { Client } from "./SpatialHashGrid3D"
+import Counter from "./world/Counter"
+import { Client } from "./world/SpatialHashGrid3D"
 
 export type InstanceName = "line" | "box" | "sphere" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball"
@@ -183,7 +183,7 @@ export interface WorldPartStart extends WorldPart {
 }
 export interface WorldPartBoss extends WorldPart {
     type: WorldPartType.BOSS
-    counter: number
+    level: number
 }
 
 export interface WorldPartBuildingsLow extends WorldPart {

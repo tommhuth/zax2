@@ -1,6 +1,6 @@
 import random from "@huth/random"
 
-export default function makeCycler<T>(options: T[], randomPickChance = .1, startAt = 0) {
+export default function cycler<T>(options: T[], randomPickChance = .1, startAt = 0) {
     let i = startAt
     let lastWasRandom = false
 

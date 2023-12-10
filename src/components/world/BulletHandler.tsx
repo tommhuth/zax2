@@ -1,36 +1,11 @@
 import { useFrame } from "@react-three/fiber"
-import { memo, startTransition } from "react"
-import { Box3, Ray, Vector3 } from "three"
+import { memo, startTransition } from "react" 
 import { Bullet } from "../../data/types"
 import { Tuple3 } from "../../types"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../data/utils"
 import { store } from "../../data/store"
 import { removeBullet } from "../../data/store/actors"
-import { getCollisions } from "../../data/collisions"
-
-let _box3 = new Box3()
-let _ray = new Ray()
-let _center = new Vector3()
-let _size = new Vector3()
-let _origin = new Vector3()
-let _direction = new Vector3()
-let _intersection = new Vector3()
-
-interface BoxParams {
-    position: Tuple3
-    size: Tuple3
-}
-interface RayParams {
-    position: Vector3
-    direction: Tuple3
-}
-
-function boxRayIntersection(box: BoxParams, ray: RayParams) {
-    _box3.setFromCenterAndSize(_center.set(...box.position), _size.set(...box.size))
-    _ray.set(_origin.copy(ray.position), _direction.set(...ray.direction))
-
-    return _ray.intersectBox(_box3, _intersection)?.toArray()
-}
+import { boxRayIntersection, getCollisions } from "../../data/collisions"
 
 function BulletHandler() {
     useFrame((state, delta) => {
