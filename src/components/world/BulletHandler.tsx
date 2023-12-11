@@ -1,7 +1,6 @@
 import { useFrame } from "@react-three/fiber"
-import { memo, startTransition } from "react" 
+import { memo, startTransition } from "react"
 import { Bullet } from "../../data/types"
-import { Tuple3 } from "../../types"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../data/utils"
 import { store } from "../../data/store"
 import { removeBullet } from "../../data/store/actors"
@@ -16,8 +15,7 @@ function BulletHandler() {
             return
         }
 
-        for (let i = 0; i < bullets.length; i++) {
-            let bullet = bullets[i]
+        for (let bullet of bullets) {
             let bulletDiagonal = Math.sqrt((bullet.size[2] * .5) ** 2 + bullet.size[2] ** 2)
             let collisions = getCollisions({
                 grid,
@@ -26,33 +24,23 @@ function BulletHandler() {
                     size: [bulletDiagonal, bullet.size[1], bulletDiagonal],
                 }
             })
-            let direction: Tuple3 = [
-                Math.cos(bullet.rotation),
-                0,
-                Math.sin(bullet.rotation)
-            ]
 
-            for (let i = 0; i < collisions.length; i++) {
-                let client = collisions[i]
-
+            for (let client of collisions) {
                 window.dispatchEvent(new CustomEvent("bulletcollision:" + client.data.type, {
                     bubbles: false,
                     cancelable: false,
                     detail: {
                         client,
                         bullet,
-                        intersection: boxRayIntersection(client, {
-                            direction,
-                            position: bullet.position
-                        })
+                        intersection: boxRayIntersection(client, bullet)
                     }
                 }))
 
                 break
             }
 
-            bullet.position.x += direction[0] * bullet.speed * ndelta(delta)
-            bullet.position.z += direction[2] * bullet.speed * ndelta(delta)
+            bullet.position.x += bullet.direction[0] * bullet.speed * ndelta(delta)
+            bullet.position.z += bullet.direction[2] * bullet.speed * ndelta(delta)
 
             setMatrixAt({
                 instance: instances.line.mesh,
@@ -76,9 +64,7 @@ function BulletHandler() {
             }
         }
 
-        for (let i = 0; i < removed.length; i++) {
-            let bullet = removed[i]
-
+        for (let bullet of removed) {  
             setMatrixNullAt(instances.line.mesh, bullet.index)
         }
 

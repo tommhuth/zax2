@@ -206,6 +206,7 @@ export interface Bullet {
     speed: number
     index: number
     rotation: number
+    direction: Tuple3
     mounted: boolean
     size: Tuple3 
     aabb: Box3
