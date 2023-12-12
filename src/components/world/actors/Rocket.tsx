@@ -114,24 +114,21 @@ export default function Rocket({
 
     useBulletCollision({
         name: "bulletcollision:rocket",
-        handler: ({ detail: { bullet, intersection, client } }) => {
+        handler: ({ detail: { bullet, intersection, client, normal } }) => {
             if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
                 return
             }
-
-            if (intersection) {
-                createParticles({
-                    position: intersection,
-                    count: [2, 4],
-                    speed: [8, 12],
-                    positionOffset: [[0, 0], [0, 0], [0, 0]],
-                    speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                    normal: [0, 0, -1],
-                    color: "purple",
-                })
-            }
-
+ 
             damageRocket(id, bullet.damage)
+            createParticles({
+                position: intersection,
+                count: [2, 4],
+                speed: [8, 12],
+                positionOffset: [[0, 0], [0, 0], [0, 0]],
+                speedOffset: [[-5, 5], [0, 0], [-5, 5]],
+                normal,
+                color: "purple",
+            }) 
         }
     })
 

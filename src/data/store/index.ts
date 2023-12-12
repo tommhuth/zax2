@@ -11,7 +11,7 @@ import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D"
 export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
 export const pixelSize = isSmallScreen ? 4 : 5
 export const dpr = 1 / pixelSize
-export const bulletSize: Tuple3 = [.2, .2, 1.5]
+export const bulletSize: Tuple3 = [.15, .2, 1.5]
 
 export interface Store {
     loaded: boolean
@@ -51,8 +51,7 @@ export interface Store {
             fireFrequency: number,
             color: string,
             speed: number
-            damage: number
-            bulletSize: Tuple3
+            damage: number 
         }
         object: Object3D | null
     }
@@ -93,8 +92,7 @@ const store = create<Store>(() => ({
             fireFrequency: 150,
             damage: 35,
             color: "yellow",
-            speed: 40,
-            bulletSize: [.125, .125, 1.25]
+            speed: 40, 
         },
     }
 }))

@@ -77,24 +77,21 @@ function Plane({
 
     useBulletCollision({
         name: "bulletcollision:plane",
-        handler: ({ detail: { bullet, client, intersection } }) => {
+        handler: ({ detail: { bullet, client, intersection, normal } }) => {
             if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
                 return
             }
 
-            damagePlane(id, bullet.damage)
-
-            if (intersection) {
-                createParticles({
-                    position: intersection,
-                    count: [1, 3],
-                    speed: [8, 12],
-                    positionOffset: [[0, 0], [0, 0], [0, 0]],
-                    speedOffset: [[-5, 5], [0, 0], [5, 18]],
-                    normal: [0, -1, 0],
-                    color: "yellow",
-                })
-            } 
+            damagePlane(id, bullet.damage) 
+            createParticles({
+                position: intersection,
+                count: [1, 3],
+                speed: [8, 12],
+                positionOffset: [[0, 0], [0, 0], [0, 0]],
+                speedOffset: [[-5, 5], [0, 0], [5, 18]],
+                normal,
+                color: "yellow",
+            }) 
         }
     })
 
@@ -147,12 +144,12 @@ function Plane({
             return
         }
 
-        let distanceFromPlayer = 1 - clamp((-position.z - playerPosition.z) / 10, 0, 1)
+        let distanceFromPlayer = 1 - clamp((-position.z - playerPosition.z) / 15, 0, 1)
         let heightPenalty = 1 - clamp((playerPosition.y - WORLD_BOTTOM_EDGE) / (WORLD_TOP_EDGE - WORLD_BOTTOM_EDGE), 0, 1)
         let shootDisabled = position.z > playerPosition.z || !world.frustum.containsPoint(position)
-        let canShoot = position.y > playerPosition.y - 3 && health > 0
+        let canShoot = health > 0
 
-        if (!shootDisabled && canShoot && data.shootTimer > data.nextShotAt + heightPenalty * fireFrequency * 4) {
+        if (!shootDisabled && canShoot && data.shootTimer > data.nextShotAt + heightPenalty * fireFrequency) {
             let bulletSpeed = 30
 
             startTransition(() => {
@@ -163,7 +160,7 @@ function Plane({
                         position.z - 3
                     ],
                     damage: 10,
-                    color: "red",
+                    color: "#fff",
                     speed: bulletSpeed,
                     rotation: -Math.PI * .5,
                     owner: Owner.ENEMY

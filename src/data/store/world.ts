@@ -103,7 +103,7 @@ export function removeBarrel(id: string) {
 export function createBuilding(
     size: Tuple3 = [1, 1, 1],
     [x = 0, y = 0, z = 0] = [],
-) {
+) { 
     let id = random.id()
     let position = new Vector3(x, y + size[1] / 2, z)
     let box = new Box3().setFromCenterAndSize(new Vector3(x, y , z), new Vector3(...size))

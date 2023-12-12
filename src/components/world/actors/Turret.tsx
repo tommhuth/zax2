@@ -61,25 +61,23 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
 
     useBulletCollision({
         name: "bulletcollision:turret",
-        handler: ({ detail: { bullet, intersection, client } }) => {
+        handler: ({ detail: { bullet, intersection, client, normal } }) => { 
+            setLastImpactLocation(...intersection)
+
             if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
                 return
-            } 
+            }  
 
-            if (intersection) {
-                setLastImpactLocation(...intersection)
-                createParticles({
-                    position: intersection ,
-                    positionOffset: [[0, 0], [0, 0], [0, 0]],
-                    count: [1, 2],
-                    speed: [11, 22],
-                    speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                    normal: [0, 0, -1],
-                    normalOffset: [[0, 0], [0, 0], [0, 0]],
-                    color: "white"
-                })
-            }
-
+            createParticles({
+                position: intersection ,
+                positionOffset: [[0, 0], [0, 0], [0, 0]],
+                count: [1, 2],
+                speed: [11, 22],
+                speedOffset: [[-5, 5], [0, 0], [-5, 5]],
+                normal,
+                normalOffset: [[0, 0], [0, 0], [0, 0]],
+                color: "white"
+            }) 
             damageTurret(id, bullet.damage)
         }
     })
@@ -171,7 +169,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
         }
     })
 
-    if (!Config.DEBUG) {
+    if (!Config.DEBUG ||false) {
         return null
     }
 

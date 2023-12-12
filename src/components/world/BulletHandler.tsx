@@ -1,40 +1,53 @@
 import { useFrame } from "@react-three/fiber"
 import { memo, startTransition } from "react"
-import { Bullet } from "../../data/types"
+import { Bullet, CollisionObjectType } from "../../data/types"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../data/utils"
 import { store } from "../../data/store"
 import { removeBullet } from "../../data/store/actors"
-import { boxRayIntersection, getCollisions } from "../../data/collisions"
+import { getIntersection, getCollisions, CollisionEventDetails } from "../../data/collisions"
+import { Tuple3 } from "../../types" 
+
+function createCollisionEvent(
+    type: CollisionObjectType,
+    detail: CollisionEventDetails
+) {
+    return new CustomEvent<CollisionEventDetails>("bulletcollision:" + type, {
+        bubbles: false,
+        cancelable: false,
+        detail,
+    })
+}
+
 
 function BulletHandler() {
     useFrame((state, delta) => {
         let { instances, world: { bullets, grid, frustum }, player } = store.getState()
-        let removed: Bullet[] = []
+        let removedBullets: Bullet[] = []
 
         if (!instances.line || !player.object || !instances.device) {
             return
         }
 
-        for (let bullet of bullets) {
-            let bulletDiagonal = Math.sqrt((bullet.size[2] * .5) ** 2 + bullet.size[2] ** 2)
+        for (let bullet of bullets) {  
             let collisions = getCollisions({
                 grid,
                 source: {
                     position: bullet.position,
-                    size: [bulletDiagonal, bullet.size[1], bulletDiagonal],
+                    size: bullet.obb,
                 }
             })
 
             for (let client of collisions) {
-                window.dispatchEvent(new CustomEvent("bulletcollision:" + client.data.type, {
-                    bubbles: false,
-                    cancelable: false,
-                    detail: {
+                let intersection = getIntersection(client, bullet)
+
+                window.dispatchEvent(
+                    createCollisionEvent(client.data.type, {
                         client,
                         bullet,
-                        intersection: boxRayIntersection(client, bullet)
-                    }
-                }))
+                        intersection,
+                        normal: bullet.direction.map(i  => i * -1) as Tuple3, 
+                    })
+                )
 
                 break
             }
@@ -45,17 +58,13 @@ function BulletHandler() {
             setMatrixAt({
                 instance: instances.line.mesh,
                 index: bullet.index,
-                position: [
-                    bullet.position.x,
-                    bullet.position.y - .2,
-                    bullet.position.z,
-                ],
+                position: bullet.position.toArray(),
                 rotation: [0, bullet.rotation + Math.PI * .5, 0],
-                scale: bullet.size,
+                scale: bullet.size
             })
 
             if (!frustum.containsPoint(bullet.position) || collisions.length) {
-                removed.push(bullet)
+                removedBullets.push(bullet)
             }
 
             if (!bullet.mounted) {
@@ -64,12 +73,12 @@ function BulletHandler() {
             }
         }
 
-        for (let bullet of removed) {  
+        for (let bullet of removedBullets) {
             setMatrixNullAt(instances.line.mesh, bullet.index)
         }
 
-        if (removed.length) {
-            startTransition(() => removeBullet(...removed.map(i => i.id)))
+        if (removedBullets.length) {
+            startTransition(() => removeBullet(...removedBullets.map(i => i.id)))
         }
     })
 

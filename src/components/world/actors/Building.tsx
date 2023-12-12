@@ -11,25 +11,23 @@ export default function Building({ size, id, position }: Building) {
 
     useBulletCollision({
         name: "bulletcollision:building",
-        handler: ({ detail: { client, intersection } }) => {
+        handler: ({ detail: { client, intersection, normal } }) => {
             if (client.data.id !== id) {
                 return
-            }
-
-            if (intersection) {
-                setLastImpactLocation(...intersection)
-                createParticles({
-                    position: intersection,
-                    positionOffset: [[0, 0], [0, 0], [0, 0]],
-                    speed: [7, 14],
-                    speedOffset: [[-2, 2], [-2, 2], [-2, 2]],
-                    normal: [0, 0, -1], 
-                    count: [1, 2],
-                    radius: [.1, .2],
-                    friction: [.8, .95],
-                    color: "#fff",
-                })
-            }
+            } 
+ 
+            setLastImpactLocation(...intersection)
+            createParticles({
+                position: intersection,
+                positionOffset: [[0, 0], [0, 0], [0, 0]],
+                speed: [7, 14],
+                speedOffset: [[-2, 2], [-2, 2], [-2, 2]],
+                normal,
+                count: [1, 2],
+                radius: [.1, .2],
+                friction: [.8, .95],
+                color: "#fff",
+            }) 
         }
     })
 
@@ -45,4 +43,11 @@ export default function Building({ size, id, position }: Building) {
     })
 
     return null
+
+    return (
+        <mesh position={position.toArray()}>
+            <boxGeometry args={[...size, 1, 1, 1]} />
+            <meshBasicMaterial color="#bbecff"  wireframe />
+        </mesh>
+    )
 }

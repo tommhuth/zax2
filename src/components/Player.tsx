@@ -29,7 +29,7 @@ interface PlayerProps {
 
 export default function Player({
     size = [1.5, .5, depth],
-    z = -20,
+    z = -15,
     y = 1.5
 }: PlayerProps) {
     let playerGroupRef = useRef<Group | null>(null)
@@ -191,6 +191,7 @@ export default function Player({
                     damage: weapon.damage,
                     rotation: Math.PI * .5,
                     speed: weapon.speed,
+                    color: "#fff",
                 })
                 lastShotAt.current = Date.now()
             })

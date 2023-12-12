@@ -1,11 +1,13 @@
 import random from "@huth/random"
-import { bulletSize, store } from "."
+import { bulletSize, store } from "./index"
 import { Plane, Turret } from "../types"
 import { Box3, Matrix4, Quaternion, Vector3 } from "three"
 import { Tuple3 } from "../../types"
 import { updateWorld } from "./utils"
 
-let _mat4 = new Matrix4()
+let _mat4 = new Matrix4() 
+let _yAxis = new Vector3(0,1,0)
+let _obb = new Vector3()
 
 export function createBullet({
     position = [0, 0, 0],
@@ -18,7 +20,10 @@ export function createBullet({
 }) {
     let id = random.id()
     let aabb = new Box3().setFromCenterAndSize(new Vector3(...position), new Vector3(0, 0, 0))
-    let { instances } = store.getState()
+    let { instances } = store.getState() 
+
+    _obb.set(...size)
+        .applyMatrix4(_mat4.makeRotationAxis(_yAxis, rotation))
 
     aabb.applyMatrix4(_mat4.compose(
         new Vector3(),
@@ -33,6 +38,7 @@ export function createBullet({
                 id,
                 damage,
                 mounted: false,
+                obb: _obb.toArray(),
                 index: instances.line.index.next(),
                 aabb,
                 color,
@@ -213,7 +219,7 @@ export function createPlane({
     position: [x, y, z] = [0, 0, -10],
     targetY = y,
     speed = random.float(4, 5),
-    fireFrequency = random.integer(550, 700),
+    fireFrequency = random.integer(350, 700),
     takeoffDistance = random.integer(2, 5),
 }: CreatePlaneParams) {
     let id = random.id()

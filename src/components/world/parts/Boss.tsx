@@ -7,7 +7,7 @@ import Boss from "../actors/Boss"
 export default function BossPart({
     id,
     position,
-    counter,
+    level,
     size,
 }: WorldPartBoss) {
     let textZ = 50
@@ -51,7 +51,7 @@ export default function BossPart({
                 receiveShadow
                 letterSpacing={-.05}
             >
-                0{counter + 1}
+                0{level + 1}
                 <meshLambertMaterial color="blue" />
             </Text3D>
 
