@@ -3,10 +3,10 @@ import { store, useStore } from "../../../data/store"
 import { useFrame } from "@react-three/fiber"
 import { removeHeatSeaker } from "../../../data/store/boss"
 import { setMatrixAt, setMatrixNullAt } from "../../../data/utils"
-import { useLayoutEffect } from "react"
+import { useLayoutEffect, useMemo } from "react"
 import { createExplosion } from "../../../data/store/effects"
 import random from "@huth/random"
-import { HeatSeaker } from "../../../data/types" 
+import { HeatSeaker } from "../../../data/types"
 import { useBulletCollision } from "../../../data/collisions"
 
 let _dir = new Vector3()
@@ -22,6 +22,7 @@ export default function HeatSeaker({
     velocity
 }: HeatSeaker) {
     let grid = useStore(i => i.world.grid)
+    let accuracy = useMemo(() => random.float(.25, .4), [])
 
     useBulletCollision({
         name: "bulletcollision:heatseaker",
@@ -35,7 +36,6 @@ export default function HeatSeaker({
     useFrame((state, delta) => {
         let { player, world, instances } = store.getState()
         let speed = 10
-        let turnEffect = .35
 
         if (!player.object) {
             return
@@ -59,7 +59,7 @@ export default function HeatSeaker({
         _dir.copy(position)
             .sub(player.object.position)
             .normalize()
-            .multiplyScalar(-turnEffect)
+            .multiplyScalar(-accuracy)
 
         velocity.x += _dir.x * delta * 4
         velocity.y += _dir.y * delta * 4

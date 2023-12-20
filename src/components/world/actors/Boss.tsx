@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react"
-import { createHeatSeaker, damageBoss, registerBoss, removeBoss } from "../../../data/store/boss" 
+import { createHeatSeaker, damageBoss, registerBoss, removeBoss } from "../../../data/store/boss"
 import { Group, Vector3 } from "three"
 import { useStore } from "../../../data/store"
 import { Tuple3 } from "../../../types"
@@ -11,8 +11,9 @@ import { useFrame } from "@react-three/fiber"
 import { createBullet } from "../../../data/store/actors"
 import { Owner } from "../../../data/types"
 import { useBulletCollision } from "../../../data/collisions"
+import { useGLTF } from "@react-three/drei"
 
-let bossSize: Tuple3 = [4, 3, 2]
+let bossSize: Tuple3 = [4.5, 4.75, 2]
 
 interface BossProps {
     startPosition: Tuple3
@@ -22,6 +23,7 @@ interface BossProps {
 export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossProps) {
     let boss = useStore(i => i.boss)
     let bossWrapper = useRef<Group>(null)
+    let { nodes, materials } = useGLTF("/models/boss.glb") as any
     let grid = useStore(i => i.world.grid)
     let data = useMemo(() => {
         return {
@@ -35,7 +37,7 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
     let client = useMemo(() => {
         return grid.createClient([...startPosition], bossSize, {
             type: "boss",
-            id: "boss", 
+            id: "boss",
         })
     }, [grid, ...startPosition])
 
@@ -43,16 +45,20 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
         data.time += delta * 1000
 
         if (data.time >= data.nextHeatSeakerAt) {
-            createHeatSeaker(position.toArray())
+            createHeatSeaker([
+                position.x + bossSize[0] / 2 * random.pick(-1, 1) * 1,
+                position.y + .65,
+                position.z - .5
+            ])
             data.nextHeatSeakerAt = data.time + random.pick(1500, 700, 5000, 2500)
         }
 
         if (data.time >= data.nextBulletAt) {
             createBullet({
                 position: [
-                    position.x,
-                    position.y,
-                    position.z - 3
+                    position.x + bossSize[0] / 2 * random.pick(-1, 1) * 1,
+                    position.y + .65,
+                    position.z - 2
                 ],
                 damage: 10,
                 color: "red",
@@ -71,7 +77,7 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
                 return
             }
 
-            damageBoss(10) 
+            damageBoss(10)
             setLastImpactLocation(...intersection)
             createParticles({
                 position: intersection,
@@ -83,7 +89,7 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
                 radius: [.1, .3],
                 friction: [.8, .95],
                 color: "#00f",
-            }) 
+            })
         }
     })
 
@@ -155,7 +161,7 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
 
     useEffect(() => {
         registerBoss({
-            pauseAt, 
+            pauseAt,
             position,
         })
     }, [])
@@ -170,14 +176,34 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
                 ref={bossWrapper}
                 visible={!!boss}
             >
+                <mesh 
+                    geometry={nodes.Cube012.geometry}
+                    material={materials.lightblue}
+                />
+                <mesh 
+                    geometry={nodes.Cube012_1.geometry}
+                    material={materials.black}
+                />
+                <mesh 
+                    geometry={nodes.Cube012_2.geometry}
+                    material={materials.darkblue}
+                />
                 <mesh
-                    castShadow
-                    receiveShadow
-                >
-                    <boxGeometry args={bossSize} />
-                    <meshLambertMaterial color="blue" />
-                </mesh>
+                    castShadow 
+                    geometry={nodes.Cube012_3.geometry}
+                    material={materials.blue}
+                />
+                <mesh 
+                    geometry={nodes.Cube012_4.geometry}
+                    material={materials.solidblue}
+                />
+                <mesh 
+                    geometry={nodes.Cube012_5.geometry}
+                    material={materials.white2}
+                />
             </group>
         </>
     )
 }
+
+useGLTF.preload("/boss.glb")

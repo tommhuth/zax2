@@ -37,7 +37,7 @@ export function createHeatSeaker([x, y, z]: Tuple3) {
     if (boss) {
         let id = random.id()
         let position = new Vector3(x, y, z)
-        let size: Tuple3 = [.5, .5, .5]
+        let size: Tuple3 = [.35, .35, .35]
         let client = world.grid.createClient(position.toArray(), size, {
             type: "heatseaker",
             id, 
