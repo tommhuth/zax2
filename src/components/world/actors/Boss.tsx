@@ -206,4 +206,4 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
     )
 }
 
-useGLTF.preload("/boss.glb")
+useGLTF.preload("/models/boss.glb")

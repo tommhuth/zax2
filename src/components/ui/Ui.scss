@@ -24,7 +24,7 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%); 
-    width: clamp(15em, 60vw, 30em);
+    width: clamp(18em, 40vw, 25em);
     top: 2em;
     text-align: center;
     z-index: 100;
@@ -39,7 +39,7 @@
     background-size: var(--size) var(--size); /* Must be a square */
     background-position: 0 0, calc(var(--size) / 2) 0, calc(var(--size) / 2) calc(var(--size) / -2), 0px calc(var(--size) / 2);
 
-    @media (max-width: 700px) {
+    @media (max-width: 900px) {
         font-size: .75em;
     }
 
