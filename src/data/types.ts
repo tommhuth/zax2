@@ -6,7 +6,7 @@ import { Client } from "./world/SpatialHashGrid3D"
 export type InstanceName = "line" | "box" | "sphere" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball"
     | "turret" | "rocket" | "platform" | "cylinder" | "shimmer"
-    | "grass" | "plant" | "shockwave" | "blast"
+    | "grass" | "plant" | "shockwave" | "blast" | "impact"
 
 export type RepeaterName = "building1" | "building2" | "building3"
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"

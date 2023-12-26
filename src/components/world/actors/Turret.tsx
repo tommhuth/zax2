@@ -12,8 +12,8 @@ import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
 import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
-import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
-import { explosionColor, turretColor, turretParticleColor } from "../../../data/theme" 
+import { createExplosion, createImpactDecal, createParticles, createShimmer } from "../../../data/store/effects"
+import { explosionColor, turretColor, turretParticleColor } from "../../../data/theme"
 import { setLastImpactLocation } from "../../../data/store/player"
 import { useBulletCollision } from "../../../data/collisions"
 
@@ -61,15 +61,15 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
 
     useBulletCollision({
         name: "bulletcollision:turret",
-        handler: ({ detail: { bullet, intersection, client, normal } }) => { 
+        handler: ({ detail: { bullet, intersection, client, normal } }) => {
             setLastImpactLocation(...intersection)
 
             if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
                 return
-            }  
+            }
 
             createParticles({
-                position: intersection ,
+                position: intersection,
                 positionOffset: [[0, 0], [0, 0], [0, 0]],
                 count: [1, 2],
                 speed: [11, 22],
@@ -77,7 +77,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
                 normal,
                 normalOffset: [[0, 0], [0, 0], [0, 0]],
                 color: "white"
-            }) 
+            })
             damageTurret(id, bullet.damage)
         }
     })
@@ -119,7 +119,8 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
         if (health === 0) {
             startTransition(() => {
                 remove()
-                explode(position, size)
+                explode(position, size) 
+                createImpactDecal([position.x, .1, position.z])
             })
         }
     }, [health])
@@ -169,15 +170,17 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
         }
     })
 
-    if (!Config.DEBUG ||false) {
+    if (!Config.DEBUG || false) {
         return null
     }
 
     return (
-        <mesh position={position.toArray()}>
-            <boxGeometry args={[...size, 1, 1, 1]} />
-            <meshBasicMaterial wireframe color="orange" />
-        </mesh>
+        <>
+            <mesh position={position.toArray()}>
+                <boxGeometry args={[...size, 1, 1, 1]} />
+                <meshBasicMaterial wireframe color="orange" />
+            </mesh>
+        </>
     )
 }
 

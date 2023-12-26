@@ -7,7 +7,7 @@ import { useInstance } from "../../InstancedMesh"
 import random from "@huth/random"
 import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
-import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, createShimmer } from "../../../data/store/effects"
 import { damageBarrel, removeBarrel } from "../../../data/store/world"
 import { barellParticleColor } from "../../../data/theme"  
 import { increaseScore } from "../../../data/store/player"
@@ -42,6 +42,7 @@ function explode(position: Vector3, size: Tuple3, color: string) {
         radius: [.1, .4],
         color,
     })
+    createImpactDecal([position.x, 0, position.z])
 }
 
 export default function Barrel({

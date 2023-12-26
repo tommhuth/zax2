@@ -15,6 +15,7 @@ import { playerColor } from "../data/theme"
 import { MeshLambertFogMaterial } from "./world/MeshLambertFogMaterial"
 import { removeHeatSeaker } from "../data/store/boss"
 import { useBulletCollision, useCollisionDetection } from "../data/collisions"
+import random from "@huth/random"
 
 let _edgemin = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -100)
 let _edgemax = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, 100)
@@ -33,6 +34,7 @@ export default function Player({
     y = 1.5
 }: PlayerProps) {
     let playerGroupRef = useRef<Group | null>(null)
+    let flameRef = useRef<Mesh | null>(null)
     let hitboxRef = useRef<Mesh>(null)
     let lastShotAt = useRef(0)
     let isMovingUp = useRef(false)
@@ -84,41 +86,41 @@ export default function Player({
         }
     })
 
-    useCollisionDetection({ 
+    useCollisionDetection({
         interval: 1,
         source: {
             size,
             position,
         },
         actions: {
-            building: () => {  
+            building: () => {
                 damagePlayer(100)
             },
-            turret: (data) => { 
+            turret: (data) => {
                 damagePlayer(100)
                 damageTurret(data.id, 100)
             },
-            barrel: (data) => { 
+            barrel: (data) => {
                 damageBarrel(data.id, 100)
             },
-            plane: (data) => { 
+            plane: (data) => {
                 damagePlayer(100)
                 damagePlane(data.id, 100)
             },
-            rocket: (data) => { 
+            rocket: (data) => {
                 damagePlayer(100)
                 damageRocket(data.id, 100)
             },
-            heatseaker: (data) => {  
+            heatseaker: (data) => {
                 damagePlayer(25)
                 removeHeatSeaker(data.id)
             },
             boss: () => {
-                damagePlayer(100) 
+                damagePlayer(100)
             }
         }
-    }) 
-    
+    })
+
     useEffect(() => {
         let shootDiv = document.getElementById("shoot") as HTMLElement
         // shoot 
@@ -229,6 +231,11 @@ export default function Player({
             client.position = position.toArray()
             grid.updateClient(client)
         }
+
+        flameRef.current.scale.x = random.float(.3, .6)
+        flameRef.current.scale.z = random.float(.9, 1.1)
+        flameRef.current.position.z = -flameRef.current.scale.z - 1
+        flameRef.current.material.opacity = random.float(.85, 1)
     })
 
     return (
@@ -254,6 +261,15 @@ export default function Player({
                 <mesh userData={{ type: "player" }} visible={false}>
                     <boxGeometry args={[...size, 1, 1, 1]} />
                     <meshBasicMaterial color="red" wireframe />
+                </mesh>
+                <mesh
+                    userData={{ type: "player" }}
+                    scale={[.5, .21, 1]}
+                    ref={flameRef}
+                    position-z={-2}
+                >
+                    <sphereGeometry args={[1, 16, 16]} />
+                    <meshBasicMaterial color="white" transparent />
                 </mesh>
             </group>
             <mesh

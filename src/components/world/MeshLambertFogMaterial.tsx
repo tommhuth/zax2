@@ -1,27 +1,65 @@
-import { Color, MeshLambertMaterial, Vector3 } from "three"
+import { Color, MeshLambertMaterial, TextureLoader, Vector3 } from "three"
 import { useShader } from "../../data/hooks"
-import { bcolor, fogColorEnd, fogColorStart } from "../../data/theme"
+import { backColor, bcolor, fogColorEnd, fogColorStart, leftColor, topColor } from "../../data/theme"
 import easings from "../../shaders/easings.glsl"
+import dither from "../../shaders/dither.glsl"
 import { glsl } from "../../data/utils"
-import { useFrame } from "@react-three/fiber"
-import { useEffect, useRef } from "react"
+import { useFrame, useLoader } from "@react-three/fiber"
+import { useEffect, useMemo, useRef } from "react"
 import { useStore } from "../../data/store"
+import Counter from "../../data/world/Counter"
 
 export function MeshLambertFogMaterial({
     color = bcolor,
     isInstance = true,
     usesTime = false,
-    usesPlayerPosition = false,
+    usesPlayerPosition = true,
     fragmentShader = "",
-    vertexShader = "", 
-    fogDensity = .75,
+    vertexShader = "",
+    fogDensity = 0.2,
+    ditherActive = true,
     ...rest
 }) {
-    let ref = useRef<MeshLambertMaterial>(null)
+    let counter = useMemo(() => new Counter(1), [])
+    let ref = useRef<MeshLambertMaterial>(null) 
     let player = useStore(i => i.player.object)
     let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
             uTime: { value: 0 },
+            uDitherActive: { value: ditherActive ? 1 : 0 },
+            uBasicDirectionLights: {   
+                value: [
+                    {
+                        direction: new Vector3(0, 0, -1),
+                        color: new Color(backColor),
+                        strength: .5,
+                    }, 
+                    {
+                        direction: new Vector3(1, 0, 0),
+                        color: new Color(leftColor),
+                        strength: .75,
+                    },
+                ]
+            },
+            uExplosions: {
+                value: [
+                    {
+                        position: new Vector3(0, 0, 0),
+                        strength: 0,
+                        radius: 21,
+                    },
+                    {
+                        position: new Vector3(0, 0, 26),
+                        strength: 0,
+                        radius: 1,
+                    },
+                    {
+                        position: new Vector3(0, 0, 35),
+                        strength: 0,
+                        radius: 1,
+                    }
+                ],
+            },
             uPlayerPosition: { value: new Vector3() },
             uFogColorStart: { value: new Color(fogColorStart) },
             uFogColorEnd: { value: new Color(fogColorEnd) },
@@ -51,22 +89,91 @@ export function MeshLambertFogMaterial({
                 uniform float uTime; 
                 uniform vec3 uFogColorStart; 
                 uniform vec3 uFogColorEnd;  
+                uniform vec3 uPlayerPosition; 
+                uniform float uDitherActive; 
+
+                struct Explosion {
+                    vec3 position;
+                    float strength;
+                    float radius;
+                };
+
+
+                struct BasicDirectionLight {
+                    vec3 direction;
+                    vec3 color;
+                    float strength;
+                };
+                
+                uniform Explosion uExplosions[3];
+                uniform BasicDirectionLight uBasicDirectionLights[2];
+
+
                 ${easings}
+                ${dither}
             `,
             main: glsl` 
                 ${fragmentShader} 
-
-                float fogDensity = ${fogDensity};
-                vec3 bottomColor = mix(uFogColorStart, gl_FragColor.rgb , 1. - fogDensity); 
-                float heightDistance = 2.8;
                 
+
+                for (int i = 0; i < uBasicDirectionLights.length(); ++i) { 
+                    BasicDirectionLight light = uBasicDirectionLights[i];
+
+                    gl_FragColor.rgb = mix(
+                        gl_FragColor.rgb,
+                        mix(gl_FragColor.rgb, light.color, light.strength),
+                        clamp(dot(normal, light.direction), 0., 1.)
+                    );
+                }
+ 
+                float fogDensity = ${fogDensity};
+                float heightDistance = 2.;
+                vec3 bottomColor = mix(uFogColorStart, gl_FragColor.rgb , 1. - fogDensity); 
+
                 gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, easeOutCubic(clamp(vGlobalPosition.y / heightDistance, .0, 1.)));
-            
+
+                if (uDitherActive == 1.) { 
+                    gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 16., .0051);
+                }
+
+                /*
+                float shadowEffect = 1.; 
+
+                for (int j = 0; j < uExplosions.length(); ++j) {
+                    Explosion explosion = uExplosions[j];
+                     
+                    shadowEffect = min( 
+                        shadowEffect,
+                        explosion.strength * easeInOutCubic(
+                            clamp(length(vGlobalPosition - explosion.position) / explosion.radius, 0., 1.)
+                        )
+                    );
+                }
+
+                gl_FragColor.rgb = mix(
+                    gl_FragColor.rgb, 
+                    vec3(.0, .0, .0), 
+                    shadowEffect
+                ); 
+                */
             `
         }
-    }) 
+    })
+    let explosions = useStore(i => i.effects.explosions)
 
-    useEffect(()=> {
+    useEffect(() => {
+        if (!explosions.length) {
+            return
+        }
+
+        uniforms.uExplosions.value[counter.current + 1].position = explosions[0].position
+        uniforms.uExplosions.value[counter.current + 1].strength = 1
+        uniforms.uExplosions.value[counter.current + 1].radius = explosions[0].radius * 2
+        uniforms.uExplosions.needsUpdate = true
+        counter.next()
+    }, [explosions, uniforms])
+
+    useEffect(() => {
         if (ref.current) {
             ref.current.needsUpdate = true
         }
@@ -78,6 +185,17 @@ export function MeshLambertFogMaterial({
             uniforms.uTime.needsUpdate = true
         }
 
+        //uniforms.uExplosions.value[0].position =  player.position.toArray()
+        if (player) {
+            uniforms.uExplosions.value[0].position = player.position.toArray()
+        }
+
+        for (let i = 0; i < 2; i++) {
+            uniforms.uExplosions.value[i + 1].strength *= .95
+        }
+
+        uniforms.uExplosions.needsUpdate = true
+
         if (usesPlayerPosition && player) {
             uniforms.uPlayerPosition.value = player.position.toArray()
             uniforms.uPlayerPosition.needsUpdate = true
@@ -85,7 +203,7 @@ export function MeshLambertFogMaterial({
     })
 
     return (
-        <meshLambertMaterial
+        <meshPhongMaterial
             onBeforeCompile={onBeforeCompile}
             color={color}
             attach={"material"}
@@ -97,23 +215,4 @@ export function MeshLambertFogMaterial({
 }
 
 
-/*
-
-float fogScale = .095;
-float verticalScale = .1;
-vec3 pos = vec3(
-  vPosition.x * fogScale + uTime, 
-  vPosition.y * verticalScale + uTime, 
-  vPosition.z * fogScale * 1.2
-);
-float fogDensity = 1.;
-float heightRange = 8.;
-float heightOffset = 0.;
-float heightEffect = easeInQuad(1. - clamp((vPosition.y - heightOffset) / heightRange, 0., 1.));
-float fogEffect = easeInOutCubic((noise(pos) + 1.) / 2.) * 1.;
-
-vec3 baseColor = gl_FragColor.rgb; 
-vec3 fogColor = mix(uFogColorStart, uFogColorStart, easeInOutCubic(clamp(vPosition.y / heightRange, 0., 1.)));
-
-gl_FragColor = vec4(mix(baseColor, fogColor, heightEffect * fogEffect * fogDensity), 1.);
-*/
+useLoader.preload(TextureLoader, "/textures/night-2-4K.jpg")

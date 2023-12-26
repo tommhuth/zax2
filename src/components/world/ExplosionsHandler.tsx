@@ -1,5 +1,5 @@
 import { startTransition, useEffect, useMemo, useRef } from "react"
-import { AdditiveBlending, BufferAttribute, Color, Sprite } from "three"
+import { AdditiveBlending, BufferAttribute, Color, PointLight, Sprite } from "three"
 import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
 import { useShader } from "../../data/hooks"
 import { useFrame, useLoader } from "@react-three/fiber"
@@ -9,16 +9,20 @@ import { useStore } from "../../data/store"
 import { removeExplosion } from "../../data/store/effects"
 import { explosionColor, explosionEndColor } from "../../data/theme"
 import easings from "../../shaders/easings.glsl"
+import dither from "../../shaders/dither.glsl"
 import noise from "../../shaders/noise.glsl"
 import { blend, easeInQuint, easeOutExpo, easeOutQuart } from "../../data/shaping"
 
 export default function ExplosionsHandler() {
     let count = 200
     let latestExplosion = useStore(i => i.effects.explosions[0])
-    let glowMap = useLoader(TextureLoader, "/textures/glow.png")
-    let glowRef = useRef<Sprite>(null)  
+    let [glowMap, impactMap] = useLoader(TextureLoader, ["/textures/glow.png", "/textures/decal1.png"])
+    let glowRef = useRef<Sprite>(null)
     let opacityAttributes = useMemo(() => {
         return new Float32Array(new Array(count).fill(0))
+    }, [count])
+    let iopacityAttributes = useMemo(() => {
+        return new Float32Array(new Array(10).fill(0))
     }, [count])
     let centerAttributes = useMemo(() => {
         return new Float32Array(new Array(count * 3).fill(0))
@@ -31,8 +35,8 @@ export default function ExplosionsHandler() {
     }, [count])
     let instance = useStore(i => i.instances.fireball?.mesh)
     let fireballShader = useShader({
-        uniforms: {  
-            uEndColor: { value: new Color(explosionEndColor) }, 
+        uniforms: {
+            uEndColor: { value: new Color(explosionEndColor) },
         },
         vertex: {
             head: glsl` 
@@ -65,6 +69,7 @@ export default function ExplosionsHandler() {
                  
                 ${easings}
                 ${noise}
+                ${dither}
             `,
             main: glsl`     
                 vec3 baseColor = mix(uEndColor, gl_FragColor.rgb, easeOutQuart(vDistance)); 
@@ -74,10 +79,12 @@ export default function ExplosionsHandler() {
                     mix(baseColor, vec3(1., .0, .79), easeInCubic(noiseEffect) * .6) * 1.05, 
                     easeOutQuart(1. - vDistance)  
                 );
+
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 10., .005);
             `
         }
     })
-    let shockwaveShader = useShader({ 
+    let shockwaveShader = useShader({
         vertex: {
             head: glsl` 
                 attribute float aOpacity;  
@@ -95,6 +102,7 @@ export default function ExplosionsHandler() {
                 varying float vDistanceFromCenter;   
 
                 ${easings}
+                ${dither}
             `,
             main: glsl`      
                 
@@ -103,10 +111,11 @@ export default function ExplosionsHandler() {
 
                     easeInCubic(vOpacity * vDistanceFromCenter)
                 ); 
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 18., .005);
             `
         }
     })
-    let blastShader = useShader({  
+    let blastShader = useShader({
         vertex: {
             head: glsl` 
                 varying vec3 vGlobalNormal;
@@ -122,6 +131,7 @@ export default function ExplosionsHandler() {
                 varying float vDistanceFromCenter;   
 
                 ${easings}
+                ${dither}
             `,
             main: glsl`  
                 // this isnt accurate is it
@@ -132,9 +142,32 @@ export default function ExplosionsHandler() {
                     mix(vec3(1., 0., 0.65), vec3(1., .5, 0.), easeInQuad(directionToCamera)),
                     directionToCamera
                 );
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 10., .005);
             `
         }
-    }) 
+    })
+    let impactShader = useShader({
+        vertex: {
+            head: glsl`
+                attribute float aOpacity;
+                varying float vOpacity;
+            `,
+            main: glsl`
+                vOpacity = aOpacity;
+            `
+        },
+        fragment: {
+            head: glsl`
+                varying float vOpacity;
+                
+                ${dither} 
+            `,
+            main: glsl` 
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 16., .005);
+                gl_FragColor.a *= vOpacity;
+            `
+        },
+    })
 
     useEffect(() => {
         if (!instance || !latestExplosion) {
@@ -151,7 +184,7 @@ export default function ExplosionsHandler() {
             radiusAttribute.set([latestExplosion.radius], fireball.index)
             radiusAttribute.needsUpdate = true
         }
-    }, [latestExplosion]) 
+    }, [latestExplosion])
 
     useFrame((state, delta) => {
         if (!instance) {
@@ -166,7 +199,7 @@ export default function ExplosionsHandler() {
         for (let { shockwave, blast, ...explosion } of explosions) {
             let fireballs = explosion.fireballs
             let shockwaveDone = shockwave ? shockwave.time > shockwave.lifetime : true
-            let blastDone =  blast.time > blast.lifetime 
+            let blastDone = blast.time > blast.lifetime
 
             if (fireballs[0].time > fireballs[0].lifetime && shockwaveDone && blastDone) {
                 dead.push(explosion.id)
@@ -190,17 +223,17 @@ export default function ExplosionsHandler() {
                 shockwave.time += ndelta(delta) * 1000
             }
 
-            let t2 = clamp(blast.time / (blast.lifetime * .5), 0, 1) 
+            let t2 = clamp(blast.time / (blast.lifetime * .5), 0, 1)
 
             setMatrixAt({
                 instance: blastInstance.mesh,
                 index: blast.index,
-                position:[ explosion.position[0],  explosion.position[1] + 1,  explosion.position[2]],
-                scale: blend([0, blast.radius, 0],  easeOutExpo(t2)),
+                position: [explosion.position[0], explosion.position[1] + 1, explosion.position[2]],
+                scale: blend([0, blast.radius, 0], easeOutExpo(t2)),
             })
 
             blast.time += ndelta(delta) * 1000
- 
+
             for (let sphere of fireballs) {
                 let t = clamp(sphere.time / sphere.lifetime, 0, 1)
                 let scale = blend([sphere.startRadius, sphere.maxRadius, 0], easeOutQuart(t))
@@ -226,7 +259,7 @@ export default function ExplosionsHandler() {
                 })
 
                 sphere.time += ndelta(delta) * 1000
-            } 
+            }
         }
 
         if (dead.length) {
@@ -253,15 +286,36 @@ export default function ExplosionsHandler() {
     return (
         <>
             <InstancedMesh
+                name="impact"
+                count={10}
+                castShadow={false}
+                receiveShadow
+            >
+                <planeGeometry args={[2, 2, 1, 1]} >
+                    <instancedBufferAttribute
+                        needsUpdate={true}
+                        attach="attributes-aOpacity"
+                        args={[iopacityAttributes, 1, false, 1]}
+                    />
+                </planeGeometry>
+                <meshBasicMaterial
+                    map={impactMap} 
+                    color={"black"}
+                    depthWrite={false}
+                    transparent
+                    onBeforeCompile={impactShader.onBeforeCompile}
+                />
+            </InstancedMesh>
+            <InstancedMesh
                 castShadow={false}
                 receiveShadow={false}
                 count={count}
                 name="blast"
             >
-                <sphereGeometry args={[1, 16,16]} />  
+                <sphereGeometry args={[1, 24, 24]} />
                 <meshLambertMaterial
-                    onBeforeCompile={blastShader.onBeforeCompile} 
-                    transparent 
+                    onBeforeCompile={blastShader.onBeforeCompile}
+                    transparent
                 />
             </InstancedMesh>
 
@@ -271,7 +325,7 @@ export default function ExplosionsHandler() {
                 count={count}
                 name="shockwave"
             >
-                <cylinderGeometry args={[1, 1, .01, 16, 1]}>
+                <cylinderGeometry args={[1, 1, .01, 32, 1]}>
                     <instancedBufferAttribute
                         needsUpdate={true}
                         attach="attributes-aOpacity"
@@ -290,9 +344,9 @@ export default function ExplosionsHandler() {
                 castShadow={false}
                 receiveShadow={false}
                 count={count}
-                name="fireball" 
+                name="fireball"
             >
-                <sphereGeometry args={[1, 12, 12]} >
+                <sphereGeometry args={[1, 24, 24]} >
                     <instancedBufferAttribute
                         needsUpdate={true}
                         attach="attributes-aCenter"
@@ -312,13 +366,14 @@ export default function ExplosionsHandler() {
                 <meshPhongMaterial
                     transparent
                     onBeforeCompile={fireballShader.onBeforeCompile}
-                    color={explosionColor} 
+                    color={explosionColor}
                     emissive={"#FFF"}
                     emissiveIntensity={.45}
                 />
             </InstancedMesh>
 
-            <sprite ref={glowRef} scale={15} >
+
+            <sprite visible={false} ref={glowRef} scale={15} >
                 <spriteMaterial
                     depthWrite={false}
                     color={"#fff"}

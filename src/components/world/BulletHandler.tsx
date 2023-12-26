@@ -60,7 +60,7 @@ function BulletHandler() {
                 index: bullet.index,
                 position: bullet.position.toArray(),
                 rotation: [0, bullet.rotation + Math.PI * .5, 0],
-                scale: bullet.size
+                scale: [bullet.size[0], .1, bullet.size[2] ]
             })
 
             if (!frustum.containsPoint(bullet.position) || collisions.length) {

@@ -20,7 +20,12 @@ export default function Building1() {
                     // receiveShadow
                     geometry={nodes.Cube007_1.geometry}
                 >
-                    <MeshLambertFogMaterial isInstance={false} color={buildingHi} />
+                    <meshBasicMaterial
+                        isInstance={false}
+                        color={buildingHi}
+                        emssive={buildingHi}
+                        emissiveIntensity={.95}
+                    />
                 </mesh>
             </group>
         </group>

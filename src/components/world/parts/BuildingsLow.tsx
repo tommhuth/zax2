@@ -44,7 +44,7 @@ export default function BuildingsLow({
                 size={[3, 1, 3]}
             />
             <Grass
-                position={[9, 0, size[1] / 2]}
+                position={[9, 0, size[1] / 2 - 1]}
             />
             
             <Turret 

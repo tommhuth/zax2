@@ -1,10 +1,10 @@
 import random from "@huth/random"
 import { Tuple2, Tuple3 } from "../../types"
 import { Store, store } from "."
-import { Vector3 } from "three"
+import { BufferAttribute, Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
-import { clamp } from "../utils"
+import { clamp, setMatrixAt } from "../utils"
 import { easeOutCubic } from "../shaping"
 
 function updateEffects(data: Partial<Store["effects"]>) {
@@ -91,23 +91,23 @@ export function createExplosion({
     let blastInstance = store.getState().instances.blast
     let { cameraShake, object } = store.getState().player
     let playerZ = object?.position.z || 0
-    let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 5, 0, 1) 
+    let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 5, 0, 1)
 
-    setCameraShake(Math.min(cameraShake + easeOutCubic(shake), 1)) 
+    setCameraShake(Math.min(cameraShake + easeOutCubic(shake), 1))
     updateEffects({
         explosions: [
             {
                 position,
                 id: random.id(),
-                radius: radius * 7 + (fireballCount ? 1.5 : 0), 
-                blast: { 
-                    lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5), 
+                radius: radius * 7 + (fireballCount ? 1.5 : 0),
+                blast: {
+                    lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5),
                     radius: radius * 5,
-                    time: 0, 
+                    time: 0,
                     index: blastInstance.index.next(),
                 },
                 shockwave: shockwave ? {
-                    lifetime: random.float(baseLifetime * 1.15, baseLifetime * 1.5), 
+                    lifetime: random.float(baseLifetime * 1.15, baseLifetime * 1.5),
                     radius: radius * random.float(3, 5),
                     time: 0,
                     index: shockwaveInstance.index.next(),
@@ -163,6 +163,25 @@ export function createExplosion({
     })
 }
 
+export function createImpactDecal(position: Tuple3, scale = random.float(1.5, 3)) {
+    let { impact } = store.getState().instances
+    let index = impact.index.next()
+    let opacityAttribute = impact?.mesh.geometry.attributes?.aOpacity as BufferAttribute
+
+    if (opacityAttribute) {  
+        opacityAttribute.set([random.float(.3, .7)], index)
+        opacityAttribute.needsUpdate = true 
+    }
+
+    setMatrixAt({
+        instance: impact.mesh,
+        index,
+        scale: [scale, scale, scale],
+        rotation: [-Math.PI * .5, 0, random.float(0, Math.PI * 2)],
+        position: [position[0], position[1] + random.float(.1, .2), position[2]],
+    })
+}
+
 export function removeExplosion(id: string | string[]) {
     updateEffects({
         explosions: store.getState().effects.explosions.filter(i => Array.isArray(id) ? !id.includes(i.id) : i.id !== id)
@@ -200,7 +219,7 @@ export function createParticles({
     color = "#FFFFFF",
     radius = [.15, .25],
 }: CreateParticlesParams) {
-    let instance = store.getState().instances[name] 
+    let instance = store.getState().instances[name]
     let particles: Particle[] = new Array(Array.isArray(count) ? random.integer(...count) : count).fill(null).map((i, index, list) => {
         let velocity = new Vector3(
             (normal[0] + random.float(...normalOffset[0])) * random.float(...speed) + random.float(...speedOffset[0]),
@@ -208,7 +227,7 @@ export function createParticles({
             (normal[2] + random.float(...normalOffset[2])) * random.float(...speed) + random.float(...speedOffset[2]),
         )
 
-        let j =  instance.index.next() 
+        let j = instance.index.next()
 
         return {
             id: random.id(),
