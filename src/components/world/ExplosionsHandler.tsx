@@ -273,7 +273,7 @@ export default function ExplosionsHandler() {
             glowRef.current.position.y += 6
             glowRef.current.position.x -= 5
             glowRef.current.position.z -= 5
-            glowRef.current.material.opacity = .85
+            glowRef.current.material.opacity = .5
         }
     }, [latestExplosion])
 
@@ -371,9 +371,8 @@ export default function ExplosionsHandler() {
                     emissiveIntensity={.45}
                 />
             </InstancedMesh>
-
-
-            <sprite visible={false} ref={glowRef} scale={15} >
+ 
+            <sprite ref={glowRef} scale={15} >
                 <spriteMaterial
                     depthWrite={false}
                     color={"#fff"}

@@ -169,7 +169,7 @@ export function createImpactDecal(position: Tuple3, scale = random.float(1.5, 3)
     let opacityAttribute = impact?.mesh.geometry.attributes?.aOpacity as BufferAttribute
 
     if (opacityAttribute) {  
-        opacityAttribute.set([random.float(.3, .7)], index)
+        opacityAttribute.set([random.float(.45, .75)], index)
         opacityAttribute.needsUpdate = true 
     }
 
