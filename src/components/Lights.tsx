@@ -49,6 +49,10 @@ export default function Lights() {
     })
 
     useLayoutEffect(() => {
+        if (! explosionLightRef1.current || !explosionLightRef2.current) {
+            return 
+        }
+
         explosionLightRef1.current.intensity = 0
         explosionLightRef2.current.intensity = 0
     }, [])
@@ -68,7 +72,7 @@ export default function Lights() {
         }
     }, [lastExplosion])
 
-    useFrame((state, delta) => {
+    useFrame(() => {
         for (let light of explosionLights) {
             if (light.current) {
                 light.current.intensity *= .9 //* 60 * delta 

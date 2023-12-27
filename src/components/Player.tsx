@@ -51,7 +51,7 @@ export default function Player({
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {
             type: "player",
-            id: "player", 
+            id: "player",
         })
     }, [grid])
     let currentPointerPosition = useMemo(() => new Vector3(), [])
@@ -256,7 +256,11 @@ export default function Player({
                     userData={{ type: "player" }}
                     position={[0, 0, 0]}
                 >
-                    <MeshLambertFogMaterial isInstance={false} color={playerColor} />
+                    <MeshLambertFogMaterial
+                        ditherActive={false}
+                        isInstance={false}
+                        color={playerColor}
+                    />
                 </primitive>
                 <mesh userData={{ type: "player" }} visible={false}>
                     <boxGeometry args={[...size, 1, 1, 1]} />
