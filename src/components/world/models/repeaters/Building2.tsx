@@ -13,7 +13,11 @@ export default function Building2() {
                     // receiveShadow
                     geometry={nodes.Cube006.geometry}
                 >
-                    <MeshLambertFogMaterial isInstance={false} color={buildingBase} />
+                    <MeshLambertFogMaterial 
+                        isInstance={false}
+                        color={buildingBase}
+                        fogDensity={.5}
+                    />
                 </mesh>
                 <mesh
                     // castShadow

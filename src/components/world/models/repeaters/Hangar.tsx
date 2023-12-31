@@ -11,15 +11,18 @@ export default function Hangar() {
                 receiveShadow
                 geometry={nodes.Cube.geometry}
             >
-                <MeshLambertFogMaterial isInstance={false} color={buildingBase} />
+                <MeshLambertFogMaterial
+                    isInstance={false}
+                    fogDensity={.5}
+                    color={buildingBase}
+                />
             </mesh>
             <mesh
                 receiveShadow
                 geometry={nodes.Cube_1.geometry}
             >
-                <meshBasicMaterial 
-                    isInstance={false} 
-                    color={buildingHi} 
+                <meshBasicMaterial
+                    color={buildingHi}
                 />
             </mesh>
         </group>

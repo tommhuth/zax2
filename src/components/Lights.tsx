@@ -99,7 +99,7 @@ export default function Lights() {
                 color={"#fff"}
             />
 
-            <directionalLight position={[10, 5, 7]} intensity={.5} />
+            <directionalLight position={[10, 5, 7]} intensity={.4} />
             
             <directionalLight
                 ref={shadowLightRef}

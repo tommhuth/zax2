@@ -9,22 +9,19 @@ export default function Building1() {
         <group dispose={null}>
             <group position={[0, 0, 0]} scale={.3}>
                 <mesh
-                    // castShadow
-                    // receiveShadow
                     geometry={nodes.Cube007.geometry}
                 >
-                    <MeshLambertFogMaterial isInstance={false} color={buildingBase} />
+                    <MeshLambertFogMaterial
+                        isInstance={false}
+                        color={buildingBase}
+                        fogDensity={.5}
+                    />
                 </mesh>
                 <mesh
-                    // castShadow
-                    // receiveShadow
                     geometry={nodes.Cube007_1.geometry}
                 >
-                    <meshBasicMaterial
-                        isInstance={false}
-                        color={buildingHi}
-                        emssive={buildingHi}
-                        emissiveIntensity={.95}
+                    <meshBasicMaterial 
+                        color={buildingHi}  
                     />
                 </mesh>
             </group>

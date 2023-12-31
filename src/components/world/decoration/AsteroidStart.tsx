@@ -48,7 +48,7 @@ export function AsteroidStart(props) {
                     geometry={nodes.Cube004.geometry}
                     material={materials["Material.001"]}
                 >
-                    <MeshLambertFogMaterial color={floorColor} />
+                    <MeshLambertFogMaterial color={floorColor} fogDensity={0} />
                 </mesh>
                 <mesh>
                     <primitive object={nodes.Cube004_1.geometry} attach="geometry" />

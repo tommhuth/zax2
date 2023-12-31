@@ -194,7 +194,7 @@ export default function ExplosionsHandler() {
             glowRef.current.position.y += 4
             glowRef.current.position.x -= 5
             glowRef.current.position.z -= 5
-            glowRef.current.material.opacity = .5
+            glowRef.current.material.opacity = 1
         }
     }, [latestExplosion])
 
@@ -283,7 +283,7 @@ export default function ExplosionsHandler() {
     // glow anim
     useFrame(() => {
         if (glowRef.current) {
-            glowRef.current.material.opacity *= .9
+            glowRef.current.material.opacity *= .95
         }
     })
 

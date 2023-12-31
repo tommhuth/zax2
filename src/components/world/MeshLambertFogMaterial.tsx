@@ -1,13 +1,24 @@
-import { Color, MeshLambertMaterial, TextureLoader, Vector3 } from "three"
+import { Color, ColorRepresentation, MeshLambertMaterial, MeshPhongMaterial, Vector3 } from "three"
 import { useShader } from "../../data/hooks"
-import { backColor, bcolor, fogColorEnd, fogColorStart, leftColor, topColor } from "../../data/theme"
+import { backColor, bcolor, fogColorStart, leftColor } from "../../data/theme"
 import easings from "../../shaders/easings.glsl"
-import dither from "../../shaders/dither.glsl"
+import ditherFragment from "../../shaders/dither.glsl"
 import { glsl } from "../../data/utils"
-import { useFrame, useLoader } from "@react-three/fiber"
-import { useEffect, useMemo, useRef } from "react"
+import { useFrame } from "@react-three/fiber"
+import { useEffect, useRef } from "react"
 import { useStore } from "../../data/store"
-import Counter from "../../data/world/Counter"
+
+interface MeshLambertFogMaterialProps {
+    color?: ColorRepresentation
+    emissive?: ColorRepresentation
+    isInstance?: boolean
+    usesTime?: boolean
+    usesPlayerPosition?: boolean
+    fragmentShader?: string
+    vertexShader?: string
+    fogDensity?: number
+    dither?: boolean
+}
 
 export function MeshLambertFogMaterial({
     color = bcolor,
@@ -16,24 +27,24 @@ export function MeshLambertFogMaterial({
     usesPlayerPosition = true,
     fragmentShader = "",
     vertexShader = "",
-    fogDensity = 0.2,
-    ditherActive = true,
+    fogDensity = 0.0,
+    dither = true,
+    emissive,
     ...rest
-}) {
-    let counter = useMemo(() => new Counter(1), [])
-    let ref = useRef<MeshLambertMaterial>(null) 
+}: MeshLambertFogMaterialProps & Partial<Omit<MeshPhongMaterial, "color" | "emissive" | "onBeforeCompile">>) {
+    let ref = useRef<MeshLambertMaterial>(null)
     let player = useStore(i => i.player.object)
     let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
             uTime: { value: 0 },
-            uDitherActive: { value: ditherActive ? 1 : 0 },
-            uBasicDirectionLights: {   
+            uDither: { value: dither ? 1 : 0 },
+            uBasicDirectionLights: {
                 value: [
                     {
                         direction: new Vector3(0, 0, -1),
                         color: new Color(backColor),
                         strength: .5,
-                    }, 
+                    },
                     {
                         direction: new Vector3(1, 0, 0),
                         color: new Color(leftColor),
@@ -41,28 +52,9 @@ export function MeshLambertFogMaterial({
                     },
                 ]
             },
-            uExplosions: {
-                value: [
-                    {
-                        position: new Vector3(0, 0, 0),
-                        strength: 0,
-                        radius: 21,
-                    },
-                    {
-                        position: new Vector3(0, 0, 26),
-                        strength: 0,
-                        radius: 1,
-                    },
-                    {
-                        position: new Vector3(0, 0, 35),
-                        strength: 0,
-                        radius: 1,
-                    }
-                ],
-            },
             uPlayerPosition: { value: new Vector3() },
-            uFogColorStart: { value: new Color(fogColorStart) },
-            uFogColorEnd: { value: new Color(fogColorEnd) },
+            uFogDensity: { value: fogDensity },
+            uFogColor: { value: new Color(fogColorStart) },
         },
         vertex: {
             head: glsl`
@@ -87,34 +79,24 @@ export function MeshLambertFogMaterial({
                 varying vec3 vPosition;   
                 varying vec3 vGlobalPosition;    
                 uniform float uTime; 
-                uniform vec3 uFogColorStart; 
-                uniform vec3 uFogColorEnd;  
+                uniform vec3 uFogColor;  
                 uniform vec3 uPlayerPosition; 
-                uniform float uDitherActive; 
-
-                struct Explosion {
-                    vec3 position;
-                    float strength;
-                    float radius;
-                };
-
+                uniform float uDither;   
+                uniform float uFogDensity;   
 
                 struct BasicDirectionLight {
                     vec3 direction;
                     vec3 color;
                     float strength;
                 };
-                
-                uniform Explosion uExplosions[3];
                 uniform BasicDirectionLight uBasicDirectionLights[2];
 
 
                 ${easings}
-                ${dither}
+                ${ditherFragment}
             `,
             main: glsl` 
-                ${fragmentShader} 
-                
+                ${fragmentShader}  
 
                 for (int i = 0; i < uBasicDirectionLights.length(); ++i) { 
                     BasicDirectionLight light = uBasicDirectionLights[i];
@@ -126,52 +108,18 @@ export function MeshLambertFogMaterial({
                     );
                 }
  
-                float fogDensity = ${fogDensity};
-                float heightDistance = 2.;
-                vec3 bottomColor = mix(uFogColorStart, gl_FragColor.rgb , 1. - fogDensity); 
+                float heightDistance = 1.5;
+                vec3 bottomColor = mix(uFogColor, gl_FragColor.rgb , 1. - uFogDensity); 
 
-                gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, easeOutCubic(clamp(vGlobalPosition.y / heightDistance, .0, 1.)));
-
-                if (uDitherActive == 1.) { 
-                    gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 16., .0051);
-                }
-
-                /*
-                float shadowEffect = 1.; 
-
-                for (int j = 0; j < uExplosions.length(); ++j) {
-                    Explosion explosion = uExplosions[j];
-                     
-                    shadowEffect = min( 
-                        shadowEffect,
-                        explosion.strength * easeInOutCubic(
-                            clamp(length(vGlobalPosition - explosion.position) / explosion.radius, 0., 1.)
-                        )
-                    );
-                }
-
-                gl_FragColor.rgb = mix(
-                    gl_FragColor.rgb, 
-                    vec3(.0, .0, .0), 
-                    shadowEffect
-                ); 
-                */
+                gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, (clamp(vGlobalPosition.y / heightDistance, .0, 1.))); 
+         
+                if (uDither == 1.) { 
+                    gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 16., .005);
+                } 
             `
         }
     })
-    let explosions = useStore(i => i.effects.explosions)
 
-    useEffect(() => {
-        if (!explosions.length) {
-            return
-        }
-
-        uniforms.uExplosions.value[counter.current + 1].position = explosions[0].position
-        uniforms.uExplosions.value[counter.current + 1].strength = 1
-        uniforms.uExplosions.value[counter.current + 1].radius = explosions[0].radius * 2
-        uniforms.uExplosions.needsUpdate = true
-        counter.next()
-    }, [explosions, uniforms])
 
     useEffect(() => {
         if (ref.current) {
@@ -185,17 +133,6 @@ export function MeshLambertFogMaterial({
             uniforms.uTime.needsUpdate = true
         }
 
-        //uniforms.uExplosions.value[0].position =  player.position.toArray()
-        if (player) {
-            uniforms.uExplosions.value[0].position = player.position.toArray()
-        }
-
-        for (let i = 0; i < 2; i++) {
-            uniforms.uExplosions.value[i + 1].strength *= .95
-        }
-
-        uniforms.uExplosions.needsUpdate = true
-
         if (usesPlayerPosition && player) {
             uniforms.uPlayerPosition.value = player.position.toArray()
             uniforms.uPlayerPosition.needsUpdate = true
@@ -207,12 +144,8 @@ export function MeshLambertFogMaterial({
             onBeforeCompile={onBeforeCompile}
             color={color}
             attach={"material"}
-            dithering
-            ref={ref}
+            emissive={emissive}
             {...rest}
         />
     )
-}
-
-
-useLoader.preload(TextureLoader, "/textures/night-2-4K.jpg")
+} 

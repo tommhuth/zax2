@@ -12,31 +12,51 @@ export default function Floor4() {
                 receiveShadow
                 geometry={(nodes["Combined-Shape005"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial isInstance={false} color="white" />
+                <MeshLambertFogMaterial
+                    isInstance={false}
+                    color="white"
+                    fogDensity={.5}
+                />
             </mesh>
             <mesh
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_1"] as Mesh).geometry}
-            >  
-                <MeshLambertFogMaterial isInstance={false} color={floorColorHi} />
+            >
+                <MeshLambertFogMaterial
+                    isInstance={false}
+                    color={floorColorHi}
+                    fogDensity={.5}
+                />
             </mesh>
             <mesh
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_2"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial isInstance={false} color="white" />
+                <MeshLambertFogMaterial
+                    isInstance={false}
+                    color="white"
+                    fogDensity={.5}
+                />
             </mesh>
             <mesh
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_3"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial isInstance={false} color="white" />
+                <MeshLambertFogMaterial
+                    isInstance={false}
+                    color="white"
+                    fogDensity={.5}
+                />
             </mesh>
             <mesh
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_4"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial isInstance={false} color={floorColor} />
+                <MeshLambertFogMaterial
+                    isInstance={false}
+                    color={floorColor}
+                    fogDensity={.5}
+                />
             </mesh>
         </group>
     )

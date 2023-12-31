@@ -38,16 +38,12 @@ export default function Instances() {
             <InstancedMesh name="line" count={35} colors={false}>
                 <boxGeometry args={[1, 1, 1, 1, 1, 1]} attach="geometry" />
                 <meshBasicMaterial color={"white"} />
-            </InstancedMesh>
-
-            <InstancedMesh name="cylinder" count={20}>
-                <cylinderGeometry args={[.5, .5, 1, 10, 1]} attach="geometry" />
-                <MeshLambertFogMaterial />
-            </InstancedMesh>
+            </InstancedMesh> 
 
             <InstancedMesh name="barrel1" count={25}>
                 <primitive object={(barrel1.nodes.barrel as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial
+                    fogDensity={.35}
                     color={barellcolor}
                     emissive={barellcolor}
                     emissiveIntensity={barrellEmissiveIntensity}
@@ -57,7 +53,7 @@ export default function Instances() {
             <InstancedMesh name="barrel2" count={25}>
                 <primitive object={(barrel2.nodes.barrel2 as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial
-
+                    fogDensity={.35}
                     color={barellcolor}
                     emissive={barellcolor}
                     emissiveIntensity={barrellEmissiveIntensity}
@@ -67,7 +63,7 @@ export default function Instances() {
             <InstancedMesh name="barrel3" count={25}>
                 <primitive object={(barrel3.nodes.barrel3 as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial
-
+                    fogDensity={.35}
                     color={barellcolor}
                     emissive={barellcolor}
                     emissiveIntensity={barrellEmissiveIntensity}
@@ -77,7 +73,7 @@ export default function Instances() {
             <InstancedMesh name="barrel4" count={25}>
                 <primitive object={(barrel4.nodes.barrel4 as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial
-
+                    fogDensity={.35}
                     color={barellcolor}
                     emissive={barellcolor}
                     emissiveIntensity={barrellEmissiveIntensity}
@@ -90,6 +86,7 @@ export default function Instances() {
                     color={turretColor}
                     emissive={turretColor}
                     emissiveIntensity={.4}
+                    fogDensity={.5}
                 />
             </InstancedMesh>
 
@@ -104,12 +101,18 @@ export default function Instances() {
 
             <InstancedMesh name="platform" count={15}>
                 <primitive object={(platform.nodes.platform as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial color={platformColor} />
+                <MeshLambertFogMaterial
+                    color={platformColor}
+                    fogDensity={.4}
+                />
             </InstancedMesh>
 
             <InstancedMesh name="device" castShadow={false} count={30}>
                 <primitive object={(device.nodes.device as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial color={deviceColor} />
+                <MeshLambertFogMaterial
+                    color={deviceColor}
+                    fogDensity={.5}
+                />
             </InstancedMesh>
 
             <InstancedMesh
@@ -122,7 +125,7 @@ export default function Instances() {
                 <MeshLambertFogMaterial
                     usesTime
                     usesPlayerPosition
-                    ditherActive={true}
+                    fogDensity={.5}
                     color={plantColor}
                     side={DoubleSide}
                     vertexShader={glsl`
@@ -161,7 +164,8 @@ export default function Instances() {
                     color={grassColor}
                     side={DoubleSide}
                     usesPlayerPosition
-                    ditherActive={false}
+                    fogDensity={0}
+                    dither={false}
                     transparent
                     vertexShader={glsl`
                         float height = 1.75;
@@ -184,12 +188,12 @@ export default function Instances() {
                         transformed.x += cos((globalPosition.z) * .4 + uTime * timeScale) * heightScale * 1.1 * offsetSize; 
                     `}
                     fragmentShader={glsl`
-                        float height = 1.75;
-                        vec3 start = mix(gl_FragColor.rgb, vec3(${grassColorStart.toArray().map(i => i + .001).join(", ")}), .35);
-                        vec3 end = mix(gl_FragColor.rgb, vec3(${grassColorEnd.toArray().map(i => i + .001).join(", ")}), .65);
+                        float height = 2.25;
+                        vec3 start = mix(gl_FragColor.rgb, vec3(${grassColorStart.toArray().map(i => i + .001).join(", ")}), .2);
+                        vec3 end = mix(gl_FragColor.rgb, vec3(${grassColorEnd.toArray().map(i => i + .001).join(", ")}), .8);
 
-                        gl_FragColor.rgb = mix(start, end, (clamp((vPosition.y) / height, 0., 1.)));
-                        gl_FragColor.a = clamp((vPosition.y ) / .35, 0., 1.);
+                        gl_FragColor.rgb = mix(start, end, easeInQuad(clamp(vGlobalPosition.y / height, 0., 1.)));
+                        gl_FragColor.a = clamp((vPosition.y) / .75, 0., 1.);
                     `}
                 />
             </InstancedMesh>

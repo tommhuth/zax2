@@ -257,7 +257,7 @@ export default function Player({
                     position={[0, 0, 0]}
                 >
                     <MeshLambertFogMaterial
-                        ditherActive={false}
+                        dither={false}
                         isInstance={false}
                         color={playerColor}
                     />
