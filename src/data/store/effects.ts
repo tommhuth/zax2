@@ -163,13 +163,13 @@ export function createExplosion({
     })
 }
 
-export function createImpactDecal(position: Tuple3, scale = random.float(1.5, 3)) {
+export function createImpactDecal(position: Tuple3, scale = random.float(1.85, 3)) {
     let { impact } = store.getState().instances
     let index = impact.index.next()
     let opacityAttribute = impact?.mesh.geometry.attributes?.aOpacity as BufferAttribute
 
     if (opacityAttribute) {  
-        opacityAttribute.set([random.float(.45, .75)], index)
+        opacityAttribute.set([random.float(.3, .5)], index)
         opacityAttribute.needsUpdate = true 
     }
 

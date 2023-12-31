@@ -1,5 +1,5 @@
 import { startTransition, useEffect, useMemo, useRef } from "react"
-import { AdditiveBlending, BufferAttribute, Color, Sprite } from "three"
+import { AdditiveBlending, BufferAttribute, Color, LinearFilter, Sprite, Texture } from "three"
 import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
 import { useShader } from "../../data/hooks"
 import { useFrame, useLoader } from "@react-three/fiber"
@@ -16,7 +16,7 @@ import { blend, easeInQuint, easeOutExpo, easeOutQuart } from "../../data/shapin
 export default function ExplosionsHandler() {
     let explosionsCount = 200
     let latestExplosion = useStore(i => i.effects.explosions[0])
-    let [glowMap, impactMap] = useLoader(TextureLoader, ["/textures/glow.png", "/textures/decal1.png"])
+    let [glowMap, impactMap]: Texture[] = useLoader(TextureLoader, ["/textures/glow.png", "/textures/decal1.png"])
     let glowRef = useRef<Sprite>(null)
     let shockwaveOpacityAttributes = useMemo(() => {
         return new Float32Array(new Array(explosionsCount).fill(0))
@@ -168,6 +168,11 @@ export default function ExplosionsHandler() {
             `
         },
     })
+
+    useEffect(()=>{
+        impactMap.magFilter = LinearFilter
+        impactMap.minFilter = LinearFilter
+    }, [impactMap])
 
     // init
     useEffect(() => {
