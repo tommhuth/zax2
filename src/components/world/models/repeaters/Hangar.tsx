@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei"
-import { buildingBase, buildingHi } from "../../../../data/theme"
+import { buildingBase, buildingHi, groundFogIntensity } from "../../../../data/theme"
 import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
 
 export default function Hangar() {
@@ -13,7 +13,7 @@ export default function Hangar() {
             >
                 <MeshLambertFogMaterial
                     isInstance={false}
-                    fogDensity={.5}
+                    fogDensity={groundFogIntensity}
                     color={buildingBase}
                 />
             </mesh>

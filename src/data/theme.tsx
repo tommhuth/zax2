@@ -10,7 +10,7 @@ export const buildingBase = "#ff0090"
 export const buildingHi = "#000000"
 
 export const turretColor = "#fbff00" // "#529fbe" // "#141E46"
-export const turretParticleColor = "#e4f6ff" // "#529fbe" // "#141E46"
+export const turretParticleColor = "#fbff00" // "#529fbe" // "#141E46"
 
 export const rocketColor = turretColor // "#d9e7ed"
 export const platformColor = floorColorHi // "#e1f6ff" // "#6fbad8" // "#141E46" 
@@ -33,6 +33,9 @@ export const leftColor = "#ff0090"
 export const backColor = "#26ff00"
  
 export const explosionEndColor = "#ffffff"
+
+export const groundFogIntensity = .7
+export const florFogIntensity = .27
 
 export const explosionColor = "#ffffff"
 

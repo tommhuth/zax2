@@ -13,6 +13,7 @@ import { increaseScore } from "../../../data/store/player"
 import { damageRocket, removeRocket } from "../../../data/store/actors"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects" 
 import { useBulletCollision } from "../../../data/collisions"
+import { rocketColor } from "../../../data/theme"
 
 let _size = new Vector3()
 
@@ -39,7 +40,7 @@ function explode(position: Vector3, size: Tuple3) {
             normalOffset: [[-.5, .5], [0, 0], [-.5, .5]],
             count: [10, 15],
             radius: [.2, .6],
-            color: "#fff",
+            color: rocketColor,
         })
 
         createExplosion({
@@ -84,7 +85,7 @@ function explode(position: Vector3, size: Tuple3) {
                 normalOffset: [[-1, 1], [-1, 1], [-1, 1]],
                 count: [10, 15],
                 radius: [.1, .55],
-                color: "#fff",
+                color: rocketColor,
             })
         }, 320)
     }

@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei"
-import { buildingBase, buildingHi } from "../../../../data/theme"
+import { buildingBase, buildingHi, groundFogIntensity } from "../../../../data/theme"
 import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
 
 export default function Building2() {
@@ -16,7 +16,7 @@ export default function Building2() {
                     <MeshLambertFogMaterial 
                         isInstance={false}
                         color={buildingBase}
-                        fogDensity={.5}
+                        fogDensity={groundFogIntensity}
                     />
                 </mesh>
                 <mesh

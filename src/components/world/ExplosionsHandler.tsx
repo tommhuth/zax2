@@ -80,7 +80,7 @@ export default function ExplosionsHandler() {
                     easeOutQuart(1. - vDistance)  
                 );
 
-                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 10., .005);
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * 1.2, 10., .005);
             `
         }
     })

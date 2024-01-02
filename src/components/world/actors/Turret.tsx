@@ -27,13 +27,17 @@ function explode(position: Vector3, size: Tuple3) {
         size: [3, 4, 3]
     })
     createExplosion({
-        position: [position.x, 0, position.z],
+        position:[
+            position.x,
+            position.y - size[1] / 2,
+            position.z,
+        ],
         count: 16,
         radius: random.float(.6, .7),
         shockwave: false,
     })
     createParticles({
-        position: [position.x, 0, position.z],
+        position: position.toArray(),
         positionOffset: [[-1, 1], [0, 2], [-1, 1]],
         speed: [6, 22],
         speedOffset: [[-10, 10], [0, 5], [-10, 10]],

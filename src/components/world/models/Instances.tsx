@@ -1,7 +1,7 @@
 import { useLoader } from "@react-three/fiber"
 import InstancedMesh from "../../InstancedMesh"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
-import { barellcolor, barrellEmissiveIntensity, deviceColor, grassColor, grassColorEnd, grassColorStart, plantColor, plantColorEnd, plantColorStart, platformColor, turretColor } from "../../../data/theme"
+import { barellcolor, barrellEmissiveIntensity, deviceColor, grassColor, grassColorEnd, grassColorStart, groundFogIntensity, plantColor, plantColorEnd, plantColorStart, platformColor, turretColor } from "../../../data/theme"
 import { DoubleSide, Mesh } from "three"
 import { glsl } from "../../../data/utils"
 import { MeshLambertFogMaterial } from "../MeshLambertFogMaterial"
@@ -44,6 +44,7 @@ export default function Instances() {
                 <primitive object={(barrel1.nodes.barrel as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial
                     fogDensity={.35}
+                    fogHeight={.6}
                     color={barellcolor}
                     emissive={barellcolor}
                     emissiveIntensity={barrellEmissiveIntensity}
@@ -55,6 +56,7 @@ export default function Instances() {
                 <MeshLambertFogMaterial
                     fogDensity={.35}
                     color={barellcolor}
+                    fogHeight={.6}
                     emissive={barellcolor}
                     emissiveIntensity={barrellEmissiveIntensity}
                 />
@@ -65,6 +67,7 @@ export default function Instances() {
                 <MeshLambertFogMaterial
                     fogDensity={.35}
                     color={barellcolor}
+                    fogHeight={.6}
                     emissive={barellcolor}
                     emissiveIntensity={barrellEmissiveIntensity}
                 />
@@ -76,6 +79,7 @@ export default function Instances() {
                     fogDensity={.35}
                     color={barellcolor}
                     emissive={barellcolor}
+                    fogHeight={.6}
                     emissiveIntensity={barrellEmissiveIntensity}
                 />
             </InstancedMesh>
@@ -86,7 +90,8 @@ export default function Instances() {
                     color={turretColor}
                     emissive={turretColor}
                     emissiveIntensity={.4}
-                    fogDensity={.5}
+                    fogDensity={.65}
+                    fogHeight={.6}
                 />
             </InstancedMesh>
 
@@ -111,7 +116,7 @@ export default function Instances() {
                 <primitive object={(device.nodes.device as Mesh).geometry} attach="geometry" />
                 <MeshLambertFogMaterial
                     color={deviceColor}
-                    fogDensity={.5}
+                    fogDensity={groundFogIntensity}
                 />
             </InstancedMesh>
 
@@ -125,7 +130,7 @@ export default function Instances() {
                 <MeshLambertFogMaterial
                     usesTime
                     usesPlayerPosition
-                    fogDensity={.5}
+                    fogDensity={groundFogIntensity}
                     color={plantColor}
                     side={DoubleSide}
                     vertexShader={glsl`

@@ -1,7 +1,7 @@
 import { Color, ColorRepresentation, MeshLambertMaterial, MeshPhongMaterial, Vector3 } from "three"
 import { useShader } from "../../data/hooks"
 import { backColor, bcolor, fogColorStart, leftColor } from "../../data/theme"
-import easings from "../../shaders/easings.glsl"
+import easings from "../../shaders/easings.glsl" 
 import ditherFragment from "../../shaders/dither.glsl"
 import { glsl } from "../../data/utils"
 import { useFrame } from "@react-three/fiber"
@@ -17,6 +17,7 @@ interface MeshLambertFogMaterialProps {
     fragmentShader?: string
     vertexShader?: string
     fogDensity?: number
+    fogHeight?: number
     dither?: boolean
 }
 
@@ -28,6 +29,7 @@ export function MeshLambertFogMaterial({
     fragmentShader = "",
     vertexShader = "",
     fogDensity = 0.0,
+    fogHeight = 1.5,
     dither = true,
     emissive,
     ...rest
@@ -38,6 +40,7 @@ export function MeshLambertFogMaterial({
         uniforms: {
             uTime: { value: 0 },
             uDither: { value: dither ? 1 : 0 },
+            uFogHeight: { value: fogHeight },
             uBasicDirectionLights: {
                 value: [
                     {
@@ -83,6 +86,7 @@ export function MeshLambertFogMaterial({
                 uniform vec3 uPlayerPosition; 
                 uniform float uDither;   
                 uniform float uFogDensity;   
+                uniform float uFogHeight;   
 
                 struct BasicDirectionLight {
                     vec3 direction;
@@ -92,7 +96,7 @@ export function MeshLambertFogMaterial({
                 uniform BasicDirectionLight uBasicDirectionLights[2];
 
 
-                ${easings}
+                ${easings} 
                 ${ditherFragment}
             `,
             main: glsl` 
@@ -107,15 +111,14 @@ export function MeshLambertFogMaterial({
                         clamp(dot(normal, light.direction), 0., 1.)
                     );
                 }
- 
-                float heightDistance = 1.5;
+  
                 vec3 bottomColor = mix(uFogColor, gl_FragColor.rgb , 1. - uFogDensity); 
 
-                gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, (clamp(vGlobalPosition.y / heightDistance, .0, 1.))); 
+                gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, clamp(vGlobalPosition.y / uFogHeight, .0, 1.)); 
          
                 if (uDither == 1.) { 
                     gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 16., .005);
-                } 
+                }  
             `
         }
     })
@@ -145,6 +148,8 @@ export function MeshLambertFogMaterial({
             color={color}
             attach={"material"}
             emissive={emissive}
+            shininess={50}
+            specular={"#3b3b3b"}
             {...rest}
         />
     )

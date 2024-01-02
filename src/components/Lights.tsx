@@ -86,8 +86,8 @@ export default function Lights() {
                 ref={engineLightRef}
                 distance={30}
                 position-y={3}
-                intensity={30} //25} 
-                color={"#aeccff"}
+                intensity={40} //25} 
+                color={"#ffffff"}
             />
 
             <pointLight
@@ -99,13 +99,13 @@ export default function Lights() {
                 color={"#fff"}
             />
 
-            <directionalLight position={[10, 5, 7]} intensity={.4} />
+            <directionalLight position={[10, 5, 7]} intensity={.2} /> 
             
             <directionalLight
                 ref={shadowLightRef}
                 color={"#b4e2ff"}
                 position={[0, 15, 0]}
-                intensity={.75}
+                intensity={1}
                 castShadow
                 shadow-radius={1.5}
                 shadow-camera-near={0} // y

@@ -64,7 +64,7 @@ const store = create<Store>(() => ({
         grid: new SpatialHashGrid3D([4, 3, 4]),
         frustum: new Frustum(),
         parts: [
-            makeBuildingsLow({ position: new Vector3(0, 0, 0), size: [0, 0] }),
+            makeStart({ position: new Vector3(0, 0, 0), size: [0, 0] }),
         ],
         buildings: [],
         planes: [],
