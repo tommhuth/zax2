@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei"
 import { MeshLambertFogMaterial } from "../MeshLambertFogMaterial"
-import { floorColor, florFogIntensity } from "../../../data/theme"
+import { floorColor, floorFogIntensity } from "../../../data/theme"
 import { glsl } from "../../../data/utils" 
 
 export function AsteroidStart(props) {
@@ -15,7 +15,7 @@ export function AsteroidStart(props) {
                 <MeshLambertFogMaterial
                     color={floorColor}
                     isInstance={false}
-                    fogDensity={florFogIntensity}
+                    fogDensity={floorFogIntensity}
                 />
             </mesh>
             <mesh>

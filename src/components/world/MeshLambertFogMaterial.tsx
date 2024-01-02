@@ -29,7 +29,7 @@ export function MeshLambertFogMaterial({
     fragmentShader = "",
     vertexShader = "",
     fogDensity = 0.0,
-    fogHeight = 1.5,
+    fogHeight = 2.,
     dither = true,
     emissive,
     ...rest
@@ -114,7 +114,7 @@ export function MeshLambertFogMaterial({
   
                 vec3 bottomColor = mix(uFogColor, gl_FragColor.rgb , 1. - uFogDensity); 
 
-                gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, clamp(vGlobalPosition.y / uFogHeight, .0, 1.)); 
+                gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, easeOutQuad(clamp(vGlobalPosition.y / uFogHeight, .0, 1.))); 
          
                 if (uDither == 1.) { 
                     gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 16., .005);

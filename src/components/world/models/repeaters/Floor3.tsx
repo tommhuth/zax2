@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei"
-import { floorColor, florFogIntensity } from "../../../../data/theme"
+import { floorColor, floorFogIntensity } from "../../../../data/theme"
 import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
 
 export default function Floor3() {
@@ -14,7 +14,7 @@ export default function Floor3() {
                 <MeshLambertFogMaterial
                     isInstance={false}
                     color={floorColor}
-                    fogDensity={florFogIntensity}
+                    fogDensity={floorFogIntensity}
                 />
             </mesh>
         </group>

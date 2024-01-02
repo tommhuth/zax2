@@ -35,7 +35,7 @@ export const backColor = "#26ff00"
 export const explosionEndColor = "#ffffff"
 
 export const groundFogIntensity = .7
-export const florFogIntensity = .27
+export const floorFogIntensity = .27
 
 export const explosionColor = "#ffffff"
 
