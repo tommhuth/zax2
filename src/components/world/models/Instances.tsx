@@ -4,7 +4,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 import { barellcolor, barrellEmissiveIntensity, deviceColor, grassColor, grassColorEnd, grassColorStart, groundFogIntensity, plantColor, plantColorEnd, plantColorStart, platformColor, turretColor } from "../../../data/theme"
 import { DoubleSide, Mesh } from "three"
 import { glsl } from "../../../data/utils"
-import { MeshLambertFogMaterial } from "../MeshLambertFogMaterial"
+import { MeshRetroMaterial } from "../MeshRetroMaterial"
 
 export default function Instances() {
     let [
@@ -27,12 +27,12 @@ export default function Instances() {
         <>
             <InstancedMesh name="box" count={30}>
                 <boxGeometry args={[1, 1, 1, 1, 1, 1]} attach="geometry" />
-                <MeshLambertFogMaterial />
+                <MeshRetroMaterial />
             </InstancedMesh>
 
             <InstancedMesh name="sphere" count={100}>
                 <sphereGeometry args={[1, 3, 4]} attach="geometry" />
-                <MeshLambertFogMaterial />
+                <MeshRetroMaterial />
             </InstancedMesh>
 
             <InstancedMesh name="line" count={35} colors={false}>
@@ -42,7 +42,7 @@ export default function Instances() {
 
             <InstancedMesh name="barrel1" count={25}>
                 <primitive object={(barrel1.nodes.barrel as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     fogDensity={.35}
                     fogHeight={.6}
                     color={barellcolor}
@@ -53,7 +53,7 @@ export default function Instances() {
 
             <InstancedMesh name="barrel2" count={25}>
                 <primitive object={(barrel2.nodes.barrel2 as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     fogDensity={.35}
                     color={barellcolor}
                     fogHeight={.6}
@@ -64,7 +64,7 @@ export default function Instances() {
 
             <InstancedMesh name="barrel3" count={25}>
                 <primitive object={(barrel3.nodes.barrel3 as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     fogDensity={.35}
                     color={barellcolor}
                     fogHeight={.6}
@@ -75,7 +75,7 @@ export default function Instances() {
 
             <InstancedMesh name="barrel4" count={25}>
                 <primitive object={(barrel4.nodes.barrel4 as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     fogDensity={.35}
                     color={barellcolor}
                     emissive={barellcolor}
@@ -86,7 +86,7 @@ export default function Instances() {
 
             <InstancedMesh name="turret" count={25}>
                 <primitive object={(turret2.nodes.turret2 as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     color={turretColor}
                     emissive={turretColor}
                     emissiveIntensity={.4}
@@ -97,7 +97,7 @@ export default function Instances() {
 
             <InstancedMesh name="rocket" count={15} castShadow={false}>
                 <primitive object={(rocket.nodes.rocket as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     emissive={turretColor}
                     emissiveIntensity={.4}
                     color={turretColor}
@@ -106,7 +106,7 @@ export default function Instances() {
 
             <InstancedMesh name="platform" count={15}>
                 <primitive object={(platform.nodes.platform as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     color={platformColor}
                     fogDensity={.4}
                 />
@@ -114,7 +114,7 @@ export default function Instances() {
 
             <InstancedMesh name="device" castShadow={false} count={30}>
                 <primitive object={(device.nodes.device as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     color={deviceColor}
                     fogDensity={groundFogIntensity}
                 />
@@ -127,7 +127,7 @@ export default function Instances() {
                 castShadow={true}
             >
                 <primitive object={(plant.nodes.plant as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     usesTime
                     usesPlayerPosition
                     fogDensity={groundFogIntensity}
@@ -164,7 +164,7 @@ export default function Instances() {
                 count={4}
             >
                 <primitive object={(grass.nodes.grass as Mesh).geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     usesTime
                     color={grassColor}
                     side={DoubleSide}

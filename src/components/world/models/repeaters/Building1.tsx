@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei"
 import { buildingBase, buildingHi, groundFogIntensity } from "../../../../data/theme"
-import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
+import { MeshRetroMaterial } from "../../MeshRetroMaterial"
 
 export default function Building1() {
     const { nodes }: { nodes: any } = useGLTF("/models/building1.glb")
@@ -11,7 +11,7 @@ export default function Building1() {
                 <mesh
                     geometry={nodes.Cube007.geometry}
                 >
-                    <MeshLambertFogMaterial
+                    <MeshRetroMaterial
                         isInstance={false}
                         color={buildingBase}
                         fogDensity={groundFogIntensity}

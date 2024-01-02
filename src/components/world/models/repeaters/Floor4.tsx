@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei"
 import { floorColor, floorColorHi, floorFogIntensity } from "../../../../data/theme"
-import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
+import { MeshRetroMaterial } from "../../MeshRetroMaterial"
 import { Mesh } from "three"
 
 export default function Floor4() {
@@ -12,7 +12,7 @@ export default function Floor4() {
                 receiveShadow
                 geometry={(nodes["Combined-Shape005"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     isInstance={false}
                     color="white"
                     fogDensity={floorFogIntensity}
@@ -22,7 +22,7 @@ export default function Floor4() {
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_1"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     isInstance={false}
                     color={floorColorHi}
                     fogDensity={floorFogIntensity}
@@ -32,7 +32,7 @@ export default function Floor4() {
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_2"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     isInstance={false}
                     color="white"
                     fogDensity={floorFogIntensity}
@@ -42,7 +42,7 @@ export default function Floor4() {
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_3"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     isInstance={false}
                     color="white"
                     fogDensity={floorFogIntensity}
@@ -52,7 +52,7 @@ export default function Floor4() {
                 receiveShadow
                 geometry={(nodes["Combined-Shape005_4"] as Mesh).geometry}
             >
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     isInstance={false}
                     color={floorColor}
                     fogDensity={floorFogIntensity}

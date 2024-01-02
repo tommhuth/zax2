@@ -12,7 +12,7 @@ import { damagePlayer, increaseScore, setPlayerObject } from "../data/store/play
 import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/store/actors"
 import { damageBarrel } from "../data/store/world"
 import { playerColor } from "../data/theme"
-import { MeshLambertFogMaterial } from "./world/MeshLambertFogMaterial"
+import { MeshRetroMaterial } from "./world/MeshRetroMaterial"
 import { removeHeatSeaker } from "../data/store/boss"
 import { useBulletCollision, useCollisionDetection } from "../data/collisions"
 import random from "@huth/random"
@@ -256,7 +256,7 @@ export default function Player({
                     userData={{ type: "player" }}
                     position={[0, 0, 0]}
                 >
-                    <MeshLambertFogMaterial
+                    <MeshRetroMaterial
                         dither={false}
                         isInstance={false}
                         color={playerColor}

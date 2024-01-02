@@ -8,7 +8,7 @@ import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
 import { useStore } from "../../data/store"
 
-interface MeshLambertFogMaterialProps {
+interface MeshRetroMaterialProps {
     color?: ColorRepresentation
     emissive?: ColorRepresentation
     isInstance?: boolean
@@ -21,11 +21,11 @@ interface MeshLambertFogMaterialProps {
     dither?: boolean
 }
 
-export function MeshLambertFogMaterial({
+export function MeshRetroMaterial({
     color = bcolor,
     isInstance = true,
     usesTime = false,
-    usesPlayerPosition = true,
+    usesPlayerPosition = false,
     fragmentShader = "",
     vertexShader = "",
     fogDensity = 0.0,
@@ -33,7 +33,7 @@ export function MeshLambertFogMaterial({
     dither = true,
     emissive,
     ...rest
-}: MeshLambertFogMaterialProps & Partial<Omit<MeshPhongMaterial, "color" | "emissive" | "onBeforeCompile">>) {
+}: MeshRetroMaterialProps & Partial<Omit<MeshPhongMaterial, "color" | "emissive" | "onBeforeCompile">>) {
     let ref = useRef<MeshLambertMaterial>(null)
     let player = useStore(i => i.player.object)
     let { onBeforeCompile, uniforms } = useShader({
@@ -123,7 +123,6 @@ export function MeshLambertFogMaterial({
         }
     })
 
-
     useEffect(() => {
         if (ref.current) {
             ref.current.needsUpdate = true
@@ -144,9 +143,9 @@ export function MeshLambertFogMaterial({
 
     return (
         <meshPhongMaterial
+            attach={"material"}
             onBeforeCompile={onBeforeCompile}
             color={color}
-            attach={"material"}
             emissive={emissive}
             shininess={50}
             specular={"#3b3b3b"}

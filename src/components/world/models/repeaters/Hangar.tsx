@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei"
 import { buildingBase, buildingHi, groundFogIntensity } from "../../../../data/theme"
-import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
+import { MeshRetroMaterial } from "../../MeshRetroMaterial"
 
 export default function Hangar() {
     const { nodes }: { nodes: any } = useGLTF("/models/hangar.glb")
@@ -11,7 +11,7 @@ export default function Hangar() {
                 receiveShadow
                 geometry={nodes.Cube.geometry}
             >
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     isInstance={false}
                     fogDensity={groundFogIntensity}
                     color={buildingBase}

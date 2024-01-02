@@ -1,7 +1,7 @@
 
 import { useGLTF } from "@react-three/drei"
 import { floorColor, floorFogIntensity } from "../../../../data/theme"
-import { MeshLambertFogMaterial } from "../../MeshLambertFogMaterial"
+import { MeshRetroMaterial } from "../../MeshRetroMaterial"
 
 export default function Floor2() {
     const { nodes }: { nodes: any } = useGLTF("/models/floor2.glb")
@@ -12,7 +12,7 @@ export default function Floor2() {
                 receiveShadow
                 geometry={nodes.floor2.geometry}
             >
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     isInstance={false}
                     color={floorColor}
                     fogDensity={floorFogIntensity}

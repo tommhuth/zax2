@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei"
-import { MeshLambertFogMaterial } from "../MeshLambertFogMaterial"
+import { MeshRetroMaterial } from "../MeshRetroMaterial"
 import { floorColor, floorFogIntensity } from "../../../data/theme"
 import { glsl } from "../../../data/utils" 
 
@@ -12,7 +12,7 @@ export function AsteroidStart(props) {
                 receiveShadow
             >
                 <primitive object={nodes.Cube004.geometry} attach="geometry" />
-                <MeshLambertFogMaterial
+                <MeshRetroMaterial
                     color={floorColor}
                     isInstance={false}
                     fogDensity={floorFogIntensity}
@@ -21,7 +21,7 @@ export function AsteroidStart(props) {
             <mesh>
                 <primitive object={nodes.Cube004_1.geometry} attach="geometry" />
 
-                <MeshLambertFogMaterial 
+                <MeshRetroMaterial 
                     fragmentShader={glsl`
                         vec3 top = mix(gl_FragColor.rgb, vec3(.0, 1., .6), .84);
                         vec3 bottom = mix(gl_FragColor.rgb, vec3(.0, .5, 1.), .65); 
