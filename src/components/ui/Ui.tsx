@@ -38,8 +38,7 @@ export default function Ui() {
                     display: state === "intro" && loaded ? undefined : "none"
                 }}
             >
-                <h1 className="title">Untitled arcade knockoff</h1>
-                <p className="start">Tap to start</p>
+                <h1 className="title">Untitled arcade knockoff</h1> 
             </div>
 
             <div
