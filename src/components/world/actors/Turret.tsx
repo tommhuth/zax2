@@ -148,7 +148,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
                 createBullet({
                     position: [
                         position.x + offsetx,
-                        position.y + size[1] / 2 - .15,
+                        position.y + size[1] / 2 - .5,
                         position.z + offsetz
                     ],
                     damage: 5,
