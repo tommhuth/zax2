@@ -11,6 +11,7 @@ import { WorldPartType } from "../../../data/types"
 export default function Instances() {
     let parts = useStore(i => i.world.parts)
     let ready = useStore(i => i.ready)
+    let hasFoliage = ready ? parts.some(i => i.type === WorldPartType.BUILDINGS_LOW) : true
     let [
         barrel1, barrel2, barrel3, barrel4,
         turret2, rocket, platform, device, plant, grass,
@@ -25,7 +26,7 @@ export default function Instances() {
         "/models/device.glb",
         "/models/plant.glb",
         "/models/grass.glb"
-    ])
+    ]) 
 
     return (
         <>
@@ -34,12 +35,12 @@ export default function Instances() {
                 <MeshRetroMaterial name="sphere" />
             </InstancedMesh>
 
-            <InstancedMesh name="line" count={35} colors={false}>
+            <InstancedMesh name="line" count={50} colors={false}>
                 <boxGeometry args={[1, 1, 1, 1, 1, 1]} attach="geometry" />
                 <meshBasicMaterial name="line" color={"white"} />
             </InstancedMesh>
 
-            <InstancedMesh name="barrel1" count={25}>
+            <InstancedMesh name="barrel1" count={15}>
                 <primitive object={(barrel1.nodes.barrel as Mesh).geometry} attach="geometry" />
                 <MeshRetroMaterial
                     fogDensity={.35}
@@ -51,7 +52,7 @@ export default function Instances() {
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="barrel2" count={25}>
+            <InstancedMesh name="barrel2" count={15}>
                 <primitive object={(barrel2.nodes.barrel2 as Mesh).geometry} attach="geometry" />
                 <MeshRetroMaterial
                     fogDensity={.35}
@@ -63,7 +64,7 @@ export default function Instances() {
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="barrel3" count={25}>
+            <InstancedMesh name="barrel3" count={15}>
                 <primitive object={(barrel3.nodes.barrel3 as Mesh).geometry} attach="geometry" />
                 <MeshRetroMaterial
                     fogDensity={.35}
@@ -75,7 +76,7 @@ export default function Instances() {
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="barrel4" count={25}>
+            <InstancedMesh name="barrel4" count={15}>
                 <primitive object={(barrel4.nodes.barrel4 as Mesh).geometry} attach="geometry" />
                 <MeshRetroMaterial
                     fogDensity={.35}
@@ -87,7 +88,7 @@ export default function Instances() {
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="turret" count={25}>
+            <InstancedMesh name="turret" count={15}>
                 <primitive object={(turret2.nodes.turret2 as Mesh).geometry} attach="geometry" />
                 <MeshRetroMaterial
                     color={turretColor}
@@ -99,7 +100,7 @@ export default function Instances() {
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="rocket" count={15} castShadow={false}>
+            <InstancedMesh name="rocket" count={8} castShadow={false}>
                 <primitive object={(rocket.nodes.rocket as Mesh).geometry} attach="geometry" />
                 <MeshRetroMaterial
                     emissive={turretColor}
@@ -109,7 +110,7 @@ export default function Instances() {
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="platform" count={15}>
+            <InstancedMesh name="platform" count={8}>
                 <primitive object={(platform.nodes.platform as Mesh).geometry} attach="geometry" />
                 <MeshRetroMaterial
                     color={platformColor}
@@ -132,7 +133,7 @@ export default function Instances() {
                 count={6}
                 receiveShadow={false}
                 castShadow={true}
-                visible={ready ? parts.some(i => i.type === WorldPartType.BUILDINGS_LOW) : true}
+                visible={hasFoliage}
             >
                 <primitive object={(plant.nodes.plant as Mesh).geometry} attach="geometry" />
                 <MeshRetroMaterial
@@ -171,7 +172,7 @@ export default function Instances() {
                 receiveShadow={false}
                 colors={false}
                 name="grass"
-                visible={ready ? parts.some(i => i.type === WorldPartType.BUILDINGS_LOW) : true}
+                visible={hasFoliage}
                 count={2}
             >
                 <primitive object={(grass.nodes.grass as Mesh).geometry} attach="geometry" />
