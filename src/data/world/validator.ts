@@ -2,7 +2,7 @@ import { store } from "../store"
 import { WorldPart, WorldPartType } from "../types"
 
 let lastBossAt = new Date()
-let bossInterval = 60_000 * 1
+let bossInterval = 60_000 * 2
 
 export const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
     [WorldPartType.DEFAULT]: () => true,
