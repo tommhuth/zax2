@@ -1,24 +1,24 @@
 import { useRef } from "react"
 import { useStore } from "../../data/store"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../world/World"
-
-import "./Ui.scss"
 import { setState } from "../../data/store/utils"
 import { useAnimationFrame, useWindowEvent } from "../../data/hooks"
 
+import "./Ui.scss"
+
 export default function Ui() {
     let state = useStore(i => i.state)
+    let ready = useStore(i => i.ready)
     let player = useStore(i => i.player)
-    let loaded = useStore(i => i.loaded)
     let boss = useStore(i => i.boss)
     let currentHeightRef = useRef<HTMLDivElement>(null)
     let bars = 5
 
     useWindowEvent(["click", "touchstart"], () => {
-        if (state === "intro") {
+        if (state === "intro" && ready) {
             setState("running")
         }
-    }, [state])
+    }, [ready, state])
 
     useAnimationFrame(() => {
         let player = useStore.getState().player.object
@@ -35,16 +35,16 @@ export default function Ui() {
             <div
                 className="intro"
                 style={{
-                    display: state === "intro" && loaded ? undefined : "none"
+                    display: state === "intro" || !ready ? undefined : "none"
                 }}
             >
-                <h1 className="title">Untitled arcade knockoff</h1> 
+                <h1 className="title">Untitled arcade knockoff</h1>
             </div>
 
             <div
                 className="height"
                 style={{
-                    opacity: state === "intro" ? 0 : 1
+                    opacity: state === "intro" || !ready ? 0 : 1
                 }}
             >
                 <div className="height__top">H</div>
@@ -69,7 +69,7 @@ export default function Ui() {
             <div
                 className="ui"
                 style={{
-                    opacity: state === "intro" ? 0 : 1
+                    opacity: state === "intro" || !ready ? 0 : 1
                 }}
             >
                 {player.health.toFixed(0)}%

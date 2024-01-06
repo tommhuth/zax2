@@ -3,17 +3,18 @@ import { Color } from "three"
 export const bcolor = "#ffe0f3"
 export const dark = "#fff"
 
-export const floorColor = "#0000ff" // "#d7dde8"
-export const floorColorHi = "#0000a5"
+export const floorBaseColor = "#0000ff" // "#d7dde8"
+export const floorHiColor = "#0000a5"
+export const floorMarkColor = "#fff"
 
-export const buildingBase = "#ff0090"
-export const buildingHi = "#000000"
+export const buildingBaseColor = "#ff0090"
+export const buildingHiColor = "#000000"
 
 export const turretColor = "#fbff00" // "#529fbe" // "#141E46"
 export const turretParticleColor = "#fbff00" // "#529fbe" // "#141E46"
 
 export const rocketColor = turretColor // "#d9e7ed"
-export const platformColor = floorColorHi // "#e1f6ff" // "#6fbad8" // "#141E46" 
+export const platformColor = floorHiColor // "#e1f6ff" // "#6fbad8" // "#141E46" 
 
 export const barellcolor = "#1400ab"
 export const barrellEmissiveIntensity = .3
@@ -23,7 +24,7 @@ export const planeColor = "#ff0073"
 
 export const playerColor = "#273941"
 
-export const deviceColor = buildingBase // "#e2eef5" // "#6fbad8" // "#141E46" 
+export const deviceColor = buildingBaseColor // "#e2eef5" // "#6fbad8" // "#141E46" 
 
 
 export const fogColorStart = "#0004ff"

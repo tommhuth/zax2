@@ -1,9 +1,9 @@
-import { useGLTF } from "@react-three/drei"
-import { floorColor, floorColorHi, floorFogIntensity } from "../../../../data/theme"
-import { MeshRetroMaterial } from "../../MeshRetroMaterial"
+import { useGLTF } from "@react-three/drei" 
+import { useStore } from "../../../../data/store"
 
 export default function Floor1() {
     const { nodes }: { nodes: any } = useGLTF("/models/floor1b.glb")
+    let materials = useStore(i => i.materials)
 
     return (
         <group dispose={null}>
@@ -11,23 +11,13 @@ export default function Floor1() {
                 <mesh
                     receiveShadow
                     geometry={nodes.Plane001?.geometry}
-                >
-                    <MeshRetroMaterial
-                        isInstance={false} 
-                        color={floorColor}
-                        fogDensity={floorFogIntensity}
-                    />
-                </mesh>
+                    material={materials.floorBase}
+                />
                 <mesh
                     receiveShadow
                     geometry={nodes.Plane001_1?.geometry}
-                >
-                    <MeshRetroMaterial
-                        isInstance={false}
-                        color={floorColorHi}
-                        fogDensity={floorFogIntensity}
-                    />
-                </mesh>
+                    material={materials.floorHi}
+                />
             </group>
         </group>
     )

@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useRepeater } from "../../RepeaterMesh"
+import { useRepeater } from "../models/RepeaterMesh"
 import { WORLD_LEFT_EDGE } from "../World"
 import random from "@huth/random"
 import { RepeaterName } from "../../../data/types"

@@ -1,4 +1,4 @@
-import RepeaterMesh from "../../RepeaterMesh"
+import RepeaterMesh from "./RepeaterMesh"
 import Building1 from "./repeaters/Building1"
 import Building2 from "./repeaters/Building2"
 import Building3 from "./repeaters/Building3"

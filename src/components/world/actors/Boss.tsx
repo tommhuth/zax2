@@ -21,9 +21,10 @@ interface BossProps {
 }
 
 export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossProps) {
+    let materials = useStore(i => i.materials)
     let boss = useStore(i => i.boss)
     let bossWrapper = useRef<Group>(null)
-    let { nodes, materials } = useGLTF("/models/boss.glb") as any
+    let { nodes } = useGLTF("/models/boss.glb") as any
     let grid = useStore(i => i.world.grid)
     let data = useMemo(() => {
         return {
@@ -152,7 +153,7 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
 
         bossWrapper.current.position.x = Math.cos(state.clock.elapsedTime * .45) * 3.5
         bossWrapper.current.position.y = bossSize[1] / 2 + 1 + Math.sin(state.clock.elapsedTime * .97) * .85
-        bossWrapper.current.position.z = startPosition[2] + Math.sin(state.clock.elapsedTime * .6) * 2
+        bossWrapper.current.position.z = startPosition[2] - ((Math.sin(state.clock.elapsedTime * .6) + 1) / 2) * 6
 
         position.copy(bossWrapper.current.position)
         client.position = position.toArray()
@@ -178,28 +179,28 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
             >
                 <mesh 
                     geometry={nodes.Cube012.geometry}
-                    material={materials.lightblue}
+                    material={materials.bossLightBlue}
                 />
                 <mesh 
                     geometry={nodes.Cube012_1.geometry}
-                    material={materials.black}
+                    material={materials.bossBlack}
                 />
                 <mesh 
                     geometry={nodes.Cube012_2.geometry}
-                    material={materials.darkblue}
+                    material={materials.bossDarkBlue}
                 />
                 <mesh
                     castShadow 
                     geometry={nodes.Cube012_3.geometry}
-                    material={materials.blue}
+                    material={materials.bossBlue}
                 />
                 <mesh 
                     geometry={nodes.Cube012_4.geometry}
-                    material={materials.solidblue}
+                    material={materials.bossSecondaryBlue}
                 />
                 <mesh 
                     geometry={nodes.Cube012_5.geometry}
-                    material={materials.white2}
+                    material={materials.bossWhite}
                 />
             </group>
         </>

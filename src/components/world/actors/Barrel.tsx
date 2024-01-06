@@ -3,15 +3,15 @@ import { startTransition, useLayoutEffect, useMemo, useRef, useState } from "rea
 import { Vector3 } from "three"
 import { useStore } from "../../../data/store"
 import { Barrel, InstanceName, Owner } from "../../../data/types"
-import { useInstance } from "../../InstancedMesh"
-import random from "@huth/random"
-import Config from "../../../data/Config"
+import { useInstance } from "../models/InstancedMesh"
+import random from "@huth/random" 
 import { Tuple3 } from "../../../types"
 import { createExplosion, createImpactDecal, createParticles, createShimmer } from "../../../data/store/effects"
 import { damageBarrel, removeBarrel } from "../../../data/store/world"
 import { barellParticleColor } from "../../../data/theme"  
 import { increaseScore } from "../../../data/store/player"
 import { useBulletCollision } from "../../../data/collisions"
+import Config from "../../../data/Config"
 
 let _size = new Vector3()
 

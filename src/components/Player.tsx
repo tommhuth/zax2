@@ -42,7 +42,8 @@ export default function Player({
     let grid = useStore(i => i.world.grid)
     let boss = useStore(i => i.boss)
     let keys = useMemo<Record<string, boolean>>(() => ({}), [])
-    let weapon = useStore(i => i.player.weapon)
+    let weapon = useStore(i => i.player.weapon) 
+    let ready = useStore(i => i.ready)
     let lastImpactLocation = useStore(i => i.player.lastImpactLocation)
     let state = useStore(i => i.state)
     let targetPosition = useMemo(() => new Vector3(WORLD_CENTER_X, _edgemin.y, z), [])
@@ -120,6 +121,12 @@ export default function Player({
             }
         }
     })
+
+    useEffect(() => {
+        if (ready && playerGroupRef.current) {
+            playerGroupRef.current.position.z = 80
+        }
+    }, [ready])
 
     useEffect(() => {
         let shootDiv = document.getElementById("shoot") as HTMLElement
@@ -242,7 +249,7 @@ export default function Player({
         <>
             <mesh ref={impactRef}>
                 <sphereGeometry args={[.5, 16, 16]} />
-                <meshBasicMaterial color={"white"} />
+                <meshBasicMaterial name="solidWhite" color={"white"} />
             </mesh>
             <group
                 ref={handleRef}
@@ -259,12 +266,13 @@ export default function Player({
                     <MeshRetroMaterial
                         dither={false}
                         isInstance={false}
+                        name="player"
                         color={playerColor}
                     />
                 </primitive>
                 <mesh userData={{ type: "player" }} visible={false}>
                     <boxGeometry args={[...size, 1, 1, 1]} />
-                    <meshBasicMaterial color="red" wireframe />
+                    <meshBasicMaterial color="red" wireframe name="debug" />
                 </mesh>
                 <mesh
                     userData={{ type: "player" }}
@@ -273,12 +281,13 @@ export default function Player({
                     position-z={-2}
                 >
                     <sphereGeometry args={[1, 16, 16]} />
-                    <meshBasicMaterial color="white" transparent />
+                    <meshBasicMaterial color="white" transparent name="solidWhite" />
                 </mesh>
             </group>
             <mesh
                 ref={hitboxRef}
                 position={[0, .1, 0]}
+                visible={false}
                 rotation-x={-Math.PI / 2}
                 onPointerUp={() => {
                     isMovingUp.current = false
@@ -308,7 +317,7 @@ export default function Player({
                 }}
             >
                 <planeGeometry args={[20, 20, 1, 1]} />
-                <meshBasicMaterial visible={false} />
+                <meshBasicMaterial name="hitbox" />
             </mesh>
         </>
     )

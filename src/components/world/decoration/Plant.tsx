@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useInstance } from "../../InstancedMesh"
+import { useInstance } from "../models/InstancedMesh"
 import { setMatrixAt } from "../../../data/utils"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"

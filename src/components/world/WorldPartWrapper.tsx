@@ -2,30 +2,25 @@ import { useFrame } from "@react-three/fiber"
 import React, { createContext, startTransition, useContext, useMemo, useRef } from "react"
 import { Box3, Vector3 } from "three"
 import { Tuple2, Tuple3 } from "../../types"
-import { Only } from "../../data/utils" 
+import { Only } from "../../data/utils"
 import random from "@huth/random"
 import { WORLD_CENTER_X } from "./World"
 import Config from "../../data/Config"
 import { store } from "../../data/store"
-import { removeWorldPart } from "../../data/store/world" 
-
-interface Asset {
-    release: () => void
-}
+import { removeWorldPart } from "../../data/store/world"
 
 interface WorldPartWrapperProps {
     position: Vector3
     id: string
     children?: React.ReactNode
     size: Tuple2
-    assets?: (Asset | null)[]
 }
 
 let _box = new Box3()
 let _center = new Vector3()
 let _size = new Vector3()
 
-let context = createContext<Tuple3 >([0,0,0])
+let context = createContext<Tuple3>([0, 0, 0])
 
 export function useWorldPart() {
     return useContext(context)
@@ -33,7 +28,7 @@ export function useWorldPart() {
 
 export function RootWorld({ children }) {
     return (
-        <context.Provider value={[0,0,0]}>
+        <context.Provider value={[0, 0, 0]}>
             {children}
         </context.Provider>
     )
@@ -52,7 +47,7 @@ export default function WorldPartWrapper({
     useFrame(() => {
         i.current++
 
-        if (dead.current || i.current % 20 > 0) {
+        if (dead.current || i.current % 20 > 0 || !store.getState().loaded) {
             return
         }
 
@@ -62,15 +57,15 @@ export default function WorldPartWrapper({
         _center.set(position.x, position.y + height / 2, position.z + depth / 2)
         _box.setFromCenterAndSize(_center, _size.set(width, height, depth))
 
-        if (!world.frustum.intersectsBox(_box) && player.object && position.z + depth <  player.object.position.z) {
+        if (!world.frustum.intersectsBox(_box) && player.object && position.z + depth < player.object.position.z) {
             dead.current = true
-            startTransition(() => removeWorldPart(id)) 
+            startTransition(() => removeWorldPart(id))
         }
     })
 
     return (
         <>
-            <context.Provider 
+            <context.Provider
                 value={p}
             >
                 {children}

@@ -1,7 +1,7 @@
 import { memo, startTransition, useLayoutEffect, useRef } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
-import { useInstance } from "../../InstancedMesh"
+import { useInstance } from "../models/InstancedMesh"
 import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
@@ -182,7 +182,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
         <>
             <mesh position={position.toArray()}>
                 <boxGeometry args={[...size, 1, 1, 1]} />
-                <meshBasicMaterial wireframe color="orange" />
+                <meshBasicMaterial wireframe color="orange" name="debug" />
             </mesh>
         </>
     )

@@ -1,6 +1,6 @@
 import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
 import { useFrame } from "@react-three/fiber"
-import InstancedMesh from "../InstancedMesh"
+import InstancedMesh from "./models/InstancedMesh"
 import { startTransition, useMemo } from "react"
 import { useStore } from "../../data/store"
 import { removeShimmer } from "../../data/store/effects"
@@ -94,6 +94,7 @@ export default function ShimmerHandler() {
             <meshBasicMaterial
                 attach={"material"}
                 color={shimmerColor}
+                name="shimmer"
                 transparent
                 onBeforeCompile={onBeforeCompile}
             />

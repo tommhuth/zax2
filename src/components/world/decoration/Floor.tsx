@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useRepeater } from "../../RepeaterMesh"
+import { useRepeater } from "../models/RepeaterMesh"
 import { Tuple3 } from "../../../types"
 import { RepeaterName } from "../../../data/types"
 import { useWorldPart } from "../WorldPartWrapper"

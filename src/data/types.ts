@@ -1,18 +1,22 @@
-import { Box3, InstancedMesh, Object3D, Vector3 } from "three" 
+import { Box3, InstancedMesh, Object3D, Vector3 } from "three"
 import { Tuple2, Tuple3 } from "../types"
 import Counter from "./world/Counter"
 import { Client } from "./world/SpatialHashGrid3D"
 
+export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
+    | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi"
+    | "floorBase" | "floorHi" | "floorMark"
+
 export type InstanceName = "line" | "box" | "sphere" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball"
     | "turret" | "rocket" | "platform" | "cylinder" | "shimmer"
-    | "grass" | "plant" | "shockwave" | "blast" | "impact"
+    | "grass" | "plant" | "shockwave" | "blast" | "impact"
 
 export type RepeaterName = "building1" | "building2" | "building3"
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
 
 export type CollisionObjectType = "barrel" | "player" | "boss" | "heatseaker" | "plane" | "turret" | "building" | "rocket"
-    
+
 export interface Fireball {
     isPrimary?: boolean
     position: Tuple3
@@ -105,7 +109,7 @@ export interface Barrel {
     position: Vector3
     size: Tuple3
     client: Client
-    aabb: Box3 
+    aabb: Box3
     index: number
     rotation: number
     health: number
@@ -209,7 +213,7 @@ export interface Bullet {
     direction: Tuple3
     obb: Tuple3
     mounted: boolean
-    size: Tuple3 
+    size: Tuple3
     aabb: Box3
     color: string
     damage: number

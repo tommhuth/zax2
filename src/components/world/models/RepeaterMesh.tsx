@@ -1,27 +1,13 @@
-import React, { cloneElement, useCallback, useEffect, useRef, useState } from "react"
+import React, { cloneElement, useEffect, useRef, useState } from "react"
 import { Group, Object3D } from "three"
-import { useStore } from "../data/store"
-import { requestRepeater, setRepeater } from "../data/store/utils"
-import { RepeaterName } from "../data/types"
+import { useStore } from "../../../data/store"
+import { requestRepeater, setRepeater } from "../../../data/store/utils"
+import { RepeaterName } from "../../../data/types"
 
 export function useRepeater(name: RepeaterName) {
     let [repeater, setRepeater] = useState<Object3D | null>(null)
     let hasRepeater = useRef(false)
-    let hasData = !!useStore(i => i.repeaters[name])
-    let release = useCallback(() => {
-        if (!repeater) {
-            return
-        }
-
-        // repeater.visible = false
-        // repeater.position.set(0, 0, 100_000)
-    }, [repeater])
-
-    useEffect(() => {
-        if (repeater) {
-            return () => release()
-        }
-    }, [repeater, release])
+    let hasData = !!useStore(i => i.repeaters[name])  
 
     useEffect(() => {
         if (!hasRepeater.current && hasData) {
@@ -35,8 +21,7 @@ export function useRepeater(name: RepeaterName) {
     }
 
     return {
-        mesh: repeater,
-        release
+        mesh: repeater, 
     }
 }
 
@@ -48,6 +33,7 @@ interface RepeaterMeshProps {
 
 export default function RepeaterMesh({ name, count, children }: RepeaterMeshProps) {
     let [ref, setRef] = useState<Group | null>(null)
+    let ready = useStore(i => i.ready)
 
     useEffect(() => {
         if (!ref) {
@@ -55,8 +41,16 @@ export default function RepeaterMesh({ name, count, children }: RepeaterMeshProp
         }
 
         ref.children.forEach(i => {
-            i.visible = false 
+            i.traverse(j => {
+                j.frustumCulled = ready
+            })
         })
+    }, [ready])
+
+    useEffect(() => {
+        if (!ref) {
+            return
+        }
 
         setRepeater(name, ref.children, count)
     }, [ref])

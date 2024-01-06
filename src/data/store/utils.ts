@@ -1,6 +1,7 @@
-import { InstancedMesh, Object3D } from "three"
+import { InstancedMesh, Material, Object3D } from "three"
 import Counter from "../world/Counter"
 import { Store, store } from "."
+import { MaterialName } from "../types"
 
 export function updateWorld(data: Partial<Store["world"]>) {
     store.setState({
@@ -50,9 +51,23 @@ export function setInstance(name: string, mesh: InstancedMesh, maxCount: number)
         }
     })
 }
+export function setMaterial(name: MaterialName, material: Material) {
+    store.setState({
+        materials: {
+            ...store.getState().materials,
+            [name]: material,
+        }
+    })
+}
 
 export function setLoaded() {
     store.setState({
         loaded: true,
+    })
+}
+
+export function setReady() {
+    store.setState({
+        ready: true,
     })
 }

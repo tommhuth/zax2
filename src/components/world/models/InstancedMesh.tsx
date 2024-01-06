@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { setColorAt, setMatrixAt, setMatrixNullAt } from "../data/utils"
-import { BufferGeometry, ColorRepresentation, InstancedMesh as InstancedMeshThree, Material, Vector3 } from "three"
-import { Tuple3, Tuple4 } from "../types"
-import { useStore } from "../data/store"
-import { setInstance } from "../data/store/utils"
-import { InstanceName } from "../data/types"
+import React, { useEffect, useMemo, useRef, useState } from "react"
+import { setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
+import { ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
+import { Tuple3, Tuple4 } from "../../../types"
+import { useStore } from "../../../data/store"
+import { setInstance } from "../../../data/store/utils"
+import { InstanceName } from "../../../data/types"
 
 interface UseInstanceOptions {
     reset?: boolean
@@ -64,6 +64,7 @@ interface InstancedMeshProps {
     receiveShadow?: boolean
     castShadow?: boolean
     colors?: boolean
+    visible?: boolean
     count: number
     name: InstanceName
     userData?: Record<string, any>
@@ -74,29 +75,36 @@ export default function InstancedMesh({
     receiveShadow = true,
     castShadow = true,
     colors = true,
+    visible = true,
     count,
     name,
     userData = {}
 }: InstancedMeshProps) {
     let colorData = useMemo(() => new Float32Array(count * 3).fill(1), [])
-    let handleRef = useCallback((mesh: InstancedMeshThree<BufferGeometry, Material>) => { 
-        if (mesh) {
-            setInstance(name, mesh, count)
+    let ref = useRef<InstancedMeshThree | null>(null) 
 
-            for (let i = 0; i < count; i++) {
-                setMatrixAt({ instance: mesh, index: i, scale: 0 })
-            }
+    useEffect(() => {
+        if (!ref.current) {
+            console.warn(name, "instance is not available, this is bad")
+
+            return
         }
-    }, [])  
+
+        setInstance(name, ref.current, count) 
+
+        for (let i = 0; i < count; i++) {
+            setMatrixAt({ instance: ref.current, index: i, scale: 0 })
+        } 
+    }, []) 
 
     return (
         <instancedMesh
             args={[undefined, undefined, count]}
             castShadow={castShadow}
-            userData={{ ...userData, type: name }}
             receiveShadow={receiveShadow}
-            ref={handleRef}
-            frustumCulled={false}
+            userData={{ ...userData, type: name }}
+            ref={ref} 
+            visible={visible} 
         >
             {colors ? <instancedBufferAttribute attach="instanceColor" args={[colorData, 3]} /> : null}
             {children}

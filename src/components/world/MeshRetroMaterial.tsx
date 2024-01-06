@@ -1,16 +1,14 @@
-import { Color, ColorRepresentation, MeshLambertMaterial, MeshPhongMaterial, Vector3 } from "three"
+import { Color, MeshLambertMaterial, Vector3 } from "three"
 import { useShader } from "../../data/hooks"
 import { backColor, bcolor, fogColorStart, leftColor } from "../../data/theme"
-import easings from "../../shaders/easings.glsl" 
+import easings from "../../shaders/easings.glsl"
 import ditherFragment from "../../shaders/dither.glsl"
 import { glsl } from "../../data/utils"
-import { useFrame } from "@react-three/fiber"
-import { useEffect, useRef } from "react"
+import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
+import { forwardRef } from "react"
 import { useStore } from "../../data/store"
 
-interface MeshRetroMaterialProps {
-    color?: ColorRepresentation
-    emissive?: ColorRepresentation
+type MeshRetroMaterialProps = {
     isInstance?: boolean
     usesTime?: boolean
     usesPlayerPosition?: boolean
@@ -19,9 +17,9 @@ interface MeshRetroMaterialProps {
     fogDensity?: number
     fogHeight?: number
     dither?: boolean
-}
+} & Omit<MeshLambertMaterialProps, "onBeforeCompile">
 
-export function MeshRetroMaterial({
+const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
     color = bcolor,
     isInstance = true,
     usesTime = false,
@@ -33,8 +31,8 @@ export function MeshRetroMaterial({
     dither = true,
     emissive,
     ...rest
-}: MeshRetroMaterialProps & Partial<Omit<MeshPhongMaterial, "color" | "emissive" | "onBeforeCompile">>) {
-    let ref = useRef<MeshLambertMaterial>(null)
+}, ref) => {
+    // let ref = useRef<MeshLambertMaterial>(null)
     let player = useStore(i => i.player.object)
     let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
@@ -123,11 +121,6 @@ export function MeshRetroMaterial({
         }
     })
 
-    useEffect(() => {
-        if (ref.current) {
-            ref.current.needsUpdate = true
-        }
-    }, [])
 
     useFrame((state, delta) => {
         if (usesTime) {
@@ -142,14 +135,15 @@ export function MeshRetroMaterial({
     })
 
     return (
-        <meshPhongMaterial
+        <meshLambertMaterial
             attach={"material"}
             onBeforeCompile={onBeforeCompile}
             color={color}
             emissive={emissive}
-            shininess={50}
-            specular={"#3b3b3b"}
+            ref={ref}
             {...rest}
         />
     )
-} 
+})
+
+export { MeshRetroMaterial }

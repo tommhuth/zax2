@@ -1,7 +1,7 @@
-import { useInstance } from "../../InstancedMesh"
+import { useInstance } from "../models/InstancedMesh"
 import { Building, InstanceName } from "../../../data/types"
 import random from "@huth/random"
-import { buildingBase } from "../../../data/theme"
+import { buildingBaseColor } from "../../../data/theme"
 import { setLastImpactLocation } from "../../../data/store/player"
 import { createParticles } from "../../../data/store/effects" 
 import { useBulletCollision } from "../../../data/collisions"
@@ -32,7 +32,7 @@ export default function Building({ size, id, position }: Building) {
     })
 
     useInstance(type, {
-        color: buildingBase,
+        color: buildingBaseColor,
         scale: size,
         position,
         rotation: [
@@ -42,12 +42,5 @@ export default function Building({ size, id, position }: Building) {
         ]
     })
 
-    return null
-
-    return (
-        <mesh position={position.toArray()}>
-            <boxGeometry args={[...size, 1, 1, 1]} />
-            <meshBasicMaterial color="#bbecff"  wireframe />
-        </mesh>
-    )
+    return null 
 }

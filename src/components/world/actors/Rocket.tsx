@@ -1,6 +1,6 @@
 import { startTransition, useLayoutEffect, useMemo, useRef } from "react"
 import { Owner, Rocket } from "../../../data/types"
-import { useInstance } from "../../InstancedMesh"
+import { useInstance } from "../models/InstancedMesh"
 import { useFrame } from "@react-three/fiber"
 import { ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
@@ -187,7 +187,7 @@ export default function Rocket({
     return (
         <mesh position={position.toArray()} ref={ref}>
             <boxGeometry args={[...size, 1, 1, 1]} />
-            <meshBasicMaterial wireframe color="orange" />
+            <meshBasicMaterial wireframe color="orange" name="debug" />
         </mesh>
     )
 }

@@ -20,7 +20,7 @@ export default function Start({
             position={position}
             id={id}
         >
-            <AsteroidStart position={[0, 0, 0]} />
+            <AsteroidStart position={[0, 0, position.z]} />
 
             <Building
                 position={[4, 0, 1]}

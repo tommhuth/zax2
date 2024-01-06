@@ -1,6 +1,6 @@
 import Camera from "./components/Camera"
-import { Suspense, useEffect, useState } from "react"
-import { Canvas } from "@react-three/fiber"
+import { Suspense, startTransition, useEffect, useState } from "react"
+import { Canvas, useThree } from "@react-three/fiber"
 import Player from "./components/Player"
 import World from "./components/world/World"
 import Ui from "./components/ui/Ui"
@@ -9,7 +9,14 @@ import { BasicShadowMap, NoToneMapping } from "three"
 import { dpr, isSmallScreen, pixelSize, useStore } from "./data/store"
 import Models from "./components/world/models/Models"
 import EdgeOverlay from "./components/EdgeOverlay"
-import { Text3D } from "@react-three/drei"
+import { Perf } from "r3f-perf"
+import MaterialLoader from "./components/world/models/MaterialLoader"
+import { Only } from "./data/utils"
+import Config from "./data/Config"
+import { setLoaded, setReady } from "./data/store/utils"
+import Grass from "./components/world/decoration/Grass"
+import Plant from "./components/world/decoration/Plant"
+
 
 export default function Wrapper() {
     let getSize = () => [
@@ -17,7 +24,7 @@ export default function Wrapper() {
         Math.ceil(window.innerHeight / pixelSize) * pixelSize
     ]
     let [size, setSize] = useState(() => getSize())
-    let loaded = useStore(i => i.loaded)
+    let ready = useStore(i => i.ready)
 
     useEffect(() => {
         let tid: ReturnType<typeof setTimeout>
@@ -38,50 +45,80 @@ export default function Wrapper() {
     return (
         <>
             <Ui />
-            <Suspense fallback={null}>
-                <Canvas
-                    gl={{
-                        antialias: false,
-                        depth: true,
-                        stencil: false,
-                        alpha: false,
-                        powerPreference: "high-performance",
-                        toneMapping: NoToneMapping
-                    }}
-                    style={{
-                        height: size[1],
-                        width: size[0],
-                        opacity: loaded ? 1 : 0,
-                        left: 0,
-                        top: 0,
-                        position: "fixed",
-                    }}
-                    shadows={{
-                        type: BasicShadowMap,
-                    }}
-                    orthographic
-                    camera={{
-                        zoom: isSmallScreen ? 40 : 70,
-                        near: 0,
-                        far: 150
-                    }}
-                    dpr={dpr}
-                >
-                    <Text3D
-                        font="/fonts/roboto.json"
-                        position-z={-10_000}
-                    >
-                        L
-                    </Text3D>
+            <Canvas
+                gl={{
+                    antialias: false,
+                    depth: true,
+                    stencil: false,
+                    alpha: false,
+                    powerPreference: "high-performance",
+                    toneMapping: NoToneMapping
+                }}
+                style={{
+                    height: size[1],
+                    width: size[0],
+                    opacity: ready ? 1 : 0,
+                    left: 0,
+                    top: 0,
+                    position: "fixed",
+                }}
+                shadows={{
+                    type: BasicShadowMap,
+                }}
+                orthographic
+                camera={{
+                    zoom: isSmallScreen ? 40 : 70,
+                    near: 0,
+                    far: 150
+                }}
+                dpr={dpr}
+            >
+                <Suspense fallback={null}>
                     <EdgeOverlay />
-                    <Camera />
-                    <Lights />
-
                     <Models />
                     <World />
                     <Player />
-                </Canvas>
-            </Suspense>
+                    <Loader />
+                </Suspense>
+
+                <Camera />
+                <Lights />
+                <MaterialLoader />
+
+                <Only if={Config.DEBUG || Config.STATS}>
+                    <Perf deepAnalyze style={{ zIndex: 90000 }} />
+                </Only>
+            </Canvas>
+        </>
+    )
+}
+
+function Loader() {
+    let { scene, gl, camera } = useThree()
+    let loaded = useStore(i => i.loaded)
+
+    useEffect(() => {
+        gl.compile(scene, camera)
+        startTransition(setLoaded)
+    }, [scene, camera])
+
+    useEffect(() => {
+        if (loaded) {
+            setTimeout(() => {
+                document.getElementById("loading")?.remove()
+                setReady()
+            }, 1000)
+        }
+    }, [loaded])
+
+    return (
+        <>
+            <Grass position={[0, 0, 0]} />
+            <Plant position={[0, 0, 0]} scale={1} />
+            <mesh>
+                <sphereGeometry args={[4]} />
+                <meshLambertMaterial color="red" />
+            </mesh>
         </>
     )
 }

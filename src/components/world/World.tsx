@@ -1,6 +1,5 @@
-
 import { useFrame, useThree } from "@react-three/fiber"
-import { memo, startTransition } from "react"
+import { memo, startTransition, useEffect } from "react"
 import { store, useStore } from "../../data/store"
 import Turret from "./actors/Turret"
 import Plane from "./actors/Plane"
@@ -13,12 +12,14 @@ import { WorldPartDefault, WorldPartBuildingsGap, WorldPartType, WorldPartBuildi
 import BuildingsGap from "./parts/BuildingsGap"
 import BuildingsLow from "./parts/BuildingsLow"
 import Rocket from "./actors/Rocket"
-import { createWorldPart } from "../../data/store/world"
+import { addWorldPart } from "../../data/store/world"
 import ExplosionsHandler from "./ExplosionsHandler"
 import ShimmerHandler from "./ShimmerHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
+import { makeStart } from "../../data/world/generators"
+import { Vector3 } from "three"
 
 export const WORLD_CENTER_X = 0
 export const WORLD_LEFT_EDGE = 5
@@ -28,18 +29,28 @@ export const WORLD_BOTTOM_EDGE = 1
 
 export default function World() {
     let parts = useStore(i => i.world.parts)
+    let loaded = useStore(i => i.loaded)
     let { viewport } = useThree()
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
 
     useFrame(() => {
-        let { world: { parts }, boss, player: { object: player } } = store.getState()
+        let { world: { parts }, loaded, boss, player: { object: player } } = store.getState()
         let forwardWorldPart = parts[parts.length - 1]
-        let lastPartIsAtEdge = forwardWorldPart && player && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
 
-        if ((lastPartIsAtEdge || !forwardWorldPart) && !boss) {
-            startTransition(createWorldPart)
+        if (forwardWorldPart) {
+            let lastPartIsAtEdge = forwardWorldPart && player && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
+
+            if ((lastPartIsAtEdge || !forwardWorldPart) && !boss && loaded) {
+                startTransition(addWorldPart)
+            }
         }
     })
+
+    useEffect(() => {
+        if (loaded) {
+            setTimeout(() => addWorldPart(makeStart({ position: new Vector3(0, 0, 100), size: [0, 0] })), 100)
+        }
+    }, [loaded])
 
     return (
         <>
@@ -62,7 +73,7 @@ export default function World() {
                 }
             })}
 
-            <Parts />
+            <Actors />
             <ParticleHandler />
             <BulletHandler />
             <ExplosionsHandler />
@@ -72,7 +83,7 @@ export default function World() {
 }
 
 
-const Parts = memo(() => {
+const Actors = memo(() => {
     let buildings = useStore(i => i.world.buildings)
     let turrets = useStore(i => i.world.turrets)
     let planes = useStore(i => i.world.planes)

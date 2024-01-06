@@ -1,30 +1,22 @@
-import { useGLTF } from "@react-three/drei"
-import { buildingBase, buildingHi, groundFogIntensity } from "../../../../data/theme"
-import { MeshRetroMaterial } from "../../MeshRetroMaterial"
+import { useGLTF } from "@react-three/drei" 
+import { useStore } from "../../../../data/store"
 
 export default function Hangar() {
-    const { nodes }: { nodes: any } = useGLTF("/models/hangar.glb")
+    const { nodes } = useGLTF("/models/hangar.glb")
+    let materials = useStore(i => i.materials) 
 
     return (
         <group dispose={null}>
             <mesh
                 receiveShadow
                 geometry={nodes.Cube.geometry}
-            >
-                <MeshRetroMaterial
-                    isInstance={false}
-                    fogDensity={groundFogIntensity}
-                    color={buildingBase}
-                />
-            </mesh>
+                material={materials.buildingBase}
+            />
             <mesh
                 receiveShadow
                 geometry={nodes.Cube_1.geometry}
-            >
-                <meshBasicMaterial
-                    color={buildingHi}
-                />
-            </mesh>
+                material={materials.buildingHi}
+            />
         </group>
     )
 }

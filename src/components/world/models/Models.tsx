@@ -1,16 +1,7 @@
-import { setLoaded } from "../../../data/store/utils"
-import Instances from "./Instances"
-import Repeaters from "./Repeaters"
-import { useEffect } from "react"
+import Instances from "./Instances" 
+import Repeaters from "./Repeaters" 
 
-export default function Models() {
-    useEffect(() => {
-        setTimeout(() => { 
-            setLoaded() 
-            document.getElementById("loading")?.remove()
-        }, 250)
-    }, [])
-
+export default function Models() { 
     return (
         <>
             <Instances />

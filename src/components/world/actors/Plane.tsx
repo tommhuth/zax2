@@ -1,7 +1,7 @@
 import { memo, startTransition, useMemo } from "react"
 import { useFrame } from "@react-three/fiber"
 import { useEffect } from "react"
-import { useInstance } from "../../InstancedMesh"
+import { useInstance } from "../models/InstancedMesh"
 import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"

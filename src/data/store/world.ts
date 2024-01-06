@@ -1,12 +1,12 @@
 import { Tuple3 } from "../../types"
 import { store } from "."
-import { Barrel } from "../types"
+import { Barrel, WorldPart } from "../types"
 import { Box3, Vector3 } from "three"
-import random from "@huth/random" 
+import random from "@huth/random"
 import { updateWorld } from "./utils"
 import { getNextWorldPart } from "../world/getNextWorldPart"
 
-export function createWorldPart() {
+export function addWorldPart(part?: WorldPart) {
     let world = store.getState().world
     let lastPart = world.parts[world.parts.length - 1]
 
@@ -15,7 +15,7 @@ export function createWorldPart() {
             ...world,
             parts: [
                 ...world.parts,
-                getNextWorldPart(lastPart),
+                part || getNextWorldPart(lastPart),
             ],
         }
     })
@@ -46,7 +46,7 @@ export function createBarrel({
 }: CreateBarrelParams) {
     let id = random.id()
     let size = [2, 1.85, 2] as Tuple3
-    let position = new Vector3(x, y + size[1] / 2, z) 
+    let position = new Vector3(x, y + size[1] / 2, z)
     let aabb = new Box3().setFromCenterAndSize(new Vector3(z, y, z), new Vector3(...size))
     let { instances, world: { grid, barrels } } = store.getState()
     let client = grid.createClient(position.toArray(), [...size], { type: "barrel", id })
@@ -56,7 +56,7 @@ export function createBarrel({
             {
                 position,
                 id,
-                client, 
+                client,
                 health,
                 index: instances.line.index.next(),
                 aabb,
@@ -103,10 +103,10 @@ export function removeBarrel(id: string) {
 export function createBuilding(
     size: Tuple3 = [1, 1, 1],
     [x = 0, y = 0, z = 0] = [],
-) { 
+) {
     let id = random.id()
     let position = new Vector3(x, y + size[1] / 2, z)
-    let box = new Box3().setFromCenterAndSize(new Vector3(x, y , z), new Vector3(...size))
+    let box = new Box3().setFromCenterAndSize(new Vector3(x, y, z), new Vector3(...size))
     let { grid, buildings } = store.getState().world
     let client = grid.createClient(
         [position.x, position.y, position.z],

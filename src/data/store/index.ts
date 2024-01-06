@@ -1,11 +1,11 @@
 import { Frustum, Object3D, Vector3 } from "three"
+import type { Material } from "three"
 import { create } from "zustand"
 import { Tuple3 } from "../../types"
 import {
-    Barrel, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, Particle,
+    Barrel, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, MaterialName, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
-} from "../types"
-import { makeBuildingsLow, makeStart } from "../world/generators"
+} from "../types" 
 import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D"
 
 export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
@@ -15,6 +15,7 @@ export const bulletSize: Tuple3 = [.15, .2, 1.5]
 
 export interface Store {
     loaded: boolean
+    ready: boolean
     state: "intro" | "running" | "gameover"
     world: {
         parts: WorldPart[]
@@ -34,12 +35,13 @@ export interface Store {
     }
     instances: Record<InstanceName, Instance>
     repeaters: Record<string, RepeaterMesh>
-    boss: { 
+    materials: Record<MaterialName, Material>
+    boss: {
         pauseAt: number
         health: number
-        position: Vector3 
+        position: Vector3
         maxHealth: number
-        heatSeakers: HeatSeaker[] 
+        heatSeakers: HeatSeaker[]
     } | null,
     player: {
         speed: number
@@ -51,7 +53,7 @@ export interface Store {
             fireFrequency: number,
             color: string,
             speed: number
-            damage: number 
+            damage: number
         }
         object: Object3D | null
     }
@@ -59,13 +61,12 @@ export interface Store {
 
 const store = create<Store>(() => ({
     loaded: false,
-    state: "intro",
+    ready: false,
+    state: "running",
     world: {
         grid: new SpatialHashGrid3D([4, 3, 4]),
         frustum: new Frustum(),
-        parts: [
-            makeStart({ position: new Vector3(0, 0, 0), size: [0, 0] }),
-        ],
+        parts: [],
         buildings: [],
         planes: [],
         turrets: [],
@@ -80,6 +81,7 @@ const store = create<Store>(() => ({
     },
     instances: {} as Store["instances"],
     repeaters: {},
+    materials: { },
     boss: null,
     player: {
         speed: 0,
@@ -92,7 +94,7 @@ const store = create<Store>(() => ({
             fireFrequency: 150,
             damage: 35,
             color: "yellow",
-            speed: 40, 
+            speed: 40,
         },
     }
 }))

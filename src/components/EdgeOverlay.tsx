@@ -1,10 +1,11 @@
 import { useFrame } from "@react-three/fiber"
 import { useStore } from "../data/store"
 import { useLayoutEffect, useRef } from "react"
-import { Group } from "three"
+import { Group, MeshBasicMaterial } from "three"
 import animate from "@huth/animate"
 import { easeOutCubic } from "../data/shaping"
 
+let material = new MeshBasicMaterial({ color: "#000", name: "edge" })
 
 export default function EdgeOverlay() {
     let groupRef = useRef<Group>(null)
@@ -48,17 +49,17 @@ export default function EdgeOverlay() {
                 rotation-x={-Math.PI / 2}
                 position-y={13}
                 rotation-y={-.65}
+                material={material}
             >
-                <planeGeometry args={[12, 100, 1, 1]} />
-                <meshBasicMaterial color="black" />
+                <planeGeometry args={[12, 100, 1, 1]} /> 
             </mesh>
             <mesh
                 rotation-x={-Math.PI / 2}
                 position-y={12}
                 position-x={-26}
+                material={material}
             >
-                <planeGeometry args={[12, 100, 1, 1]} />
-                <meshBasicMaterial color="#000" />
+                <planeGeometry args={[12, 100, 1, 1]} /> 
             </mesh>
         </group>
 

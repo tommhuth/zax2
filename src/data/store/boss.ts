@@ -11,8 +11,8 @@ export function registerBoss({
         boss: {
             pauseAt,
             position, 
-            health: 1000,
-            maxHealth: 1000,
+            health: 100,
+            maxHealth: 100,
             heatSeakers: [],
         }
     })

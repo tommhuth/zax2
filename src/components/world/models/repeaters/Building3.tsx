@@ -1,34 +1,21 @@
-import { useGLTF } from "@react-three/drei"
-import { buildingBase, buildingHi, groundFogIntensity } from "../../../../data/theme"
-import { MeshRetroMaterial } from "../../MeshRetroMaterial"
+import { useGLTF } from "@react-three/drei" 
+import { useStore } from "../../../../data/store"
+
 
 export default function Building3() {
     const { nodes }: { nodes: any } = useGLTF("/models/building3.glb")
+    let materials = useStore(i => i.materials)
 
     return (
         <group dispose={null} scale={.3}>
-            <mesh
-                // castShadow
-                // receiveShadow
+            <mesh 
                 geometry={nodes.Cube003.geometry}
-            >
-                <MeshRetroMaterial
-                    isInstance={false}
-                    color={buildingBase}
-                    fogDensity={groundFogIntensity}
-                />
-            </mesh>
-            <mesh
-                // castShadow
-                // receiveShadow
+                material={materials.buildingBase}
+            /> 
+            <mesh 
                 geometry={nodes.Cube003_1.geometry}
-            >
-                <meshBasicMaterial
-                    isInstance={false}
-                    color={buildingHi}
-                    emssive={buildingHi}
-                    emissiveIntensity={.95}
-                />
+                material={materials.buildingHi}
+            > 
             </mesh>
         </group>
     )

@@ -1,8 +1,9 @@
 import { useEffect } from "react"
-import { useInstance } from "../../InstancedMesh"
+import { useInstance } from "../models/InstancedMesh"
 import { setMatrixAt, setMatrixNullAt } from "../../../data/utils" 
 import { Tuple3 } from "../../../types"
 import { useWorldPart } from "../WorldPartWrapper"
+import random from "@huth/random"
 
 interface GrassProps {
     position: Tuple3
@@ -16,13 +17,13 @@ export default function Grass({
 
     useEffect(() => {
         if (typeof index === "number") {
-            let flip = 1 // random.pick(-1, 1) 
+            let flip = random.pick(Math.PI, 0) 
 
             setMatrixAt({
                 index,
                 instance,
-                // rotation: [0, random.pick(-.5, .25, 0, .25, .5), 0],
-                scale: [flip, 1.75, flip],
+                rotation: [0, flip, 0],
+                scale: [1, 1.75, 1],
                 position: [position[0], position[1], partPosition[2] + position[2]]
             })
 
