@@ -57,7 +57,7 @@ export default function Player({
     }, [grid])
     let currentPointerPosition = useMemo(() => new Vector3(), [])
     let originalPointerPosition = useMemo(() => new Vector3(), [])
-    let speed = 7
+    let speed = 6
     let handleRef = useCallback((object: Group) => {
         if (!object) {
             return

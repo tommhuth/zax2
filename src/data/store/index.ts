@@ -5,7 +5,7 @@ import { Tuple3 } from "../../types"
 import {
     Barrel, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, MaterialName, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
-} from "../types" 
+} from "../types"
 import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D"
 
 export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
@@ -81,7 +81,7 @@ const store = create<Store>(() => ({
     },
     instances: {} as Store["instances"],
     repeaters: {},
-    materials: { },
+    materials: {} as Store["materials"],
     boss: null,
     player: {
         speed: 0,

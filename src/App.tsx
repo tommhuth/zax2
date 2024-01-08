@@ -17,7 +17,6 @@ import { setLoaded, setReady } from "./data/store/utils"
 import Grass from "./components/world/decoration/Grass"
 import Plant from "./components/world/decoration/Plant"
 
-
 export default function Wrapper() {
     let getSize = () => [
         Math.ceil(window.innerWidth / pixelSize) * pixelSize,
@@ -98,6 +97,7 @@ function Loader() {
     let loaded = useStore(i => i.loaded)
 
     useEffect(() => {
+        // not sure this is really needed
         gl.compile(scene, camera)
         startTransition(setLoaded)
     }, [scene, camera])
@@ -111,14 +111,5 @@ function Loader() {
         }
     }, [loaded])
 
-    return (
-        <>
-            <Grass position={[0, 0, 0]} />
-            <Plant position={[0, 0, 0]} scale={1} />
-            <mesh>
-                <sphereGeometry args={[4]} />
-                <meshLambertMaterial color="red" />
-            </mesh>
-        </>
-    )
+    return null
 }

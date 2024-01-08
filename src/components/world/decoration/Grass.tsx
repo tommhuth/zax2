@@ -17,7 +17,7 @@ export default function Grass({
 
     useEffect(() => {
         if (typeof index === "number") {
-            let flip = random.pick(Math.PI, 0) 
+            let flip = random.pick(Math.PI, 0)  
 
             setMatrixAt({
                 index,
