@@ -3,7 +3,7 @@ import easings from "../../shaders/easings.glsl"
 import { InstancedMesh, Vector3 } from "three"
 import random from "@huth/random"
 import { useMemo, useRef } from "react"
-import { clamp, glsl, setMatrixAt, setMatrixNullAt } from "../../data/utils"
+import { clamp, glsl, ndelta, setMatrixAt, setMatrixNullAt } from "../../data/utils"
 import { useFrame } from "@react-three/fiber"
 import { store } from "../../data/store"
 import { Tuple3 } from "../../types"
@@ -107,6 +107,7 @@ export default function SmokeHandler() {
 
         for (let smoke of smokes.current) {
             let { radius, index, position, velocity, id } = smoke
+            let d = ndelta(delta)
 
             if (smoke.radius < .05) {
                 setMatrixNullAt(instanceRef.current, index)
@@ -119,20 +120,20 @@ export default function SmokeHandler() {
             let groundMovementEffect = 1 - easeInOutCubic(clamp(smoke.time / smoke.groundAnimationDuration, 0, 1)) 
             let shrinkEffect = 1 - clamp((smoke.time - 2000) / (smoke.groundAnimationDuration * 1.5), 0, 1)
 
-            position[0] += velocity[0] * delta * groundMovementEffect * heightMovementEffect
-            position[1] = Math.max(position[1] + velocity[1] * delta, 0) 
-            position[2] += velocity[2] * delta * groundMovementEffect * heightMovementEffect 
+            position[0] += velocity[0] * d * groundMovementEffect * heightMovementEffect
+            position[1] = Math.max(position[1] + velocity[1] * d, 0) 
+            position[2] += velocity[2] * d * groundMovementEffect * heightMovementEffect 
 
-            velocity[0] += .8 * delta
-            velocity[1] += .4 * delta
-            velocity[2] += .8 * delta
+            velocity[0] += .8 * d
+            velocity[1] += .4 * d
+            velocity[2] += .8 * d
 
-            smoke.radius += .3 * delta + delta * smoke.grow * (1 - groundMovementEffect) +  delta * .35 * (1 - heightMovementEffect)
+            smoke.radius += .3 * d + d * smoke.grow * (1 - groundMovementEffect) +  d * .35 * (1 - heightMovementEffect)
             smoke.radius *= shrinkEffect
             smoke.radius = Math.min(smoke.radius, smoke.maxRadius)
 
             if (position[1] === 0) { 
-                smoke.time += delta * 1000
+                smoke.time += d * 1000
             }
 
             setMatrixAt({
