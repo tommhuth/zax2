@@ -191,7 +191,8 @@ export default function Instances() {
                         float offsetSize = .4;
                         float timeScale = 8.;
                         vec3 playerPosition = vec3(uPlayerPosition.x, vGlobalPosition.y, uPlayerPosition.z);
-                        vec3 offsetNormal = (vec4(normalize(vGlobalPosition - playerPosition), 1.) * removeTranslation(instanceMatrix)).xyz;
+                        //vec3 offsetNormal = (vec4(normalize(vGlobalPosition - playerPosition), 1.) * removeTranslation(instanceMatrix)).xyz;
+                        vec3 offsetNormal = normalize(vGlobalPosition - playerPosition);
                         float playerRadius = 6.;
                         float offsetEffect = 1. - clamp(length(playerPosition - vGlobalPosition) / playerRadius, 0., 1.);
                         float offsetHeightEffect = 1. - clamp((uPlayerPosition.y - 1.) / (height * 2. - 1.), 0., 1.);

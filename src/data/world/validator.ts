@@ -10,6 +10,8 @@ export const validator: Record<WorldPartType, (previous: WorldPart) => boolean> 
     [WorldPartType.BUILDINGS_LOW]: () => {
         let { world } = store.getState()
 
+        return true
+
         return world.parts.every(i => i.type !== WorldPartType.BUILDINGS_LOW)
     },
     [WorldPartType.AIRSTRIP]: () => true,

@@ -20,6 +20,7 @@ import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
 import { makeStart } from "../../data/world/generators"
 import { Vector3 } from "three"
+import SmokeHandler from "./SmokeHandler"
 
 export const WORLD_CENTER_X = 0
 export const WORLD_LEFT_EDGE = 5
@@ -48,7 +49,7 @@ export default function World() {
 
     useEffect(() => {
         if (loaded) {
-            setTimeout(() => addWorldPart(makeStart({ position: new Vector3(0, 0, 100), size: [0, 0] })), 100)
+            setTimeout(() => addWorldPart(makeStart({ position: new Vector3(0, 0, 90), size: [0, 0] })), 100)
         }
     }, [loaded])
 
@@ -78,6 +79,7 @@ export default function World() {
             <BulletHandler />
             <ExplosionsHandler />
             <ShimmerHandler />
+            <SmokeHandler />
         </>
     )
 }

@@ -32,7 +32,6 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     emissive,
     ...rest
 }, ref) => {
-    // let ref = useRef<MeshLambertMaterial>(null)
     let player = useStore(i => i.player.object)
     let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
@@ -92,7 +91,6 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     float strength;
                 };
                 uniform BasicDirectionLight uBasicDirectionLights[2];
-
 
                 ${easings} 
                 ${ditherFragment}
