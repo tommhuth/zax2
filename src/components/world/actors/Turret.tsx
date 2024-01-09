@@ -27,7 +27,7 @@ function explode(position: Vector3, size: Tuple3) {
         size: [3, 4, 3]
     })
     createExplosion({
-        position:[
+        position: [
             position.x,
             position.y - size[1] / 2,
             position.z,
@@ -53,10 +53,15 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
     let { viewport } = useThree()
     let [index, instance] = useInstance("turret", {
         color: turretColor,
+        rotation: [0, -rotation + Math.PI * .5, 0],
+        position: [
+            position.x,
+            position.y - .1,
+            position.z,
+        ]
     })
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
     let shootTimer = useRef(0)
-    let offset = useRef(0)
     let nextShotAt = useRef(fireFrequency)
     let remove = () => {
         setTimeout(() => removeTurret(id), 350)
@@ -86,28 +91,8 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
         }
     })
 
-    useFrame(() => {
-        if (instance && typeof index === "number") {
-            offset.current *= .85
-
-            setMatrixAt({
-                instance,
-                rotation: [0, -rotation + Math.PI * .5, 0],
-                index,
-                position: [
-                    position.x + random.float(-.125, .125) * offset.current,
-                    position.y - .1,
-                    position.z + random.float(-.125, .125) * offset.current,
-                ]
-            })
-        }
-
-    })
-
     useEffect(() => {
         if (health !== 100 && instance && typeof index === "number") {
-            offset.current = 1
-
             return animate({
                 from: explosionColor,
                 to: turretColor,
@@ -123,7 +108,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
         if (health === 0) {
             startTransition(() => {
                 remove()
-                explode(position, size) 
+                explode(position, size)
                 createImpactDecal([position.x, .1, position.z])
             })
         }
