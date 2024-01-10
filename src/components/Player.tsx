@@ -42,7 +42,7 @@ export default function Player({
     let grid = useStore(i => i.world.grid)
     let boss = useStore(i => i.boss)
     let keys = useMemo<Record<string, boolean>>(() => ({}), [])
-    let weapon = useStore(i => i.player.weapon) 
+    let weapon = useStore(i => i.player.weapon)
     let ready = useStore(i => i.ready)
     let lastImpactLocation = useStore(i => i.player.lastImpactLocation)
     let state = useStore(i => i.state)
@@ -260,22 +260,21 @@ export default function Player({
                     object={models.nodes.plane}
                     receiveShadow
                     castShadow
-                    userData={{ type: "player" }}
                     position={[0, 0, 0]}
                 >
                     <MeshRetroMaterial
-                        dither={false}
+                        dithering={false}
                         isInstance={false}
                         name="player"
+                        attach={"material"}
                         color={playerColor}
                     />
                 </primitive>
-                <mesh userData={{ type: "player" }} visible={false}>
+                <mesh visible={false}>
                     <boxGeometry args={[...size, 1, 1, 1]} />
                     <meshBasicMaterial color="red" wireframe name="debug" />
                 </mesh>
                 <mesh
-                    userData={{ type: "player" }}
                     scale={[.5, .21, 1]}
                     ref={flameRef}
                     position-z={-2}

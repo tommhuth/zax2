@@ -66,47 +66,42 @@ interface InstancedMeshProps {
     colors?: boolean
     visible?: boolean
     count: number
-    name: InstanceName
-    userData?: Record<string, any>
+    name: InstanceName 
 }
 
 export default function InstancedMesh({
     children,
-    receiveShadow = true,
-    castShadow = true,
-    colors = true,
+    receiveShadow = false,
+    castShadow = false,
+    colors = false,
     visible = true,
     count,
-    name,
-    userData = {}
+    name, 
 }: InstancedMeshProps) {
-    let colorData = useMemo(() => new Float32Array(count * 3).fill(1), [])
-    let ref = useRef<InstancedMeshThree | null>(null) 
+    let colorData = useMemo(() => new Float32Array(count * 3).fill(0), [])
+    let [instance, setInstanceRef] = useState<InstancedMeshThree | null>(null)
 
     useEffect(() => {
-        if (!ref.current) {
-            console.warn(name, "instance is not available, this is bad")
-
+        if (!instance) { 
             return
         }
 
-        setInstance(name, ref.current, count) 
+        setInstance(name, instance, count)  
 
         for (let i = 0; i < count; i++) {
-            setMatrixAt({ instance: ref.current, index: i, scale: 0 })
-        } 
-    }, []) 
+            setMatrixAt({ instance: instance, index: i, scale: 0 })
+        }
+    }, [instance])
 
     return (
         <instancedMesh
             args={[undefined, undefined, count]}
             castShadow={castShadow}
-            receiveShadow={receiveShadow}
-            userData={{ ...userData, type: name }}
-            ref={ref} 
+            receiveShadow={receiveShadow} 
+            ref={setInstanceRef} 
             visible={visible} 
         >
-            {colors ? <instancedBufferAttribute attach="instanceColor" args={[colorData, 3]} /> : null}
+            {colors ? <instancedBufferAttribute attach="instanceColor" args={[colorData, 3, true]} /> : null}
             {children}
         </instancedMesh>
     )

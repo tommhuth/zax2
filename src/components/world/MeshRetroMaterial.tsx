@@ -16,7 +16,7 @@ type MeshRetroMaterialProps = {
     vertexShader?: string
     fogDensity?: number
     fogHeight?: number
-    dither?: boolean
+    dithering?: boolean
 } & Omit<MeshLambertMaterialProps, "onBeforeCompile">
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
@@ -28,7 +28,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     vertexShader = "",
     fogDensity = 0.0,
     fogHeight = 2.,
-    dither = true,
+    dithering = true,
     emissive,
     ...rest
 }, ref) => {
@@ -36,7 +36,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
             uTime: { value: 0 },
-            uDither: { value: dither ? 1 : 0 },
+            uDither: { value: dithering ? 1 : 0 },
             uFogHeight: { value: fogHeight },
             uBasicDirectionLights: {
                 value: [
@@ -117,8 +117,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 }  
             `
         }
-    })
-
+    }) 
 
     useFrame((state, delta) => {
         if (usesTime) {
@@ -133,12 +132,11 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     })
 
     return (
-        <meshLambertMaterial
-            attach={"material"}
+        <meshLambertMaterial 
             onBeforeCompile={onBeforeCompile}
             color={color}
             emissive={emissive}
-            ref={ref}
+            ref={ref}   
             {...rest}
         />
     )

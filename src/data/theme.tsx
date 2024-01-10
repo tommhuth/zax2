@@ -18,7 +18,7 @@ export const platformColor = floorHiColor // "#e1f6ff" // "#6fbad8" // "#141E46"
 
 export const barellcolor = "#1400ab"
 export const barrellEmissiveIntensity = .3
-export const barellParticleColor = "#ff3c94"
+export const barellParticleColor = "#1400ab"
 
 export const planeColor = "#ff0073"
 

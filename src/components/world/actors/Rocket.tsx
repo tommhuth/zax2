@@ -106,6 +106,7 @@ export default function Rocket({
     }, [speed])
     let ref = useRef<Mesh>(null)
     let [rocketIndex, rocketInstance] = useInstance("rocket", { reset: false, color: "#FFF" })
+    let [exhaustIndex, exhaustInstance] = useInstance("exhaust", { color: "#FFF" })
     let remove = () => {
         data.removed = true
         increaseScore(500)
@@ -149,6 +150,25 @@ export default function Rocket({
         }
     }, [health])
 
+    useFrame(() => {
+        if (typeof exhaustIndex === "number") {
+            setMatrixAt({
+                instance: exhaustInstance,
+                index: exhaustIndex,
+                scale: [
+                    .5 + random.float(-.15, .15), 
+                    1.5 + random.float(-.2, .2), 
+                    .5 + random.float(-.15, .15)
+                ],
+                position: [
+                    position.x,
+                    position.y - size[1] / 2 - 1.25,
+                    position.z,
+                ]
+            })
+        }
+    })
+
     useFrame((state, delta) => {
         let { player } = useStore.getState()
         let d = ndelta(delta)
@@ -179,7 +199,7 @@ export default function Rocket({
             grid.updateClient(client)
         }
     })
- 
+
 
     if (!Config.DEBUG) {
         return null

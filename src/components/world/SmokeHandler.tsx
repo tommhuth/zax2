@@ -82,7 +82,7 @@ export default function SmokeHandler() {
                         radius: random.float(.15, .35), 
                         maxRadius: random.float(.35, 2),
                         grow: random.float(.25, .5),
-                        groundAnimationDuration: random.integer(300, 1500),
+                        groundAnimationDuration: random.integer(600, 1500),
                         velocity: [
                             velocity[0] * random.float(2, 3.5),
                             -random.float(4, 6),
@@ -90,7 +90,7 @@ export default function SmokeHandler() {
                         ],
                         position: [
                             position.x + random.float(-.1, .1),
-                            position.y - 1,
+                            position.y - 2 - random.float(.1, .3),
                             position.z + random.float(-.1, .1)
                         ]
                     },
@@ -118,7 +118,7 @@ export default function SmokeHandler() {
 
             let heightMovementEffect = 1 - easeInOutCubic(clamp(position[1] / 3, 0, 1))
             let groundMovementEffect = 1 - easeInOutCubic(clamp(smoke.time / smoke.groundAnimationDuration, 0, 1)) 
-            let shrinkEffect = 1 - clamp((smoke.time - 2000) / (smoke.groundAnimationDuration * 1.5), 0, 1)
+            let shrinkEffect = 1 - clamp((smoke.time - 2000) / (smoke.groundAnimationDuration * 2.5), 0, 1)
 
             position[0] += velocity[0] * d * groundMovementEffect * heightMovementEffect
             position[1] = Math.max(position[1] + velocity[1] * d, 0) 

@@ -325,6 +325,7 @@ export default function ExplosionsHandler() {
                 receiveShadow={false}
                 count={blastCount}
                 name="blast"
+                colors
             >
                 <sphereGeometry args={[1, 20, 20]} />
                 <meshLambertMaterial
@@ -361,6 +362,7 @@ export default function ExplosionsHandler() {
                 receiveShadow={false}
                 count={smokeCount}
                 name="fireball"
+                colors
             >
                 <sphereGeometry args={[1, 20, 20]} >
                     <instancedBufferAttribute

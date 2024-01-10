@@ -5,10 +5,12 @@ import { barellcolor, barrellEmissiveIntensity, deviceColor, grassColor, grassCo
 import { DoubleSide, Mesh } from "three"
 import { glsl } from "../../../data/utils"
 import { MeshRetroMaterial } from "../MeshRetroMaterial"
-import { useStore } from "../../../data/store"
+import { store, useStore } from "../../../data/store"
 import { WorldPartType } from "../../../data/types"
+import { useShader } from "../../../data/hooks"
+import { memo } from "react"
 
-export default function Instances() {
+function Instances() {
     let parts = useStore(i => i.world.parts)
     let ready = useStore(i => i.ready)
     let hasFoliage = ready ? parts.some(i => i.type === WorldPartType.BUILDINGS_LOW) : true
@@ -26,13 +28,39 @@ export default function Instances() {
         "/models/device.glb",
         "/models/plant.glb",
         "/models/grass.glb"
-    ]) 
+    ])
 
+    let { onBeforeCompile } = useShader({
+        vertex: {
+            head: glsl`
+                varying vec3 vPosition;
+            `,
+            main: glsl`
+                vPosition = position;
+            `
+        },
+        fragment: {
+            head: glsl`
+                varying vec3 vPosition;
+            `,
+            main: glsl`
+                gl_FragColor.a = (vPosition.y  + .5) / 1.;
+            `
+        }
+    })
+ 
     return (
         <>
-            <InstancedMesh name="sphere" count={100}>
+            <InstancedMesh
+                name="sphere" 
+                count={100} 
+                castShadow={false}
+                receiveShadow={false}
+            >
                 <sphereGeometry args={[1, 3, 4]} attach="geometry" />
-                <MeshRetroMaterial name="sphere" />
+                <MeshRetroMaterial
+                    name="sphere" 
+                />
             </InstancedMesh>
 
             <InstancedMesh name="line" count={50} colors={false}>
@@ -40,10 +68,11 @@ export default function Instances() {
                 <meshBasicMaterial name="line" color={"white"} />
             </InstancedMesh>
 
+
             <InstancedMesh name="barrel1" count={15}>
-                <primitive object={(barrel1.nodes.barrel as Mesh).geometry} attach="geometry" />
+                <primitive object={(barrel1.nodes.barrel as Mesh).geometry} dispose={null} attach="geometry" />
                 <MeshRetroMaterial
-                    fogDensity={.35}
+                    fogDensity={.35} 
                     name="barrel1"
                     fogHeight={.6}
                     color={barellcolor}
@@ -183,7 +212,7 @@ export default function Instances() {
                     usesPlayerPosition
                     fogDensity={0}
                     name="grass"
-                    dither={false}
+                    dithering={false}
                     transparent
                     vertexShader={glsl`
                         float height = 1.75;
@@ -225,6 +254,20 @@ export default function Instances() {
                     `}
                 />
             </InstancedMesh>
+
+            <InstancedMesh name="exhaust" count={10}>
+                <sphereGeometry args={[1, 20, 20]} />
+                <meshBasicMaterial
+                    color={"#fff"}
+                    transparent
+                    name="exhaust"
+                    attach={"material"}
+                    depthWrite={false}
+                    onBeforeCompile={onBeforeCompile}
+                />
+            </InstancedMesh>
         </>
     )
 }
+
+export default memo(Instances)
