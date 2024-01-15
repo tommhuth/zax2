@@ -68,7 +68,7 @@ export default function Start({
                 position={[position.x, 0, size[1] / 2]}
             />
 
-            <EdgeBuilding z={size[1] / 2} />
+            <EdgeBuilding type="tanks" z={size[1] / 2} />
         </WorldPartWrapper>
     )
 }

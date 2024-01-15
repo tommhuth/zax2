@@ -16,7 +16,7 @@ export default function EdgeBuilding({
     x = 0,
     z = 0,
     y = 0,
-    type = random.pick("building1", "building2", "building3")
+    type = random.pick("building1", "building2", "building3", "building4", "building5")
 }: EdgeBuildingProps) {
     let building = useRepeater(type) 
     let partPosition = useWorldPart()

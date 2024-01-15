@@ -7,7 +7,7 @@ export default function Building3() {
     let materials = useStore(i => i.materials)
 
     return (
-        <group dispose={null} scale={.3}>
+        <group dispose={null}>
             <mesh 
                 geometry={nodes.Cube003.geometry}
                 material={materials.buildingBase}

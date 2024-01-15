@@ -1,11 +1,12 @@
 import random from "@huth/random"
 import { Tuple2, Tuple3 } from "../../types"
 import { Store, store } from "."
-import { BufferAttribute, Vector3 } from "three"
+import { BufferAttribute, ColorRepresentation, Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
-import { clamp, setMatrixAt } from "../utils"
+import { clamp, setColorAt, setMatrixAt } from "../utils"
 import { easeOutCubic } from "../shaping"
+import { setMaterial } from "./utils"
 
 function updateEffects(data: Partial<Store["effects"]>) {
     store.setState({
@@ -168,9 +169,9 @@ export function createImpactDecal(position: Tuple3, scale = random.float(1.85, 3
     let index = impact.index.next()
     let opacityAttribute = impact?.mesh.geometry.attributes?.aOpacity as BufferAttribute
 
-    if (opacityAttribute) {  
+    if (opacityAttribute) {
         opacityAttribute.set([random.float(.3, .5)], index)
-        opacityAttribute.needsUpdate = true 
+        opacityAttribute.needsUpdate = true
     }
 
     setMatrixAt({
@@ -202,6 +203,32 @@ interface CreateParticlesParams {
     radius?: Tuple2 | number
     color?: string
     name?: string
+}
+
+export function createScrap(
+    position: Tuple3,
+    radius: number,
+    color: ColorRepresentation = "red",
+) {
+    let instance = store.getState().instances.scrap
+    let index = instance.index.next()
+
+    setColorAt(instance.mesh, index, color)
+    setMatrixAt({
+        instance: instance.mesh,
+        index,
+        position,
+        rotation: [
+            random.float(0, Math.PI * 2),
+            random.float(0, Math.PI * 2),
+            random.float(0, Math.PI * 2),
+        ],
+        scale: [
+            random.float(.85, 1.15) * radius,
+            random.float(.85, 1.15) * radius,
+            random.float(.85, 1.15) * radius,
+        ],
+    })
 }
 
 export function createParticles({

@@ -2,7 +2,7 @@ import { useLoader } from "@react-three/fiber"
 import InstancedMesh from "./InstancedMesh"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 import { barellcolor, barrellEmissiveIntensity, deviceColor, grassColor, grassColorEnd, grassColorStart, groundFogIntensity, plantColor, plantColorEnd, plantColorStart, platformColor, turretColor } from "../../../data/theme"
-import { DoubleSide, Mesh } from "three"
+import { DoubleSide, FrontSide, Mesh } from "three"
 import { glsl } from "../../../data/utils"
 import { MeshRetroMaterial } from "../MeshRetroMaterial"
 import { store, useStore } from "../../../data/store"
@@ -16,7 +16,7 @@ function Instances() {
     let hasFoliage = ready ? parts.some(i => i.type === WorldPartType.BUILDINGS_LOW) : true
     let [
         barrel1, barrel2, barrel3, barrel4,
-        turret2, rocket, platform, device, plant, grass,
+        turret2, rocket, platform, device, plant, grass, scrap
     ] = useLoader(GLTFLoader, [
         "/models/barrel1.glb",
         "/models/barrel2.glb",
@@ -27,7 +27,8 @@ function Instances() {
         "/models/platform.glb",
         "/models/device.glb",
         "/models/plant.glb",
-        "/models/grass.glb"
+        "/models/grass.glb",
+        "/models/scrap.glb",
     ])
 
     let { onBeforeCompile } = useShader({
@@ -66,6 +67,11 @@ function Instances() {
             <InstancedMesh name="line" count={50} colors={false}>
                 <boxGeometry args={[1, 1, 1, 1, 1, 1]} attach="geometry" />
                 <meshBasicMaterial name="line" color={"white"} />
+            </InstancedMesh>
+
+            <InstancedMesh name="scrap" count={50} colors={true}>
+                <primitive object={(scrap.nodes.scrap as Mesh).geometry} dispose={null} attach="geometry" />
+                <MeshRetroMaterial side={FrontSide} name="scrap" color={"white"}   />
             </InstancedMesh>
 
 
