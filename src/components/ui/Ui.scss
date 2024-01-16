@@ -12,6 +12,10 @@
     pointer-events: none;
     font-size: 1.5em;
 
+    @media (max-width: 800px) and (orientation: portrait) {
+        display: none;
+    }
+    
     @media (max-width: 800px), (max-height: 500px) {
         font-size: 1.25em;
         flex-direction: row-reverse;
@@ -43,6 +47,10 @@
         font-size: .75em;
     }
 
+    @media (max-width: 800px) and (orientation: portrait) {
+        display: none;
+    }
+
     &__bar {
         background-color: currentColor;
         height: 100%;
@@ -62,6 +70,10 @@
     transform: translateY(-50%) ;
     height: clamp(8em, 20vh, 14em); 
     z-index: 10001;
+
+    @media (max-width: 800px) and (orientation: portrait) {
+        display: none;
+    }
 
     &__top,
     &__bottom {
