@@ -29,11 +29,13 @@ export default function Start({
             <Turret
                 position={[4, 3, 1]}
                 rotation={Math.PI}
+                floorLevel={3}
             />
 
             <Turret
                 position={[-2, 1, 2]}
                 rotation={-Math.PI / 2}
+                floorLevel={1}
             />
             <Building
                 position={[-2, 0, 2]}
@@ -60,6 +62,7 @@ export default function Start({
 
             <Turret
                 position={[-2, 0, 11]}
+                floorLevel={0}
             />
 
             <Floor

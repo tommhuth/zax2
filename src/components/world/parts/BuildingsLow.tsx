@@ -24,9 +24,14 @@ export default function BuildingsLow({
                 scale={[1.5, 1.5, 1.5]}
             />
 
-            <Turret position={[-3, 0, 2]} />
-            <Turret position={[4, 0, 10]}
+            <Turret 
+                position={[-3, 0, 2]}
+                floorLevel={0}
+            />
+            <Turret 
+                position={[4, 0, 10]}
                 rotation={-Math.PI/2}
+                floorLevel={0}
             />
 
             <Barrel
@@ -50,6 +55,7 @@ export default function BuildingsLow({
             <Turret 
                 position={[0, 1, size[1] - 2]}
                 rotation={-Math.PI / 2}
+                floorLevel={1}
             />
 
             <Plant

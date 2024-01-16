@@ -86,7 +86,7 @@ export default function Lights() {
                 ref={engineLightRef}
                 distance={30}
                 position-y={3}
-                intensity={40} //25} 
+                intensity={35} //25} 
                 color={"#ffffff"}
             />
 
@@ -99,13 +99,13 @@ export default function Lights() {
                 color={"#fff"}
             />
 
-            <directionalLight position={[10, 5, 7]} intensity={.2} /> 
+            <directionalLight position={[13, 6, 10]} intensity={.4} /> 
             
             <directionalLight
                 ref={shadowLightRef}
                 color={"#b4e2ff"}
                 position={[0, 15, 0]}
-                intensity={1}
+                intensity={.6}
                 castShadow
                 shadow-radius={1.5}
                 shadow-camera-near={0} // y

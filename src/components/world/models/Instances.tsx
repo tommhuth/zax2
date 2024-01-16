@@ -175,6 +175,7 @@ function Instances() {
                     usesTime
                     usesPlayerPosition
                     name="plant"
+                    colorCount={12}
                     fogDensity={groundFogIntensity}
                     color={plantColor}
                     side={DoubleSide}

@@ -23,10 +23,12 @@ export default function BuildingsGap({
             <Turret
                 position={[5, 1, 7]}
                 rotation={random.pick(-Math.PI / 2, Math.PI)}
+                floorLevel={0}
             />
             <Turret
                 position={[-3, 0, 4]}
                 rotation={random.pick(0, -Math.PI / 2)}
+                floorLevel={0}
             />
             <Floor
                 position={[position.x, 0, size[1] / 2]}

@@ -7,12 +7,14 @@ interface TurretProps {
     position?: Tuple3
     fireFrequency?: number
     rotation?: number
+    floorLevel: number
 }
 
 export default function Turret({
     fireFrequency,
     position = [0, 0, 0],
-    rotation = 0
+    rotation = 0,
+    floorLevel
 }: TurretProps) {
     let partPosition = useWorldPart()
 
@@ -23,7 +25,8 @@ export default function Turret({
             id = createTurret({ 
                 fireFrequency, 
                 position: [position[0], position[1], partPosition[2] + position[2]],
-                rotation
+                rotation,
+                floorLevel
             })
         })
 
@@ -32,7 +35,7 @@ export default function Turret({
                 removeTurret(id)
             })
         }
-    }, [fireFrequency, ...position])
+    }, [fireFrequency, floorLevel, ...position])
 
     return null
 }

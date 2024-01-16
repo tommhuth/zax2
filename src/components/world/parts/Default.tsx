@@ -26,6 +26,7 @@ export default function Default({
             <Turret
                 position={[3, 2, 10]}
                 rotation={-Math.PI / 2}
+                floorLevel={2}
             />
 
             <Building
@@ -39,6 +40,7 @@ export default function Default({
             <Turret
                 position={[3, 1, 6]}
                 rotation={-Math.PI / 2}
+                floorLevel={1}
             />
             <Rocket
                 position={[-3, 0, 4]}

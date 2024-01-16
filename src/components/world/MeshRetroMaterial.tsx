@@ -16,6 +16,7 @@ type MeshRetroMaterialProps = {
     vertexShader?: string
     fogDensity?: number
     fogHeight?: number
+    colorCount?: number
     dithering?: boolean
 } & Omit<MeshLambertMaterialProps, "onBeforeCompile">
 
@@ -28,6 +29,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     vertexShader = "",
     fogDensity = 0.0,
     fogHeight = 2.,
+    colorCount = 9,
     dithering = true,
     emissive,
     ...rest
@@ -36,6 +38,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
             uTime: { value: 0 },
+            uColorCount: { value: colorCount },
             uDither: { value: dithering ? 1 : 0 },
             uFogHeight: { value: fogHeight },
             uBasicDirectionLights: {
@@ -84,6 +87,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 uniform float uDither;   
                 uniform float uFogDensity;   
                 uniform float uFogHeight;   
+                uniform float uColorCount;   
 
                 struct BasicDirectionLight {
                     vec3 direction;
@@ -113,7 +117,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, easeOutQuad(clamp(vGlobalPosition.y / uFogHeight, .0, 1.))); 
          
                 if (uDither == 1.) { 
-                    gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 16., .005);
+                    gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, uColorCount, .005);
                 }  
             `
         }

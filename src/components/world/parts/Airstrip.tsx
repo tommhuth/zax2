@@ -33,14 +33,17 @@ export default function Airstrip({
             <Turret
                 position={[4, 0, 6]}
                 rotation={-Math.PI/2}
+                floorLevel={0}
             />
             <Turret
                 position={[-2, 1, 35]}
                 rotation={-Math.PI/2}
+                floorLevel={0}
             />
             <Turret
                 position={[5, 0, 45]}
                 rotation={-Math.PI/2}
+                floorLevel={0}
             />
             <Barrel 
                 position={[5,0,10]}
@@ -54,6 +57,7 @@ export default function Airstrip({
             <Turret 
                 position={[-1,1,14]}
                 rotation={-Math.PI/2}
+                floorLevel={0}
             />
             <Barrel 
                 position={[-2,0,43]}

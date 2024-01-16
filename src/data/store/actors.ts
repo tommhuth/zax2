@@ -175,7 +175,8 @@ export function removePlane(id: string) {
 export function createTurret({
     fireFrequency = random.integer(1500, 2200),
     position: [x = 0, y = 0, z = -10] = [0, 0, 0],
-    rotation = 0
+    rotation = 0,
+    floorLevel,
 }) {
     let id = random.id()
     let size = [1.65, 1.5, 1.65] as Tuple3
@@ -186,7 +187,7 @@ export function createTurret({
         position.toArray(),
         [...size],
         { type: "turret", id }
-    )
+    ) 
 
     updateWorld({
         turrets: [
@@ -196,6 +197,7 @@ export function createTurret({
                 size,
                 health: 70,
                 rotation,
+                floorLevel,
                 id,
                 aabb,
                 client,

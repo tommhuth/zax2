@@ -101,6 +101,7 @@ export interface Turret {
     rotation: number
     client: Client
     aabb: Box3
+    floorLevel: number
     health: number
     fireFrequency: number
 }

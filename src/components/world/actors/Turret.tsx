@@ -46,10 +46,9 @@ function explode(position: Vector3, size: Tuple3) {
         radius: [.1, .5],
         color: turretParticleColor,
     })
-    createScrap([position.x, position.y - size[1] * .6, position.z], 2, turretColor)
 }
 
-function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: Turret) {
+function Turret({ id, size, position, health, fireFrequency, rotation, aabb, floorLevel }: Turret) {
     let removed = useRef(false)
     let { viewport } = useThree()
     let [index, instance] = useInstance("turret", {
@@ -111,6 +110,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb }: T
                 remove()
                 explode(position, size)
                 createImpactDecal([position.x, .1, position.z])
+                createScrap([position.x, floorLevel, position.z], 2, turretColor)
             })
         }
     }, [health])

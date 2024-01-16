@@ -217,7 +217,11 @@ export function createScrap(
     setMatrixAt({
         instance: instance.mesh,
         index,
-        position,
+        position: [
+            position[0],
+            position[1] - random.float(0, .15) * radius,
+            position[2],
+        ],
         rotation: [
             random.float(0, Math.PI * 2),
             random.float(0, Math.PI * 2),
