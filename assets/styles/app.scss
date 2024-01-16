@@ -43,6 +43,26 @@ body::before {
     align-items: center;
     box-sizing: border-box;
     padding: .25em;
+    text-shadow: 0 0 2em rgb(0, 0, 169), 0 0 1em blue;
+    height: 100%; 
+    width: 100%; 
+    z-index: 100;
+    top: 0;  
+    color: #fff;
+    flex-direction: column; 
+}
+
+.introold {
+    pointer-events: none;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: .25em;
     height: 100%; 
     width: 100%; 
     z-index: 100;
@@ -69,11 +89,10 @@ body::before {
 }
 
 .title {
-    font-size: min(20vw, 29vh); 
+    font-size: min(18vw, 28vh); 
     font-weight: 400;
     font-family: edunline;
-    line-height: .8;
-    margin-bottom: -2rem;
+    line-height: .8; 
 
     @media (max-width: 700px), (max-height: 500px) { 
         line-height: .9;

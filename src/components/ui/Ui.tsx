@@ -35,7 +35,7 @@ export default function Ui() {
             <div
                 className="intro"
                 style={{
-                    display: state === "intro" || !ready ? undefined : "none"
+                    display: ready  && state === "intro"  ? undefined : "none"
                 }}
             >
                 <h1 className="title">Untitled arcade knockoff</h1>

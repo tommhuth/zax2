@@ -62,7 +62,7 @@ export interface Store {
 const store = create<Store>(() => ({
     loaded: false,
     ready: false,
-    state: "running",
+    state: "intro",
     world: {
         grid: new SpatialHashGrid3D([4, 3, 4]),
         frustum: new Frustum(),
