@@ -268,8 +268,8 @@ function Instances() {
                     transparent
                     name="exhaust"
                     attach={"material"}
-                    depthWrite={false}
-                    onBeforeCompile={onBeforeCompile}
+                    depthWrite={false} 
+                    // onBeforeCompile={onBeforeCompile}
                 />
             </InstancedMesh>
         </>

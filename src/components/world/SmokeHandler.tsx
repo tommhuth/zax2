@@ -54,11 +54,15 @@ export default function SmokeHandler() {
                 varying vec3 vGlobalPosition;
 
                 ${dither}
-                ${easings} 
+                ${easings}
+
+                float luma(vec3 color) {
+                    return dot(color, vec3(0.299, 0.587, 0.114));
+                }
             `,
             main: glsl`
-                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 16., .005);
-                gl_FragColor.a = easeOutQuad(clamp(vGlobalPosition.y / .75, 0., 1.));
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * 1.05 + .075, 1., .0125);
+                gl_FragColor.a = easeOutQuad(clamp(vGlobalPosition.y / 1.25, 0., 1.)) * luma(gl_FragColor.rgb); 
             `
         }
     })

@@ -57,8 +57,7 @@ export default function ExplosionsHandler() {
                 ${easings}
                 ${dither}
             `,
-            main: glsl`      
-                
+            main: glsl`     
                 gl_FragColor = vec4(
                     mix(vec3(.0, .0, 1.), vec3(1., 1., 1.), 1. - easeOutQuart(vDistanceFromCenter)), 
 
@@ -302,6 +301,7 @@ export default function ExplosionsHandler() {
                 count={impactCount}
                 castShadow={false}
                 receiveShadow
+                colors
             >
                 <planeGeometry args={[2, 2, 1, 1]} >
                     <instancedBufferAttribute
@@ -340,6 +340,7 @@ export default function ExplosionsHandler() {
                 receiveShadow={false}
                 count={shockwaveCount}
                 name="shockwave"
+                colors
             >
                 <cylinderGeometry args={[1, 1, .01, 32, 1]}>
                     <instancedBufferAttribute
