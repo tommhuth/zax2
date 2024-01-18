@@ -35,7 +35,7 @@ export default function Ui() {
             <div
                 className="intro"
                 style={{
-                    visibility: ready  && state === "intro"  ? undefined : "hidden"
+                    visibility: ready  && state === "intro" && false  ? undefined : "hidden"
                 }}
             >
                 <h1 className="title">Untitled arcade knockoff</h1>

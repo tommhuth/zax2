@@ -29,8 +29,7 @@ function explode(position: Vector3, size: Tuple3, color: string) {
         count: 10,
         radius: random.float(.65, .75),
         fireballPath: [[position.x, 1, position.z], [0, 4, 0]],
-        fireballCount: random.pick(0, 5),
-        shockwave: false,
+        fireballCount: random.pick(0, 5), 
     })
     createParticles({
         position: [position.x, 1, position.z],

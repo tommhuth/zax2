@@ -84,7 +84,7 @@ export function createExplosion({
     radius = .75,
     fireballPath: [fireballStart, fireballDirection] = [[0, 0, 0], [0, 0, 0]],
     fireballCount = 0,
-    shockwave = true,
+    shockwave = random.boolean(1.4),
 }: CreateExplosionParams) {
     let baseLifetime = random.integer(1600, 1800)
     let fireBallInstance = store.getState().instances.fireball
@@ -102,15 +102,15 @@ export function createExplosion({
                 id: random.id(),
                 radius: radius * 7 + (fireballCount ? 1.5 : 0),
                 blast: {
-                    lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5),
-                    radius: radius * 5,
+                    lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5) * .2,
+                    radius: radius * 6,
                     time: 0,
                     index: blastInstance.index.next(),
                 },
                 shockwave: shockwave ? {
-                    lifetime: random.float(baseLifetime * 1.15, baseLifetime * 1.5),
-                    radius: radius * random.float(3, 5),
-                    time: 0,
+                    lifetime: random.float(baseLifetime * .4, baseLifetime * .65) ,
+                    radius: random.float(radius * 2.5, radius * 3),
+                    time: 100,
                     index: shockwaveInstance.index.next(),
                 } : null,
                 fireballs: [
@@ -121,7 +121,7 @@ export function createExplosion({
                         startRadius: radius * .25,
                         maxRadius: radius,
                         time: 0,
-                        lifetime: baseLifetime
+                        lifetime: baseLifetime * 1.5
                     },
                     ...new Array(fireballCount).fill(null).map((i, index) => {
                         let tn = index / (fireballCount - 1)
@@ -137,7 +137,7 @@ export function createExplosion({
                             startRadius: radius * 1.5,
                             maxRadius: radius * 3.5,
                             time: index * -random.integer(75, 100),
-                            lifetime: 750 + random.integer(0, 200)
+                            lifetime: 750 * 1.5 + random.integer(0, 200)
                         }
                     }),
                     ...new Array(count).fill(null).map((i, index, list) => {
@@ -154,7 +154,7 @@ export function createExplosion({
                             id: random.id(),
                             maxRadius: startRadius * 2.5,
                             time: random.integer(-200, 0),
-                            lifetime: random.integer(baseLifetime * .25, baseLifetime * .65)
+                            lifetime: random.integer(baseLifetime * .25, baseLifetime * .65) * 1.5
                         }
                     })
                 ],

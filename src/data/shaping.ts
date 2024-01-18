@@ -10,6 +10,10 @@ export function easeInQuint(x: number): number {
     return x * x * x
 }
 
+export function easeOutQuad(x: number): number {
+    return 1 - (1 - x) * (1 - x)
+}
+
 export function easeInQuad(x: number): number {
     return x * x
 }

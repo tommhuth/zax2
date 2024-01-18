@@ -33,7 +33,9 @@ export const fogColorEnd = "#0b9198"
 export const leftColor = "#ff0090" 
 export const backColor = "#26ff00"
  
-export const explosionEndColor = "#ffffff"
+export const explosionEndColor = "#000"
+export const explosionCenterColor = "#ffa200"
+export const explosionHighlightColor = "#ffcc00"
 
 export const groundFogIntensity = .6
 export const floorFogIntensity = .27

@@ -27,8 +27,7 @@ function explode(position: Vector3) {
     createExplosion({
         position: [position.x, position.y - 1, position.z],
         count: 16,
-        radius: .55,
-        shockwave: false,
+        radius: .55, 
     })
     createParticles({
         position: position.toArray(),
@@ -216,8 +215,7 @@ function Plane({
                     startTransition(() => {
                         createExplosion({
                             position: [position.x, -.5, position.z],
-                            count: 18,
-                            shockwave: false,
+                            count: 18, 
                             radius: .6,
                             fireballCount: 5,
                             fireballPath: [[position.x, 0, position.z], [0, 4, 0]]

@@ -8,6 +8,14 @@ float easeInOutQuad(float x) {
   return x < 0.5 ? 2. * x * x : 1. - pow(-2. * x + 2., 2.) / 2.;
 } 
 
+float easeOutExpo(float x) {
+  if (x == 1.) {
+    return 1.;
+  }
+
+  return  1. - pow(2., -10. * x);
+}
+
 float easeInQuart(float x) {
   return x * x * x * x;
 }
