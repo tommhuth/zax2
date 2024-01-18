@@ -16,6 +16,10 @@ float easeOutExpo(float x) {
   return  1. - pow(2., -10. * x);
 }
 
+float easeInQuint(float x) {
+  return x * x * x * x * x;
+}
+
 float easeInQuart(float x) {
   return x * x * x * x;
 }

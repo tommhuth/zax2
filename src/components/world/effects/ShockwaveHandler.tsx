@@ -1,13 +1,13 @@
 import { useMemo } from "react"
 import { BufferAttribute } from "three"
-import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
-import { useShader } from "../../data/hooks"
+import { clamp, glsl, ndelta, setMatrixAt } from "../../../data/utils"
+import { useShader } from "../../../data/hooks"
 import { useFrame } from "@react-three/fiber"
-import InstancedMesh from "./models/InstancedMesh"
-import { useStore } from "../../data/store"
-import easings from "../../shaders/easings.glsl"
-import dither from "../../shaders/dither.glsl"
-import { easeInQuad, easeInQuint, easeOutCubic, easeOutExpo, easeOutQuad, easeOutQuart } from "../../data/shaping"
+import InstancedMesh from "../models/InstancedMesh"
+import { useStore } from "../../../data/store"
+import easings from "../../../shaders/easings.glsl"
+import dither from "../../../shaders/dither.glsl"
+import { easeOutCubic, easeOutQuad } from "../../../data/shaping"
 
 export default function ShockwaveHandler() {
     let count = 20
@@ -23,7 +23,7 @@ export default function ShockwaveHandler() {
             `,
             main: glsl`
                 vOpacity = aOpacity;
-                vDistanceFromCenter = clamp(length(vec3(0., 0., 0.) - position) / .5, 0., 1.); 
+                vDistanceFromCenter = clamp(length(vec3(0., 0., 0.) - position) / 1., 0., 1.); 
             `
         },
         fragment: {

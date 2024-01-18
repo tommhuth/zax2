@@ -1,16 +1,16 @@
-import { startTransition, useMemo } from "react"
-import InstancedMesh from "./models/InstancedMesh"
-import { useShader } from "../../data/hooks"
+import { startTransition, useEffect, useMemo } from "react"
+import InstancedMesh from "../models/InstancedMesh"
+import { useShader } from "../../../data/hooks"
 import { BufferAttribute, Color } from "three"
-import { explosionCenterColor, explosionEndColor, explosionHighlightColor } from "../../data/theme"
-import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
-import easings from "../../shaders/easings.glsl"
-import dither from "../../shaders/dither.glsl"
-import noise from "../../shaders/noise.glsl"
+import { explosionCenterColor, explosionEndColor, explosionHighlightColor } from "../../../data/theme"
+import { clamp, glsl, ndelta, setMatrixAt } from "../../../data/utils"
+import easings from "../../../shaders/easings.glsl"
+import dither from "../../../shaders/dither.glsl"
+import noise from "../../../shaders/noise.glsl"
 import { useFrame } from "@react-three/fiber"
-import { blend, easeOutQuart } from "../../data/shaping"
-import { removeExplosion } from "../../data/store/effects"
-import { useStore } from "../../data/store"
+import { blend, easeOutQuart } from "../../../data/shaping"
+import { removeExplosion } from "../../../data/store/effects"
+import { useStore } from "../../../data/store"
 
 export default function FireballHandler() {
     let count = 150
@@ -50,7 +50,7 @@ export default function FireballHandler() {
 
                 transformed *= 1. + noiseEffect * .2; 
  
-                vDistance = clamp(length(globalPosition.xyz - aCenter) / aRadius, 0., 1.); // );
+                vDistance = clamp(length(globalPosition.xyz - aCenter) / aRadius, 0., 1.);
                 vLifetime = aLifetime;
                 vGlobalPosition = globalPosition.xyz; 
                 vRadius = aRadius;  
@@ -75,8 +75,7 @@ export default function FireballHandler() {
                     return dot(color, vec3(0.299, 0.587, 0.114));
                 }
             `,
-            main: glsl`     
-                // vec3 baseColor = mix(uEndColor, gl_FragColor.rgb, .5); 
+            main: glsl`      
                 float noiseEffect = (noise(vGlobalPosition * .65 + uTime * 7.) + 1.) / 2.;
                 vec3 cameraDirection = normalize(vec3(-57.2, -50., -61.2)); 
                 float edgeEffect = clamp(-dot(cameraDirection, normal), 0., 1.) ; 
@@ -90,8 +89,10 @@ export default function FireballHandler() {
                 gl_FragColor.rgb += .5;
                 gl_FragColor.rgb *= color * 1.6;
                 gl_FragColor.rgb = mix(vec3(0.8, 0.4, 0.), gl_FragColor.rgb, easeInOutQuad(noiseEffect)); 
+                gl_FragColor.rgb = mix(vec3(1., 0., 0.), gl_FragColor.rgb, vDistance);
                 
                 gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * 1.2, 4., .05);
+
            
                 gl_FragColor.a = max(luma(gl_FragColor.rgb), .65);
             `
@@ -144,9 +145,11 @@ export default function FireballHandler() {
         }
     })
 
-    // init
-    /*
-    useEffect(() => {
+    let latestExplosion = useStore(i => i.effects.explosions[0])
+    let instance = useStore(i => i.instances.fireball?.mesh)
+
+    // init 
+    useEffect(() => { 
         if (!instance || !latestExplosion) {
             return
         }
@@ -161,8 +164,7 @@ export default function FireballHandler() {
             radiusAttribute.set([latestExplosion.radius], fireball.index)
             radiusAttribute.needsUpdate = true
         }
-    }, [latestExplosion])
-    */
+    }, [latestExplosion]) 
 
     // glow anim
     useFrame((state, delta) => {

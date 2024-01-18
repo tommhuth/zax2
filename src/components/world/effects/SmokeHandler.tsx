@@ -1,14 +1,14 @@
-import dither from "../../shaders/dither.glsl"
-import easings from "../../shaders/easings.glsl"
+import dither from "../../../shaders/dither.glsl"
+import easings from "../../../shaders/easings.glsl"
 import { InstancedMesh, Vector3 } from "three"
 import random from "@huth/random"
 import { useMemo, useRef } from "react"
-import { clamp, glsl, ndelta, setMatrixAt, setMatrixNullAt } from "../../data/utils"
+import { clamp, glsl, ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { useFrame } from "@react-three/fiber"
-import { store } from "../../data/store"
-import { Tuple3 } from "../../types"
-import { useShader } from "../../data/hooks"
-import Counter from "../../data/world/Counter"
+import { store } from "../../../data/store"
+import { Tuple3 } from "../../../types"
+import { useShader } from "../../../data/hooks"
+import Counter from "../../../data/world/Counter"
 
 function easeInOutCubic(x: number): number {
     return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2

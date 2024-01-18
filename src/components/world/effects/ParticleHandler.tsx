@@ -1,9 +1,9 @@
 import { useFrame } from "@react-three/fiber"
 import { memo, startTransition } from "react" 
-import { Particle } from "../../data/types"
-import { ndelta, setColorAt, setMatrixAt } from "../../data/utils"
-import { store } from "../../data/store"
-import { removeParticle } from "../../data/store/effects"
+import { Particle } from "../../../data/types"
+import { ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
+import { store } from "../../../data/store"
+import { removeParticle } from "../../../data/store/effects"
 
 function ParticleHandler() { 
     let floorY = 0

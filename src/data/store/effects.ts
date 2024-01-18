@@ -5,8 +5,7 @@ import { BufferAttribute, ColorRepresentation, Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
 import { clamp, setColorAt, setMatrixAt } from "../utils"
-import { easeOutCubic } from "../shaping"
-import { setMaterial } from "./utils"
+import { easeOutCubic } from "../shaping" 
 
 function updateEffects(data: Partial<Store["effects"]>) {
     store.setState({
@@ -84,7 +83,7 @@ export function createExplosion({
     radius = .75,
     fireballPath: [fireballStart, fireballDirection] = [[0, 0, 0], [0, 0, 0]],
     fireballCount = 0,
-    shockwave = random.boolean(1.4),
+    shockwave = random.boolean(.5),
 }: CreateExplosionParams) {
     let baseLifetime = random.integer(1600, 1800)
     let fireBallInstance = store.getState().instances.fireball
@@ -102,15 +101,15 @@ export function createExplosion({
                 id: random.id(),
                 radius: radius * 7 + (fireballCount ? 1.5 : 0),
                 blast: {
-                    lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5) * .2,
+                    lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5) * .3,
                     radius: radius * 6,
                     time: 0,
                     index: blastInstance.index.next(),
                 },
-                shockwave: shockwave ? {
-                    lifetime: random.float(baseLifetime * .4, baseLifetime * .65) ,
+                shockwave: shockwave || fireballCount ? {
+                    lifetime: random.float(baseLifetime * .5, baseLifetime * .65) ,
                     radius: random.float(radius * 2.5, radius * 3),
-                    time: 100,
+                    time: random.integer(100, 300),
                     index: shockwaveInstance.index.next(),
                 } : null,
                 fireballs: [

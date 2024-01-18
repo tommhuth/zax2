@@ -1,13 +1,13 @@
-import { clamp, glsl, ndelta, setMatrixAt } from "../../data/utils"
+import { clamp, glsl, ndelta, setMatrixAt } from "../../../data/utils"
 import { useFrame } from "@react-three/fiber"
-import InstancedMesh from "./models/InstancedMesh"
+import InstancedMesh from "../models/InstancedMesh"
 import { startTransition, useMemo } from "react"
-import { useStore } from "../../data/store"
-import { removeShimmer } from "../../data/store/effects"
-import { shimmerColor } from "../../data/theme"
-import { useShader } from "../../data/hooks"
+import { useStore } from "../../../data/store"
+import { removeShimmer } from "../../../data/store/effects"
+import { shimmerColor } from "../../../data/theme"
+import { useShader } from "../../../data/hooks"
 import { BufferAttribute } from "three"
-import { easeInQuad } from "../../data/shaping"
+import { easeInQuad } from "../../../data/shaping"
 
 export default function ShimmerHandler() {
     let instance = useStore(i => i.instances.shimmer?.mesh)
