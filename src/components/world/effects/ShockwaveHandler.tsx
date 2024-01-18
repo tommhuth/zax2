@@ -1,6 +1,5 @@
 import { useMemo } from "react"
-import { BufferAttribute } from "three"
-import { clamp, glsl, ndelta, setMatrixAt } from "../../../data/utils"
+import { clamp, glsl, ndelta, setAttribute, setMatrixAt } from "../../../data/utils"
 import { useShader } from "../../../data/hooks"
 import { useFrame } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
@@ -60,13 +59,9 @@ export default function ShockwaveHandler() {
         for (let { shockwave, position } of explosions) {
             if (shockwave) {
                 let t = clamp(shockwave.time / (shockwave.lifetime), 0, 1)
-                let t2 = clamp((shockwave.time   ) / (shockwave.lifetime ), 0, 1)
-                let opacityAttribute = instance.mesh.geometry.attributes.aOpacity as BufferAttribute
+                let t2 = clamp((shockwave.time) / (shockwave.lifetime), 0, 1)
 
-                // easeInQuad(1 - t)
-                opacityAttribute.set([ easeOutQuad(1 - t2)], shockwave.index)
-                opacityAttribute.needsUpdate = true
-
+                setAttribute(instance.mesh.geometry, "aOpacity", easeOutQuad(1 - t2), shockwave.index)
                 setMatrixAt({
                     instance: instance.mesh,
                     index: shockwave.index,

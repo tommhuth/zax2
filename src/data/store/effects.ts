@@ -4,8 +4,8 @@ import { Store, store } from "."
 import { BufferAttribute, ColorRepresentation, Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
-import { clamp, setColorAt, setMatrixAt } from "../utils"
-import { easeOutCubic } from "../shaping" 
+import { clamp, setAttribute, setColorAt, setMatrixAt } from "../utils"
+import { easeOutCubic } from "../shaping"
 
 function updateEffects(data: Partial<Store["effects"]>) {
     store.setState({
@@ -107,7 +107,7 @@ export function createExplosion({
                     index: blastInstance.index.next(),
                 },
                 shockwave: shockwave || fireballCount ? {
-                    lifetime: random.float(baseLifetime * .5, baseLifetime * .65) ,
+                    lifetime: random.float(baseLifetime * .5, baseLifetime * .65),
                     radius: random.float(radius * 2.5, radius * 3),
                     time: random.integer(100, 300),
                     index: shockwaveInstance.index.next(),
@@ -165,14 +165,9 @@ export function createExplosion({
 
 export function createImpactDecal(position: Tuple3, scale = random.float(1.85, 3)) {
     let { impact } = store.getState().instances
-    let index = impact.index.next()
-    let opacityAttribute = impact?.mesh.geometry.attributes?.aOpacity as BufferAttribute
+    let index = impact.index.next() 
 
-    if (opacityAttribute) {
-        opacityAttribute.set([random.float(.3, .5)], index)
-        opacityAttribute.needsUpdate = true
-    }
-
+    setAttribute(impact.mesh.geometry, "aOpacity", random.float(.3, .5), index)
     setMatrixAt({
         instance: impact.mesh,
         index,

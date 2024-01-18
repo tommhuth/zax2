@@ -1,4 +1,4 @@
-import { clamp, glsl, ndelta, setMatrixAt } from "../../../data/utils"
+import { clamp, glsl, ndelta, setAttribute, setMatrixAt } from "../../../data/utils"
 import { useFrame } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
 import { startTransition, useMemo } from "react"
@@ -47,34 +47,36 @@ export default function ShimmerHandler() {
         let dead: string[] = []
 
         for (let shimmer of shimmers) {
-            if (shimmer.time > shimmer.lifetime || shimmer.position.y === shimmer.radius) {
-                dead.push(shimmer.id)
+            let {
+                time, lifetime, position, radius,
+                speed, friction, gravity, id, index, opacity
+            } = shimmer
+
+            if (time > lifetime || position.y === radius) {
+                dead.push(id)
                 continue
             }
 
-            let scale = (1 - clamp(shimmer.time / shimmer.lifetime, 0, 1)) * shimmer.radius
-            let opacityAttribute = instance.geometry.attributes.aOpacity as BufferAttribute
-            let explodeEffect = shimmer.time > 0 ? easeInQuad(1 - clamp(shimmer.time / (shimmer.lifetime * .25), 0, 1)) : 0
-            let dragEffect = getDistanceTo(shimmer.position.distanceToSquared(player.position))
+            let scale = (1 - clamp(time / lifetime, 0, 1)) * radius
+            let explodeEffect = time > 0 ? easeInQuad(1 - clamp(time / (lifetime * .25), 0, 1)) : 0
+            let dragEffect = getDistanceTo(position.distanceToSquared(player.position))
 
-            opacityAttribute.set([shimmer.opacity * (1 - clamp(shimmer.time / shimmer.lifetime, 0, 1))], shimmer.index)
-            opacityAttribute.needsUpdate = true
+            position.x += speed.x * explodeEffect * d * friction * 5
+            position.y += speed.y * explodeEffect * d * friction * 5
+            position.z += speed.z * explodeEffect * d * friction * 5
 
-            shimmer.position.x += shimmer.speed.x * explodeEffect * d * shimmer.friction * 5
-            shimmer.position.y += shimmer.speed.y * explodeEffect * d * shimmer.friction * 5
-            shimmer.position.z += shimmer.speed.z * explodeEffect * d * shimmer.friction * 5
-
-            shimmer.position.z += (dragEffect) * d * 8
-            shimmer.position.y -= shimmer.gravity * (1 - explodeEffect) * d
-            shimmer.position.y = Math.max(shimmer.position.y, shimmer.radius)
+            position.z += (dragEffect) * d * 8
+            position.y -= gravity * (1 - explodeEffect) * d
+            position.y = Math.max(position.y, radius)
 
             shimmer.time += d * 1000
 
+            setAttribute(instance.geometry, "aOpacity", opacity * (1 - clamp(time / lifetime, 0, 1)), index)
             setMatrixAt({
                 instance,
-                index: shimmer.index,
-                position: shimmer.position.toArray(),
-                scale: shimmer.time < 0 ? 0 : scale
+                index: index,
+                position: position.toArray(),
+                scale: time < 0 ? 0 : scale
             })
         }
 

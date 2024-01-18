@@ -1,6 +1,6 @@
 import React, { createContext, useRef } from "react"
-import { Color, ColorRepresentation, Euler, InstancedMesh, Matrix4, Quaternion, Vector3 } from "three"
-import { Tuple3, Tuple4 } from "../types"
+import { BufferAttribute, BufferGeometry, Color, ColorRepresentation, Euler, InstancedMesh, Matrix4, Quaternion, Vector3 } from "three"
+import { Tuple2, Tuple3, Tuple4 } from "../types"
 
 export function ndelta(delta: number) {
     let nDelta = clamp(delta, 0, 1 / 30)
@@ -111,4 +111,16 @@ export function setColorAt(instance: InstancedMesh, index: number, color: ColorR
     if (instance.instanceColor) {
         instance.instanceColor.needsUpdate = true
     }
+}
+
+export function setAttribute(
+    geometry: BufferGeometry, 
+    name: string, 
+    value: number | Tuple2 | Tuple3, 
+    index: number
+)  {
+    let attribute = geometry.getAttribute(name) as BufferAttribute 
+
+    attribute.set(Array.isArray(value) ? value : [value], index)
+    attribute.needsUpdate = true
 }

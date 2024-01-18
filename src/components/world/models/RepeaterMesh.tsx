@@ -32,20 +32,7 @@ interface RepeaterMeshProps {
 }
 
 export default function RepeaterMesh({ name, count, children }: RepeaterMeshProps) {
-    let [ref, setRef] = useState<Group | null>(null)
-    let ready = useStore(i => i.ready)
-
-    useEffect(() => {
-        if (!ref) {
-            return
-        }
-
-        ref.children.forEach(i => {
-            i.traverse(j => {
-                j.frustumCulled = ready
-            })
-        })
-    }, [ready])
+    let [ref, setRef] = useState<Group | null>(null) 
 
     useEffect(() => {
         if (!ref) {
