@@ -48,7 +48,7 @@ export default function FireballHandler() {
                 vec4 globalPosition = instanceMatrix * vec4(transformed, 1.);   
                 float noiseEffect = noise(globalPosition.xyz * .96)  ;
 
-                transformed *= 1. + noiseEffect * .2; 
+                transformed *= 1. + noiseEffect * .15; 
  
                 vDistance = clamp(length(globalPosition.xyz - aCenter) / aRadius, 0., 1.);
                 vLifetime = aLifetime;
