@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react"
 import { IUniform, Shader } from "three"
 import { glsl } from "./utils"
+import random from "@huth/random"
 
 export const useAnimationFrame = (callback: (delta: number) => void) => {
     // Use useRef for mutable variables that we want to persist
@@ -70,9 +71,11 @@ export function useShader({
             .map(([key, value]) => ({ [key]: { needsUpdate: true, ...value } }))
             .reduce((previous, current) => ({ ...previous, ...current }), {})
     }, [])
+    let id = useMemo(() => random.id(), [])
 
     return {
         uniforms,
+        customProgramCacheKey: () => id,
         onBeforeCompile(shader: Shader) {
             shader.uniforms = {
                 ...shader.uniforms,

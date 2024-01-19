@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react"
 import { setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
 import { Tuple3, Tuple4 } from "../../../types"
-import { useStore } from "../../../data/store"
+import { store, useStore } from "../../../data/store"
 import { setInstance } from "../../../data/store/utils"
 import { InstanceName } from "../../../data/types"
 
@@ -81,8 +81,8 @@ export default function InstancedMesh({
     let colorData = useMemo(() => new Float32Array(count * 3).fill(0), [])
     let [instance, setInstanceRef] = useState<InstancedMeshThree | null>(null)
 
-    useEffect(() => {
-        if (!instance) { 
+    useEffect(() => { 
+        if (!instance || store.getState().instances[name]?.mesh === instance) { 
             return
         }
 

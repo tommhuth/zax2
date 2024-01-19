@@ -157,12 +157,12 @@ export default function Rocket({
                 index: exhaustIndex,
                 scale: [
                     .5 + random.float(-.15, .15), 
-                    1.5 + random.float(-.2, .2), 
+                    1.25 + random.float(-.4, .4), 
                     .5 + random.float(-.15, .15)
                 ],
                 position: [
                     position.x,
-                    position.y - size[1] / 2 - 1.25,
+                    position.y - size[1] / 2 - 1.1,
                     position.z,
                 ]
             })
@@ -199,7 +199,6 @@ export default function Rocket({
             grid.updateClient(client)
         }
     })
-
 
     if (!Config.DEBUG) {
         return null
