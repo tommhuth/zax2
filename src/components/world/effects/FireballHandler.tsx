@@ -3,7 +3,7 @@ import InstancedMesh from "../models/InstancedMesh"
 import { useShader } from "../../../data/hooks"
 import { Color } from "three"
 import { explosionCenterColor, explosionEndColor, explosionHighlightColor } from "../../../data/theme"
-import { clamp, glsl, ndelta, setAttribute, setMatrixAt } from "../../../data/utils"
+import { clamp, glsl, ndelta, setBufferAttribute, setMatrixAt } from "../../../data/utils"
 import easings from "../../../shaders/easings.glsl"
 import dither from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
@@ -120,7 +120,7 @@ export default function FireballHandler() {
                     scale = 0
                 }
 
-                setAttribute(instance.geometry, "aLifetime", t, sphere.index)
+                setBufferAttribute(instance.geometry, "aLifetime", t, sphere.index)
                 setMatrixAt({
                     instance: instance,
                     index: sphere.index,
@@ -150,8 +150,8 @@ export default function FireballHandler() {
         }
  
         for (let fireball of latestExplosion.fireballs) {
-            setAttribute(instance.geometry, "aCenter", latestExplosion.position, fireball.index)
-            setAttribute(instance.geometry, "aRadius", latestExplosion.radius, fireball.index) 
+            setBufferAttribute(instance.geometry, "aCenter", latestExplosion.position, fireball.index)
+            setBufferAttribute(instance.geometry, "aRadius", latestExplosion.radius, fireball.index) 
         }
     }, [latestExplosion])
  

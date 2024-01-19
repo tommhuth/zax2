@@ -1,6 +1,6 @@
 import { useFrame, useLoader } from "@react-three/fiber"
 import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
-import { Group, Mesh, Vector3 } from "three"
+import { BufferGeometry, Group, Material, Mesh, Vector3 } from "three"
 import { Tuple3 } from "../types"
 import { WORLD_BOTTOM_EDGE, WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_TOP_EDGE } from "./world/World"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
@@ -34,7 +34,7 @@ export default function Player({
     y = 1.5
 }: PlayerProps) {
     let playerGroupRef = useRef<Group | null>(null)
-    let flameRef = useRef<Mesh | null>(null)
+    let flameRef = useRef<Mesh<BufferGeometry, Material> | null>(null)
     let hitboxRef = useRef<Mesh>(null)
     let lastShotAt = useRef(0)
     let isMovingUp = useRef(false)
@@ -238,11 +238,15 @@ export default function Player({
             client.position = position.toArray()
             grid.updateClient(client)
         }
+    })
 
-        flameRef.current.scale.x = random.float(.3, .6)
-        flameRef.current.scale.z = random.float(.9, 1.1)
-        flameRef.current.position.z = -flameRef.current.scale.z - 1
-        flameRef.current.material.opacity = random.float(.85, 1)
+    useFrame(()=> {
+        if (flameRef.current) {
+            flameRef.current.scale.x = random.float(.3, .6)
+            flameRef.current.scale.z = random.float(.9, 1.1)
+            flameRef.current.position.z = -flameRef.current.scale.z - 1
+            flameRef.current.material.opacity = random.float(.85, 1)
+        }
     })
 
     return (

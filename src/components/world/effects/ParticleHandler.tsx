@@ -4,6 +4,7 @@ import { Particle } from "../../../data/types"
 import { ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import { store } from "../../../data/store"
 import { removeParticle } from "../../../data/store/effects"
+import { damp } from "three/src/math/MathUtils.js"
 
 function ParticleHandler() { 
     let floorY = 0
@@ -35,8 +36,8 @@ function ParticleHandler() {
             position.y = Math.max(floorY + radius * .25, position.y + velocity.y * nd)
             position.z += velocity.z * nd
 
-            velocity.x *= friction
-            velocity.z *= friction
+            velocity.x = damp(velocity.x, 0, friction, nd)
+            velocity.z = damp(velocity.z, 0, friction, nd)
 
             velocity.x += acceleration.x * nd
             velocity.y += acceleration.y * nd

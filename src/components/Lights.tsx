@@ -3,6 +3,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef } from "react"
 import { DirectionalLight, PointLight } from "three"
 import { useStore } from "../data/store"
 import Counter from "../data/world/Counter"
+import { damp } from "three/src/math/MathUtils.js"
 
 
 
@@ -72,10 +73,10 @@ export default function Lights() {
         }
     }, [lastExplosion])
 
-    useFrame(() => {
+    useFrame((state, delta) => {
         for (let light of explosionLights) {
             if (light.current) {
-                light.current.intensity *= .9 //* 60 * delta 
+                light.current.intensity = damp(light.current.intensity, 0, 4, delta)
             }
         }
     })

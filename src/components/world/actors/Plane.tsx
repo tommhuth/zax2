@@ -16,6 +16,7 @@ import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createParticles } from "../../../data/store/effects"
 import { planeColor } from "../../../data/theme"
 import { useBulletCollision, useCollisionDetection } from "../../../data/collisions"
+import { damp } from "three/src/math/MathUtils.js"
 
 let _size = new Vector3()
 
@@ -209,7 +210,7 @@ function Plane({
                 data.rotation[0] += data.tilt * 60 * nd
                 data.rotation[2] += data.tilt * .25 * 60 * nd
                 data.grounded = position.y <= (bottomY + .5 / 2)
-                data.actualSpeed *= .99
+                data.actualSpeed = damp(data.actualSpeed, 0, .5, delta)
 
                 if (data.grounded) {
                     startTransition(() => {
@@ -222,8 +223,8 @@ function Plane({
                         })
                     })
                 }
-            } else {
-                data.actualSpeed *= .9
+            } else { 
+                data.actualSpeed = damp(data.actualSpeed, 0, 1, delta)
                 position.y = (bottomY + .5 / 2)
             }
         } else {

@@ -156,8 +156,8 @@ export default function Rocket({
                 instance: exhaustInstance,
                 index: exhaustIndex,
                 scale: [
-                    .5 + random.float(-.15, .15), 
-                    1.25 + random.float(-.4, .4), 
+                    .5 + random.float(-.15, .15),
+                    1.25 + random.float(-.4, .4),
                     .5 + random.float(-.15, .15)
                 ],
                 position: [
@@ -178,11 +178,11 @@ export default function Rocket({
                 position.y += data.speed * d
 
                 if (health === 0) {
-                    data.speed -= .1
+                    data.speed -= .1 * 60 * d
                 } else if (position.y > WORLD_TOP_EDGE + 2) {
-                    data.speed += .75
+                    data.speed += .75 * 60 * d
                 } else {
-                    data.speed += .01
+                    data.speed += .01 * 60 * d
                 }
             }
 

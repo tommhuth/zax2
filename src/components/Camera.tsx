@@ -5,6 +5,7 @@ import { store, useStore } from "../data/store"
 import { Tuple3 } from "../types"
 import { setCameraShake } from "../data/store/player"
 import random from "@huth/random"
+import { damp } from "three/src/math/MathUtils.js"
 
 let _matrix = new Matrix4()
 
@@ -38,17 +39,15 @@ export default function Camera({ startPosition = [0, 15, 0] }: { startPosition?:
 
     })
 
-    useFrame(() => {
+    useFrame((state, delta) => {
         let { player } = store.getState()
 
-
         if (player.object && ready) {
-            let targetZ = (basePosition.z + player.object.position.z + 6)
+            let targetZ = (basePosition.z + player.object.position.z + 6) 
 
-            camera.position.z += (targetZ - camera.position.z) * .06
-            camera.position.x = basePosition.x + player.cameraShake * random.float(-1, 1)
-
-            setCameraShake(player.cameraShake * .92)
+            camera.position.z = damp(camera.position.z, targetZ, 5, delta) 
+            camera.position.x = basePosition.x + player.cameraShake * random.float(-1, 1) 
+            setCameraShake(damp(player.cameraShake, 0, 7, delta))
         }
     })
 

@@ -4,7 +4,7 @@ import { Store, store } from "."
 import { BufferAttribute, ColorRepresentation, Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
-import { clamp, setAttribute, setColorAt, setMatrixAt } from "../utils"
+import { clamp, setBufferAttribute, setColorAt, setMatrixAt } from "../utils"
 import { easeOutCubic } from "../shaping"
 
 function updateEffects(data: Partial<Store["effects"]>) {
@@ -167,7 +167,7 @@ export function createImpactDecal(position: Tuple3, scale = random.float(1.85, 3
     let { impact } = store.getState().instances
     let index = impact.index.next() 
 
-    setAttribute(impact.mesh.geometry, "aOpacity", random.float(.3, .5), index)
+    setBufferAttribute(impact.mesh.geometry, "aOpacity", random.float(.3, .5), index)
     setMatrixAt({
         instance: impact.mesh,
         index,

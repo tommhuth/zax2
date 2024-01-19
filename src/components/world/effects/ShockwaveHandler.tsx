@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { clamp, glsl, ndelta, setAttribute, setMatrixAt } from "../../../data/utils"
+import { clamp, glsl, ndelta, setBufferAttribute, setMatrixAt } from "../../../data/utils"
 import { useShader } from "../../../data/hooks"
 import { useFrame } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
@@ -61,7 +61,7 @@ export default function ShockwaveHandler() {
                 let t = clamp(shockwave.time / (shockwave.lifetime), 0, 1)
                 let t2 = clamp((shockwave.time) / (shockwave.lifetime), 0, 1)
 
-                setAttribute(instance.mesh.geometry, "aOpacity", easeOutQuad(1 - t2), shockwave.index)
+                setBufferAttribute(instance.mesh.geometry, "aOpacity", easeOutQuad(1 - t2), shockwave.index)
                 setMatrixAt({
                     instance: instance.mesh,
                     index: shockwave.index,

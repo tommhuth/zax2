@@ -1,12 +1,11 @@
-import { clamp, glsl, ndelta, setAttribute, setMatrixAt } from "../../../data/utils"
+import { clamp, glsl, ndelta, setBufferAttribute, setMatrixAt } from "../../../data/utils"
 import { useFrame } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
 import { startTransition, useMemo } from "react"
 import { useStore } from "../../../data/store"
 import { removeShimmer } from "../../../data/store/effects"
 import { shimmerColor } from "../../../data/theme"
-import { useShader } from "../../../data/hooks"
-import { BufferAttribute } from "three"
+import { useShader } from "../../../data/hooks" 
 import { easeInQuad } from "../../../data/shaping"
 
 export default function ShimmerHandler() {
@@ -71,7 +70,7 @@ export default function ShimmerHandler() {
 
             shimmer.time += d * 1000
 
-            setAttribute(instance.geometry, "aOpacity", opacity * (1 - clamp(time / lifetime, 0, 1)), index)
+            setBufferAttribute(instance.geometry, "aOpacity", opacity * (1 - clamp(time / lifetime, 0, 1)), index)
             setMatrixAt({
                 instance,
                 index: index,
