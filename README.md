@@ -2,7 +2,7 @@
 
 ## Todo 
 - more destructable ground objects
-- enemy plane 3d model and effects 
+- enemy plane 3d model  
 - boss destoryed state 3d model + boss rocket 3d model 
 - actual level design  
 - more decorational 3d objs 
