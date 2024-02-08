@@ -35,13 +35,13 @@ export default function World() {
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
 
     useFrame(() => {
-        let { world: { parts }, loaded, boss, player: { object: player } } = store.getState()
+        let { world: { parts }, loaded, player: { object: player } } = store.getState()
         let forwardWorldPart = parts[parts.length - 1]
 
         if (forwardWorldPart) {
             let lastPartIsAtEdge = forwardWorldPart && player && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
-
-            if ((lastPartIsAtEdge || !forwardWorldPart) && !boss && loaded) {
+ 
+            if ((lastPartIsAtEdge || !forwardWorldPart) && loaded) { 
                 startTransition(addWorldPart)
             }
         }
@@ -49,7 +49,9 @@ export default function World() {
 
     useEffect(() => {
         if (loaded) {
-            setTimeout(() => addWorldPart(makeStart({ position: new Vector3(0, 0, 90), size: [0, 0] })), 100)
+            setTimeout(() => {
+                addWorldPart(makeStart({ position: new Vector3(0, 0, 100), size: [0, 0] }))
+            }, 100)
         }
     }, [loaded])
 

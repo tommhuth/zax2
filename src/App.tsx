@@ -6,16 +6,14 @@ import World from "./components/world/World"
 import Ui from "./components/ui/Ui"
 import Lights from "./components/Lights"
 import { BasicShadowMap, NoToneMapping } from "three"
-import { dpr, isSmallScreen, pixelSize, useStore } from "./data/store"
+import { dpr, pixelSize, useStore, zoom } from "./data/store"
 import Models from "./components/world/models/Models"
 import EdgeOverlay from "./components/EdgeOverlay"
 import { Perf } from "r3f-perf"
 import MaterialLoader from "./components/world/models/MaterialLoader"
 import { Only } from "./data/utils"
 import Config from "./data/Config"
-import { setLoaded, setReady } from "./data/store/utils"
-import Grass from "./components/world/decoration/Grass"
-import Plant from "./components/world/decoration/Plant"
+import { setLoaded, setReady } from "./data/store/utils" 
 
 export default function Wrapper() {
     let getSize = () => [
@@ -66,7 +64,7 @@ export default function Wrapper() {
                 }}
                 orthographic
                 camera={{
-                    zoom: isSmallScreen ? 40 : 70,
+                    zoom,
                     near: 0,
                     far: 150
                 }}

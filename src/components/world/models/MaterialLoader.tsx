@@ -12,6 +12,7 @@ function MaterialLoader() {
             buildingHi: <MeshRetroMaterial isInstance={false} fogDensity={groundFogIntensity} color={buildingHiColor} />,
             floorBase: <MeshRetroMaterial isInstance={false} fogDensity={floorFogIntensity} color={floorBaseColor} />,
             floorHi: <MeshRetroMaterial isInstance={false} fogDensity={floorFogIntensity} color={floorHiColor} />,
+            floorSolid: <meshBasicMaterial color={"red"} />,
             floorMark: <meshBasicMaterial color={floorMarkColor} />,
             bossLightBlue: <MeshRetroMaterial isInstance={false} color="lightblue" />,
             bossBlack: <MeshRetroMaterial isInstance={false} color="black" />,

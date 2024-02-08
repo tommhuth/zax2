@@ -1,8 +1,9 @@
 import { Color, MeshLambertMaterial, Vector3 } from "three"
 import { useShader } from "../../data/hooks"
-import { backColor, bcolor, fogColorStart, leftColor } from "../../data/theme"
+import { backColor as defaultBackColor, bcolor, fogColorStart, rightColor as defaultRightColor } from "../../data/theme"
 import easings from "../../shaders/easings.glsl"
 import ditherFragment from "../../shaders/dither.glsl"
+import noise from "../../shaders/noise.glsl"
 import { glsl } from "../../data/utils"
 import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef } from "react"
@@ -18,6 +19,11 @@ type MeshRetroMaterialProps = {
     fogHeight?: number
     colorCount?: number
     dithering?: boolean
+
+    rightColor?: string
+    rightColorIntensity?: number
+    backColor?: string
+    backColorIntensity?: number
 } & Omit<MeshLambertMaterialProps, "onBeforeCompile">
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
@@ -31,27 +37,31 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     fogHeight = 2.,
     colorCount = 9,
     dithering = true,
+    rightColor = defaultRightColor,
+    rightColorIntensity = .75,
+    backColor = defaultBackColor,
+    backColorIntensity = .5,
     emissive,
     ...rest
 }, ref) => {
     let player = useStore(i => i.player.object)
-    let { onBeforeCompile, uniforms } = useShader({
+    let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({
         uniforms: {
             uTime: { value: 0 },
             uColorCount: { value: colorCount },
             uDither: { value: dithering ? 1 : 0 },
             uFogHeight: { value: fogHeight },
             uBasicDirectionLights: {
-                value: [
+                value: [ 
                     {
-                        direction: new Vector3(0, 0, -1),
-                        color: new Color(backColor),
-                        strength: .5,
+                        direction: new Vector3(-1, 0, .85),
+                        color: new Color(rightColor),
+                        strength: rightColorIntensity,
                     },
                     {
-                        direction: new Vector3(1, 0, 0),
-                        color: new Color(leftColor),
-                        strength: .75,
+                        direction: new Vector3(.4, 0, -1),
+                        color: new Color(backColor),
+                        strength: backColorIntensity,
                     },
                 ]
             },
@@ -65,14 +75,25 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 varying vec3 vGlobalPosition;    
                 uniform float uTime; 
                 uniform vec3 uPlayerPosition; 
+                varying vec3 vInstanceColor;    
+                varying vec3 vNormal2;    
 
                 ${easings}
+
+                mat4 translationless(mat4 mat) {
+                    mat4 m = mat4(mat);
+                    m[3][0] = 0.;
+                    m[3][1] = 0.;
+                    m[3][2] = 0.;
+                    return m;
+                }
             `,
             main: glsl` 
                 vec4 globalPosition = ${isInstance ? "instanceMatrix" : "modelMatrix"}  * vec4(position, 1.);
 
                 vGlobalPosition = globalPosition.xyz;
-                vPosition = position.xyz;
+                vPosition = position.xyz; 
+                vNormal2 = (translationless(${isInstance ? "instanceMatrix" : "modelMatrix"}) * vec4(normal, 1.)).xyz;
 
                 ${vertexShader}
             `
@@ -88,6 +109,8 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 uniform float uFogDensity;   
                 uniform float uFogHeight;   
                 uniform float uColorCount;   
+                varying vec3 vInstanceColor;    
+                varying vec3 vNormal2;    
 
                 struct BasicDirectionLight {
                     vec3 direction;
@@ -98,30 +121,33 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
 
                 ${easings} 
                 ${ditherFragment}
+                ${noise}
             `,
-            main: glsl` 
-                ${fragmentShader}  
-
-                for (int i = 0; i < uBasicDirectionLights.length(); ++i) { 
+            main: glsl`  
+                for (int i = 0; i < uBasicDirectionLights.length(); i++) { 
                     BasicDirectionLight light = uBasicDirectionLights[i];
 
                     gl_FragColor.rgb = mix(
                         gl_FragColor.rgb,
                         mix(gl_FragColor.rgb, light.color, light.strength),
-                        clamp(dot(normal, light.direction), 0., 1.)
+                        clamp(dot(normalize(vNormal2), light.direction), 0., 1.)
                     );
                 }
-  
-                vec3 bottomColor = mix(uFogColor, gl_FragColor.rgb , 1. - uFogDensity); 
 
-                gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, easeOutQuad(clamp(vGlobalPosition.y / uFogHeight, .0, 1.))); 
-         
+                if (vGlobalPosition.y >= 0.) {
+                    vec3 bottomColor = mix(uFogColor, gl_FragColor.rgb , 1. - uFogDensity); 
+    
+                    gl_FragColor.rgb = mix(bottomColor, gl_FragColor.rgb, easeOutQuad(clamp(vGlobalPosition.y / uFogHeight, .0, 1.))); 
+                }
+  
+                ${fragmentShader}   
+
                 if (uDither == 1.) { 
                     gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, uColorCount, .005);
                 }  
             `
         }
-    }) 
+    })
 
     useFrame((state, delta) => {
         if (usesTime) {
@@ -136,11 +162,12 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     })
 
     return (
-        <meshLambertMaterial 
+        <meshLambertMaterial
             onBeforeCompile={onBeforeCompile}
             color={color}
             emissive={emissive}
-            ref={ref}   
+            ref={ref}
+            customProgramCacheKey={customProgramCacheKey}
             {...rest}
         />
     )

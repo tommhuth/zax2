@@ -34,6 +34,7 @@ interface ShaderPart {
 interface UseShaderParams {
     uniforms?: Record<string, IUniform<any>>
     vertex?: ShaderPart
+    cacheKey?: string | number
     fragment?: ShaderPart
 }
 
@@ -56,6 +57,7 @@ export function useWindowEvent(name: string | string[], func: (e: any) => void, 
 }
 
 export function useShader({
+    cacheKey,
     uniforms: incomingUniforms = {},
     vertex = {
         head: "",
@@ -71,7 +73,7 @@ export function useShader({
             .map(([key, value]) => ({ [key]: { needsUpdate: true, ...value } }))
             .reduce((previous, current) => ({ ...previous, ...current }), {})
     }, [])
-    let id = useMemo(() => random.id(), [])
+    let id = useMemo(() => cacheKey || random.id(), [cacheKey])
 
     return {
         uniforms,

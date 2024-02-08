@@ -3,14 +3,16 @@ import { useStore } from "../../data/store"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../world/World"
 import { setState } from "../../data/store/utils"
 import { useAnimationFrame, useWindowEvent } from "../../data/hooks"
+import { BossState } from "../../data/types" 
 
 import "./Ui.scss"
 
 export default function Ui() {
     let state = useStore(i => i.state)
     let ready = useStore(i => i.ready)
-    let player = useStore(i => i.player)
+    let player = useStore(i => i.player) 
     let boss = useStore(i => i.boss)
+    let level = useStore(i => i.world.level)
     let currentHeightRef = useRef<HTMLDivElement>(null)
     let bars = 5
 
@@ -35,16 +37,37 @@ export default function Ui() {
             <div
                 className="intro"
                 style={{
-                    visibility: ready  && state === "intro" && false  ? undefined : "hidden"
+                    visibility: ready && state === "intro" ? undefined : "hidden"
                 }}
             >
                 <h1 className="title">Untitled arcade knockoff</h1>
+            </div>
+ 
+
+            <div
+                className={"levelc"}
+                style={{
+                    display: boss?.state === BossState.DEAD ? "block": "none"
+                }}
+            >
+                <h1>Level complete</h1>
+                <p>{player.score.toLocaleString("en")}</p>
+            </div>
+
+            <div
+                className={"leveln"}
+                style={{
+                    display: boss?.state === BossState.DEAD ? "block": "none"
+                }}
+            >
+                <h1>Level {level}</h1>
+                <p>Now entering</p>
             </div>
 
             <div
                 className="height"
                 style={{
-                    opacity: state === "intro" || !ready ? 0 : 1
+                    opacity: state === "intro" || !ready || boss?.state === BossState.DEAD ? 0 : 1
                 }}
             >
                 <div className="height__top">H</div>
@@ -69,7 +92,7 @@ export default function Ui() {
             <div
                 className="ui"
                 style={{
-                    opacity: state === "intro" || !ready ? 0 : 1
+                    opacity: state === "intro" || !ready || boss?.state === BossState.DEAD ? 0 : 1
                 }}
             >
                 {player.health.toFixed(0)}%
@@ -79,7 +102,7 @@ export default function Ui() {
             <div
                 className="boss"
                 style={{
-                    display: boss ? undefined : "none",
+                    display: boss?.state === BossState.ACTIVE ? undefined : "none",
                 }}
             >
                 <div

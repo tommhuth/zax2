@@ -75,6 +75,7 @@ interface CreateExplosionParams {
     fireballPath?: [start: Tuple3, direction: Tuple3]
     fireballCount?: number
     shockwave?: boolean
+    delay?: number
 }
 
 export function createExplosion({
@@ -84,88 +85,91 @@ export function createExplosion({
     fireballPath: [fireballStart, fireballDirection] = [[0, 0, 0], [0, 0, 0]],
     fireballCount = 0,
     shockwave = random.boolean(.5),
+    delay = 0,
 }: CreateExplosionParams) {
-    let baseLifetime = random.integer(1600, 1800)
-    let fireBallInstance = store.getState().instances.fireball
-    let shockwaveInstance = store.getState().instances.shockwave
-    let blastInstance = store.getState().instances.blast
-    let { cameraShake, object } = store.getState().player
-    let playerZ = object?.position.z || 0
-    let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 5, 0, 1)
+    setTimeout(() => {
+        let baseLifetime = random.integer(1600, 1800)
+        let fireBallInstance = store.getState().instances.fireball
+        let shockwaveInstance = store.getState().instances.shockwave
+        let blastInstance = store.getState().instances.blast
+        let { cameraShake, object } = store.getState().player
+        let playerZ = object?.position.z || 0
+        let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 5, 0, 1)
 
-    setCameraShake(Math.min(cameraShake + easeOutCubic(shake), 1))
-    updateEffects({
-        explosions: [
-            {
-                position,
-                id: random.id(),
-                radius: radius * 7 + (fireballCount ? 1.5 : 0),
-                blast: {
-                    lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5) * .3,
-                    radius: radius * 6,
-                    time: 0,
-                    index: blastInstance.index.next(),
-                },
-                shockwave: shockwave || fireballCount ? {
-                    lifetime: random.float(baseLifetime * .5, baseLifetime * .65),
-                    radius: random.float(radius * 2.5, radius * 3),
-                    time: random.integer(100, 300),
-                    index: shockwaveInstance.index.next(),
-                } : null,
-                fireballs: [
-                    {
-                        id: random.id(),
-                        index: fireBallInstance.index.next(),
-                        position,
-                        startRadius: radius * .25,
-                        maxRadius: radius,
+        setCameraShake(Math.min(cameraShake + easeOutCubic(shake), 1))
+        updateEffects({
+            explosions: [
+                {
+                    position,
+                    id: random.id(),
+                    radius: radius * 7 + (fireballCount ? 1.5 : 0),
+                    blast: {
+                        lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5) * .3,
+                        radius: radius * 6,
                         time: 0,
-                        lifetime: baseLifetime * 1.5
+                        index: blastInstance.index.next(),
                     },
-                    ...new Array(fireballCount).fill(null).map((i, index) => {
-                        let tn = index / (fireballCount - 1)
-
-                        return {
-                            index: fireBallInstance.index.next(),
+                    shockwave: shockwave || fireballCount ? {
+                        lifetime: random.float(baseLifetime * .5, baseLifetime * .65),
+                        radius: random.float(radius * 2.5, radius * 3),
+                        time: random.integer(100, 300),
+                        index: shockwaveInstance.index.next(),
+                    } : null,
+                    fireballs: [
+                        {
                             id: random.id(),
-                            position: [
-                                fireballStart[0] + tn * fireballDirection[0] + random.float(-.25, .25),
-                                fireballStart[1] + tn * fireballDirection[1],
-                                fireballStart[2] + tn * fireballDirection[2] + random.float(-.25, .25),
-                            ] as Tuple3,
-                            startRadius: radius * 1.5,
-                            maxRadius: radius * 3.5,
-                            time: index * -random.integer(75, 100),
-                            lifetime: 750 * 1.5 + random.integer(0, 200)
-                        }
-                    }),
-                    ...new Array(count).fill(null).map((i, index, list) => {
-                        let startRadius = (index / list.length) * (radius * 1.5 - radius * .25) + radius * .25
-
-                        return {
                             index: fireBallInstance.index.next(),
-                            position: [
-                                random.pick(-radius, radius) + position[0],
-                                random.float(0, radius * 3) + position[1],
-                                random.pick(-radius, radius) + position[2]
-                            ] as Tuple3,
-                            startRadius,
-                            id: random.id(),
-                            maxRadius: startRadius * 2.5,
-                            time: random.integer(-200, 0),
-                            lifetime: random.integer(baseLifetime * .25, baseLifetime * .65) * 1.5
-                        }
-                    })
-                ],
-            },
-            ...store.getState().effects.explosions,
-        ]
-    })
+                            position,
+                            startRadius: radius * .25,
+                            maxRadius: radius,
+                            time: 0,
+                            lifetime: baseLifetime * 1.5
+                        },
+                        ...new Array(fireballCount).fill(null).map((i, index) => {
+                            let tn = index / (fireballCount - 1)
+
+                            return {
+                                index: fireBallInstance.index.next(),
+                                id: random.id(),
+                                position: [
+                                    fireballStart[0] + tn * fireballDirection[0] + random.float(-.25, .25),
+                                    fireballStart[1] + tn * fireballDirection[1],
+                                    fireballStart[2] + tn * fireballDirection[2] + random.float(-.25, .25),
+                                ] as Tuple3,
+                                startRadius: radius * 1.5,
+                                maxRadius: radius * 3.5,
+                                time: index * -random.integer(75, 100),
+                                lifetime: 750 * 1.5 + random.integer(0, 200)
+                            }
+                        }),
+                        ...new Array(count).fill(null).map((i, index, list) => {
+                            let startRadius = (index / list.length) * (radius * 1.5 - radius * .25) + radius * .25
+
+                            return {
+                                index: fireBallInstance.index.next(),
+                                position: [
+                                    random.pick(-radius, radius) + position[0],
+                                    random.float(0, radius * 3) + position[1],
+                                    random.pick(-radius, radius) + position[2]
+                                ] as Tuple3,
+                                startRadius,
+                                id: random.id(),
+                                maxRadius: startRadius * 2.5,
+                                time: random.integer(-200, 0),
+                                lifetime: random.integer(baseLifetime * .25, baseLifetime * .65) * 1.5
+                            }
+                        })
+                    ],
+                },
+                ...store.getState().effects.explosions,
+            ]
+        })
+    }, delay)
 }
 
 export function createImpactDecal(position: Tuple3, scale = random.float(1.85, 3)) {
     let { impact } = store.getState().instances
-    let index = impact.index.next() 
+    let index = impact.index.next()
 
     setBufferAttribute(impact.mesh.geometry, "aOpacity", random.float(.3, .5), index)
     setMatrixAt({
@@ -197,6 +201,7 @@ interface CreateParticlesParams {
     radius?: Tuple2 | number
     color?: string
     name?: string
+    delay?: number
 }
 
 export function createScrap(
@@ -229,6 +234,8 @@ export function createScrap(
     })
 }
 
+let _vec3 = new Vector3()
+
 export function createParticles({
     name = "sphere",
     position = [0, 0, 0],
@@ -243,45 +250,50 @@ export function createParticles({
     restitution = [.2, .5],
     color = "#FFFFFF",
     radius = [.15, .25],
+    delay = 0,
 }: CreateParticlesParams) {
-    let instance = store.getState().instances[name]
-    let particles: Particle[] = new Array(Array.isArray(count) ? random.integer(...count) : count).fill(null).map((i, index, list) => {
-        let velocity = new Vector3(
-            (normal[0] + random.float(...normalOffset[0])) * random.float(...speed) + random.float(...speedOffset[0]),
-            (normal[1] + random.float(...normalOffset[1])) * random.float(...speed) + random.float(...speedOffset[1]),
-            (normal[2] + random.float(...normalOffset[2])) * random.float(...speed) + random.float(...speedOffset[2]),
-        )
+    setTimeout(() => {
+        normal = _vec3.set(...normal).normalize().toArray()
 
-        let j = instance.index.next()
+        let instance = store.getState().instances[name]
+        let particles: Particle[] = new Array(Array.isArray(count) ? random.integer(...count) : count).fill(null).map((i, index, list) => {
+            let velocity = new Vector3(
+                (normal[0] + random.float(...normalOffset[0])) * random.float(...speed) + random.float(...speedOffset[0]),
+                (normal[1] + random.float(...normalOffset[1])) * random.float(...speed) + random.float(...speedOffset[1]),
+                (normal[2] + random.float(...normalOffset[2])) * random.float(...speed) + random.float(...speedOffset[2]),
+            )
 
-        return {
-            id: random.id(),
-            instance,
-            mounted: false,
-            index: j,
-            position: new Vector3(...position.map((i, index) => i + random.float(...positionOffset[index]))),
-            acceleration: new Vector3(...gravity),
-            rotation: new Vector3(
-                random.float(0, Math.PI * 2),
-                random.float(0, Math.PI * 2),
-                random.float(0, Math.PI * 2)
-            ),
-            velocity,
-            restitution: random.float(...restitution),
-            friction: typeof friction == "number" ? friction : random.float(...friction),
-            radius: typeof radius === "number" ? radius : radius[0] + (radius[1] - radius[0]) * (index / (list.length - 1)),
-            color,
-            lifetime: 0,
-            maxLifetime: velocity.length() * 10,
-        }
-    })
+            let j = instance.index.next()
 
-    updateEffects({
-        particles: [
-            ...store.getState().effects.particles,
-            ...particles,
-        ]
-    })
+            return {
+                id: random.id(),
+                instance,
+                mounted: false,
+                index: j,
+                position: new Vector3(...position.map((i, index) => i + random.float(...positionOffset[index]))),
+                acceleration: new Vector3(...gravity),
+                rotation: new Vector3(
+                    random.float(0, Math.PI * 2),
+                    random.float(0, Math.PI * 2),
+                    random.float(0, Math.PI * 2)
+                ),
+                velocity,
+                restitution: random.float(...restitution),
+                friction: typeof friction == "number" ? friction : random.float(...friction),
+                radius: typeof radius === "number" ? radius : radius[0] + (radius[1] - radius[0]) * (index / (list.length - 1)),
+                color,
+                lifetime: 0,
+                maxLifetime: velocity.length() * 10,
+            }
+        })
+
+        updateEffects({
+            particles: [
+                ...store.getState().effects.particles,
+                ...particles,
+            ]
+        })
+    }, delay)
 }
 
 export function removeParticle(id: string | string[]) {

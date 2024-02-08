@@ -44,8 +44,7 @@ export default function ShockwaveHandler() {
             `
         }
     })
-
-    // main
+ 
     useFrame((state, delta) => {
         let {
             effects: { explosions },
@@ -58,15 +57,14 @@ export default function ShockwaveHandler() {
 
         for (let { shockwave, position } of explosions) {
             if (shockwave) {
-                let t = clamp(shockwave.time / (shockwave.lifetime), 0, 1)
-                let t2 = clamp((shockwave.time) / (shockwave.lifetime), 0, 1)
+                let t = clamp(shockwave.time / (shockwave.lifetime), 0, 1) 
 
-                setBufferAttribute(instance.mesh.geometry, "aOpacity", easeOutQuad(1 - t2), shockwave.index)
+                setBufferAttribute(instance.mesh.geometry, "aOpacity", easeOutQuad(1 - t), shockwave.index)
                 setMatrixAt({
                     instance: instance.mesh,
                     index: shockwave.index,
-                    position: [position[0], position[1] + 1, position[2]],
-                    scale: easeOutCubic(t) * shockwave.radius + 2,
+                    position,
+                    scale: easeOutCubic(t) * shockwave.radius * 1.5 + 1,
                 })
 
                 shockwave.time += ndelta(delta) * 1000

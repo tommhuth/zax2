@@ -3,15 +3,18 @@ import type { Material } from "three"
 import { create } from "zustand"
 import { Tuple3 } from "../../types"
 import {
-    Barrel, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, MaterialName, Particle,
+    Barrel, BossState, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, MaterialName, Particle,
     Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
 } from "../types"
 import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D"
+import { clamp } from "../utils"
 
-export let isSmallScreen = window.matchMedia("(max-height: 400px)").matches || window.matchMedia("(max-width: 800px)").matches
+export const zoom = 70 - clamp(1 - (Math.min(window.innerWidth, window.innerHeight) - 400) / 600, 0, 1) * 30 
+
+export let isSmallScreen = Math.min(window.innerWidth, window.innerHeight) < 900
 export const pixelSize = isSmallScreen ? 4 : 5
 export const dpr = 1 / pixelSize
-export const bulletSize: Tuple3 = [.15, .2, 1.5]
+export const bulletSize: Tuple3 = [.15, .2, 1.5] 
 
 export interface Store {
     loaded: boolean
@@ -20,6 +23,7 @@ export interface Store {
     world: {
         parts: WorldPart[]
         frustum: Frustum
+        level: number
         grid: SpatialHashGrid3D
         bullets: Bullet[]
         turrets: Turret[]
@@ -42,7 +46,9 @@ export interface Store {
         position: Vector3
         maxHealth: number
         heatSeakers: HeatSeaker[]
-    } | null,
+        state: BossState
+        time: number 
+    },
     player: {
         speed: number
         cameraShake: number
@@ -66,6 +72,7 @@ const store = create<Store>(() => ({
     world: {
         grid: new SpatialHashGrid3D([4, 3, 4]),
         frustum: new Frustum(),
+        level: 1,
         parts: [],
         buildings: [],
         planes: [],
@@ -82,7 +89,15 @@ const store = create<Store>(() => ({
     instances: {} as Store["instances"],
     repeaters: {},
     materials: {} as Store["materials"],
-    boss: null,
+    boss: {
+        pauseAt: -Infinity,
+        health: Infinity,
+        position: new Vector3(),
+        maxHealth: Infinity,
+        heatSeakers:  [],
+        state: BossState.UNKNOWN,
+        time: 0, 
+    },
     player: {
         speed: 0,
         cameraShake: 0,

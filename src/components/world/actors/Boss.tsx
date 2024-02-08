@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react"
-import { createHeatSeaker, damageBoss, registerBoss, removeBoss } from "../../../data/store/boss"
-import { Group, Vector3 } from "three"
-import { useStore } from "../../../data/store"
+import { createHeatSeaker, damageBoss, defeatBoss, registerBoss, removeBoss, setBossProp } from "../../../data/store/boss"
+import { CatmullRomCurve3, Group, Vector3 } from "three"
+import { store, useStore } from "../../../data/store"
 import { Tuple3 } from "../../../types"
 import { setLastImpactLocation } from "../../../data/store/player"
 import HeatSeaker from "./HeatSeaker"
@@ -9,7 +9,7 @@ import { createExplosion, createParticles } from "../../../data/store/effects"
 import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
 import { createBullet } from "../../../data/store/actors"
-import { Owner } from "../../../data/types"
+import { BossState, Owner } from "../../../data/types"
 import { useBulletCollision } from "../../../data/collisions"
 import { useGLTF } from "@react-three/drei"
 
@@ -43,6 +43,10 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
     }, [grid, ...startPosition])
 
     useFrame((state, delta) => {
+        if (boss.health === 0) {
+            return 
+        }
+
         data.time += delta * 1000
 
         if (data.time >= data.nextHeatSeakerAt) {
@@ -96,52 +100,54 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
 
     useEffect(() => {
         if (boss?.health === 0 && !data.dead) {
-            data.dead = true
+            data.dead = true 
 
             for (let i = 0; i < 3; i++) {
                 let basePosition = position.toArray()
+                let d = random.pick(-1, 1)
+                let p = [
+                    basePosition[0] + random.float(-bossSize[0] / 2, bossSize[0] / 2),
+                    basePosition[1] + random.float(-bossSize[1] / 2, bossSize[1] / 2),
+                    basePosition[2]
+                ]
 
-                setTimeout(() => {
-                    createExplosion({
-                        position: [
-                            basePosition[0] + random.float(-bossSize[0] / 2, bossSize[0] / 2),
-                            basePosition[1] + random.float(-bossSize[1] / 2, bossSize[1] / 2),
-                            basePosition[2]
-                        ],
-                        radius: random.float(.5, .75),
-                        count: 16,
-                        shockwave: true,
-                    })
-                    createParticles({
-                        position: [
-                            basePosition[0] + random.float(-bossSize[0] / 2, bossSize[0] / 2),
-                            basePosition[1] + random.float(-bossSize[1] / 2, bossSize[1] / 2),
-                            basePosition[2]
-                        ],
-                        positionOffset: [[0, 0], [0, 0], [0, 0]],
-                        speed: [5, 30],
-                        speedOffset: [[0, 0], [0, 0], [0, 0]],
-                        normal: [random.float(-1, 1), 1, random.float(-1, 1)],
-                        count: [14, 16],
-                        radius: [.2, .6],
-                        friction: [.8, .95],
-                        color: "#00f",
-                    })
-                }, i * 350)
+                createExplosion({
+                    position: p,
+                    radius: random.float(.5, .75),
+                    fireballCount: 6,
+                    fireballPath: [p,  [-1,1,-5]],
+                    count: 16,
+                    shockwave: true,
+                    delay: i * 350
+                })
+                createParticles({
+                    position: [
+                        basePosition[0] + random.float(-bossSize[0] / 2, bossSize[0] / 2),
+                        basePosition[1] + random.float(-bossSize[1] / 2, bossSize[1] / 2),
+                        basePosition[2]
+                    ],
+                    positionOffset: [[0, 0], [0, 0], [0, 0]],
+                    speed: [-20 , 20],
+
+                    speedOffset: [[0, 0], [0, 0], [0, 0]],
+                    normal: [random.float(-1, 1), 1, random.float(-1, 1)],
+                    count: [14, 16],
+                    radius: [.2, .6],
+                    friction: [.7, .8],
+                    color: "#00f",
+                    delay: i * 500
+                })
             }
 
-            setTimeout(() => {
-                createExplosion({
-                    position: position.toArray(),
-                    radius: random.float(1.3, 1.5),
-                    count: 26,
-                    shockwave: true,
-                })
-            }, 950)
+            createExplosion({
+                position: position.toArray(),
+                radius: 1.3,
+                count: 26,
+                shockwave: true,
+                delay: 950
+            })
 
-            setTimeout(() => {
-                removeBoss()
-            }, 1200)
+            setTimeout(() => defeatBoss() , 1200)
         }
 
     }, [boss?.health])
@@ -158,14 +164,7 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
         position.copy(bossWrapper.current.position)
         client.position = position.toArray()
         grid.updateClient(client)
-    })
-
-    useEffect(() => {
-        registerBoss({
-            pauseAt,
-            position,
-        })
-    }, [])
+    }) 
 
     return (
         <>
@@ -177,28 +176,28 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
                 ref={bossWrapper}
                 visible={!!boss}
             >
-                <mesh 
+                <mesh
                     geometry={nodes.Cube012.geometry}
                     material={materials.bossLightBlue}
                 />
-                <mesh 
+                <mesh
                     geometry={nodes.Cube012_1.geometry}
                     material={materials.bossBlack}
                 />
-                <mesh 
+                <mesh
                     geometry={nodes.Cube012_2.geometry}
                     material={materials.bossDarkBlue}
                 />
                 <mesh
-                    castShadow 
+                    castShadow
                     geometry={nodes.Cube012_3.geometry}
                     material={materials.bossBlue}
                 />
-                <mesh 
+                <mesh
                     geometry={nodes.Cube012_4.geometry}
                     material={materials.bossSecondaryBlue}
                 />
-                <mesh 
+                <mesh
                     geometry={nodes.Cube012_5.geometry}
                     material={materials.bossWhite}
                 />

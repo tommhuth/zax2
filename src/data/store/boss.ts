@@ -2,20 +2,36 @@ import random from "@huth/random"
 import { store } from "."
 import { Tuple3 } from "../../types"
 import { Vector3 } from "three"
+import { BossState } from "../types"
 
 export function registerBoss({
-    pauseAt,  
-    position,
-}) { 
+    pauseAt,
+    position, 
+}) {
     store.setState({
         boss: {
             pauseAt,
-            position, 
-            health: 100,
+            position,
+            health: 1,
             maxHealth: 100,
+            state: BossState.IDLE,
             heatSeakers: [],
+            time: 0,  
         }
     })
+}
+
+export function defeatBoss( ) {
+    let { boss } = store.getState()
+
+    if (boss) {
+        store.setState({
+            boss: {
+                ...boss,
+                state: BossState.DEAD,  
+            }
+        })
+    }
 }
 
 export function removeHeatSeaker(id: string) {
@@ -31,6 +47,19 @@ export function removeHeatSeaker(id: string) {
     }
 }
 
+export function setBossProp(key: string, value: any) {
+    let { boss } = store.getState()
+
+    if (boss) {
+        store.setState({
+            boss: {
+                ...boss,
+                [key]: value
+            }
+        })
+    }
+}
+
 export function createHeatSeaker([x, y, z]: Tuple3) {
     let { world, boss, instances } = store.getState()
 
@@ -40,7 +69,7 @@ export function createHeatSeaker([x, y, z]: Tuple3) {
         let size: Tuple3 = [.35, .35, .35]
         let client = world.grid.createClient(position.toArray(), size, {
             type: "heatseaker",
-            id, 
+            id,
         })
 
         store.setState({

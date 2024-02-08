@@ -46,19 +46,16 @@ export function makeStart(previous: BaseWorldPart): WorldPartStart {
         color: Math.random() * 0xffffff,
         type: WorldPartType.START,
     }
-}
-
-let level = 1
+} 
 
 export function makeBoss(previous: BaseWorldPart): WorldPartBoss {
-    let depth = 80
+    let depth = 85
 
     return {
         ...baseProps(previous),
         size: [10, depth] as Tuple2,
         color: Math.random() * 0xffffff,
-        type: WorldPartType.BOSS,
-        level: level++,
+        type: WorldPartType.BOSS, 
     }
 }
 

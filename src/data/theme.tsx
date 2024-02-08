@@ -30,8 +30,8 @@ export const deviceColor = buildingBaseColor // "#e2eef5" // "#6fbad8" // "#141E
 export const fogColorStart = "#0004ff"
 export const fogColorEnd = "#0b9198"
 
-export const leftColor = "#ff0090" 
-export const backColor = "#26ff00"
+export const rightColor = "#ff0000" 
+export const backColor = "#00129c"
  
 export const explosionEndColor = "#000"
 export const explosionCenterColor = "#ffa200"

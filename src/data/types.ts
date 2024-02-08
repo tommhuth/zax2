@@ -5,7 +5,7 @@ import { Client } from "./world/SpatialHashGrid3D"
 
 export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
     | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi"
-    | "floorBase" | "floorHi" | "floorMark"
+    | "floorBase" | "floorHi" | "floorMark" | "floorSolid"
 
 export type InstanceName = "scrap" |  "line" | "box" | "sphere" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball"
@@ -17,6 +17,14 @@ export type RepeaterName = "building1" | "building2" | "building3"
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
 
 export type CollisionObjectType = "barrel" | "player" | "boss" | "heatseaker" | "plane" | "turret" | "building" | "rocket"
+
+export enum BossState {
+    IDLE = "idle",
+    ACTIVE = "active",  
+    DEAD = "dead",
+    COMPLETE = "complete",
+    UNKNOWN = "unknown"
+}
 
 export interface Fireball {
     isPrimary?: boolean
@@ -184,12 +192,13 @@ export interface WorldPartBuildingsGap extends WorldPart {
 export interface WorldPartDefault extends WorldPart {
     type: WorldPartType.DEFAULT
 }
+
 export interface WorldPartStart extends WorldPart {
     type: WorldPartType.START
 }
+
 export interface WorldPartBoss extends WorldPart {
-    type: WorldPartType.BOSS
-    level: number
+    type: WorldPartType.BOSS 
 }
 
 export interface WorldPartBuildingsLow extends WorldPart {
@@ -199,7 +208,6 @@ export interface WorldPartBuildingsLow extends WorldPart {
 export interface WorldPartAirstrip extends WorldPart {
     type: WorldPartType.AIRSTRIP
 }
-
 
 export enum Owner {
     PLAYER = "player",

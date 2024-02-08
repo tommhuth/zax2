@@ -9,6 +9,7 @@ import Barrels from "./instances/Barrels"
 import Plant from "./instances/Plant"
 import Grass from "./instances/Grass"
 import Exhaust from "./instances/Exhaust"
+import { glsl } from "../../../data/utils"
 
 function Instances() {
     let [
@@ -22,12 +23,11 @@ function Instances() {
     ])
 
     return (
-        <> 
+        <>
             <InstancedMesh
                 name="sphere"
                 count={100}
-                castShadow={false}
-                receiveShadow={false}
+                castShadow={true}
             >
                 <sphereGeometry args={[1, 3, 4]} attach="geometry" />
                 <MeshRetroMaterial
@@ -35,14 +35,28 @@ function Instances() {
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="line" count={50} colors={false}>
+            <InstancedMesh
+                castShadow={true}
+                name="line"
+                count={50}
+                colors={false}
+            >
                 <boxGeometry args={[1, 1, 1, 1, 1, 1]} attach="geometry" />
                 <meshBasicMaterial name="line" color={"white"} />
             </InstancedMesh>
 
             <InstancedMesh name="scrap" count={50} colors={true}>
                 <primitive object={(scrap.nodes.scrap as Mesh).geometry} dispose={null} attach="geometry" />
-                <MeshRetroMaterial side={FrontSide} name="scrap" color={"white"} />
+                <MeshRetroMaterial
+                    side={FrontSide}
+                    name="scrap"
+                    isInstance={true}
+                    color={"white"}
+                    fragmentShader={glsl`
+                        gl_FragColor.rgb = mix(gl_FragColor.rgb, vColor, .85);
+                     
+                     `}
+                />
             </InstancedMesh>
 
             <InstancedMesh name="turret" count={15}>
@@ -54,6 +68,8 @@ function Instances() {
                     emissiveIntensity={.4}
                     fogDensity={.65}
                     fogHeight={.6}
+                    backColor="#ffff00"
+                    backColorIntensity={0}
                 />
             </InstancedMesh>
 

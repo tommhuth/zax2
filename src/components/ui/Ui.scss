@@ -24,6 +24,88 @@
     }
 }   
 
+.i {
+    position: absolute;
+    left: 50%;
+    z-index: 1000000000;
+    font-size: 2em;
+    transform: translate(-50%, -50%);  
+    top: 50%;
+}
+
+.levelc {
+    position: absolute;
+    left: 10vw;
+    right: 10vw;
+    bottom: 50%;
+    translate: 0 50%;
+    z-index: 1000000000; 
+    pointer-events: none;
+
+    h1 {
+        font-size: clamp(2em, 10vw, 9em); 
+        line-height: .9;
+        margin-bottom: 1rem;
+        animation: infoin 7s 1s both 1;
+    }
+
+    p { 
+        font-size: clamp(1em, 6vw, 5em); 
+        color: rgb(21, 0, 214);
+        animation: infoin 6s 2s both 1;
+    }
+}
+
+.leveln {
+    position: absolute;
+    pointer-events: none;
+    left: 10vw;
+    right: 10vw;
+    bottom: 50%;
+    translate: 0 50%;
+    text-transform: uppercase;
+    z-index: 1000000000; 
+
+    h1 {
+        font-size: clamp(2em, 10vw, 9em); 
+        line-height: .9;
+        margin-bottom: 1rem;
+        animation: infoin 5s 7s both  ;
+    }
+
+    p {
+        font-size: clamp(1em, 5vw, 4em); 
+        color: rgb(21, 0, 214);
+        animation: infoin 7s 6s both  ;
+    }
+}
+
+
+@keyframes infoin {
+    0% {
+        opacity: 0;
+        translate: 0 -1rem;
+    }
+
+    10% {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    50% {
+        opacity: 1;
+        translate: 0 0;
+    }
+    60% {
+        opacity: 0;
+        translate: 0 -1rem;
+    }
+    100% {
+        opacity: 0;
+        translate: 0 -1rem;
+    }
+}
+
 .boss {
     position: absolute;
     left: 50%;

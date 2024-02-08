@@ -6,16 +6,17 @@ import { WORLD_BOTTOM_EDGE, WORLD_CENTER_X, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, W
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
 import { useWindowEvent } from "../data/hooks"
-import { Owner } from "../data/types"
-import { bulletSize, useStore } from "../data/store"
+import { BossState, Owner } from "../data/types"
+import { bulletSize, store, useStore } from "../data/store"
 import { damagePlayer, increaseScore, setPlayerObject } from "../data/store/player"
 import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/store/actors"
 import { damageBarrel } from "../data/store/world"
 import { playerColor } from "../data/theme"
 import { MeshRetroMaterial } from "./world/MeshRetroMaterial"
-import { removeHeatSeaker } from "../data/store/boss"
+import { removeHeatSeaker, setBossProp } from "../data/store/boss"
 import { useBulletCollision, useCollisionDetection } from "../data/collisions"
 import random from "@huth/random"
+import { easeInQuad } from "../data/shaping"
 
 let _edgemin = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -100)
 let _edgemax = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, 100)
@@ -28,6 +29,17 @@ interface PlayerProps {
     y?: number
 }
 
+interface LocalData {
+    lastShotAt: number
+    isMovingUp: boolean
+    keys: Record<string, boolean>
+    bossDeadAt: number
+    position: Vector3
+    currentPointerPosition: Vector3
+    originalPointerPosition: Vector3
+    targetPosition:Vector3 
+}
+
 export default function Player({
     size = [1.5, .5, depth],
     z = -15,
@@ -35,29 +47,39 @@ export default function Player({
 }: PlayerProps) {
     let playerGroupRef = useRef<Group | null>(null)
     let flameRef = useRef<Mesh<BufferGeometry, Material> | null>(null)
-    let hitboxRef = useRef<Mesh>(null)
-    let lastShotAt = useRef(0)
-    let isMovingUp = useRef(false)
-    let impactRef = useRef<Mesh>(null)
-    let grid = useStore(i => i.world.grid)
-    let boss = useStore(i => i.boss)
-    let keys = useMemo<Record<string, boolean>>(() => ({}), [])
+    let hitboxRef = useRef<Mesh>(null) 
+    let grid = useStore(i => i.world.grid) 
     let weapon = useStore(i => i.player.weapon)
     let ready = useStore(i => i.ready)
-    let lastImpactLocation = useStore(i => i.player.lastImpactLocation)
     let state = useStore(i => i.state)
-    let targetPosition = useMemo(() => new Vector3(WORLD_CENTER_X, _edgemin.y, z), [])
-    let models = useLoader(GLTFLoader, "/models/space.glb")
-    let position = useMemo(() => new Vector3(0, y, z), [])
+    let bossState = useStore(i => i.boss.state) 
+    let models = useLoader(GLTFLoader, "/models/space.glb") 
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {
             type: "player",
             id: "player",
         })
-    }, [grid])
-    let currentPointerPosition = useMemo(() => new Vector3(), [])
-    let originalPointerPosition = useMemo(() => new Vector3(), [])
-    let speed = 6
+    }, [grid]) 
+    let speed = 6 
+    let data = useMemo<LocalData>(()=> {
+        return {
+            lastShotAt: 0,
+            isMovingUp: false,
+            keys: {},
+            bossDeadAt: Infinity, 
+            position: new Vector3(0, y, z),
+            currentPointerPosition: new Vector3(),
+            originalPointerPosition: new Vector3(),
+            targetPosition: new Vector3(WORLD_CENTER_X, _edgemin.y, z)
+        }
+    }, []) 
+
+    useEffect(()=> {
+        if (bossState === BossState.DEAD) { 
+            data.bossDeadAt = Date.now()
+        }
+    }, [bossState])
+
     let handleRef = useCallback((object: Group) => {
         if (!object) {
             return
@@ -65,14 +87,14 @@ export default function Player({
 
         playerGroupRef.current = object
         setPlayerObject(object)
-    }, [])
+    }, []) 
 
     useWindowEvent("keydown", (e: KeyboardEvent) => {
-        keys[e.code] = true
+        data.keys[e.code] = true
     })
 
     useWindowEvent("keyup", (e: KeyboardEvent) => {
-        delete keys[e.code]
+        delete data.keys[e.code]
     })
 
     useBulletCollision({
@@ -91,7 +113,7 @@ export default function Player({
         interval: 1,
         source: {
             size,
-            position,
+            position: data.position,
         },
         actions: {
             building: () => {
@@ -132,10 +154,10 @@ export default function Player({
         let shootDiv = document.getElementById("shoot") as HTMLElement
         // shoot 
         let onTouchStartShoot = () => {
-            keys.Space = true
+            data.keys.Space = true
         }
         let onTouchEndShoot = () => {
-            delete keys.Space
+            delete data.keys.Space
         }
 
         shootDiv.addEventListener("touchstart", onTouchStartShoot)
@@ -149,52 +171,38 @@ export default function Player({
         }
     }, [])
 
-    useEffect(() => {
-        impactRef.current?.scale.set(1, 1, 1)
-        impactRef.current?.position.set(...lastImpactLocation)
-    }, [lastImpactLocation])
-
-    // impact animation
-    useFrame(() => {
-        if (impactRef.current) {
-            impactRef.current.scale.x += (0 - impactRef.current.scale.x) * .15
-            impactRef.current.scale.y += (0 - impactRef.current.scale.y) * .15
-            impactRef.current.scale.z += (0 - impactRef.current.scale.z) * .15
-        }
-    })
-
     // input
     useFrame((state, delta) => {
         let speedx = 12
         let speedy = 10
         let nd = ndelta(delta)
 
-        if (Object.entries(keys).length) {
-            if (keys.KeyA) {
-                targetPosition.x += speedx * nd
-            } else if (keys.KeyD) {
-                targetPosition.x -= speedx * nd
+        if (Object.entries(data.keys).length) {
+            if (data.keys.KeyA) {
+                data.targetPosition.x += speedx * nd
+            } else if (data.keys.KeyD) {
+                data.targetPosition.x -= speedx * nd
             }
 
-            if (keys.KeyW) {
-                targetPosition.y += speedy * nd
-            } else if (keys.KeyS) {
-                targetPosition.y -= speedy * nd
+            if (data.keys.KeyW) {
+                data.targetPosition.y += speedy * nd
+            } else if (data.keys.KeyS) {
+                data.targetPosition.y -= speedy * nd
             }
 
-            targetPosition.clamp(_edgemin, _edgemax)
+            data.targetPosition.clamp(_edgemin, _edgemax)
         }
     })
 
     // shoot
     useFrame(() => {
-        if (Date.now() - lastShotAt.current > weapon.fireFrequency && keys.Space) {
+        if (Date.now() - data.lastShotAt > weapon.fireFrequency && data.keys.Space) {
             startTransition(() => {
                 createBullet({
                     position: [
-                        position.x,
-                        position.y,
-                        position.z + (depth / 2 + bulletSize[2] / 2) * 1.5
+                        data.position.x,
+                        data.position.y,
+                        data.position.z + (depth / 2 + bulletSize[2] / 2) * 1.5
                     ],
                     owner: Owner.PLAYER,
                     damage: weapon.damage,
@@ -202,7 +210,7 @@ export default function Player({
                     speed: weapon.speed,
                     color: "#fff",
                 })
-                lastShotAt.current = Date.now()
+                data.lastShotAt = Date.now()
             })
         }
     })
@@ -220,27 +228,42 @@ export default function Player({
         if (playerGroupRef.current && hitboxRef.current) {
             let nd = ndelta(delta)
             let playerGroup = playerGroupRef.current
-            let y = clamp(targetPosition.y, _edgemin.y, _edgemax.y)
-
-            playerGroup.position.x += (targetPosition.x - playerGroup.position.x) * (.09 * 60 * nd)
-            playerGroup.position.y += (y - playerGroup.position.y) * (.08 * 60 * nd)
-
-
-            if (!boss || (boss && boss.pauseAt >= playerGroup.position.z)) {
+            let y = clamp(data.targetPosition.y, _edgemin.y, _edgemax.y)
+            let { boss } = store.getState()
+            let move = (speed: number) => {
                 playerGroup.position.z += speed * nd
+                data.currentPointerPosition.z += speed * nd 
+                playerGroup.position.x += (data.targetPosition.x - playerGroup.position.x) * (.09 * 60 * nd)
+                playerGroup.position.y += (y - playerGroup.position.y) * (.08 * 60 * nd) 
+            }
 
-                currentPointerPosition.z += speed * nd
+            if (boss.state === BossState.IDLE) {
+                let d = 1 - clamp((playerGroup.position.z - boss.pauseAt - 3) / 3, 0, 1)
+
+                move(speed * d)
+
+                if (d < .1) {
+                    setBossProp("state", BossState.ACTIVE)
+                }
+            } else if (boss.state === BossState.ACTIVE) { 
+                move(0)
+            } else if (boss.state === BossState.DEAD) {
+                let d = easeInQuad(clamp((Date.now() - data.bossDeadAt) / 1400, 0, 1))  
+
+                move(speed * d)
+            }else {
+                move(speed )
             }
 
             hitboxRef.current.position.z = playerGroup.position.z
 
-            position.copy(playerGroup.position)
-            client.position = position.toArray()
+            data.position.copy(playerGroup.position)
+            client.position = data.position.toArray()
             grid.updateClient(client)
         }
     })
 
-    useFrame(()=> {
+    useFrame(() => {
         if (flameRef.current) {
             flameRef.current.scale.x = random.float(.3, .6)
             flameRef.current.scale.z = random.float(.9, 1.1)
@@ -251,10 +274,6 @@ export default function Player({
 
     return (
         <>
-            <mesh ref={impactRef}>
-                <sphereGeometry args={[.5, 16, 16]} />
-                <meshBasicMaterial name="solidWhite" color={"white"} />
-            </mesh>
             <group
                 ref={handleRef}
                 scale={.75}
@@ -293,29 +312,29 @@ export default function Player({
                 visible={false}
                 rotation-x={-Math.PI / 2}
                 onPointerUp={() => {
-                    isMovingUp.current = false
+                    data.isMovingUp = false
                 }}
                 onPointerMove={({ pointerType, point }) => {
                     if (pointerType === "touch") {
                         let depthThreshold = 2
 
-                        if (Math.abs(originalPointerPosition.z - point.z) > depthThreshold) {
-                            isMovingUp.current = true
+                        if (Math.abs(data.originalPointerPosition.z - point.z) > depthThreshold) {
+                            data.isMovingUp = true
                         }
 
-                        if (isMovingUp.current) {
-                            targetPosition.y += (point.z - currentPointerPosition.z)
+                        if (data.isMovingUp) {
+                            data.targetPosition.y += (point.z - data.currentPointerPosition.z)
                         }
 
-                        targetPosition.x += (point.x - currentPointerPosition.x) * 1.5
-                        targetPosition.clamp(_edgemin, _edgemax)
-                        currentPointerPosition.copy(point)
+                        data.targetPosition.x += (point.x - data.currentPointerPosition.x) * 1.5
+                        data.targetPosition.clamp(_edgemin, _edgemax)
+                        data.currentPointerPosition.copy(point)
                     }
                 }}
                 onPointerDown={(e) => {
                     if (e.pointerType === "touch") {
-                        currentPointerPosition.set(e.point.x, 0, e.point.z)
-                        originalPointerPosition.set(0, 0, e.point.z)
+                        data.currentPointerPosition.set(e.point.x, 0, e.point.z)
+                        data.originalPointerPosition.set(0, 0, e.point.z)
                     }
                 }}
             >
