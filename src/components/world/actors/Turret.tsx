@@ -2,7 +2,7 @@ import { memo, startTransition, useLayoutEffect, useRef } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
+import { clamp, ndelta, setColorAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
 import { Vector3 } from "three"
@@ -14,8 +14,7 @@ import { createBullet, damageTurret, removeTurret } from "../../../data/store/ac
 import { store, useStore } from "../../../data/store"
 import { createExplosion, createImpactDecal, createParticles, createScrap, createShimmer } from "../../../data/store/effects"
 import { explosionColor, turretColor, turretParticleColor } from "../../../data/theme"
-import { setLastImpactLocation } from "../../../data/store/player"
-import { useBulletCollision } from "../../../data/collisions"
+import { useCollisionDetection } from "../../../data/collisions"
 
 function explode(position: Vector3, size: Tuple3) {
     createShimmer({
@@ -67,28 +66,27 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
         removed.current = true
     }
 
-    useBulletCollision({
-        name: "bulletcollision:turret",
-        handler: ({ detail: { bullet, intersection, client, normal } }) => {
-            setLastImpactLocation(...intersection)
-
-            if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
-                return
+    useCollisionDetection({
+        actions: {
+            bullet: ( { bullet, intersection, client, normal, type   }) => {  
+                if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "turret") {
+                    return
+                }
+    
+                createParticles({
+                    position: intersection,
+                    positionOffset: [[0, 0], [0, 0], [0, 0]],
+                    count: [1, 2],
+                    speed: [11, 22],
+                    speedOffset: [[-5, 5], [0, 0], [-5, 5]],
+                    normal,
+                    normalOffset: [[0, 0], [0, 0], [0, 0]],
+                    color: "white"
+                })
+                damageTurret(id, bullet.damage)
             }
-
-            createParticles({
-                position: intersection,
-                positionOffset: [[0, 0], [0, 0], [0, 0]],
-                count: [1, 2],
-                speed: [11, 22],
-                speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                normal,
-                normalOffset: [[0, 0], [0, 0], [0, 0]],
-                color: "white"
-            })
-            damageTurret(id, bullet.damage)
         }
-    })
+    }) 
 
     useEffect(() => {
         if (health !== 100 && instance && typeof index === "number") {

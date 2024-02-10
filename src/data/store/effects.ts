@@ -1,7 +1,7 @@
 import random from "@huth/random"
 import { Tuple2, Tuple3 } from "../../types"
 import { Store, store } from "."
-import { BufferAttribute, ColorRepresentation, Vector3 } from "three"
+import { ColorRepresentation, Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
 import { clamp, setBufferAttribute, setColorAt, setMatrixAt } from "../utils"

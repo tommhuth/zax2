@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber"
 import { memo, startTransition, useEffect, useRef } from "react"
-import { Bullet, CollisionObjectType } from "../../data/types"
+import { Bullet } from "../../data/types"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../data/utils"
 import { store, useStore } from "../../data/store"
 import { removeBullet } from "../../data/store/actors"
@@ -8,11 +8,10 @@ import { getIntersection, getCollisions, CollisionEventDetails } from "../../dat
 import { Tuple3 } from "../../types"
 import { Mesh } from "three"
 
-function createCollisionEvent(
-    type: CollisionObjectType,
+function createCollisionEvent( 
     detail: CollisionEventDetails
 ) {
-    return new CustomEvent<CollisionEventDetails>("bulletcollision:" + type, {
+    return new CustomEvent<CollisionEventDetails>("bulletcollision", {
         bubbles: false,
         cancelable: false,
         detail,
@@ -34,22 +33,21 @@ function BulletHandler() {
 
         for (let bullet of bullets) {
             let collisions = getCollisions({
-                grid,
-                source: {
-                    position: bullet.position,
-                    size: bullet.obb,
-                }
+                grid, 
+                position: bullet.position,
+                size: bullet.obb, 
             })
 
             for (let client of collisions) {
                 let intersection = getIntersection(client, bullet)
 
                 window.dispatchEvent(
-                    createCollisionEvent(client.data.type, {
+                    createCollisionEvent({
                         client,
                         bullet,
                         intersection,
                         normal: bullet.direction.map(i => i * -1) as Tuple3,
+                        type: client.data.type
                     })
                 )
 

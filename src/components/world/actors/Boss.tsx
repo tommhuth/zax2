@@ -1,26 +1,24 @@
 import { useEffect, useMemo, useRef } from "react"
-import { createHeatSeaker, damageBoss, defeatBoss, registerBoss, removeBoss, setBossProp } from "../../../data/store/boss"
-import { CatmullRomCurve3, Group, Vector3 } from "three"
-import { store, useStore } from "../../../data/store"
-import { Tuple3 } from "../../../types"
-import { setLastImpactLocation } from "../../../data/store/player"
+import { createHeatSeaker, damageBoss, defeatBoss } from "../../../data/store/boss"
+import { Group, Vector3 } from "three"
+import { useStore } from "../../../data/store"
+import { Tuple3 } from "../../../types" 
 import HeatSeaker from "./HeatSeaker"
 import { createExplosion, createParticles } from "../../../data/store/effects"
 import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
 import { createBullet } from "../../../data/store/actors"
-import { BossState, Owner } from "../../../data/types"
-import { useBulletCollision } from "../../../data/collisions"
+import { Owner } from "../../../data/types"
+import { useCollisionDetection } from "../../../data/collisions"
 import { useGLTF } from "@react-three/drei"
 
 let bossSize: Tuple3 = [4.5, 4.75, 2]
 
 interface BossProps {
-    startPosition: Tuple3
-    pauseAt: number
+    startPosition: Tuple3 
 }
 
-export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossProps) {
+export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
     let materials = useStore(i => i.materials)
     let boss = useStore(i => i.boss)
     let bossWrapper = useRef<Group>(null)
@@ -74,27 +72,27 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
             data.nextBulletAt = data.time + random.pick(1100, 500, 200, 2000)
         }
     })
-
-    useBulletCollision({
-        name: "bulletcollision:boss",
-        handler: ({ detail: { bullet, intersection, normal } }) => {
-            if (data.dead || bullet.owner !== Owner.PLAYER) {
-                return
+ 
+    useCollisionDetection({
+        actions: {
+            bullet: ({ bullet, intersection, normal, type }) => {
+                if (data.dead || bullet.owner !== Owner.PLAYER || type !== "boss") {
+                    return
+                }
+    
+                damageBoss(10) 
+                createParticles({
+                    position: intersection,
+                    positionOffset: [[0, 0], [0, 0], [0, 0]],
+                    speed: [3, 29],
+                    speedOffset: [[0, 0], [0, 0], [0, 0]],
+                    normal,
+                    count: [0, 3],
+                    radius: [.1, .3],
+                    friction: [.8, .95],
+                    color: "#00f",
+                })
             }
-
-            damageBoss(10)
-            setLastImpactLocation(...intersection)
-            createParticles({
-                position: intersection,
-                positionOffset: [[0, 0], [0, 0], [0, 0]],
-                speed: [3, 29],
-                speedOffset: [[0, 0], [0, 0], [0, 0]],
-                normal,
-                count: [0, 3],
-                radius: [.1, .3],
-                friction: [.8, .95],
-                color: "#00f",
-            })
         }
     })
 
@@ -103,8 +101,7 @@ export default function Boss({ pauseAt = 0, startPosition = [0, 0, 0] }: BossPro
             data.dead = true 
 
             for (let i = 0; i < 3; i++) {
-                let basePosition = position.toArray()
-                let d = random.pick(-1, 1)
+                let basePosition = position.toArray() 
                 let p = [
                     basePosition[0] + random.float(-bossSize[0] / 2, bossSize[0] / 2),
                     basePosition[1] + random.float(-bossSize[1] / 2, bossSize[1] / 2),

@@ -12,7 +12,7 @@ import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
 import { damageRocket, removeRocket } from "../../../data/store/actors"
 import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
-import { useBulletCollision } from "../../../data/collisions"
+import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
 
 let _size = new Vector3()
@@ -114,25 +114,26 @@ export default function Rocket({
         setMatrixNullAt(rocketInstance, rocketIndex as number)
     }
 
-    useBulletCollision({
-        name: "bulletcollision:rocket",
-        handler: ({ detail: { bullet, intersection, client, normal } }) => {
-            if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
-                return
+    useCollisionDetection({
+        actions: {
+            bullet: ( { bullet, intersection, client, normal, type }  ) => {
+                if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "rocket") {
+                    return
+                }
+    
+                damageRocket(id, bullet.damage)
+                createParticles({
+                    position: intersection,
+                    count: [2, 4],
+                    speed: [8, 12],
+                    positionOffset: [[0, 0], [0, 0], [0, 0]],
+                    speedOffset: [[-5, 5], [0, 0], [-5, 5]],
+                    normal,
+                    color: "purple",
+                })
             }
-
-            damageRocket(id, bullet.damage)
-            createParticles({
-                position: intersection,
-                count: [2, 4],
-                speed: [8, 12],
-                positionOffset: [[0, 0], [0, 0], [0, 0]],
-                speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                normal,
-                color: "purple",
-            })
         }
-    })
+    }) 
 
     useInstance("platform", {
         color: "#ddd",

@@ -15,7 +15,7 @@ import { damageBarrel } from "../../../data/store/world"
 import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createParticles } from "../../../data/store/effects"
 import { planeColor } from "../../../data/theme"
-import { useBulletCollision, useCollisionDetection } from "../../../data/collisions"
+import { useCollisionDetection } from "../../../data/collisions"
 import { damp } from "three/src/math/MathUtils.js"
 
 let _size = new Vector3()
@@ -73,37 +73,31 @@ function Plane({
     let remove = () => {
         removePlane(id)
         data.removed = true
-    }
-
-    useBulletCollision({
-        name: "bulletcollision:plane",
-        handler: ({ detail: { bullet, client, intersection, normal } }) => {
-            if (bullet.owner !== Owner.PLAYER || client.data.id !== id) {
-                return
-            }
-
-            damagePlane(id, bullet.damage) 
-            createParticles({
-                position: intersection,
-                count: [1, 3],
-                speed: [8, 12],
-                positionOffset: [[0, 0], [0, 0], [0, 0]],
-                speedOffset: [[-5, 5], [0, 0], [5, 18]],
-                normal,
-                color: "yellow",
-            }) 
-        }
-    })
+    } 
 
     useCollisionDetection({
         predicate() {
             return health === 0
         },
-        source: {
-            size,
-            position,
-        },
+        size,
+        position, 
         actions: {
+            bullet: ( { bullet, client, intersection, normal, type  }) => {
+                if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "plane") {
+                    return
+                }
+    
+                damagePlane(id, bullet.damage) 
+                createParticles({
+                    position: intersection,
+                    count: [1, 3],
+                    speed: [8, 12],
+                    positionOffset: [[0, 0], [0, 0], [0, 0]],
+                    speedOffset: [[-5, 5], [0, 0], [5, 18]],
+                    normal,
+                    color: "yellow",
+                }) 
+            },
             turret: (data) => {
                 startTransition(() => damageTurret(data.id, 100))
             },

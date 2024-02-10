@@ -7,7 +7,7 @@ import { useLayoutEffect, useMemo } from "react"
 import { createExplosion } from "../../../data/store/effects"
 import random from "@huth/random"
 import { HeatSeaker } from "../../../data/types"
-import { useBulletCollision } from "../../../data/collisions"
+import { useCollisionDetection } from "../../../data/collisions"
 
 let _dir = new Vector3()
 let _mat4 = new Matrix4()
@@ -24,11 +24,12 @@ export default function HeatSeaker({
     let grid = useStore(i => i.world.grid)
     let accuracy = useMemo(() => random.float(.25, .4), [])
 
-    useBulletCollision({
-        name: "bulletcollision:heatseaker",
-        handler: ({ detail: { bullet } }) => {
-            if (bullet.owner === "player") {
-                removeHeatSeaker(id)
+    useCollisionDetection({ 
+        actions: {
+            bullet: ( { bullet, type } ) => {
+                if (bullet.owner === "player" || type !== "heatseaker") {
+                    removeHeatSeaker(id)
+                }
             }
         }
     })

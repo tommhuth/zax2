@@ -14,6 +14,7 @@ import MaterialLoader from "./components/world/models/MaterialLoader"
 import { Only } from "./data/utils"
 import Config from "./data/Config"
 import { setLoaded, setReady } from "./data/store/utils" 
+import Controls from "./components/Controls"
 
 export default function Wrapper() {
     let getSize = () => [
@@ -78,6 +79,7 @@ export default function Wrapper() {
                     <Loader />
                 </Suspense>
 
+                <Controls />
                 <Camera />
                 <Lights />
                 <MaterialLoader />

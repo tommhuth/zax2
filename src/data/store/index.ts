@@ -8,6 +8,7 @@ import {
 } from "../types"
 import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D"
 import { clamp } from "../utils"
+import { WORLD_BOTTOM_EDGE, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_TOP_EDGE } from "../../components/world/World"
 
 export const zoom = 70 - clamp(1 - (Math.min(window.innerWidth, window.innerHeight) - 400) / 600, 0, 1) * 30 
 
@@ -15,6 +16,18 @@ export let isSmallScreen = Math.min(window.innerWidth, window.innerHeight) < 900
 export const pixelSize = isSmallScreen ? 4 : 5
 export const dpr = 1 / pixelSize
 export const bulletSize: Tuple3 = [.15, .2, 1.5] 
+
+
+export const edgeMin = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -Infinity)
+export const edgeMax = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, Infinity)
+
+interface ControlsMap {
+    d?: boolean
+    a?: boolean
+    w?: boolean
+    s?: boolean
+    space?: boolean
+}
 
 export interface Store {
     loaded: boolean
@@ -49,11 +62,18 @@ export interface Store {
         state: BossState
         time: number 
     },
+    controls: {
+        startPointerPosition: Vector3
+        pointerPosition: Vector3
+        keys: ControlsMap 
+    },
     player: {
         speed: number
         cameraShake: number
         health: number
         score: number
+        position: Vector3
+        targetPosition: Vector3
         lastImpactLocation: Tuple3
         weapon: {
             fireFrequency: number,
@@ -98,7 +118,14 @@ const store = create<Store>(() => ({
         state: BossState.UNKNOWN,
         time: 0, 
     },
-    player: {
+    controls: {
+        startPointerPosition: new Vector3(), 
+        pointerPosition: new Vector3(), 
+        keys: {}
+    },
+    player: { 
+        position: new Vector3(),
+        targetPosition: new Vector3(), 
         speed: 0,
         cameraShake: 0,
         health: 100,
