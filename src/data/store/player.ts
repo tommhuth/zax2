@@ -1,16 +1,6 @@
 import { Object3D } from "three"
 import { store } from "."
 
-export function setLastImpactLocation(x: number, y: number, z: number) {
-    store.setState({
-        player: {
-            ...store.getState().player,
-            lastImpactLocation: [x, y, z]
-        },
-    })
-
-}
-
 export function setPlayerSpeed(speed: number) {
     store.setState({
         player: {

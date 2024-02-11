@@ -4,8 +4,8 @@ import Counter from "./world/Counter"
 import { Client } from "./world/SpatialHashGrid3D"
 
 export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
-    | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi"
-    | "floorBase" | "floorHi" | "floorMark" | "floorSolid"
+    | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi" | "black"
+    | "floorBase" | "floorHi" | "floorMark" | "floorSolid" | "bossFloorBase" | "bossFloorHi"
 
 export type InstanceName = "scrap" |  "line" | "box" | "sphere" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball"
@@ -22,7 +22,7 @@ export enum BossState {
     IDLE = "idle",
     ACTIVE = "active",  
     DEAD = "dead",
-    COMPLETE = "complete",
+    OUTRO = "outro",
     UNKNOWN = "unknown"
 }
 

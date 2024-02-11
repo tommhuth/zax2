@@ -6,7 +6,8 @@ import { store, useStore } from "../../data/store"
 import { removeBullet } from "../../data/store/actors"
 import { getIntersection, getCollisions, CollisionEventDetails } from "../../data/collisions"
 import { Tuple3 } from "../../types"
-import { Mesh } from "three"
+import { Mesh } from "three" 
+import { setLastImpactLocation } from "../../data/store/world"
 
 function createCollisionEvent( 
     detail: CollisionEventDetails
@@ -20,7 +21,7 @@ function createCollisionEvent(
 
 
 function BulletHandler() {
-    let lastImpactLocation = useStore(i => i.player.lastImpactLocation)
+    let lastImpactLocation = useStore(i => i.world.lastImpactLocation)
     let impactRef = useRef<Mesh>(null)
 
     useFrame((state, delta) => {
@@ -40,6 +41,8 @@ function BulletHandler() {
 
             for (let client of collisions) {
                 let intersection = getIntersection(client, bullet)
+
+                setLastImpactLocation(...intersection)
 
                 window.dispatchEvent(
                     createCollisionEvent({

@@ -5,7 +5,7 @@ import { setState } from "../../data/store/utils"
 import { useAnimationFrame, useWindowEvent } from "../../data/hooks"
 import { BossState } from "../../data/types" 
 
-import "./Ui.scss"
+import "./Ui.scss" 
 
 export default function Ui() {
     let state = useStore(i => i.state)
@@ -47,7 +47,7 @@ export default function Ui() {
             <div
                 className={"levelc"}
                 style={{
-                    display: boss?.state === BossState.DEAD ? "block": "none"
+                    display: boss?.state === BossState.OUTRO ? "block": "none"
                 }}
             >
                 <h1>Level complete</h1>
@@ -57,7 +57,7 @@ export default function Ui() {
             <div
                 className={"leveln"}
                 style={{
-                    display: boss?.state === BossState.DEAD ? "block": "none"
+                    display: boss?.state === BossState.OUTRO ? "block": "none"
                 }}
             >
                 <h1>Level {level}</h1>
@@ -67,7 +67,7 @@ export default function Ui() {
             <div
                 className="height"
                 style={{
-                    opacity: state === "intro" || !ready || boss?.state === BossState.DEAD ? 0 : 1
+                    opacity: state === "intro" || !ready || boss?.state === BossState.OUTRO ? 0 : 1
                 }}
             >
                 <div className="height__top">H</div>
@@ -92,7 +92,7 @@ export default function Ui() {
             <div
                 className="ui"
                 style={{
-                    opacity: state === "intro" || !ready || boss?.state === BossState.DEAD ? 0 : 1
+                    opacity: state === "intro" || !ready || boss?.state === BossState.OUTRO ? 0 : 1
                 }}
             >
                 {player.health.toFixed(0)}%

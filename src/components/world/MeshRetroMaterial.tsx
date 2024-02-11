@@ -18,8 +18,7 @@ type MeshRetroMaterialProps = {
     fogDensity?: number
     fogHeight?: number
     colorCount?: number
-    dithering?: boolean
-
+    dithering?: boolean 
     rightColor?: string
     rightColorIntensity?: number
     backColor?: string

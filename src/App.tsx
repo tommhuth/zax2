@@ -84,7 +84,7 @@ export default function Wrapper() {
                 <Lights />
                 <MaterialLoader />
 
-                <Only if={Config.DEBUG || Config.STATS}>
+                <Only if={Config.STATS}>
                     <Perf deepAnalyze style={{ zIndex: 90000 }} />
                 </Only>
             </Canvas>

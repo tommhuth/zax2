@@ -17,7 +17,6 @@ export const pixelSize = isSmallScreen ? 4 : 5
 export const dpr = 1 / pixelSize
 export const bulletSize: Tuple3 = [.15, .2, 1.5] 
 
-
 export const edgeMin = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -Infinity)
 export const edgeMax = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, Infinity)
 
@@ -44,6 +43,7 @@ export interface Store {
         rockets: Rocket[]
         planes: Plane[]
         buildings: Building[]
+        lastImpactLocation: Tuple3
     }
     effects: {
         particles: Particle[]
@@ -74,7 +74,6 @@ export interface Store {
         score: number
         position: Vector3
         targetPosition: Vector3
-        lastImpactLocation: Tuple3
         weapon: {
             fireFrequency: number,
             color: string,
@@ -100,6 +99,7 @@ const store = create<Store>(() => ({
         barrels: [],
         bullets: [],
         rockets: [],
+        lastImpactLocation: [0, 0, -Infinity],
     },
     effects: {
         explosions: [],
@@ -131,7 +131,6 @@ const store = create<Store>(() => ({
         health: 100,
         score: 0,
         object: null,
-        lastImpactLocation: [0, -10, 0],
         weapon: {
             fireFrequency: 150,
             damage: 35,

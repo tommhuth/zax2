@@ -187,6 +187,9 @@ export default function Player({
                 playerGroup.position.x += (targetPosition.x - playerGroup.position.x) * (.09 * 60 * nd)
                 playerGroup.position.y += (y - playerGroup.position.y) * (.08 * 60 * nd) 
                 playerGroup.position.z += speed * nd
+
+                playerGroup.rotation.z = (targetPosition.x - playerGroup.position.x) * -.15 
+                playerGroup.rotation.x = (targetPosition.y - playerGroup.position.y) * -.1
             } 
 
             if (boss.state === BossState.IDLE) {

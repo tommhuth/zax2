@@ -34,7 +34,7 @@ interface ShaderPart {
 interface UseShaderParams {
     uniforms?: Record<string, IUniform<any>>
     vertex?: ShaderPart
-    cacheKey?: string | number
+    cacheKey?: string
     fragment?: ShaderPart
 }
 

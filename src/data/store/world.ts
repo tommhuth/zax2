@@ -6,6 +6,17 @@ import random from "@huth/random"
 import { updateWorld } from "./utils"
 import { getNextWorldPart } from "../world/getNextWorldPart"
 
+export function setLastImpactLocation(x: number, y: number, z: number) {
+    store.setState({
+        world: {
+            ...store.getState().world,
+            lastImpactLocation: [x, y, z]
+        },
+    })
+
+}
+
+
 export function addWorldPart(part?: WorldPart) {
     let world = store.getState().world
     let lastPart = world.parts[world.parts.length - 1]

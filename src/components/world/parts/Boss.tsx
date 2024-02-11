@@ -1,24 +1,25 @@
-import { useEffect, useMemo } from "react"
+import { startTransition, useEffect } from "react"
 import { useStore } from "../../../data/store"
-import { floorBaseColor } from "../../../data/theme"
-import { WorldPartBoss } from "../../../data/types"
+import { floorBaseColor, floorFogIntensity } from "../../../data/theme"
+import { BossState, WorldPartBoss } from "../../../data/types"
 import { glsl } from "../../../data/utils"
 import { MeshRetroMaterial } from "../MeshRetroMaterial"
 import WorldPartWrapper from "../WorldPartWrapper"
 import Boss from "../actors/Boss"
 
 import { useGLTF } from "@react-three/drei"
-import { registerBoss } from "../../../data/store/boss"
+import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
 
 
-function Foggy({ color = floorBaseColor }) {
+export function BossFloorMaterial({ color = floorBaseColor, name }) {
     return (
         <MeshRetroMaterial
             usesTime
             color={color}
             isInstance={false}
-            fogDensity={0}
-            colorCount={14}
+            name={name}
+            fogDensity={floorFogIntensity}
+            colorCount={12} 
             rightColorIntensity={.5}
             fragmentShader={glsl` 
                 vec3 t = vec3(uTime, uTime * .25, uTime);
@@ -44,28 +45,22 @@ export function Model(props) {
     const materials = useStore(i => i.materials)
 
     return (
-        <group {...props} dispose={null}>
+        <group {...props} dispose={null} receiveShadow>
             <mesh 
                 receiveShadow
                 geometry={nodes.bossfloor_1.geometry} 
-                material={materials.floorBase}
-            >
-                <Foggy />
-            </mesh>
-
+                material={materials.bossFloorBase}
+            /> 
             <mesh 
                 receiveShadow
                 geometry={nodes.bossfloor_2.geometry} 
-            > 
-                <Foggy  color="white" />
-            </mesh>
+                material={materials.bossFloorHi}
+            />
             <mesh 
                 receiveShadow
                 geometry={nodes.bossfloor_3.geometry} 
-                material={materials.buildingHi}
-            >
-                <meshBasicMaterial color="black" />
-            </mesh> 
+                material={materials.black}
+            />
         </group>
     )
 }
@@ -76,16 +71,26 @@ export default function BossPart({
     id,
     position,
     size,
-}: WorldPartBoss) {
-    let baseZ = useMemo(() => position.z, [position])
-    let bossZ = useMemo(() => position.z + 20, [position])
-    let pauseAt = useMemo(() => position.z + 3, [position])
+}: WorldPartBoss) { 
+    let bossZ = position.z + 20 
+    let pauseAt = position.z + 3 
+    let state = useStore(i => i.boss.state)
 
-    useEffect(() => {
-        registerBoss({
-            pauseAt,
-            position: [0, 0, bossZ],
+    useEffect(()=> {
+        if (state === BossState.DEAD) {
+            setTimeout(() => setBossProp("state", BossState.OUTRO), 4000)
+        }
+    }, [state])
+
+    useEffect(() => { 
+        startTransition(()=> { 
+            registerBoss({
+                pauseAt,
+                position: [0, 0, position.z],
+            })
         })
+
+        return () => resetBoss()
     }, [])
 
     return (
@@ -93,17 +98,9 @@ export default function BossPart({
             size={size}
             position={position}
             id={id}
-        >
-            <directionalLight position={[-10, 5, 7]} intensity={0} />
-
-            <Boss
-                pauseAt={pauseAt}
-                startPosition={[0, 0, bossZ]}
-            />
-
-            <Model
-                position={[10, 0, baseZ]}
-            />
+        > 
+            <Boss startPosition={[0, 0, bossZ]} />
+            <Model position={[10, 0, position.z]} />
         </WorldPartWrapper>
     )
 }

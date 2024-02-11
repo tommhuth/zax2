@@ -25,11 +25,17 @@ let _size1 = new Vector3()
 let _size2 = new Vector3()
 let _center1 = new Vector3()
 
+interface GetCollisionsParam{
+    grid: SpatialHashGrid3D
+    position: Vector3
+    size: Tuple3
+}
+
 export function getCollisions({
     grid, 
     position,
     size,
-}: Omit<UseCollisionDetectionParams, "actions" | "predicate" | "interval"> & { grid: SpatialHashGrid3D }) {
+}: GetCollisionsParam) {
     let near = grid.findNear(position.toArray(), size)
     let result: Client[] = []
 
@@ -104,28 +110,8 @@ export interface CollisionEventDetails {
     intersection: Tuple3
     normal: Tuple3
     type: CollisionObjectType
-}
-
-interface UseCollisionEventParams {
-    name: string,
-    handler: (e: CustomEvent<CollisionEventDetails>) => void,
-    deps?: any[]
-}
-
-export function useBulletCollision({
-    name,
-    handler,
-    deps = []
-}: UseCollisionEventParams) {
-    useEffect(() => {
-        window.addEventListener(name, handler as EventListener)
-
-        return () => {
-            window.removeEventListener(name, handler as EventListener)
-        }
-    }, deps)
-}
-
+} 
+ 
 let _box3 = new Box3()
 let _ray = new Ray()
 let _center = new Vector3()

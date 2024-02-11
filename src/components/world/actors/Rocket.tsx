@@ -58,36 +58,35 @@ function explode(position: Vector3, size: Tuple3) {
             [0, [-.2, -size[1] / 2, -.25], .3]
         ]
 
-        for (let [delay, [x, y, z], radius] of explosions) {
-            setTimeout(() => {
-                createExplosion({
-                    position: [position.x + x, position.y + y, position.z + z],
-                    count: 10,
-                    shockwave: false,
-                    radius,
-                })
-            }, delay)
-        }
-
-        setTimeout(() => {
+        for (let [delay, [x, y, z], radius] of explosions) { 
             createExplosion({
-                position: [position.x, position.y, position.z],
-                count: 20,
-                radius: random.float(.8, 1),
-            })
+                position: [position.x + x, position.y + y, position.z + z],
+                count: 10,
+                shockwave: false,
+                radius,
+                delay
+            }) 
+        }
+ 
+        createExplosion({
+            position: [position.x, position.y, position.z],
+            count: 20,
+            radius: random.float(.8, 1),
+            delay: 320
+        })
 
-            createParticles({
-                position: position.toArray(),
-                speed: [5, 20],
-                speedOffset: [[-0, 0], [-0, 0], [-0, 0]],
-                positionOffset: [[-.5, .5], [-1, 1], [-.5, .5]],
-                normal: [0, 0, 0],
-                normalOffset: [[-1, 1], [-1, 1], [-1, 1]],
-                count: [10, 15],
-                radius: [.1, .55],
-                color: rocketColor,
-            })
-        }, 320)
+        createParticles({
+            position: position.toArray(),
+            speed: [5, 20],
+            speedOffset: [[-0, 0], [-0, 0], [-0, 0]],
+            positionOffset: [[-.5, .5], [-1, 1], [-.5, .5]],
+            normal: [0, 0, 0],
+            normalOffset: [[-1, 1], [-1, 1], [-1, 1]],
+            count: [10, 15],
+            radius: [.1, .55],
+            color: rocketColor,
+            delay: 320
+        }) 
     }
 }
 

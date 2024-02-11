@@ -8,18 +8,15 @@ export const validator: Record<WorldPartType, (previous: WorldPart) => boolean> 
     [WorldPartType.DEFAULT]: () => true,
     [WorldPartType.BUILDINGS_GAP]: () => true,
     [WorldPartType.BUILDINGS_LOW]: () => {
-        let { world } = store.getState()
+        let { world } = store.getState() 
 
-        return true
-
-        return world.parts.every(i => i.type !== WorldPartType.BUILDINGS_LOW)
+        return world.parts.filter(i => i.type === WorldPartType.BUILDINGS_LOW).length < 2
     },
     [WorldPartType.AIRSTRIP]: () => true,
     [WorldPartType.BOSS]: () => {
-        let { boss } = store.getState()
-        let validBossStates = [BossState.COMPLETE, BossState.UNKNOWN]
+        let { boss } = store.getState() 
 
-        if (new Date().getTime() - lastBossAt.getTime() > bossInterval && validBossStates.includes(boss.state)) {
+        if (Date.now() - lastBossAt.getTime() > bossInterval && boss.state === BossState.UNKNOWN) {
             lastBossAt = new Date()
 
             return true

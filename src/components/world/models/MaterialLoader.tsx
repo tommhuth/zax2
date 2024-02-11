@@ -4,6 +4,7 @@ import { MeshRetroMaterial } from "../MeshRetroMaterial"
 import { BoxGeometry, BufferGeometry, Material, Mesh } from "three"
 import { setMaterial } from "../../../data/store/utils"
 import { MaterialName } from "../../../data/types"
+import { BossFloorMaterial } from "../parts/Boss"
 
 function MaterialLoader() { 
     let materials: Record<MaterialName, ReactNode> = useMemo(() => {
@@ -20,6 +21,9 @@ function MaterialLoader() {
             bossBlue: <MeshRetroMaterial isInstance={false} color="blue" />,
             bossSecondaryBlue: <MeshRetroMaterial isInstance={false} color="#00f" />,
             bossWhite: <meshLambertMaterial color="white" />,
+            bossFloorBase: <BossFloorMaterial />,
+            bossFloorHi: <BossFloorMaterial color="red" />,
+            black: <meshLambertMaterial color="#000"  />,
         }
     }, []) 
 

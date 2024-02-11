@@ -21,17 +21,28 @@ export function registerBoss({
     })
 }
 
+export function resetBoss() {
+    store.setState({
+        boss: {
+            ...store.getState().boss,
+            pauseAt: Infinity, 
+            health: 1, 
+            state: BossState.UNKNOWN,
+            heatSeakers: [],
+            time: 0,  
+        }
+    })
+}
+
 export function defeatBoss( ) {
     let { boss } = store.getState()
-
-    if (boss) {
-        store.setState({
-            boss: {
-                ...boss,
-                state: BossState.DEAD,  
-            }
-        })
-    }
+ 
+    store.setState({
+        boss: {
+            ...boss,
+            state: BossState.DEAD,  
+        }
+    }) 
 }
 
 export function removeHeatSeaker(id: string) {
@@ -49,15 +60,13 @@ export function removeHeatSeaker(id: string) {
 
 export function setBossProp(key: string, value: any) {
     let { boss } = store.getState()
-
-    if (boss) {
-        store.setState({
-            boss: {
-                ...boss,
-                [key]: value
-            }
-        })
-    }
+ 
+    store.setState({
+        boss: {
+            ...boss,
+            [key]: value
+        }
+    }) 
 }
 
 export function createHeatSeaker([x, y, z]: Tuple3) {
@@ -91,31 +100,15 @@ export function createHeatSeaker([x, y, z]: Tuple3) {
 
         return id
     }
-}
-
-export function removeBoss() {
-    let boss = store.getState().boss
-
-    if (boss) {
-        for (let heatSeaker of boss.heatSeakers) {
-            removeHeatSeaker(heatSeaker.id)
-        }
-    }
-
-    store.setState({
-        boss: null
-    })
-}
+} 
 
 export function damageBoss(amount: number) {
     let boss = store.getState().boss
-
-    if (boss) {
-        store.setState({
-            boss: {
-                ...boss,
-                health: Math.max(boss.health - amount, 0)
-            }
-        })
-    }
+ 
+    store.setState({
+        boss: {
+            ...boss,
+            health: Math.max(boss.health - amount, 0)
+        }
+    }) 
 }
