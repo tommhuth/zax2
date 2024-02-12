@@ -13,7 +13,7 @@ import { WORLD_BOTTOM_EDGE, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_TOP_EDGE } 
 export const zoom = 70 - clamp(1 - (Math.min(window.innerWidth, window.innerHeight) - 400) / 600, 0, 1) * 30 
 
 export let isSmallScreen = Math.min(window.innerWidth, window.innerHeight) < 900
-export const pixelSize = isSmallScreen ? 4 : 5
+export const pixelSize = isSmallScreen ? 4 : 4 //5
 export const dpr = 1 / pixelSize
 export const bulletSize: Tuple3 = [.15, .2, 1.5] 
 
