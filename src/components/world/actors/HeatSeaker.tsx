@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber"
 import { removeHeatSeaker } from "../../../data/store/boss"
 import { setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { useLayoutEffect, useMemo } from "react"
-import { createExplosion } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal } from "../../../data/store/effects"
 import random from "@huth/random"
 import { HeatSeaker } from "../../../data/types"
 import { useCollisionDetection } from "../../../data/collisions"
@@ -55,6 +55,10 @@ export default function HeatSeaker({
             || position.y < .45
         ) {
             removeHeatSeaker(id)
+
+            if ( position.y < .45 ) {
+                createImpactDecal([position.x, .05, position.z], random.float(1.5, 2))
+            }
         }
 
         _dir.copy(position)

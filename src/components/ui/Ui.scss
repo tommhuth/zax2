@@ -69,12 +69,12 @@
     h1 {
         font-size: clamp(2em, 10vw, 9em); 
         line-height: .9;
-        margin-bottom: 1rem;
+        margin-bottom: .75rem;
         animation: infoin 5s 7s both  ;
     }
 
     p {
-        font-size: clamp(1em, 5vw, 4em); 
+        font-size: clamp(1em, 4vw, 3em); 
         color: rgb(21, 0, 214);
         animation: infoin 7s 6s both  ;
     }

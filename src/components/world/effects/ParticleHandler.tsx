@@ -36,16 +36,16 @@ function ParticleHandler() {
             position.y = Math.max(floorY + radius * .25, position.y + velocity.y * nd)
             position.z += velocity.z * nd
 
-            velocity.x = damp(velocity.x, 0, friction, nd)
-            velocity.z = damp(velocity.z, 0, friction, nd)
-
             velocity.x += acceleration.x * nd
             velocity.y += acceleration.y * nd
             velocity.z += acceleration.z * nd
 
-            rotation.x += -velocity.x * .075
+            velocity.x = damp(velocity.x, 0, friction, nd)
+            velocity.z = damp(velocity.z, 0, friction, nd)
+
+            rotation.x += -velocity.x * .05
             rotation.y += -velocity.y * .01
-            rotation.z += -velocity.z * .075
+            rotation.z += -velocity.z * .05
 
             if (position.y <= floorY + radius * .25) {
                 velocity.y *= -restitution

@@ -16,6 +16,7 @@ import { removeHeatSeaker, setBossProp } from "../data/store/boss"
 import { useCollisionDetection } from "../data/collisions" 
 import { easeInQuad } from "../data/shaping"
 import PlayerExhaust from "./PlayerExhaust"
+import { damp } from "three/src/math/MathUtils.js"
 
 let depth = 2
 
@@ -180,24 +181,24 @@ export default function Player({
     useFrame((state, delta) => {
         if (playerGroupRef.current  ) {
             let nd = ndelta(delta)
-            let playerGroup = playerGroupRef.current
+            let group = playerGroupRef.current
             let y = clamp(targetPosition.y, edgeMin.y, edgeMax.y)
             let { boss } = store.getState()
             let move = (speed: number) => {
-                playerGroup.position.x += (targetPosition.x - playerGroup.position.x) * (.09 * 60 * nd)
-                playerGroup.position.y += (y - playerGroup.position.y) * (.08 * 60 * nd) 
-                playerGroup.position.z += speed * nd
+                group.position.x = damp(group.position.x, targetPosition.x, 4, nd)
+                group.position.y = damp(group.position.y, y, 5, nd)  
+                group.position.z += speed * nd 
 
-                playerGroup.rotation.z = (targetPosition.x - playerGroup.position.x) * -.15 
-                playerGroup.rotation.x = (targetPosition.y - playerGroup.position.y) * -.1
+                group.rotation.z = (targetPosition.x - group.position.x) * -.15 
+                group.rotation.x = (targetPosition.y - group.position.y) * -.1
             } 
 
             if (boss.state === BossState.IDLE) {
-                let t = 1 - clamp((playerGroup.position.z - boss.pauseAt - 3) / 3, 0, 1)
+                let t = 1 - clamp((group.position.z - boss.pauseAt - 3) / 3, 0, 1)
 
                 move(data.speed * t)
 
-                if (t < .1) {
+                if (t < .5) {
                     setBossProp("state", BossState.ACTIVE)
                 }
             } else if (boss.state === BossState.ACTIVE) { 
@@ -210,7 +211,7 @@ export default function Player({
                 move(data.speed)
             }
  
-            position.copy(playerGroup.position)
+            position.copy(group.position)
             client.position = position.toArray()
             grid.updateClient(client)
         }

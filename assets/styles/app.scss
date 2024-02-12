@@ -89,10 +89,10 @@ body::before {
 }
 
 .title {
-    font-size: min(18vw, 28vh); 
-    font-weight: 400;
-    font-family: edunline;
-    line-height: .8; 
+    font-size: min(9vw, 15vh); 
+    font-weight: bold; 
+    line-height: 1; 
+    letter-spacing: -.01em;
 
     @media (max-width: 700px), (max-height: 500px) { 
         line-height: .9;

@@ -167,11 +167,15 @@ export function createExplosion({
     }, delay)
 }
 
-export function createImpactDecal(position: Tuple3, scale = random.float(1.85, 3)) {
+export function createImpactDecal(
+    position: Tuple3,
+    scale = random.float(1.85, 3),
+    opacity = random.float(.4, .6)
+) {
     let { impact } = store.getState().instances
     let index = impact.index.next()
 
-    setBufferAttribute(impact.mesh.geometry, "aOpacity", random.float(.3, .5), index)
+    setBufferAttribute(impact.mesh.geometry, "aOpacity", opacity, index)
     setMatrixAt({
         instance: impact.mesh,
         index,
@@ -283,7 +287,8 @@ export function createParticles({
                 radius: typeof radius === "number" ? radius : radius[0] + (radius[1] - radius[0]) * (index / (list.length - 1)),
                 color,
                 lifetime: 0,
-                maxLifetime: velocity.length() * 10,
+                // this is stupid
+                maxLifetime: velocity.length() * 17,
             }
         })
 

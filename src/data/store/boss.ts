@@ -12,7 +12,7 @@ export function registerBoss({
         boss: {
             pauseAt,
             position,
-            health: 1,
+            health: 100,
             maxHealth: 100,
             state: BossState.IDLE,
             heatSeakers: [],
@@ -22,9 +22,11 @@ export function registerBoss({
 }
 
 export function resetBoss() {
-    store.setState({
+    let state = store.getState()
+
+    store.setState({ 
         boss: {
-            ...store.getState().boss,
+            ...state.boss,
             pauseAt: Infinity, 
             health: 1, 
             state: BossState.UNKNOWN,
@@ -35,9 +37,13 @@ export function resetBoss() {
 }
 
 export function defeatBoss( ) {
-    let { boss } = store.getState()
+    let { boss, world } = store.getState()
  
     store.setState({
+        world: {
+            ... world,
+            level: world.level + 1,
+        },
         boss: {
             ...boss,
             state: BossState.DEAD,  

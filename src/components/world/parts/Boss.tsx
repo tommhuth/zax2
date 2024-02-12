@@ -9,7 +9,7 @@ import Boss from "../actors/Boss"
 
 import { useGLTF } from "@react-three/drei"
 import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
-
+import Barrel from "../spawner/Barrel"
 
 export function BossFloorMaterial({ color = floorBaseColor, name }) {
     return (
@@ -19,7 +19,7 @@ export function BossFloorMaterial({ color = floorBaseColor, name }) {
             isInstance={false}
             name={name}
             fogDensity={floorFogIntensity}
-            colorCount={12} 
+            colorCount={13} 
             rightColorIntensity={.5}
             fragmentShader={glsl` 
                 vec3 t = vec3(uTime, uTime * .25, uTime);
@@ -27,14 +27,12 @@ export function BossFloorMaterial({ color = floorBaseColor, name }) {
                 float n2 = easeInOutQuad((noise(vGlobalPosition * .1 + t * 1.) + 1.) / 2.);
                 float h = easeInQuad(clamp((-(vGlobalPosition.y + 1.) / 6.), 0., 1.));
                 float h2 = easeInQuad(clamp((-(vGlobalPosition.y + 5.5) / 1.5), 0., 1.));
+ 
+                vec3 color = vec3(0., 0., 0.1);
+                vec3 highlight = vec3(0., .15, .6); 
 
-                /*
-                gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(.0, 0.7, 1.), clamp(n * h + h2, 0., 1.));
-                gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(.0, .01, .8), n2 * h * .57);
-                */
-
-                gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0., .2, 1.0), clamp(n * h + h2, 0., 1.) * 1.);
-                gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1., 1., 1.) , n2 * h * 1.);
+                gl_FragColor.rgb = mix(gl_FragColor.rgb, highlight, clamp(n * h + h2, 0., 1.));
+                gl_FragColor.rgb = mix(gl_FragColor.rgb, color, n2 * h * 1.);
             `}
         />
     )
@@ -72,8 +70,8 @@ export default function BossPart({
     position,
     size,
 }: WorldPartBoss) { 
-    let bossZ = position.z + 20 
-    let pauseAt = position.z + 3 
+    let bossZ = position.z + 13 
+    let pauseAt = position.z 
     let state = useStore(i => i.boss.state)
 
     useEffect(()=> {
@@ -101,6 +99,15 @@ export default function BossPart({
         > 
             <Boss startPosition={[0, 0, bossZ]} />
             <Model position={[10, 0, position.z]} />
+            <Barrel 
+                position={[6,0,5]}
+            />
+            <Barrel 
+                position={[5,0,18]}
+            />
+            <Barrel 
+                position={[5,0,21]}
+            />
         </WorldPartWrapper>
     )
 }
