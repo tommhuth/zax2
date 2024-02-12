@@ -151,6 +151,13 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
             })
 
             createExplosion({
+                position: position.toArray(),
+                radius: 0.7,
+                count: 14, 
+                shockwave: true, 
+            })
+
+            createExplosion({
                 position: [position.x, 1, position.z],
                 radius: 0.8,
                 count: 20,
