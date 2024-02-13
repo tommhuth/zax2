@@ -237,8 +237,7 @@ export interface Particle {
     friction: number
     mounted: boolean
     restitution: number
-    lifetime: number
-    maxLifetime: number
+    time: number 
     instance: Instance
     radius: number
     rotation: Vector3

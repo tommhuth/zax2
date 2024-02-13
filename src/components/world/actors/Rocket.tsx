@@ -33,11 +33,9 @@ function explode(position: Vector3, size: Tuple3) {
     if (shouldDoFireball) {
         createParticles({
             position: position.toArray(),
-            speed: [15, 25],
-            speedOffset: [[-5, 5], [0, 5], [-5, 5]],
-            positionOffset: [[-.5, .5], [0, 1], [-.5, .5]],
-            normal: [0, 1, 0],
-            normalOffset: [[-.5, .5], [0, 0], [-.5, .5]],
+            speed: [15, 25], 
+            normal: [0, 0, 0],
+            spread: [[-1, 1], [-1, 1]],
             count: [10, 15],
             radius: [.2, .6],
             color: rocketColor,
@@ -77,11 +75,9 @@ function explode(position: Vector3, size: Tuple3) {
 
         createParticles({
             position: position.toArray(),
-            speed: [5, 20],
-            speedOffset: [[-0, 0], [-0, 0], [-0, 0]],
-            positionOffset: [[-.5, .5], [-1, 1], [-.5, .5]],
+            speed: [5, 20],  
             normal: [0, 0, 0],
-            normalOffset: [[-1, 1], [-1, 1], [-1, 1]],
+            spread: [[-1, 1], [-1, 1]],
             count: [10, 15],
             radius: [.1, .55],
             color: rocketColor,
@@ -115,21 +111,12 @@ export default function Rocket({
 
     useCollisionDetection({
         actions: {
-            bullet: ( { bullet, intersection, client, normal, type }  ) => {
+            bullet: ( { bullet, client, type }  ) => {
                 if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "rocket") {
                     return
                 }
     
-                damageRocket(id, bullet.damage)
-                createParticles({
-                    position: intersection,
-                    count: [2, 4],
-                    speed: [8, 12],
-                    positionOffset: [[0, 0], [0, 0], [0, 0]],
-                    speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                    normal,
-                    color: "purple",
-                })
+                damageRocket(id, bullet.damage) 
             }
         }
     }) 

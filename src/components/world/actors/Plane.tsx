@@ -32,10 +32,9 @@ function explode(position: Vector3) {
     })
     createParticles({
         position: position.toArray(),
-        speed: [12, 16],
-        speedOffset: [[-5, 5], [0, 20], [-15, 5]],
-        positionOffset: [[-.5, .5], [-.5, .5], [-.5, .5]],
-        normal: [0, 0, -.5],
+        speed: [12, 16], 
+        spread: [[-1, 1], [-1, 1]],
+        normal: [0, 0, 0],
         count: [4, 8],
         radius: [.1, .45],
         color: planeColor,
@@ -92,8 +91,8 @@ function Plane({
                     position: intersection,
                     count: [1, 3],
                     speed: [8, 12],
-                    positionOffset: [[0, 0], [0, 0], [0, 0]],
-                    speedOffset: [[-5, 5], [0, 0], [5, 18]],
+                    offset: [[0, 0], [0, 0], [0, 0]],
+                    spread: [[0, 0], [0, 0]],
                     normal,
                     color: "yellow",
                 }) 

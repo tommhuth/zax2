@@ -16,14 +16,12 @@ export default function Building({ size, id, position }: Building) {
                 } 
       
                 createParticles({
-                    position: intersection,
-                    positionOffset: [[0, 0], [0, 0], [0, 0]],
-                    speed: [7, 14],
-                    speedOffset: [[-2, 2], [-2, 2], [-2, 2]],
+                    position: intersection, 
+                    speed: [7, 14], 
                     normal,
                     count: [1, 2],
-                    radius: [.1, .2],
-                    friction: [.8, .95],
+                    stagger: [0,0],
+                    radius: [.1, .2], 
                     color: "#fff",
                 }) 
             }

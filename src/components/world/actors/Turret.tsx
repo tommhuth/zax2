@@ -35,10 +35,9 @@ function explode(position: Vector3, size: Tuple3) {
         radius: random.float(.6, .7), 
     })
     createParticles({
-        position: position.toArray(),
-        positionOffset: [[-1, 1], [0, 2], [-1, 1]],
-        speed: [6, 22],
-        speedOffset: [[-10, 10], [0, 5], [-10, 10]],
+        position: position.toArray(), 
+        speed: [14, 22],
+        spread: [[-1, 1], [0, 1]],
         normal: [0, 1, 0],
         count: [8, 12],
         radius: [.1, .5],
@@ -68,21 +67,11 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
 
     useCollisionDetection({
         actions: {
-            bullet: ( { bullet, intersection, client, normal, type   }) => {  
+            bullet: ( { bullet, client, type   }) => {  
                 if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "turret") {
                     return
                 }
-    
-                createParticles({
-                    position: intersection,
-                    positionOffset: [[0, 0], [0, 0], [0, 0]],
-                    count: [1, 2],
-                    speed: [11, 22],
-                    speedOffset: [[-5, 5], [0, 0], [-5, 5]],
-                    normal,
-                    normalOffset: [[0, 0], [0, 0], [0, 0]],
-                    color: "white"
-                })
+     
                 damageTurret(id, bullet.damage)
             }
         }

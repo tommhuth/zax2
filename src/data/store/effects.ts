@@ -191,23 +191,6 @@ export function removeExplosion(id: string | string[]) {
     })
 }
 
-interface CreateParticlesParams {
-    gravity?: Tuple3
-    position: Tuple3 // base position
-    positionOffset?: [x: Tuple2, y: Tuple2, z: Tuple2] // additional position offset: ;
-    normal: Tuple3 // main particle direction
-    speed?: Tuple2 // speed along normal
-    speedOffset?: [x: Tuple2, y: Tuple2, z: Tuple2] // additional speed offset
-    normalOffset?: [x: Tuple2, y: Tuple2, z: Tuple2]
-    count?: Tuple2 | number
-    restitution?: Tuple2
-    friction?: Tuple2 | number
-    radius?: Tuple2 | number
-    color?: string
-    name?: string
-    delay?: number
-}
-
 export function createScrap(
     position: Tuple3,
     radius: number,
@@ -238,35 +221,56 @@ export function createScrap(
     })
 }
 
+interface CreateParticlesParams { 
+    position: Tuple3 // base position
+    offset?: [x: Tuple2, y: Tuple2, z: Tuple2] // additional position offset
+    normal: Tuple3 // main particle direction
+    speed?: Tuple2 // base speed 
+    spread?: [xz: Tuple2, y: Tuple2] // normal offset
+    count?: Tuple2 | number
+    restitution?: Tuple2
+    stagger?: Tuple2 // individual delay in ms
+    friction?: Tuple2 | number
+    radius?: Tuple2 | number
+    color?: string
+    name?: string
+    delay?: number // base delay
+}
+
 let _vec3 = new Vector3()
 
-export function createParticles({
-    name = "sphere",
+export function createParticles({ 
     position = [0, 0, 0],
-    positionOffset = [[-1, 1], [-1, 1], [-1, 1]],
+    offset = [[-1, 1], [-1, 1], [-1, 1]],
     normal = [0, 1, 0],
-    normalOffset = [[-.2, .2], [-.2, .2], [-.2, .2]],
-    speed = [10, 20],
-    speedOffset = [[0, 0], [0, 0], [0, 0]],
+    spread = [[-.85, .85], [0, .5]], 
+    speed = [10, 20], 
     count = [2, 3],
-    friction = [.9, .98],
-    gravity = [0, -50, 0],
+    friction = [1.25, 1.5], // 0 - 5
     restitution = [.2, .5],
     color = "#FFFFFF",
     radius = [.15, .25],
+    stagger = [-250, 0],
     delay = 0,
 }: CreateParticlesParams) {
-    setTimeout(() => {
-        normal = _vec3.set(...normal).normalize().toArray()
-
-        let instance = store.getState().instances[name]
+    setTimeout(() => { 
+        let gravity = [0, -50, 0]
+        let instance = store.getState().instances["sphere"]
         let particles: Particle[] = new Array(Array.isArray(count) ? random.integer(...count) : count).fill(null).map((i, index, list) => {
+            normal = _vec3.set(...normal)
+                .add(new Vector3(
+                    random.float(...spread[0]), 
+                    random.float(...spread[1]) , 
+                    random.float(...spread[0])
+                ))
+                .normalize()
+                .toArray()
+            
             let velocity = new Vector3(
-                (normal[0] + random.float(...normalOffset[0])) * random.float(...speed) + random.float(...speedOffset[0]),
-                (normal[1] + random.float(...normalOffset[1])) * random.float(...speed) + random.float(...speedOffset[1]),
-                (normal[2] + random.float(...normalOffset[2])) * random.float(...speed) + random.float(...speedOffset[2]),
-            )
-
+                normal[0] * random.float(...speed), //+ random.float(...speedOffset[0]),  + random.float(...normalOffset[0])
+                normal[1] * random.float(...speed), //+ random.float(...speedOffset[1]),
+                normal[2] * random.float(...speed), //+ random.float(...speedOffset[2]),
+            ) 
             let j = instance.index.next()
 
             return {
@@ -274,7 +278,9 @@ export function createParticles({
                 instance,
                 mounted: false,
                 index: j,
-                position: new Vector3(...position.map((i, index) => i + random.float(...positionOffset[index]))),
+                position: new Vector3(
+                    ...position.map((i, index) => i + random.float(...offset[index]))
+                ),
                 acceleration: new Vector3(...gravity),
                 rotation: new Vector3(
                     random.float(0, Math.PI * 2),
@@ -286,9 +292,7 @@ export function createParticles({
                 friction: typeof friction == "number" ? friction : random.float(...friction),
                 radius: typeof radius === "number" ? radius : radius[0] + (radius[1] - radius[0]) * (index / (list.length - 1)),
                 color,
-                lifetime: 0,
-                // this is stupid
-                maxLifetime: velocity.length() * 17,
+                lifetime: random.integer(...stagger), 
             }
         })
 

@@ -83,21 +83,12 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                 damageBoss(10)
                 createParticles({
                     position: intersection,
-                    positionOffset: [
-                        [0, 0],
-                        [0, 0],
-                        [0, 0],
-                    ],
-                    speed: [3, 29],
-                    speedOffset: [
-                        [0, 0],
-                        [0, 0],
-                        [0, 0],
-                    ],
+                    offset: [[0, 0], [0, 0], [0, 0]],
+                    speed: [3, 29], 
+                    spread: [[0,0], [0,0]],
                     normal,
                     count: [0, 3],
-                    radius: [0.1, 0.3],
-                    friction: [0.8, 0.95],
+                    radius: [0.1, 0.3], 
                     color: "#00f",
                 })
             },
@@ -130,13 +121,12 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                         basePosition[1] + random.float((-bossSize[1] / 2) * 0.5, (bossSize[1] / 2) * 0.5),
                         basePosition[2],
                     ],
-                    positionOffset: [ [0, 0], [0, 0], [0, 0] ],
-                    speed: [-15, 15],
-                    speedOffset: [ [0, 0],  [0, 0], [0, 0] ],
+                    offset: [ [0, 0], [0, 0], [0, 0] ],
+                    speed: [0, 25],
+                    spread: [ [-1, 1], [0, 1]],
                     normal: [random.float(-1, 1), 1, random.float(-1, 1)],
                     count: [8, 14],
-                    radius: [0.1, 0.4],
-                    friction: [0.75, 0.85],
+                    radius: [0.1, 0.4], 
                     color: "#00f",
                     delay: delay * 1.1,
                 })
