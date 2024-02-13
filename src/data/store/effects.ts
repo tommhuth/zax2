@@ -292,7 +292,7 @@ export function createParticles({
                 friction: typeof friction == "number" ? friction : random.float(...friction),
                 radius: typeof radius === "number" ? radius : radius[0] + (radius[1] - radius[0]) * (index / (list.length - 1)),
                 color,
-                lifetime: random.integer(...stagger), 
+                time: random.integer(...stagger), 
             }
         })
 
