@@ -44,16 +44,11 @@
 
     h1 {
         font-size: clamp(2em, 10vw, 9em); 
-        line-height: .9;
+        line-height: 1;
         margin-bottom: 1rem;
-        animation: infoin 7s 1s both 1;
-    }
-
-    p { 
-        font-size: clamp(1em, 6vw, 5em); 
-        color: rgb(21, 0, 214);
-        animation: infoin 6s 2s both 1;
-    }
+        letter-spacing: -.01em;
+        animation: infoin 5s both;
+    } 
 }
 
 .leveln {
@@ -70,13 +65,14 @@
         font-size: clamp(2em, 10vw, 9em); 
         line-height: .9;
         margin-bottom: .75rem;
-        animation: infoin 5s 7s both  ;
+        letter-spacing: -.01em;
+        animation: infoin 4s 4.5s both  ;
     }
 
     p {
         font-size: clamp(1em, 4vw, 3em); 
         color: rgb(21, 0, 214);
-        animation: infoin 7s 6s both  ;
+        animation: infoin 6s 4s both  ;
     }
 }
 

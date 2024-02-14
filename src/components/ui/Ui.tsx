@@ -50,8 +50,7 @@ export default function Ui() {
                     display: boss?.state === BossState.OUTRO ? "block": "none"
                 }}
             >
-                <h1>Level complete</h1>
-                <p>{player.score.toLocaleString("en")}</p>
+                <h1>Level complete</h1> 
             </div>
 
             <div

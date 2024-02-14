@@ -10,6 +10,7 @@ import Boss from "../actors/Boss"
 import { useGLTF } from "@react-three/drei"
 import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
 import Barrel from "../spawner/Barrel"
+import Building from "../spawner/Building"
 
 export function BossFloorMaterial({ color = floorBaseColor, name }) {
     return (
@@ -46,6 +47,7 @@ export function Model(props) {
         <group {...props} dispose={null} receiveShadow>
             <mesh 
                 receiveShadow
+                castShadow
                 geometry={nodes.bossfloor_1.geometry} 
                 material={materials.bossFloorBase}
             /> 
@@ -70,8 +72,8 @@ export default function BossPart({
     position,
     size,
 }: WorldPartBoss) { 
-    let bossZ = position.z + 13 
-    let pauseAt = position.z 
+    let bossZ = position.z + 23 
+    let pauseAt = position.z + 5
     let state = useStore(i => i.boss.state)
 
     useEffect(()=> {
@@ -100,13 +102,17 @@ export default function BossPart({
             <Boss startPosition={[0, 0, bossZ]} />
             <Model position={[10, 0, position.z]} />
             <Barrel 
-                position={[6,0,5]}
+                position={[6,0,15]}
             />
             <Barrel 
-                position={[5,0,18]}
+                position={[5,0,32]}
             />
             <Barrel 
-                position={[5,0,21]}
+                position={[5.5,0,29]}
+            />
+            <Building 
+                position={[0,0,1]}
+                size={[4, 2, 4]}
             />
         </WorldPartWrapper>
     )

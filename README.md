@@ -1,9 +1,9 @@
 # Zax
 
 ## Todo 
+- boss floor fog fix
 - more destructable ground objects
-- enemy plane 3d model  
-- particles cleanup 
+- enemy plane 3d model   
 - boss rocket 3d model 
 - actual level design  
 - more decorational 3d objs 

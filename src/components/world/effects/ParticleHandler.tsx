@@ -22,6 +22,7 @@ function ParticleHandler() {
                 mounted, color, rotation, time
             } = particle 
             let grounded = position.y <= radius + .15
+            // haha
             let magnitude = Math.abs(velocity.x) + Math.abs( velocity.z) 
 
             if (!mounted) {

@@ -49,7 +49,7 @@ export function makeStart(previous: BaseWorldPart): WorldPartStart {
 } 
 
 export function makeBoss(previous: BaseWorldPart): WorldPartBoss {
-    let depth = 85
+    let depth = 96
 
     return {
         ...baseProps(previous),
