@@ -126,14 +126,14 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                     spread: [ [-1, 1], [0, 1]],
                     normal: [random.float(-1, 1), 1, random.float(-1, 1)],
                     count: [8, 14],
-                    radius: [0.1, 0.4], 
+                    radius: [0.1, 0.5], 
                     color: "#00f",
                     delay: delay * 1.1,
                 })
             }
 
             createExplosion({
-                position: [position.x, 0, position.z],
+                position: [position.x, .5, position.z],
                 radius: 0.7,
                 count: 16, 
                 shockwave: true,

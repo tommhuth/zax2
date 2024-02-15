@@ -50,8 +50,7 @@ function Instances() {
 
             <InstancedMesh
                 name="dirt"
-                count={5}
-                castShadow
+                count={5} 
                 receiveShadow
             >
                 <primitive
@@ -77,9 +76,21 @@ function Instances() {
                 />
                 <MeshRetroMaterial name="sphere" />
             </InstancedMesh>
+            <InstancedMesh
+                name="box"
+                count={20}
+                castShadow
+                receiveShadow
+            >
+                <boxGeometry
+                    args={[1, 1, 1, 1, 1, 1]}
+                    attach="geometry"
+                />
+                <meshLambertMaterial color={"white"} name="box" />
+            </InstancedMesh>
 
             <InstancedMesh
-                castShadow wad
+                castShadow  
                 name="line"
                 count={50}
                 colors={false}
@@ -97,6 +108,7 @@ function Instances() {
             <InstancedMesh
                 name="scrap"
                 count={50}
+                receiveShadow
                 colors={true}
             >
                 <primitive
@@ -119,6 +131,7 @@ function Instances() {
             <InstancedMesh
                 name="turret"
                 count={15}
+                receiveShadow
             >
                 <primitive
                     object={(turret2.nodes.turret2 as Mesh).geometry}
@@ -156,6 +169,7 @@ function Instances() {
             <InstancedMesh
                 name="platform"
                 count={8}
+                receiveShadow
             >
                 <primitive
                     object={(platform.nodes.platform as Mesh).geometry}
@@ -169,9 +183,9 @@ function Instances() {
             </InstancedMesh>
 
             <InstancedMesh
-                name="device"
-                castShadow={false}
+                name="device" 
                 count={30}
+                receiveShadow
             >
                 <primitive
                     object={(device.nodes.device as Mesh).geometry}

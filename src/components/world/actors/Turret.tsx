@@ -99,12 +99,12 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
                 createScrap([position.x, floorLevel, position.z], 2, turretColor)
             })
         }
-    }, [health])
+    }, [health]) 
 
     // shooting
     useFrame((state, delta) => {
         let { player: { object: playerObject }, world } = store.getState()
-        let canShoot = world.frustum.containsPoint(position)
+        let canShoot = world.frustum.containsPoint(position) && health > 0
 
         if (shootTimer.current > nextShotAt.current && canShoot && playerObject) {
             let playerPosition = playerObject.position
@@ -114,7 +114,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
             let offsetRadius = size[0] + 1.25
             let offsetx = Math.cos(rotation) * offsetRadius
             let offsetz = Math.sin(rotation) * offsetRadius
-            let bulletSpeed = 18
+            let bulletSpeed = 18 
 
             startTransition(() => {
                 createBullet({

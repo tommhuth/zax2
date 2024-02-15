@@ -100,13 +100,13 @@ export default function Lights() {
                 color={"#fff"}
             />
 
-            <directionalLight position={[13, 6, 10]} intensity={.4} /> 
+            <directionalLight position={[13, 6, 10]} intensity={.3} /> 
             
             <directionalLight
                 ref={shadowLightRef}
                 color={"#b4e2ff"}
                 position={[0, 15, 0]}
-                intensity={.6}
+                intensity={1}
                 castShadow
                 shadow-radius={1.5}
                 shadow-camera-near={0} // y

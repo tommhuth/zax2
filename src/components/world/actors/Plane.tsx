@@ -13,7 +13,7 @@ import { createBullet, damagePlane, damageTurret, removePlane } from "../../../d
 import { store, useStore } from "../../../data/store"
 import { damageBarrel } from "../../../data/store/world"
 import { increaseScore } from "../../../data/store/player"
-import { createExplosion, createParticles } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { planeColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { damp } from "three/src/math/MathUtils.js"
@@ -74,14 +74,11 @@ function Plane({
         data.removed = true
     } 
 
-    useCollisionDetection({
-        predicate() {
-            return health === 0
-        },
+    useCollisionDetection({ 
         size,
         position, 
         actions: {
-            bullet: ( { bullet, client, intersection, normal, type  }) => {
+            bullet: ( { bullet, client, intersection, normal, type  }) => { 
                 if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "plane") {
                     return
                 }
@@ -143,8 +140,6 @@ function Plane({
         let canShoot = health > 0
 
         if (!shootDisabled && canShoot && data.shootTimer > data.nextShotAt + heightPenalty * fireFrequency) {
-            let bulletSpeed = 30
-
             startTransition(() => {
                 createBullet({
                     position: [
@@ -154,7 +149,7 @@ function Plane({
                     ],
                     damage: 10,
                     color: "#fff",
-                    speed: bulletSpeed,
+                    speed: 30,
                     rotation: -Math.PI * .5,
                     owner: Owner.ENEMY
                 })
@@ -193,17 +188,18 @@ function Plane({
         }
     })
 
+    // grounding
     useFrame((state, delta) => {
         if (health === 0) {
             if (!data.grounded) {
                 let nd = ndelta(delta)
 
-                data.gravity += -.015 * 60 * nd
-                position.y += data.gravity * 60 * nd
-                data.rotation[0] += data.tilt * 60 * nd
+                data.gravity += .25 * nd
+                position.y -= data.gravity * 60 * nd
+                data.rotation[0] += data.tilt * .5 * 60 * nd
                 data.rotation[2] += data.tilt * .25 * 60 * nd
-                data.grounded = position.y <= (bottomY + .5 / 2)
-                data.actualSpeed = damp(data.actualSpeed, 0, .5, delta)
+                data.actualSpeed = damp(data.actualSpeed, 0, .5, nd)
+                data.grounded = position.y <= (bottomY + .5 / 2) 
 
                 if (data.grounded) {
                     startTransition(() => {
@@ -215,9 +211,19 @@ function Plane({
                             fireballPath: [[position.x, 0, position.z], [0, 4, 0]]
                         })
                     })
+                    createParticles({
+                        position: [position.x, 0, position.z],
+                        normal: [0,1,0],
+                        speed: [10, 20],
+                        count: [6, 10],
+                        color: planeColor,
+                        spread: [[-1, 1], [0, 1]]
+                    })
+                    createScrap([position.x, .1, position.z], 1, planeColor)
+                    createImpactDecal([position.x, .1, position.z], 3)
                 }
             } else { 
-                data.actualSpeed = damp(data.actualSpeed, 0, 1, delta)
+                data.actualSpeed = damp(data.actualSpeed, 0, 2.25, delta)
                 position.y = (bottomY + .5 / 2)
             }
         } else {
@@ -225,7 +231,10 @@ function Plane({
 
             position.y = easeInOutCubic(t) * (targetY - startY) + startY
         }
+    })
 
+    // takeoff
+    useFrame((state, delta)=> { 
         if (takeoffDistance > position.z) {
             data.time += delta * 1000
         }

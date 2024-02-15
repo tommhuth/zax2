@@ -59,7 +59,7 @@ export default function Ui() {
                     display: boss?.state === BossState.OUTRO ? "block": "none"
                 }}
             >
-                <h1>Level {level}</h1>
+                <h1>Level#{level}</h1>
                 <p>Now entering</p>
             </div>
 

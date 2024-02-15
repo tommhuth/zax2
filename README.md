@@ -5,8 +5,10 @@
 - more destructable ground objects
 - enemy plane 3d model   
 - boss rocket 3d model 
-- actual level design  
-- more decorational 3d objs 
+- actual level design   
+- plane cleanup
+- edge building mat cleanup
+- exploding plants?
 
 ## Assets
 - https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html

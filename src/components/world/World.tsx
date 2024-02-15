@@ -92,7 +92,7 @@ const Actors = memo(() => {
     let turrets = useStore(i => i.world.turrets)
     let planes = useStore(i => i.world.planes)
     let barrels = useStore(i => i.world.barrels)
-    let rockets = useStore(i => i.world.rockets)
+    let rockets = useStore(i => i.world.rockets) 
 
     return (
         <>
