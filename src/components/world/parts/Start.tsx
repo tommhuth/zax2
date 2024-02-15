@@ -8,6 +8,7 @@ import Rocket from "../spawner/Rocket"
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
 import { AsteroidStart } from "../decoration/AsteroidStart"
+import Dirt from "../decoration/Dirt"
 
 export default function Start({
     id,
@@ -20,6 +21,10 @@ export default function Start({
             position={position}
             id={id}
         >
+            <Dirt 
+                position={[0,0,-5]}
+                scale={2}
+            />
             <AsteroidStart position={[0, 0, position.z]} />
 
             <Building

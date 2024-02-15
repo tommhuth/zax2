@@ -1,7 +1,12 @@
 import { useLoader } from "@react-three/fiber"
 import InstancedMesh from "./InstancedMesh"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
-import { deviceColor, groundFogIntensity, platformColor, turretColor } from "../../../data/theme"
+import {
+    deviceColor,
+    groundFogIntensity,
+    platformColor,
+    turretColor,
+} from "../../../data/theme"
 import { FrontSide, Mesh } from "three"
 import { MeshRetroMaterial } from "../MeshRetroMaterial"
 import { memo } from "react"
@@ -12,41 +17,93 @@ import Exhaust from "./instances/Exhaust"
 import { glsl } from "../../../data/utils"
 
 function Instances() {
-    let [
-        turret2, rocket, platform, device, scrap
-    ] = useLoader(GLTFLoader, [
+    let [turret2, rocket, platform, device, scrap, cable, dirt] = useLoader(GLTFLoader, [
         "/models/turret2.glb",
         "/models/rocket.glb",
         "/models/platform.glb",
         "/models/device.glb",
         "/models/scrap.glb",
+        "/models/cable.glb",
+        "/models/dirt.glb",
     ])
 
     return (
         <>
             <InstancedMesh
-                name="sphere"
-                count={100}
-                castShadow={true}
+                name="cable"
+                count={5}
+                castShadow
+                receiveShadow
             >
-                <sphereGeometry args={[1, 3, 4]} attach="geometry" />
-                <MeshRetroMaterial
-                    name="sphere"
+                <primitive
+                    object={(cable.nodes.cable as Mesh).geometry}
+                    dispose={null}
+                    attach="geometry"
+                />
+                <MeshRetroMaterial 
+                    color={"#0022dd"}
+                    name="cable"
+                    emissive={"#0022dd"} 
+                    emissiveIntensity={.05}
                 />
             </InstancedMesh>
 
             <InstancedMesh
-                castShadow={true}
+                name="dirt"
+                count={5}
+                castShadow
+                receiveShadow
+            >
+                <primitive
+                    object={(dirt.nodes.dirt as Mesh).geometry}
+                    dispose={null}
+                    attach="geometry"
+                />
+                <MeshRetroMaterial 
+                    color={"#0022dd"}
+                    name="dirt"
+                    emissive={"#0022dd"} 
+                    emissiveIntensity={.2}
+                />
+            </InstancedMesh>
+            <InstancedMesh
+                name="sphere"
+                count={100}
+                castShadow 
+            >
+                <sphereGeometry
+                    args={[1, 3, 4]}
+                    attach="geometry"
+                />
+                <MeshRetroMaterial name="sphere" />
+            </InstancedMesh>
+
+            <InstancedMesh
+                castShadow wad
                 name="line"
                 count={50}
                 colors={false}
             >
-                <boxGeometry args={[1, 1, 1, 1, 1, 1]} attach="geometry" />
-                <meshBasicMaterial name="line" color={"white"} />
+                <boxGeometry
+                    args={[1, 1, 1, 1, 1, 1]}
+                    attach="geometry"
+                />
+                <meshBasicMaterial
+                    name="line"
+                    color={"white"}
+                />
             </InstancedMesh>
 
-            <InstancedMesh name="scrap" count={50} colors={true}>
-                <primitive object={(scrap.nodes.scrap as Mesh).geometry} dispose={null} attach="geometry" />
+            <InstancedMesh
+                name="scrap"
+                count={50}
+                colors={true}
+            >
+                <primitive
+                    object={(scrap.nodes.scrap as Mesh).geometry}
+                    dispose={null}
+                    attach="geometry"
+                />
                 <MeshRetroMaterial
                     side={FrontSide}
                     name="scrap"
@@ -59,41 +116,67 @@ function Instances() {
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="turret" count={15}>
-                <primitive object={(turret2.nodes.turret2 as Mesh).geometry} attach="geometry" />
+            <InstancedMesh
+                name="turret"
+                count={15}
+            >
+                <primitive
+                    object={(turret2.nodes.turret2 as Mesh).geometry}
+                    attach="geometry"
+                />
                 <MeshRetroMaterial
                     color={turretColor}
                     name="turret"
                     emissive={turretColor}
-                    emissiveIntensity={.4}
-                    fogDensity={.65}
-                    fogHeight={.6}
+                    emissiveIntensity={0.4}
+                    fogDensity={0.65}
+                    fogHeight={0.6}
                     backColor="#ffff00"
                     backColorIntensity={0}
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="rocket" count={8} castShadow={false}>
-                <primitive object={(rocket.nodes.rocket as Mesh).geometry} attach="geometry" />
+            <InstancedMesh
+                name="rocket"
+                count={8}
+                castShadow={false}
+            >
+                <primitive
+                    object={(rocket.nodes.rocket as Mesh).geometry}
+                    attach="geometry"
+                />
                 <MeshRetroMaterial
                     emissive={turretColor}
-                    emissiveIntensity={.4}
+                    emissiveIntensity={0.4}
                     name="rocket"
                     color={turretColor}
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="platform" count={8}>
-                <primitive object={(platform.nodes.platform as Mesh).geometry} attach="geometry" />
+            <InstancedMesh
+                name="platform"
+                count={8}
+            >
+                <primitive
+                    object={(platform.nodes.platform as Mesh).geometry}
+                    attach="geometry"
+                />
                 <MeshRetroMaterial
                     color={platformColor}
                     name="platform"
-                    fogDensity={.4}
+                    fogDensity={0.4}
                 />
             </InstancedMesh>
 
-            <InstancedMesh name="device" castShadow={false} count={30}>
-                <primitive object={(device.nodes.device as Mesh).geometry} attach="geometry" />
+            <InstancedMesh
+                name="device"
+                castShadow={false}
+                count={30}
+            >
+                <primitive
+                    object={(device.nodes.device as Mesh).geometry}
+                    attach="geometry"
+                />
                 <MeshRetroMaterial
                     name="device"
                     color={deviceColor}

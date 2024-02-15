@@ -11,6 +11,8 @@ import { useGLTF } from "@react-three/drei"
 import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
 import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
+import Cable from "../decoration/Cable"
+import Dirt from "../decoration/Dirt"
 
 export function BossFloorMaterial({ color = floorBaseColor, name }) {
     return (
@@ -113,6 +115,20 @@ export default function BossPart({
             <Building 
                 position={[0,0,1]}
                 size={[4, 2, 4]}
+            />
+            <Cable 
+                position={[0,0,10]}
+                scale={1.25}
+            />
+            <Cable 
+                position={[-5,0,30]}
+                scale={1}
+                rotation={1.5}
+            />
+            <Dirt 
+                position={[0,0,12]}
+                scale={3}
+                rotation={1.5} 
             />
         </WorldPartWrapper>
     )

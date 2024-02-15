@@ -8,8 +8,8 @@ export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bos
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid" | "bossFloorBase" | "bossFloorHi"
 
 export type InstanceName = "scrap" |  "line" | "box" | "sphere" | "device"
-    | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball"
-    | "turret" | "rocket" | "platform" | "cylinder" | "shimmer"
+    | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball" | "cable"
+    | "turret" | "rocket" | "platform" | "cylinder" | "shimmer" | "dirt"
     | "grass" | "plant" | "shockwave" | "blast" | "impact" | "exhaust"
 
 export type RepeaterName = "building1" | "building2" | "building3"
