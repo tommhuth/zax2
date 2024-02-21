@@ -1,9 +1,10 @@
 import { Mesh } from "three"
-import { barellcolor, barrellEmissiveIntensity } from "../../../../data/theme"
+import { barellColor, barrellEmissiveIntensity } from "../../../../data/theme"
 import { MeshRetroMaterial } from "../../MeshRetroMaterial"
 import InstancedMesh from "../InstancedMesh"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useLoader } from "@react-three/fiber"
+import { useStore } from "../../../../data/store"
 
 export default function Barrels() {
     let [barrel1, barrel2, barrel3, barrel4] = useLoader(GLTFLoader, [
@@ -12,6 +13,7 @@ export default function Barrels() {
         "/models/barrel3.glb",
         "/models/barrel4.glb",
     ])
+    let materials = useStore(i => i.materials)
 
     return (
         <>
@@ -26,14 +28,7 @@ export default function Barrels() {
                     dispose={null}
                     attach="geometry"
                 />
-                <MeshRetroMaterial
-                    fogDensity={0.35}
-                    name="barrel1"
-                    fogHeight={0.6}
-                    color={barellcolor}
-                    emissive={barellcolor}
-                    emissiveIntensity={barrellEmissiveIntensity}
-                />
+                <primitive object={materials.barrel} attach="material" />
             </InstancedMesh>
 
             <InstancedMesh
@@ -46,14 +41,7 @@ export default function Barrels() {
                     object={(barrel2.nodes.barrel2 as Mesh).geometry}
                     attach="geometry"
                 />
-                <MeshRetroMaterial
-                    fogDensity={0.35}
-                    name="barrel2"
-                    color={barellcolor}
-                    fogHeight={0.6}
-                    emissive={barellcolor}
-                    emissiveIntensity={barrellEmissiveIntensity}
-                />
+                <primitive object={materials.barrel} attach="material" />
             </InstancedMesh>
 
             <InstancedMesh
@@ -66,14 +54,7 @@ export default function Barrels() {
                     object={(barrel3.nodes.barrel3 as Mesh).geometry}
                     attach="geometry"
                 />
-                <MeshRetroMaterial
-                    fogDensity={0.35}
-                    name="barrel3"
-                    color={barellcolor}
-                    fogHeight={0.6}
-                    emissive={barellcolor}
-                    emissiveIntensity={barrellEmissiveIntensity}
-                />
+                <primitive object={materials.barrel} attach="material" />
             </InstancedMesh>
 
             <InstancedMesh
@@ -86,14 +67,7 @@ export default function Barrels() {
                     object={(barrel4.nodes.barrel4 as Mesh).geometry}
                     attach="geometry"
                 />
-                <MeshRetroMaterial
-                    fogDensity={0.35}
-                    name="barrel4"
-                    color={barellcolor}
-                    emissive={barellcolor}
-                    fogHeight={0.6}
-                    emissiveIntensity={barrellEmissiveIntensity}
-                />
+                <primitive object={materials.barrel} attach="material" />
             </InstancedMesh>
         </>
     )

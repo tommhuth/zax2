@@ -31,7 +31,7 @@ export default function Grass() {
                 usesPlayerPosition
                 fogDensity={0}
                 name="grass"
-                dithering={false}
+                dithering={0}
                 transparent
                 backColorIntensity={0}
                 rightColorIntensity={0}

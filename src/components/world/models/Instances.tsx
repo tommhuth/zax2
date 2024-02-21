@@ -43,6 +43,7 @@ function Instances() {
                 <MeshRetroMaterial 
                     color={"#0022dd"}
                     name="cable"
+                    colorCount={6}
                     emissive={"#0022dd"} 
                     emissiveIntensity={.05}
                 />
@@ -195,6 +196,9 @@ function Instances() {
                     name="device"
                     color={deviceColor}
                     fogDensity={groundFogIntensity}
+                    backColorIntensity={.2}
+                    rightColorIntensity={.7}
+                    rightColor="#20f"
                 />
             </InstancedMesh>
 

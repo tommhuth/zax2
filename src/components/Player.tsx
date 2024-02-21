@@ -35,7 +35,7 @@ interface LocalData {
  
 export default function Player({
     size = [1.5, .5, depth],
-    z = -15,
+    z = 15,
     y = 1.5
 }: PlayerProps) {
     let playerGroupRef = useRef<Group | null>(null) 
@@ -129,7 +129,7 @@ export default function Player({
 
     useEffect(() => {
         if (ready && playerGroupRef.current) {
-            playerGroupRef.current.position.z = 80
+            playerGroupRef.current.position.z = 100
         }
     }, [ready])
 
@@ -183,7 +183,7 @@ export default function Player({
             let nd = ndelta(delta)
             let group = playerGroupRef.current
             let y = clamp(targetPosition.y, edgeMin.y, edgeMax.y)
-            let { boss } = store.getState()
+            let { boss, player } = store.getState()
             let move = (speed: number) => {
                 group.position.x = damp(group.position.x, targetPosition.x, 4, nd)
                 group.position.y = damp(group.position.y, y, 5, nd)  
@@ -191,6 +191,8 @@ export default function Player({
 
                 group.rotation.z = (targetPosition.x - group.position.x) * -.15 
                 group.rotation.x = (targetPosition.y - group.position.y) * -.1
+
+                player.velocity.z = clamp((speed * nd) / (data.speed * nd), 0, 1)
             } 
 
             if (boss.state === BossState.IDLE) {
@@ -231,7 +233,7 @@ export default function Player({
                     position={[0, 0, 0]}
                 >
                     <MeshRetroMaterial
-                        dithering={false}
+                        dithering={0}
                         isInstance={false}
                         name="player"
                         attach={"material"}

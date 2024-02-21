@@ -18,7 +18,7 @@ import ShimmerHandler from "./effects/ShimmerHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
-import { makeStart } from "../../data/world/generators"
+import { makeAirstrip, makeBoss, makeStart } from "../../data/world/generators"
 import { Vector3 } from "three"
 import SmokeHandler from "./effects/SmokeHandler"
 
@@ -50,7 +50,7 @@ export default function World() {
     useEffect(() => {
         if (loaded) {
             setTimeout(() => {
-                addWorldPart(makeStart({ position: new Vector3(0, 0, 100), size: [0, 0] }))
+                addWorldPart(makeBoss({ position: new Vector3(0, 0, 100), size: [0, 0] }))
             }, 100)
         }
     }, [loaded])

@@ -52,15 +52,16 @@ function explode(position: Vector3, size: Tuple3) {
     } else {
         type ExplosionPart = [delay: number, offset: Tuple3, radius: number]
         let explosions: ExplosionPart[] = [
-            [125, [.2, size[1] / 2 - .2, .3], .2],
-            [0, [-.2, -size[1] / 2, -.25], .3]
+            [155, [.2, size[1] / 2 - .2, .3], .2],
+            [20, [-.2, -size[1] / 2, -.25], .3],
+            [0, [.2, -size[1] / 2, -.25], .2],
         ]
 
         for (let [delay, [x, y, z], radius] of explosions) { 
             createExplosion({
                 position: [position.x + x, position.y + y, position.z + z],
                 count: 10,
-                shockwave: false,
+                shockwave: true,
                 radius,
                 delay
             }) 
@@ -70,7 +71,7 @@ function explode(position: Vector3, size: Tuple3) {
             position: [position.x, position.y, position.z],
             count: 20,
             radius: random.float(.8, 1),
-            delay: 320
+            delay: 520
         })
 
         createParticles({
@@ -81,7 +82,7 @@ function explode(position: Vector3, size: Tuple3) {
             count: [10, 15],
             radius: [.1, .55],
             color: rocketColor,
-            delay: 320
+            delay: 520
         }) 
     }
 }

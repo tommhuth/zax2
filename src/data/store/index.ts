@@ -69,6 +69,7 @@ export interface Store {
     },
     player: {
         speed: number
+        velocity: Vector3
         cameraShake: number
         health: number
         score: number
@@ -126,6 +127,7 @@ const store = create<Store>(() => ({
     player: { 
         position: new Vector3(),
         targetPosition: new Vector3(), 
+        velocity: new Vector3(), 
         speed: 0,
         cameraShake: 0,
         health: 100,

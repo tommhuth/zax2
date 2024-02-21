@@ -4,7 +4,7 @@ import Counter from "./world/Counter"
 import { Client } from "./world/SpatialHashGrid3D"
 
 export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
-    | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi" | "black"
+    | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi" | "black" | "barrel"
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid" | "bossFloorBase" | "bossFloorHi"
 
 export type InstanceName = "scrap" |  "line" | "box" | "sphere" | "device"

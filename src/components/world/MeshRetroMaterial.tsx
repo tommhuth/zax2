@@ -9,8 +9,7 @@ import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef } from "react"
 import { useStore } from "../../data/store"
 
-type MeshRetroMaterialProps = {
-    isInstance?: boolean
+type MeshRetroMaterialProps = { 
     usesTime?: boolean
     usesPlayerPosition?: boolean
     fragmentShader?: string
@@ -18,16 +17,15 @@ type MeshRetroMaterialProps = {
     fogDensity?: number
     fogHeight?: number
     colorCount?: number
-    dithering?: boolean 
+    dithering?: number 
     rightColor?: string
     rightColorIntensity?: number
     backColor?: string
     backColorIntensity?: number
-} & Omit<MeshLambertMaterialProps, "onBeforeCompile">
+} & Omit<MeshLambertMaterialProps, "onBeforeCompile" | "dithering">
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
-    color = bcolor,
-    isInstance = true,
+    color = bcolor, 
     usesTime = false,
     usesPlayerPosition = false,
     fragmentShader = "",
@@ -35,7 +33,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     fogDensity = 0.0,
     fogHeight = 2.,
     colorCount = 9,
-    dithering = true,
+    dithering = .005,
     rightColor = defaultRightColor,
     rightColorIntensity = .75,
     backColor = defaultBackColor,
@@ -48,7 +46,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         uniforms: {
             uTime: { value: 0 },
             uColorCount: { value: colorCount },
-            uDither: { value: dithering ? 1 : 0 },
+            uDither: { value: dithering },
             uFogHeight: { value: fogHeight },
             uBasicDirectionLights: {
                 value: [ 
@@ -87,12 +85,17 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     return m;
                 }
             `,
-            main: glsl` 
-                vec4 globalPosition = ${isInstance ? "instanceMatrix" : "modelMatrix"}  * vec4(position, 1.);
+            main: glsl`  
+                #ifdef USE_INSTANCING
+                    vec4 globalPosition = instanceMatrix * vec4(position, 1.);
+                    vNormal2 = (translationless(instanceMatrix) * vec4(normal, 1.)).xyz;
+	            #else 
+                    vec4 globalPosition = modelMatrix * vec4(position, 1.);
+                    vNormal2 = (translationless(modelMatrix) * vec4(normal, 1.)).xyz;
+	            #endif 
 
                 vGlobalPosition = globalPosition.xyz;
-                vPosition = position.xyz; 
-                vNormal2 = (translationless(${isInstance ? "instanceMatrix" : "modelMatrix"}) * vec4(normal, 1.)).xyz;
+                vPosition = position.xyz;  
 
                 ${vertexShader}
             `
@@ -141,8 +144,8 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
   
                 ${fragmentShader}   
 
-                if (uDither == 1.) { 
-                    gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, uColorCount, .005);
+                if (uDither > .0) { 
+                    gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, uColorCount, uDither);
                 }  
             `
         }

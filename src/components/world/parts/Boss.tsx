@@ -18,8 +18,7 @@ export function BossFloorMaterial({ color = floorBaseColor, name }) {
     return (
         <MeshRetroMaterial
             usesTime
-            color={color}
-            isInstance={false}
+            color={color} 
             name={name}
             fogDensity={floorFogIntensity}
             colorCount={13} 
