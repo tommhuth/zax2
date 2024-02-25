@@ -3,7 +3,7 @@ import { useInstance } from "../models/InstancedMesh"
 import { setMatrixAt } from "../../../data/utils"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
-import { useWorldPart } from "../WorldPartWrapper"
+import { useWorldPart } from "../WorldPartWrapper" 
 
 interface PlantProps {
     position: Tuple3
@@ -12,7 +12,7 @@ interface PlantProps {
 
 export default function Plant({ position = [0, 0, 0], scale = 1 }: PlantProps) {
     let [index, instance] = useInstance("plant")
-    let partPosition = useWorldPart()
+    let partPosition = useWorldPart() 
 
     useEffect(() => {
         if (typeof index === "number") {
@@ -24,7 +24,7 @@ export default function Plant({ position = [0, 0, 0], scale = 1 }: PlantProps) {
                 position: [position[0], position[1], partPosition[2] + position[2]],
             })
         }
-    }, [index, instance])
+    }, [index, instance]) 
 
     return null
 }

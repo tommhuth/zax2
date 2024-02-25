@@ -1,6 +1,6 @@
 import { DoubleSide, Mesh } from "three"
 import { useStore } from "../../../../data/store"
-import { groundFogIntensity, plantColor, plantColorEnd, plantColorStart } from "../../../../data/theme"
+import { plantColor } from "../../../../data/theme"
 import { WorldPartType } from "../../../../data/types"
 import { MeshRetroMaterial } from "../../MeshRetroMaterial"
 import InstancedMesh from "../InstancedMesh"
@@ -19,7 +19,7 @@ export default function Plant() {
             name="plant"
             count={10}
             receiveShadow={false}
-            castShadow={true}
+            castShadow
             visible={hasFoliage}
         >
             <primitive object={(plant.nodes.plant as Mesh).geometry} attach="geometry" />

@@ -2,7 +2,7 @@ import { memo, startTransition, useLayoutEffect, useRef } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta } from "../../../data/utils"
+import { clamp, ndelta, setColorAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
 import { Vector3 } from "three"
@@ -78,13 +78,13 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
     }) 
 
     useEffect(() => {
-        if (health !== 70 && instance && typeof index === "number") { 
+        if (instance && typeof index === "number") { 
             return animate({
                 from: "#ffffff",
                 to: turretColor,
                 duration: 400,
                 render(color) { 
-                    // setColorAt(instance, index as number, color)
+                    setColorAt(instance, index as number, color)
                 },
             })
         }

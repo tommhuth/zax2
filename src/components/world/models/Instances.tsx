@@ -160,8 +160,7 @@ function Instances() {
                     name="scrap"
                     color={scrapColor}
                     fragmentShader={glsl`
-                        gl_FragColor.rgb = mix(gl_FragColor.rgb, vColor, .85);
-                     
+                        gl_FragColor.rgb = mix(gl_FragColor.rgb, vColor, .6); 
                      `}
                 />
             </InstancedMesh>
