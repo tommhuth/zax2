@@ -1,6 +1,6 @@
 import { startTransition, useEffect } from "react"
 import { useStore } from "../../../data/store"
-import { floorBaseColor, floorFogIntensity } from "../../../data/theme"
+import { floorBaseColor } from "../../../data/theme"
 import { BossState, WorldPartBoss } from "../../../data/types"
 import { glsl } from "../../../data/utils"
 import { MeshRetroMaterial } from "../MeshRetroMaterial"
@@ -12,17 +12,15 @@ import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
 import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
 import Cable from "../decoration/Cable"
-import Dirt from "../decoration/Dirt"
+import Dirt from "../decoration/Dirt" 
 
-export function BossFloorMaterial({ color = floorBaseColor, name }) {
+export function BossFogMaterial({ color = floorBaseColor, name = undefined, ...rest }) {
     return (
-        <MeshRetroMaterial
-            usesTime
-            color={color} 
-            name={name}
-            fogDensity={floorFogIntensity}
-            colorCount={13} 
+        <MeshRetroMaterial 
+            color={color}
+            name={name} 
             rightColorIntensity={.5}
+            {...rest}
             fragmentShader={glsl` 
                 vec3 t = vec3(uTime, uTime * .25, uTime);
                 float n = easeInOutQuad((noise(vGlobalPosition * .25 + t * 1.5) + 1.) / 2.);
@@ -30,8 +28,8 @@ export function BossFloorMaterial({ color = floorBaseColor, name }) {
                 float h = easeInQuad(clamp((-(vGlobalPosition.y + 1.) / 6.), 0., 1.));
                 float h2 = easeInQuad(clamp((-(vGlobalPosition.y + 5.5) / 1.5), 0., 1.));
  
-                vec3 color = vec3(0., 0., 0.1);
-                vec3 highlight = vec3(0., .15, .6); 
+                vec3 color = vec3(0.01, 0.01, 0.2);
+                vec3 highlight = vec3(0., .0, .7); 
 
                 gl_FragColor.rgb = mix(gl_FragColor.rgb, highlight, clamp(n * h + h2, 0., 1.));
                 gl_FragColor.rgb = mix(gl_FragColor.rgb, color, n2 * h * 1.);
@@ -46,21 +44,72 @@ export function Model(props) {
 
     return (
         <group {...props} dispose={null} receiveShadow>
-            <mesh 
+            {/* cylinder base */}   
+            <mesh
+                receiveShadow 
+                geometry={nodes.bossfloor_1.geometry}
+                material={materials.floorBase}
+            />
+
+            {/* cylinder hi */}
+            <mesh
                 receiveShadow
-                castShadow
-                geometry={nodes.bossfloor_1.geometry} 
-                material={materials.bossFloorBase}
-            /> 
-            <mesh 
-                receiveShadow
-                geometry={nodes.bossfloor_2.geometry} 
+                geometry={nodes.bossfloor_2.geometry}
                 material={materials.bossFloorHi}
             />
+
+            {/* building hi */}
+            <mesh
+                receiveShadow
+                geometry={nodes.bossfloor_3.geometry}
+                material={materials.buildingHi}
+            />
+
+            {/* coords */}
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.bossfloor_5.geometry}
+                material={materials.bossCable}
+            /> 
+
+            {/* floor valley */}
             <mesh 
                 receiveShadow
-                geometry={nodes.bossfloor_3.geometry} 
-                material={materials.black}
+                geometry={nodes.bossfloor_4.geometry}
+                material={materials.bossFloorValley}
+            />
+            {/* hardware */}
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.bossfloor_6.geometry}
+                material={materials.bossHardware}
+            />
+            {/* rocks */}
+            <mesh
+                castShadow 
+                receiveShadow 
+                geometry={nodes.bossfloor_7.geometry}
+                material={materials.bossRock}
+            />
+            {/* edge building */}
+            <mesh 
+                receiveShadow
+                geometry={nodes.bossfloor_8.geometry}
+                material={materials.buildingBase} 
+            />
+            {/* base floor */}
+            <mesh 
+                receiveShadow
+                geometry={nodes.bossfloor_9.geometry}
+                material={materials.floorBase} 
+            />
+            {/* pillars */}
+            <mesh 
+                receiveShadow
+                geometry={nodes.bossfloor_10.geometry}
+                material={materials.bossPillar}
             />
         </group>
     )
@@ -72,19 +121,19 @@ export default function BossPart({
     id,
     position,
     size,
-}: WorldPartBoss) { 
-    let bossZ = position.z + 23 
+}: WorldPartBoss) {
+    let bossZ = position.z + 23
     let pauseAt = position.z + 5
     let state = useStore(i => i.boss.state)
 
-    useEffect(()=> {
+    useEffect(() => {
         if (state === BossState.DEAD) {
             setTimeout(() => setBossProp("state", BossState.OUTRO), 4000)
         }
     }, [state])
 
-    useEffect(() => { 
-        startTransition(()=> { 
+    useEffect(() => {
+        startTransition(() => {
             registerBoss({
                 pauseAt,
                 position: [0, 0, position.z],
@@ -102,32 +151,32 @@ export default function BossPart({
         > 
             <Boss startPosition={[0, 0, bossZ]} />
             <Model position={[10, 0, position.z]} />
-            <Barrel 
-                position={[6,0,15]}
+            <Barrel
+                position={[6, 0, 15]}
             />
-            <Barrel 
-                position={[5,0,32]}
+            <Barrel
+                position={[5, 0, 32]}
             />
-            <Barrel 
-                position={[5.5,0,29]}
+            <Barrel
+                position={[5.5, 0, 29]}
             />
-            <Building 
-                position={[0,0,1]}
+            <Building
+                position={[0, 0, 1]}
                 size={[4, 2, 4]}
             />
-            <Cable 
-                position={[0,0,10]}
+            <Cable
+                position={[0, 0, 10]}
                 scale={1.25}
             />
-            <Cable 
-                position={[-5,0,30]}
+            <Cable
+                position={[-5, 0, 30]}
                 scale={1}
                 rotation={1.5}
             />
-            <Dirt 
-                position={[0,0,12]}
-                scale={3}
-                rotation={1.5} 
+            <Dirt
+                position={[3, 0, 32]}
+                scale={2}
+                rotation={1}
             />
         </WorldPartWrapper>
     )

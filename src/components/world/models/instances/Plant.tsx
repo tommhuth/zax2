@@ -17,18 +17,15 @@ export default function Plant() {
     return ( 
         <InstancedMesh
             name="plant"
-            count={16}
+            count={10}
             receiveShadow={false}
             castShadow={true}
             visible={hasFoliage}
         >
             <primitive object={(plant.nodes.plant as Mesh).geometry} attach="geometry" />
-            <MeshRetroMaterial
-                usesTime
-                usesPlayerPosition
+            <MeshRetroMaterial 
                 name="plant"
                 colorCount={12}
-                fogDensity={groundFogIntensity}
                 color={plantColor}
                 side={DoubleSide}
                 vertexShader={glsl`
@@ -47,8 +44,8 @@ export default function Plant() {
                     transformed.y += cos((globalPosition.y) * .3 + uTime * timeScale) * heightScale * offsetSize * 1.25 * .5;  
                 `}
                 fragmentShader={glsl`
-                    vec3 start = mix(gl_FragColor.rgb, vec3(${plantColorStart.toArray().map(i => i + .001).join(", ")}), .7);
-                    vec3 end = mix(gl_FragColor.rgb, vec3(${plantColorEnd.toArray().map(i => i + .001).join(", ")}), .5);
+                    vec3 start = mix(gl_FragColor.rgb, vec3(${plantColorStart.toArray().map(i => i + .001).join(", ")}), .0);
+                    vec3 end = mix(gl_FragColor.rgb, vec3(${plantColorEnd.toArray().map(i => i + .001).join(", ")}), .0);
 
                     gl_FragColor.rgb = mix(start, end, easeOutCubic(clamp(length(vPosition) / 5., 0., 1.))) * 1.25;
                 `}

@@ -1,61 +1,59 @@
 import { ReactElement, ReactNode, cloneElement, memo, startTransition, useCallback, useMemo } from "react"
-import { barellColor, buildingBaseColor, buildingHiColor, floorBaseColor, floorFogIntensity, floorHiColor, floorMarkColor, groundFogIntensity } from "../../../data/theme"
+import { barellColor, buildingBaseColor, buildingHiColor, floorBaseColor, floorHiColor, floorMarkColor } from "../../../data/theme"
 import { MeshRetroMaterial } from "../MeshRetroMaterial"
 import { BoxGeometry, BufferGeometry, Material, Mesh } from "three"
 import { setMaterial } from "../../../data/store/utils"
 import { MaterialName } from "../../../data/types"
-import { BossFloorMaterial } from "../parts/Boss"
+import { BossFogMaterial } from "../parts/Boss"
 
 function MaterialLoader() { 
     let materials: Record<MaterialName, ReactNode> = useMemo(() => {
         return {
             barrel:  (
                 <MeshRetroMaterial 
-                    backColorIntensity={.1} 
-                    colorCount={14}  
-                    fogDensity={.5} 
-                    fogHeight={1}
+                    backColorIntensity={.0}  
                     color={barellColor} 
-                    rightColorIntensity={.8} 
-                    rightColor="#00f"
+                    rightColorIntensity={.5} 
+                    rightColor="#f00"
                     emissive={barellColor}
                     emissiveIntensity={.2}
                 />
             ),
             buildingBase: (
                 <MeshRetroMaterial 
-                    backColorIntensity={.4} 
-                    colorCount={16}  
-                    fogDensity={groundFogIntensity * .75} 
+                    backColorIntensity={.4}  
                     color={buildingBaseColor} 
-                    rightColorIntensity={.7} 
-                    rightColor="#10d"
+                    rightColorIntensity={.9} 
+                    rightColor="#f00"
                     emissive={buildingBaseColor}
-                    emissiveIntensity={.2}
+                    emissiveIntensity={.0}
                 />
             ),
             buildingHi: (
                 <MeshRetroMaterial 
-                    backColorIntensity={.0} 
-                    colorCount={16}  
-                    fogDensity={groundFogIntensity * .75} 
-                    color={"#001199"} 
+                    backColorIntensity={.0}  
+                    color={buildingHiColor} 
+                    emissive={buildingHiColor} 
+                    emissiveIntensity={.5} 
                     rightColorIntensity={0} 
                 />
             ), 
-            floorBase: <MeshRetroMaterial  fogDensity={floorFogIntensity} color={floorBaseColor} />,
-            floorHi: <MeshRetroMaterial  fogDensity={floorFogIntensity} color={floorHiColor} />,
+            floorBase: <MeshRetroMaterial color={floorBaseColor} />,
+            floorHi: <MeshRetroMaterial color={floorHiColor} />,
             floorSolid: <meshBasicMaterial color={"red"} />,
             floorMark: <meshBasicMaterial color={floorMarkColor} />,
-            bossLightBlue: <MeshRetroMaterial  color="lightblue" />,
-            bossBlack: <MeshRetroMaterial  color="black" />,
-            bossDarkBlue: <MeshRetroMaterial  color="darkblue" />,
-            bossBlue: <MeshRetroMaterial  color="blue" />,
-            bossSecondaryBlue: <MeshRetroMaterial  color="#00f" />,
-            bossWhite: <meshLambertMaterial color="white" />,
-            bossFloorBase: <BossFloorMaterial />,
-            bossFloorHi: <BossFloorMaterial color="red" />,
-            black: <meshLambertMaterial color="#000"  />,
+            bossLightBlue: <MeshRetroMaterial color="lightblue" />,
+            bossBlack: <MeshRetroMaterial color="black" />,
+            bossDarkBlue: <MeshRetroMaterial color="darkblue" />,
+            bossBlue: <MeshRetroMaterial color="blue" />, 
+            bossSecondaryBlue: <MeshRetroMaterial color="#00f" />,
+            bossWhite: <meshLambertMaterial color="white" />, 
+            bossFloorValley: <BossFogMaterial />, 
+            bossFloorHi: <BossFogMaterial color="#fff" />,
+            bossCable: <BossFogMaterial color="#f00" />,
+            bossHardware: <BossFogMaterial color="#00f" />,
+            bossRock: <BossFogMaterial color="#00d" />,
+            bossPillar: <BossFogMaterial color="#00f" />, 
         }
     }, []) 
 

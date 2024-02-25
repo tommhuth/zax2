@@ -1,51 +1,24 @@
-import { startTransition, useEffect, useMemo } from "react"
+import { startTransition, useEffect } from "react"
 import { LinearFilter } from "three"
 import { glsl } from "../../../data/utils"
-import { useShader } from "../../../data/hooks"
 import { useFrame, useLoader } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
 import { TextureLoader } from "three/src/loaders/TextureLoader.js"
 import { useStore } from "../../../data/store"
 import { removeExplosion } from "../../../data/store/effects"
-import dither from "../../../shaders/dither.glsl"
 import BlastHandler from "./BlastHandler"
 import FireballHandler from "./FireballHandler"
 import ShockwaveHandler from "./ShockwaveHandler"
+import { MeshRetroMaterial } from "../MeshRetroMaterial"
 
 export default function ExplosionsHandler() {
-    let impactCount = 15 
-    let [impactMap] = useLoader(TextureLoader, ["/textures/decal1.png"])
-    let impactOpacityAttributes = useMemo(() => {
-        return new Float32Array(new Array(impactCount).fill(0))
-    }, [impactCount]) 
-    let impactShader = useShader({
-        vertex: {
-            head: glsl`
-                attribute float aOpacity;
-                varying float vOpacity;
-            `,
-            main: glsl`
-                vOpacity = aOpacity;
-            `
-        },
-        fragment: {
-            head: glsl`
-                varying float vOpacity;
-                
-                ${dither} 
-            `,
-            main: glsl` 
-                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 2., .0105);
-                gl_FragColor.a *= vOpacity;
-            `
-        },
-    })
+    let decalCount = 15 
+    let [impactMap] = useLoader(TextureLoader, ["/textures/decal1.png"]) 
 
     useEffect(() => {
         impactMap.magFilter = LinearFilter
         impactMap.minFilter = LinearFilter
-    }, [impactMap])
-
+    }, [impactMap]) 
 
     // main
     useFrame(() => { 
@@ -76,27 +49,24 @@ export default function ExplosionsHandler() {
             <ShockwaveHandler />
 
             <InstancedMesh
-                name="impact"
-                count={impactCount}
+                name="decal"
+                count={decalCount}
                 castShadow={false}
                 receiveShadow
                 colors
             >
-                <planeGeometry args={[2, 2, 1, 1]} >
-                    <instancedBufferAttribute
-                        needsUpdate={true}
-                        attach="attributes-aOpacity"
-                        args={[impactOpacityAttributes, 1, false, 1]}
-                    />
-                </planeGeometry>
-                <meshBasicMaterial
+                <planeGeometry args={[2, 2, 1, 1]} />
+                <MeshRetroMaterial 
                     map={impactMap}
                     color={"black"}
                     name="impact"
                     depthWrite={false}
-                    transparent
-                    onBeforeCompile={impactShader.onBeforeCompile}
-                />
+                    transparent 
+                    fragmentShader={glsl`
+                        gl_FragColor.rgb = vec3(0., 0., 0.); 
+                        gl_FragColor.a *= .6; 
+                    `}
+                /> 
             </InstancedMesh>
         </>
     )

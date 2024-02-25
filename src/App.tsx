@@ -15,7 +15,6 @@ import Lights from "./components/Lights"
 import {
     BasicShadowMap,
     InstancedMesh,
-    MeshBasicMaterial,
     NoToneMapping,
 } from "three"
 import { dpr, pixelSize, store, useStore, zoom } from "./data/store"
@@ -23,13 +22,13 @@ import Models from "./components/world/models/Models"
 import EdgeOverlay from "./components/EdgeOverlay"
 import { Perf } from "r3f-perf"
 import MaterialLoader from "./components/world/models/MaterialLoader"
-import { Only, clamp, glsl, setMatrixAt } from "./data/utils"
+import { Only, glsl, setMatrixAt } from "./data/utils"
 import Config from "./data/Config"
 import { setLoaded, setReady } from "./data/store/utils"
 import Controls from "./components/Controls"
 import { useShader } from "./data/hooks"
 import random from "@huth/random"
-import { easeInQuad, easeOutQuad } from "./data/shaping"
+import { easeInQuad } from "./data/shaping"
 import { Tuple3 } from "./types"
 
 export default function Wrapper() {
@@ -135,18 +134,18 @@ function Loader() {
 }
 
 interface Speedline {
-    index: number 
-    size: number 
-    time: number 
-    lifetime: number 
-    speed: number 
+    index: number
+    size: number
+    time: number
+    lifetime: number
+    speed: number
     position: Tuple3
 }
 
 function Speedlines() {
-    let ref = useRef<InstancedMesh>(null) 
-    let ready = useStore(i => i.ready)  
-    let count = 4  
+    let ref = useRef<InstancedMesh>(null)
+    let ready = useStore(i => i.ready)
+    let count = 4
     let lines = useMemo<Speedline[]>(() => {
         return new Array(count).fill(null).map((i, index) => {
             return {
@@ -188,39 +187,40 @@ function Speedlines() {
                  gl_FragColor.a = (1. - clamp((abs(vPosition.z)) / .5, 0., 1.));
             `,
         },
-    }) 
+    })
 
-    useFrame((state, delta) => {  
+    useFrame((state, delta) => {
         if (!ref.current) {
             return
         }
 
-        let { velocity, position } = store.getState().player 
+        let { velocity, position } = store.getState().player
+        let bs = velocity.z > .25 && velocity.z < .75 ? 1 : 0
 
-        for (let line of lines) { 
-            let t = line.time/line.lifetime
+        for (let line of lines) {
+            let t = line.time / line.lifetime
 
             if (t < .5) {
                 t = (t / .5)
             } else {
-                t = easeInQuad(1 - (t - .5)  / .5)
+                t = easeInQuad(1 - (t - .5) / .5)
             }
- 
+
             line.position[2] -= (delta * line.speed * velocity.z)
             line.time += delta * 1000
- 
+
             setMatrixAt({
                 instance: ref.current,
                 index: line.index,
-                position: line.position, 
-                scale: [line.size * .085, .01, velocity.z * 2* t * line.size],
+                position: line.position,
+                scale: [line.size * .085 * bs, .01, velocity.z * 2 * t * line.size * bs],
             })
 
             if (line.time >= line.lifetime) {
                 line.lifetime = random.integer(400, 1600)
                 line.time = random.integer(0, 100)
-                line.speed =  random.float(1, 4)
-                line.position[0] = random.float(position.x - 1, position.x + 1 )
+                line.speed = random.float(1, 4)
+                line.position[0] = random.float(position.x - 1, position.x + 1)
                 line.position[1] = position.y + .25
                 line.position[2] = random.float(position.z + 1, position.z + 5)
             }
@@ -229,7 +229,7 @@ function Speedlines() {
 
     return (
         <instancedMesh
-            ref={ref} 
+            ref={ref}
             args={[undefined, undefined, count]}
         >
             <boxGeometry args={[1, 1, 1, 1, 1, 1]} />

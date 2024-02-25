@@ -21,17 +21,13 @@ export default function Grass() {
             colors={false}
             name="grass"
             visible={hasFoliage}
-            count={14}
+            count={6}
         >
             <primitive object={(grass.nodes.grass as Mesh).geometry} attach="geometry" />
-            <MeshRetroMaterial
-                usesTime
-                color={grassColor}
-                side={DoubleSide}
-                usesPlayerPosition
-                fogDensity={0}
-                name="grass"
-                dithering={0}
+            <MeshRetroMaterial 
+                color={grassColor} 
+                side={DoubleSide}  
+                name="grass" 
                 transparent
                 backColorIntensity={0}
                 rightColorIntensity={0}
@@ -40,8 +36,7 @@ export default function Grass() {
                     float heightScale = easeInQuad(clamp(position.y / height, 0., 1.));
                     float offsetSize = .4;
                     float timeScale = 8.;
-                    vec3 playerPosition = vec3(uPlayerPosition.x, vGlobalPosition.y, uPlayerPosition.z);
-                    //vec3 offsetNormal = (vec4(normalize(vGlobalPosition - playerPosition), 1.) * removeTranslation(instanceMatrix)).xyz;
+                    vec3 playerPosition = vec3(uPlayerPosition.x, vGlobalPosition.y, uPlayerPosition.z); 
                     vec3 offsetNormal = normalize(vGlobalPosition - playerPosition);
                     float playerRadius = 6.;
                     float offsetEffect = 1. - clamp(length(playerPosition - vGlobalPosition) / playerRadius, 0., 1.);
@@ -58,20 +53,20 @@ export default function Grass() {
                 `}
                 fragmentShader={glsl`
                     float height = 2.25;
-                    vec3 start = mix(gl_FragColor.rgb, vec3(${grassColorStart.toArray().map(i => i + .001).join(", ")}), .2);
-                    vec3 end = mix(gl_FragColor.rgb, vec3(${grassColorEnd.toArray().map(i => i + .001).join(", ")}), .8);
-                    vec3 cameraDirection = normalize(vec3(-57.2372, 50., -61.237));
-                    vec3 lightPosition = vec3(uPlayerPosition.xy, uPlayerPosition.z - .5);
-                    vec3 backlightColor =  vec3(.2, 1.0, .2);
-                    // dot(normalize(lightPosition - vGlobalPosition ), normal), 0., 1.) *
-
+                    vec3 start = mix(gl_FragColor.rgb, vec3(${grassColorStart.toArray().map(i => i + .001).join(", ")}), .5);
+                    vec3 end = mix(gl_FragColor.rgb, vec3(${grassColorEnd.toArray().map(i => i + .001).join(", ")}), .5);
+                    vec3 cameraDirection = normalize(vec3(-57.2372, 50., -61.237)); 
+                    vec3 backlightColor = vec3(.90, .9, .0);
+                    float backlightEffect = clamp(-dot(cameraDirection, vGlobalNormal), 0., 1.)
+                        * (1. - (length(uPlayerPosition - vGlobalPosition) / 9.));
+ 
                     gl_FragColor.rgb = mix(start, end, easeInQuad(clamp(vGlobalPosition.y / height, 0., 1.)));
                     gl_FragColor.rgb = mix(
                         gl_FragColor.rgb, 
-                        mix(gl_FragColor.rgb, backlightColor, .7), 
-                        clamp(1. - (length(lightPosition - vGlobalPosition) / 10.), 0., 1.)
+                        mix(gl_FragColor.rgb, backlightColor, .997), 
+                        backlightEffect
                     );
-                    gl_FragColor.a = clamp((vPosition.y) / .75, 0., 1.);
+                    gl_FragColor.a = clamp((vPosition.y) / .5, 0., 1.); 
                 `}
             />
         </InstancedMesh>

@@ -44,6 +44,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
     let materials = useStore((i) => i.materials)
     let boss = useStore((i) => i.boss)
     let bossWrapper = useRef<Group>(null)
+    let push = useRef(0)
     let { nodes: boss2 } = useGLTF("/models/boss2.glb") as any
     let { nodes: boss1 } = useGLTF("/models/boss.glb") as any
     let grid = useStore((i) => i.world.grid)
@@ -79,6 +80,8 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                 ) {
                     return
                 }
+
+                push.current = 1
 
                 damageBoss(10)
                 createParticles({
@@ -157,7 +160,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                 delay: 1300,
             })
 
-            setTimeout(()=> createImpactDecal([position.x, .1, position.z], 6, .7), 900)
+            setTimeout(()=> createImpactDecal([position.x, .1, position.z], 6), 900)
             setTimeout(() => defeatBoss(), 1200)
         }
     }, [boss?.health])
@@ -208,7 +211,8 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
         if (boss.health > 0) { 
             bossWrapper.current.position.y = bossSize[1] / 2 + 1 + Math.sin(state.clock.elapsedTime * 0.97) * 0.85
             bossWrapper.current.position.x = Math.cos(state.clock.elapsedTime * 0.45) * 3 - 1
-            bossWrapper.current.position.z = startPosition[2] - ((Math.sin(state.clock.elapsedTime * 0.6) + 1) / 2) * 3
+            bossWrapper.current.position.z = startPosition[2] 
+                - ((Math.sin(state.clock.elapsedTime * 0.6) + 1) / 2) * 3  
 
             position.copy(bossWrapper.current.position)
             client.position = position.toArray()

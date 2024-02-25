@@ -70,7 +70,12 @@ export default function ShimmerHandler() {
 
             shimmer.time += d * 1000
 
-            setBufferAttribute(instance.geometry, "aOpacity", opacity * (1 - clamp(time / lifetime, 0, 1)), index)
+            setBufferAttribute(
+                instance.geometry, 
+                "aOpacity", 
+                opacity * (1 - clamp(time / lifetime, 0, 1)),
+                index
+            )
             setMatrixAt({
                 instance,
                 index: index,

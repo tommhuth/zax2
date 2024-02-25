@@ -4,13 +4,14 @@ import Counter from "./world/Counter"
 import { Client } from "./world/SpatialHashGrid3D"
 
 export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
-    | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi" | "black" | "barrel"
-    | "floorBase" | "floorHi" | "floorMark" | "floorSolid" | "bossFloorBase" | "bossFloorHi"
+    | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi" | "barrel"
+    | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi"
+    | "bossCable" | "bossFloorValley" | "bossHardware" | "bossRock" | "bossPillar"
 
 export type InstanceName = "scrap" |  "line" | "box" | "sphere" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball" | "cable"
     | "turret" | "rocket" | "platform" | "cylinder" | "shimmer" | "dirt"
-    | "grass" | "plant" | "shockwave" | "blast" | "impact" | "exhaust"
+    | "grass" | "plant" | "shockwave" | "blast" | "decal" | "exhaust"
 
 export type RepeaterName = "building1" | "building2" | "building3"
     | "building4" | "building5" | "tanks" | "wall1"

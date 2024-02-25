@@ -8,7 +8,7 @@ import random from "@huth/random"
 import { Tuple3 } from "../../../types"
 import { createExplosion, createImpactDecal, createParticles, createScrap, createShimmer } from "../../../data/store/effects"
 import { damageBarrel, removeBarrel } from "../../../data/store/world"
-import { barellParticleColor } from "../../../data/theme"
+import { barellColor, barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
 import { useCollisionDetection } from "../../../data/collisions"
 import Config from "../../../data/Config"
@@ -62,7 +62,8 @@ export default function Barrel({
     }, [])
     let [index, instance] = useInstance(model, {
         position: [position.x, position.y - size[1] / 2, position.z],
-        rotation: [0, rotation, 0]
+        rotation: [0, rotation, 0],
+        color: barellColor
     })
     let remove = () => {
         setTimeout(() => removeBarrel(id), 300)

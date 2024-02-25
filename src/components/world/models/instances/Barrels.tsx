@@ -1,6 +1,4 @@
 import { Mesh } from "three"
-import { barellColor, barrellEmissiveIntensity } from "../../../../data/theme"
-import { MeshRetroMaterial } from "../../MeshRetroMaterial"
 import InstancedMesh from "../InstancedMesh"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useLoader } from "@react-three/fiber"

@@ -17,8 +17,7 @@ export function AsteroidStart(props) {
             </mesh>
             <mesh>
                 <primitive object={nodes.Cube004_1.geometry} attach="geometry" />
-                <MeshRetroMaterial
-                    isInstance={false}
+                <MeshRetroMaterial 
                     fragmentShader={glsl`
                         vec3 top = mix(gl_FragColor.rgb, vec3(.0, 1., .6), .84);
                         vec3 bottom = mix(gl_FragColor.rgb, vec3(.0, .5, 1.), .65); 

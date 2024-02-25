@@ -1,14 +1,14 @@
 # Zax
 
-## Todo 
-- boss floor fog fix
+## Todo  
 - more destructable ground objects
 - enemy plane 3d model   
 - boss rocket 3d model 
 - actual level design   
-- plane cleanup
-- edge building mat cleanup
+- plane cleanup 
 - exploding plants?
+- color theme revision 
+- grass normal fix
 
 ## Assets
 - https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html

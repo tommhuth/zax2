@@ -1,7 +1,6 @@
 import { useInstance } from "../models/InstancedMesh"
 import { Building, InstanceName } from "../../../data/types"
-import random from "@huth/random"
-import { buildingBaseColor } from "../../../data/theme" 
+import random from "@huth/random" 
 import { createParticles } from "../../../data/store/effects" 
 import { useCollisionDetection } from "../../../data/collisions"
 
@@ -28,8 +27,7 @@ export default function Building({ size, id, position }: Building) {
         } 
     })
 
-    useInstance(type, {
-        color: buildingBaseColor,
+    useInstance(type, { 
         scale: size,
         position,
         rotation: [

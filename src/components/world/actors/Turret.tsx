@@ -2,7 +2,7 @@ import { memo, startTransition, useLayoutEffect, useRef } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta, setColorAt } from "../../../data/utils"
+import { clamp, ndelta } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
 import { Vector3 } from "three"
@@ -13,7 +13,7 @@ import { Tuple3 } from "../../../types"
 import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
 import { createExplosion, createImpactDecal, createParticles, createScrap, createShimmer } from "../../../data/store/effects"
-import { explosionColor, turretColor, turretParticleColor } from "../../../data/theme"
+import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 
 function explode(position: Vector3, size: Tuple3) {
@@ -78,13 +78,13 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
     }) 
 
     useEffect(() => {
-        if (health !== 100 && instance && typeof index === "number") {
+        if (health !== 70 && instance && typeof index === "number") { 
             return animate({
-                from: explosionColor,
+                from: "#ffffff",
                 to: turretColor,
-                duration: 200,
-                render(color) {
-                    setColorAt(instance, index as number, color)
+                duration: 400,
+                render(color) { 
+                    // setColorAt(instance, index as number, color)
                 },
             })
         }

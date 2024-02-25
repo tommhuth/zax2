@@ -2,9 +2,12 @@ import { useLoader } from "@react-three/fiber"
 import InstancedMesh from "./InstancedMesh"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 import {
+    cableColor,
     deviceColor,
-    groundFogIntensity,
+    dirtColor, 
     platformColor,
+    rightColor,
+    scrapColor,
     turretColor,
 } from "../../../data/theme"
 import { FrontSide, Mesh } from "three"
@@ -41,10 +44,10 @@ function Instances() {
                     attach="geometry"
                 />
                 <MeshRetroMaterial 
-                    color={"#0022dd"}
+                    color={cableColor}
                     name="cable"
                     colorCount={6}
-                    emissive={"#0022dd"} 
+                    emissive={cableColor} 
                     emissiveIntensity={.05}
                 />
             </InstancedMesh>
@@ -52,7 +55,7 @@ function Instances() {
             <InstancedMesh
                 name="dirt"
                 count={5} 
-                receiveShadow
+                receiveShadow 
             >
                 <primitive
                     object={(dirt.nodes.dirt as Mesh).geometry}
@@ -60,9 +63,9 @@ function Instances() {
                     attach="geometry"
                 />
                 <MeshRetroMaterial 
-                    color={"#0022dd"}
+                    color={dirtColor}
                     name="dirt"
-                    emissive={"#0022dd"} 
+                    emissive={dirtColor} 
                     emissiveIntensity={.2}
                 />
             </InstancedMesh>
@@ -119,9 +122,8 @@ function Instances() {
                 />
                 <MeshRetroMaterial
                     side={FrontSide}
-                    name="scrap"
-                    isInstance={true}
-                    color={"white"}
+                    name="scrap" 
+                    color={scrapColor}
                     fragmentShader={glsl`
                         gl_FragColor.rgb = mix(gl_FragColor.rgb, vColor, .85);
                      
@@ -131,22 +133,22 @@ function Instances() {
 
             <InstancedMesh
                 name="turret"
-                count={15}
+                count={14}
                 receiveShadow
+                colors
             >
                 <primitive
                     object={(turret2.nodes.turret2 as Mesh).geometry}
                     attach="geometry"
-                />
+                /> 
                 <MeshRetroMaterial
                     color={turretColor}
                     name="turret"
                     emissive={turretColor}
-                    emissiveIntensity={0.4}
-                    fogDensity={0.65}
-                    fogHeight={0.6}
-                    backColor="#ffff00"
-                    backColorIntensity={0}
+                    emissiveIntensity={0.3} 
+                    rightColorIntensity={.4}
+                    backColor="#ff0"
+                    backColorIntensity={.7} 
                 />
             </InstancedMesh>
 
@@ -178,8 +180,7 @@ function Instances() {
                 />
                 <MeshRetroMaterial
                     color={platformColor}
-                    name="platform"
-                    fogDensity={0.4}
+                    name="platform" 
                 />
             </InstancedMesh>
 
@@ -194,11 +195,11 @@ function Instances() {
                 />
                 <MeshRetroMaterial
                     name="device"
-                    color={deviceColor}
-                    fogDensity={groundFogIntensity}
-                    backColorIntensity={.2}
-                    rightColorIntensity={.7}
-                    rightColor="#20f"
+                    color={deviceColor} 
+                    backColorIntensity={.0}
+                    rightColorIntensity={.97}
+                    rightColor={rightColor}
+    
                 />
             </InstancedMesh>
 

@@ -33,6 +33,7 @@ interface ShaderPart {
 
 interface UseShaderParams {
     uniforms?: Record<string, IUniform<any>>
+    shared?: string
     vertex?: ShaderPart
     cacheKey?: string
     fragment?: ShaderPart
@@ -59,6 +60,7 @@ export function useWindowEvent(name: string | string[], func: (e: any) => void, 
 export function useShader({
     cacheKey,
     uniforms: incomingUniforms = {},
+    shared = "",
     vertex = {
         head: "",
         main: "",
@@ -86,7 +88,8 @@ export function useShader({
 
             shader.vertexShader = shader.vertexShader.replace("#include <common>", glsl`
                 #include <common>
-         
+                
+                ${shared}
                 ${vertex.head}  
             `)
             shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", glsl`
@@ -97,6 +100,7 @@ export function useShader({
             shader.fragmentShader = shader.fragmentShader.replace("#include <common>", glsl`
                 #include <common>
 
+                ${shared}
                 ${fragment?.head}  
             `)
             shader.fragmentShader = shader.fragmentShader.replace("#include <dithering_fragment>", glsl`

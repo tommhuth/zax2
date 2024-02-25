@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react"
 import { setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
-import { ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
+import { Color, ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
 import { Tuple3, Tuple4 } from "../../../types"
 import { store, useStore } from "../../../data/store"
 import { setInstance } from "../../../data/store/utils"
@@ -91,6 +91,10 @@ export default function InstancedMesh({
         for (let i = 0; i < count; i++) {
             setMatrixAt({ instance: instance, index: i, scale: 0 })
         }
+    }, [instance])
+
+    useLayoutEffect(()=> {
+        colors && instance && setColorAt(instance, count - 1, new Color())
     }, [instance])
 
     return (

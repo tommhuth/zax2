@@ -58,13 +58,13 @@ export default function Lights() {
         explosionLightRef2.current.intensity = 0
     }, [])
 
-    useEffect(() => {
-        if (lastExplosion) {
+    useEffect(() => { 
+        if (lastExplosion?.radius > .5) {
             let light = explosionLights[counter.current].current
 
             if (light) {
                 light.intensity = 150
-                light.distance = Math.max(lastExplosion.radius, 5) * 1.5
+                light.distance = Math.max(lastExplosion.radius, 5) * 3
                 light.position.set(...lastExplosion.position)
                 light.position.y += 3
             }
@@ -84,10 +84,10 @@ export default function Lights() {
     return (
         <>
             <pointLight
-                ref={engineLightRef}
-                distance={45}
-                position-y={3}
-                intensity={35} //25} 
+                ref={engineLightRef} 
+                distance={90}
+                position-y={1} 
+                intensity={65}
                 color={"#ffffff"}
             />
 
@@ -100,14 +100,14 @@ export default function Lights() {
                 color={"#fff"}
             />
 
-            <directionalLight position={[-6, 15, -3]} intensity={.3} /> 
+            <directionalLight position={[-6, 15, -6]} intensity={.6} /> 
             
             <directionalLight
                 ref={shadowLightRef}
-                color={"#b4e2ff"}
+                color={"#ffffff"}
                 position={[0, 15, 0]}
-                intensity={.4}
-                castShadow
+                intensity={1.3}
+                castShadow 
                 shadow-radius={1.5}
                 shadow-camera-near={0} // y
                 shadow-camera-far={15}

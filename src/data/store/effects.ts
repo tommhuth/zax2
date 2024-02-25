@@ -4,7 +4,7 @@ import { Store, store } from "."
 import { ColorRepresentation, Vector3 } from "three"
 import { Particle } from "../types"
 import { setCameraShake } from "./player"
-import { clamp, setBufferAttribute, setColorAt, setMatrixAt } from "../utils"
+import { clamp, setColorAt, setMatrixAt } from "../utils"
 import { easeOutCubic } from "../shaping"
 
 function updateEffects(data: Partial<Store["effects"]>) {
@@ -169,15 +169,13 @@ export function createExplosion({
 
 export function createImpactDecal(
     position: Tuple3,
-    scale = random.float(1.85, 3),
-    opacity = random.float(.4, .6)
+    scale = random.float(2, 3), 
 ) {
-    let { impact } = store.getState().instances
-    let index = impact.index.next()
-
-    setBufferAttribute(impact.mesh.geometry, "aOpacity", opacity, index)
+    let { decal } = store.getState().instances
+    let index = decal.index.next()
+ 
     setMatrixAt({
-        instance: impact.mesh,
+        instance: decal.mesh,
         index,
         scale: [scale, scale, scale],
         rotation: [-Math.PI * .5, 0, random.float(0, Math.PI * 2)],

@@ -232,9 +232,7 @@ export default function Player({
                     castShadow
                     position={[0, 0, 0]}
                 >
-                    <MeshRetroMaterial
-                        dithering={0}
-                        isInstance={false}
+                    <MeshRetroMaterial 
                         name="player"
                         attach={"material"}
                         color={playerColor}
