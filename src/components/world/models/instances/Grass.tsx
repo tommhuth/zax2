@@ -76,6 +76,7 @@ export default function Grass() {
                 float playerDistanceEffect = 1. - clamp(
                     length(vGlobalPosition - vec3(uPlayerPosition.x, uPlayerPosition.y, uPlayerPosition.z - 3.)) / 5., 0., 1.
                 );
+                float noiseEffect = easeInOutSine((noise(vGlobalPosition * .15 + uTime * .4) + 1.) / 2.) ;
 
                 // base color
                 gl_FragColor.rgb = mix(uColorStart, uColorEnd, easeInQuad(clamp(vGlobalPosition.y / height, 0., 1.)));
@@ -90,6 +91,12 @@ export default function Grass() {
                     gl_FragColor.rgb,
                     vec3(0.5, 1., 0.9),
                     clamp((vGlobalPosition.y - 1.75) / .8, 0., 1.)
+                );
+                // fog
+                gl_FragColor.rgb = mix(
+                    gl_FragColor.rgb,
+                    vec3(0.0, 0.0, 0.3),
+                    noiseEffect * easeInQuad(1. - clamp(vGlobalPosition.y / 5., 0., 1.))
                 );
 
                 gl_FragColor.a = clamp((vPosition.y) / .5, 0., 1.);
