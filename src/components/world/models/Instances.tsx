@@ -195,6 +195,7 @@ function Instances() {
                 />
                 <MeshRetroMaterial
                     name="device"
+                    vertexColors
                     color={deviceColor} 
                     backColorIntensity={.0}
                     rightColorIntensity={.97}

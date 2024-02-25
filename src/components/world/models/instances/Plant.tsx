@@ -26,6 +26,7 @@ export default function Plant() {
             <MeshRetroMaterial 
                 name="plant"
                 colorCount={12}
+                vertexColors
                 color={plantColor}
                 side={DoubleSide}
                 vertexShader={glsl`
@@ -37,18 +38,12 @@ export default function Plant() {
                     transformed.x += cos((globalPosition.x) * .5 + uTime * timeScale) * heightScale * offsetSize;
                     transformed.x += sin((globalPosition.x) * .4 + uTime * timeScale) * heightScale * offsetSize * 1.1;
 
-                    transformed.z += cos((globalPosition.z) * .35 + uTime * timeScale) * heightScale * offsetSize;
-                    transformed.z += sin((globalPosition.z) * .24 + uTime * timeScale) * heightScale * offsetSize * 1.15 ;
+                    transformed.z += cos((globalPosition.z) * .35 + uTime * timeScale * .1) * heightScale * offsetSize;
+                    transformed.z += sin((globalPosition.z) * .24 + uTime * timeScale * .1) * heightScale * offsetSize * 1.15 ;
 
-                    transformed.y += cos((globalPosition.y) * .35 + uTime * timeScale) * heightScale * offsetSize * .5;
-                    transformed.y += cos((globalPosition.y) * .3 + uTime * timeScale) * heightScale * offsetSize * 1.25 * .5;  
-                `}
-                fragmentShader={glsl`
-                    vec3 start = mix(gl_FragColor.rgb, vec3(${plantColorStart.toArray().map(i => i + .001).join(", ")}), .0);
-                    vec3 end = mix(gl_FragColor.rgb, vec3(${plantColorEnd.toArray().map(i => i + .001).join(", ")}), .0);
-
-                    gl_FragColor.rgb = mix(start, end, easeOutCubic(clamp(length(vPosition) / 5., 0., 1.))) * 1.25;
-                `}
+                    transformed.y += cos((globalPosition.y) * .35 + uTime * timeScale * .2) * heightScale * offsetSize * .5;
+                    transformed.y += cos((globalPosition.y) * .3 + uTime * timeScale * .2) * heightScale * offsetSize * 1.25 * .5;  
+                `} 
             />
         </InstancedMesh>
     )

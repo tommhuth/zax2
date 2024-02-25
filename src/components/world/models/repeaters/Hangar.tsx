@@ -4,18 +4,19 @@ import { useStore } from "../../../../data/store"
 export default function Hangar() {
     const { nodes } = useGLTF("/models/hangar.glb")
     let materials = useStore(i => i.materials) 
+ 
 
     return (
         <group dispose={null}>
             <mesh
-                receiveShadow
-                geometry={nodes.Cube.geometry}
+                receiveShadow 
+                geometry={nodes.Cube004.geometry}
                 material={materials.buildingBase}
             />
             <mesh
                 receiveShadow
-                geometry={nodes.Cube_1.geometry}
-                material={materials.buildingHi}
+                geometry={nodes.Cube004_1.geometry}
+                material={materials.buildingHi} 
             />
         </group>
     )
