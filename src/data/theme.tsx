@@ -27,7 +27,7 @@ export const barellColor = "#0000bb"
 export const barrellEmissiveIntensity = .3
 export const barellParticleColor = "#1400ab"
 
-export const planeColor = "#ff0073"
+export const planeColor = "#a71cbd"
 
 export const playerColor = "#273941"
 

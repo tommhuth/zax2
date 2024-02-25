@@ -68,7 +68,7 @@ function Plane({
     }), [])
     let bottomY = 0
     let grid = useStore(i => i.world.grid)
-    let [index, instance] = useInstance("box", { color: planeColor })
+    let [index, instance] = useInstance("plane")
     let remove = () => {
         removePlane(id)
         data.removed = true
@@ -175,8 +175,8 @@ function Plane({
                 instance,
                 index,
                 position: position.toArray(),
-                scale: [size[0], .5, size[2]],
-                rotation: data.rotation
+                scale: .75,
+                rotation: [data.rotation[0],data.rotation[1] + Math.PI,data.rotation[2] ]
             })
 
             if (!world.frustum.intersectsBox(aabb) && player.object && position.z < player.object.position.z) {

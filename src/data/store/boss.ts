@@ -64,25 +64,14 @@ export function removeHeatSeaker(id: string) {
     }
 }
 
-export function setBossProp(key: string, value: any) {
-    let { boss } = store.getState()
- 
-    store.setState({
-        boss: {
-            ...boss,
-            [key]: value
-        }
-    }) 
-}
-
 export function createHeatSeaker([x, y, z]: Tuple3) {
     let { world, boss, instances } = store.getState()
 
     if (boss) {
         let id = random.id()
         let position = new Vector3(x, y, z)
-        let size: Tuple3 = [.35, .35, .35]
-        let client = world.grid.createClient(position.toArray(), size, {
+        let size = .35
+        let client = world.grid.createClient(position.toArray(), [size, size, size], {
             type: "heatseaker",
             id,
         })
@@ -96,7 +85,7 @@ export function createHeatSeaker([x, y, z]: Tuple3) {
                         id,
                         client,
                         velocity: new Vector3(),
-                        size,
+                        size: .2,
                         position,
                         index: instances.sphere.index.next(),
                     }
@@ -107,6 +96,18 @@ export function createHeatSeaker([x, y, z]: Tuple3) {
         return id
     }
 } 
+
+
+export function setBossProp(key: string, value: any) {
+    let { boss } = store.getState()
+ 
+    store.setState({
+        boss: {
+            ...boss,
+            [key]: value
+        }
+    }) 
+}
 
 export function damageBoss(amount: number) {
     let boss = store.getState().boss

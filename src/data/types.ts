@@ -8,10 +8,10 @@ export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bos
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi"
     | "bossCable" | "bossFloorValley" | "bossHardware" | "bossRock" | "bossPillar"
 
-export type InstanceName = "scrap" |  "line" | "box" | "sphere" | "device"
+export type InstanceName = "scrap" |  "line" | "box" | "sphere" | "particle" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball" | "cable"
     | "turret" | "rocket" | "platform" | "cylinder" | "shimmer" | "dirt"
-    | "grass" | "plant" | "shockwave" | "blast" | "decal" | "exhaust"
+    | "grass" | "plant" | "shockwave" | "blast" | "decal" | "exhaust" | "plane"
 
 export type RepeaterName = "building1" | "building2" | "building3"
     | "building4" | "building5" | "tanks" | "wall1"
@@ -98,7 +98,7 @@ export interface HeatSeaker {
     position: Vector3
     velocity: Vector3
     client: Client
-    size: Tuple3
+    size: number
     id: string
     index: number
 }
