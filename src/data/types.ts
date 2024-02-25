@@ -155,36 +155,7 @@ export interface WorldPart {
     position: Vector3
     color: number
     type: WorldPartType
-}
-
-export interface SpawnedBuilding {
-    position: Tuple3
-    size: Tuple3
-    id: string
-}
-
-export interface SpawnedPlane {
-    position: Tuple3
-    id: string
-    speed?: number
-    fireFrequency?: number
-}
-
-export interface SpawnedRocket {
-    position: Tuple3
-    id: string
-    speed?: number
-}
-
-export interface SpawnedTurret {
-    position: Tuple3
-    id: string
-}
-
-export interface SpawnedBarrel {
-    position: Tuple3
-    id: string
-}
+}  
 
 export interface WorldPartBuildingsGap extends WorldPart {
     type: WorldPartType.BUILDINGS_GAP
