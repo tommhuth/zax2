@@ -36,8 +36,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     emissive,
     ...rest
 }, ref) => {
-    let player = useStore(i => i.player.object)
-    let lastExplosion = useStore(i => i.effects.explosions[0])
+    let player = useStore(i => i.player.object) 
     let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({
         uniforms: {
             uTime: { value: 0 },
@@ -150,11 +149,12 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 float heightScaler = 1. - clamp((vGlobalPosition.y) / 2., 0., 1.);
                 float lowHeight = 1. - clamp(abs(vGlobalPosition.y) / 2., 0., 1.);
                 float heightMin = easeInQuad(1. - clamp((vGlobalPosition.y ) / .5, 0., 1.)); 
+                float heightBase = .45;
                 
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
                     mix(baseFogColor, fogColorHi, easeInQuad(fogLightEffect)), 
-                    min(1., (noiseEffect * heightScaler + heightMin * .25) * lowHeight) 
+                    min(1., (noiseEffect * heightScaler + heightMin * heightBase) * lowHeight) 
                 ); 
 
                 if (uDither > .0) { 
@@ -166,22 +166,27 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         }
     })
 
-    useEffect(()=> {
-        if (!lastExplosion) {
-            return 
-        }
-
-        let i = counter.current
- 
-        uniforms.uLightSources.value[i].strength = 1
-        uniforms.uLightSources.value[i].radius = lastExplosion.radius * 3
-        uniforms.uLightSources.value[i].position.set(...lastExplosion.position)
-
-        counter.next()
-    }, [lastExplosion])
+    useEffect(() => {
+        return useStore.subscribe(
+            state => state.effects.explosions[0],
+            (lastExplosion) => {
+                if (!lastExplosion) {
+                    return 
+                }
+        
+                let i = counter.current
+         
+                uniforms.uLightSources.value[i].strength = 1
+                uniforms.uLightSources.value[i].radius = lastExplosion.radius * 2
+                uniforms.uLightSources.value[i].position.set(...lastExplosion.position)
+        
+                counter.next()
+            }
+        )
+    }, []) 
 
     useFrame((state, delta) => { 
-        if ( player) {
+        if (player) {
             uniforms.uPlayerPosition.value = player.position.toArray()
             uniforms.uPlayerPosition.needsUpdate = true
         }
@@ -189,8 +194,8 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         uniforms.uTime.value += delta * .2
         uniforms.uTime.needsUpdate = true
 
-        uniforms.uLightSources.value[0].strength *= .95
-        uniforms.uLightSources.value[1].strength *= .95
+        uniforms.uLightSources.value[0].strength *= .97
+        uniforms.uLightSources.value[1].strength *= .97
         uniforms.uLightSources.needsUpdate = true
     })
 
