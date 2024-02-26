@@ -58,8 +58,7 @@ export default function Player({
         return {
             speed: 6,
             lastShotAt: 0,
-            isMovingUp: false,
-            keys: {},
+            isMovingUp: false, 
             bossDeadAt: 0, 
         }
     }, [])  
