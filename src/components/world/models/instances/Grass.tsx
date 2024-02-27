@@ -59,7 +59,7 @@ export default function Grass() {
                 float offsetHeightEffect = 1. - clamp((uPlayerPosition.y - 1.) / (height * 2. - 1.), 0., 1.);
 
                 transformed += offsetNormal 
-                    * easeInCubic(offsetEffect) 
+                    * easeInCubic(offsetEffect * .75) 
                     * easeOutCubic(offsetHeightEffect) 
                     * clamp(position.y / height, 0., 1.) 
                     * 2.; 

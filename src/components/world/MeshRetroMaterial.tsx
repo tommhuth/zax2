@@ -21,6 +21,7 @@ type MeshRetroMaterialProps = {
     backColorIntensity?: number
 } & Omit<MeshLambertMaterialProps, "onBeforeCompile" | "dithering">
 
+// this doesn't work?!
 let counter = new Counter(1)
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
@@ -104,6 +105,9 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         
         `,
         vertex: { 
+            head: glsl`
+                attribute float aTrauma;
+            `,
             main: glsl`  
                 #ifdef USE_INSTANCING
                     vec4 globalPosition = instanceMatrix * vec4(position, 1.);
@@ -156,12 +160,12 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     mix(baseFogColor, fogColorHi, easeInQuad(fogLightEffect)), 
                     min(1., (noiseEffect * heightScaler + heightMin * heightBase) * lowHeight) 
                 ); 
+  
+                ${fragmentShader}  
 
                 if (uDither > .0) { 
                     gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, uColorCount, uDither);
                 }  
-  
-                ${fragmentShader}  
             `
         }
     })
@@ -172,13 +176,11 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             (lastExplosion) => {
                 if (!lastExplosion) {
                     return 
-                }
-        
-                let i = counter.current
+                } 
          
-                uniforms.uLightSources.value[i].strength = 1
-                uniforms.uLightSources.value[i].radius = lastExplosion.radius * 2
-                uniforms.uLightSources.value[i].position.set(...lastExplosion.position)
+                uniforms.uLightSources.value[counter.current].strength = 1
+                uniforms.uLightSources.value[counter.current].radius = lastExplosion.radius * 2
+                uniforms.uLightSources.value[counter.current].position.set(...lastExplosion.position)
         
                 counter.next()
             }

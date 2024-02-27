@@ -14,7 +14,7 @@ interface UseCollisionDetectionParams {
     interval?: number
     position?: Vector3
     size?: Tuple3
-    predicate?: () => boolean
+    when?: () => boolean
     actions: BulletActions
 }
 
@@ -58,14 +58,14 @@ export function useCollisionDetection({
     position,
     size,
     actions,
-    predicate = () => true,
+    when = () => true,
 }: UseCollisionDetectionParams) {
     let grid = useStore(i => i.world.grid)
     let tick = useRef(0)
     let types = Object.keys(actions)
 
     useEffect(() => { 
-        if (!actions.bullet || !predicate()) {
+        if (!actions.bullet || !when()) {
             return 
         }
 
@@ -78,10 +78,10 @@ export function useCollisionDetection({
         return () => {
             window.removeEventListener("bulletcollision", onBulletCollision as EventListener)
         }
-    }, [actions.bullet, predicate])
+    }, [actions.bullet, when])
 
     useFrame(() => {
-        if (predicate() && tick.current % interval === 0 && position && size) {
+        if (when() && tick.current % interval === 0 && position && size) {
             let collisions = getCollisions({
                 grid, 
                 position,

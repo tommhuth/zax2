@@ -42,7 +42,7 @@ function BulletHandler() {
             for (let client of collisions) {
                 let intersection = getIntersection(client, bullet)
 
-                setLastImpactLocation(...intersection)
+                setLastImpactLocation(...intersection) 
 
                 window.dispatchEvent(
                     createCollisionEvent({

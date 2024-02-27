@@ -7,22 +7,27 @@ import InstancedMesh from "../InstancedMesh"
 import { glsl } from "../../../../data/utils"
 import { useLoader } from "@react-three/fiber"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
+import { useMemo } from "react"
 
 export default function Plant() {
+    let count = 10
     let parts = useStore(i => i.world.parts)
     let ready = useStore(i => i.ready)
     let hasFoliage = ready ? parts.some(i => i.type === WorldPartType.BUILDINGS_LOW) : true
     let [plant] = useLoader(GLTFLoader, ["/models/plant.glb"])
+    let traumaData = useMemo(() => new Float32Array(count).fill(0), [])
 
     return ( 
         <InstancedMesh
             name="plant"
-            count={10}
+            count={count}
             receiveShadow={false}
             castShadow
             visible={hasFoliage}
         >
-            <primitive object={(plant.nodes.plant as Mesh).geometry} attach="geometry" />
+            <primitive object={(plant.nodes.plant as Mesh).geometry} attach="geometry" >
+                <instancedBufferAttribute attach={"attributes-aTrauma"} args={[traumaData, 1, false, 1]} />
+            </primitive>
             <MeshRetroMaterial 
                 name="plant"
                 colorCount={12}
@@ -43,6 +48,8 @@ export default function Plant() {
 
                     transformed.y += cos((globalPosition.y) * .35 + uTime * timeScale * .2) * heightScale * offsetSize * .5;
                     transformed.y += cos((globalPosition.y) * .3 + uTime * timeScale * .2) * heightScale * offsetSize * 1.25 * .5;  
+
+                    transformed += aTrauma * random(globalPosition.xz + uTime) * normalize(transformed);
                 `} 
             />
         </InstancedMesh>

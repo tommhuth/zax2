@@ -50,7 +50,7 @@ export default function World() {
     useEffect(() => {
         if (loaded) {
             setTimeout(() => {
-                addWorldPart(makeBuildingsLow({ position: new Vector3(0, 0, 120), size: [0, 0] }))
+                addWorldPart(makeBuildingsLow({ position: new Vector3(0, 0, 130), size: [0, 0] }))
             }, 100)
         }
     }, [loaded])

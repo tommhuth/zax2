@@ -6,9 +6,7 @@
 - boss rocket 3d model 
 - actual level design   
 - plane cleanup 
-- exploding plants?
-- color theme revision 
-- grass normal fix
+- exploding plants?  
 
 ## Assets
 - https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html
