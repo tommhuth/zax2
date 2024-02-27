@@ -20,8 +20,8 @@ export default function BuildingsLow({
             id={id}
         > 
             <Plant
-                position={[0, 0, -7]}
-                scale={1.5}
+                position={[5, 0, 2]}
+                scale={1.35}
             />
 
             <Turret 
@@ -59,12 +59,12 @@ export default function BuildingsLow({
             />
 
             <Plant
-                position={[-2, 0, -5]}
+                position={[-3.5, 0, 6]}
                 scale={1}
             />
 
             <Plant
-                position={[1, 0,  12]}
+                position={[4, 0,  19]}
                 scale={1.25 }
             />
             <Floor

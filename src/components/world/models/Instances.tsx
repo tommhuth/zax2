@@ -6,12 +6,13 @@ import {
     deviceColor,
     dirtColor,
     planeColor,
+    plantColor,
     platformColor,
     rightColor,
     scrapColor,
     turretColor,
 } from "../../../data/theme"
-import { FrontSide, Mesh } from "three"
+import { DoubleSide, FrontSide, Mesh } from "three"
 import { MeshRetroMaterial } from "../MeshRetroMaterial"
 import { memo } from "react"
 import Barrels from "./instances/Barrels"
@@ -21,7 +22,7 @@ import Exhaust from "./instances/Exhaust"
 import { glsl } from "../../../data/utils"
 
 function Instances() {
-    let [turret2, rocket, platform, device, scrap, cable, dirt, plane] = useLoader(GLTFLoader, [
+    let [turret2, rocket, platform, device, scrap, cable, dirt, plane, leaf] = useLoader(GLTFLoader, [
         "/models/turret2.glb",
         "/models/rocket.glb",
         "/models/platform.glb",
@@ -30,6 +31,7 @@ function Instances() {
         "/models/cable.glb",
         "/models/dirt.glb",
         "/models/space.glb",
+        "/models/leaf.glb",
     ]) 
 
     return (
@@ -48,6 +50,25 @@ function Instances() {
                 <MeshRetroMaterial
                     color={planeColor}
                     name="plane"
+                    colorCount={8} 
+                    rightColorIntensity={0}
+                />
+            </InstancedMesh>
+            <InstancedMesh
+                name="leaf"
+                count={40}
+                castShadow 
+            >
+                <primitive
+                    object={(leaf.nodes.leaf as Mesh).geometry}
+                    dispose={null}
+                    attach="geometry"
+                />
+                <MeshRetroMaterial
+                    color={plantColor}
+                    name="leaf"
+                    vertexColors
+                    side={DoubleSide}
                     colorCount={8} 
                     rightColorIntensity={0}
                 />

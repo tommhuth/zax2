@@ -8,7 +8,7 @@ export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bos
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi"
     | "bossCable" | "bossFloorValley" | "bossHardware" | "bossRock" | "bossPillar"
 
-export type InstanceName = "scrap" |  "line" | "box" | "sphere" | "particle" | "device"
+export type InstanceName = "leaf" | "scrap" |  "line" | "box" | "sphere" | "particle" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball" | "cable"
     | "turret" | "rocket" | "platform" | "cylinder" | "shimmer" | "dirt"
     | "grass" | "plant" | "shockwave" | "blast" | "decal" | "exhaust" | "plane"
