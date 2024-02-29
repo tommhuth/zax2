@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, setBufferAttribute, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
+import { clamp, ndelta, setBufferAttribute, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
 import { useWorldPart } from "../WorldPartWrapper"
@@ -10,7 +10,6 @@ import { Vector3 } from "three"
 import { useFrame } from "@react-three/fiber"
 import { createParticles } from "../../../data/store/effects"
 import { Owner } from "../../../data/types"
-import { easeOutQuad } from "../../../data/shaping"
 import { damp } from "three/src/math/MathUtils.js"
 
 interface PlantProps {
@@ -21,10 +20,12 @@ interface PlantProps {
 interface Leaf {
     position: Tuple3
     acceleration: Tuple3
+    velocity: Tuple3
     rotation: Tuple3
     scale: Tuple3
     time: number
     index: number
+    friction: number 
 }
 
 let width = 5
@@ -51,28 +52,30 @@ export default function Plant({
     }, [grid])
     let trauma = useRef(0)
     let [leaves, setLeaves] = useState<Leaf[]>([])
-    let createLeaves = () => { 
+    let createLeaves = () => {
         let leaf = store.getState().instances.leaf
 
         setLeaves(new Array(random.integer(6, 8)).fill(null).map((i, index, list) => {
-            let x = position.x + random.float(-size[0] * .25, size[0] * .25)
-            let z = position.z + random.float(-size[2] * .25, size[2] * .25)
-            let baseScale = 1 + index / (list.length - 1) *  random.float(-.4, .4)
+            let x = position.x + random.float(-.5, .5)
+            let z = position.z + random.float(-.5, .5)
+            let baseScale = 1 + (index / (list.length - 1)) * random.float(-.4, .1)
 
             return {
                 position: [
                     x,
-                    position.y + random.float(.5, size[1] * .75),
+                    position.y + .5 + (index / (list.length - 1)) * (size[1] * .75),
                     z
                 ],
-                acceleration: [
-                    (x - position.x) * .125,
-                    random.float(-.06, 0),
-                    (z - position.z) * .125,
+                acceleration: [0, -random.float(8, 10), 0], 
+                velocity: [
+                    (x - position.x) * random.float(6, 12),
+                    random.float(.0, 6),
+                    (z - position.z) * random.float(6, 12),
                 ],
+                friction: random.float(.9, 1.35),
                 rotation: [0, random.float(0, Math.PI * 2), 0],
-                scale: [baseScale, random.float(0, 1.65), baseScale],
-                time: random.float(-1, 1),
+                scale: [baseScale, random.float(1, 2.25), baseScale],
+                time: random.float(0, Math.PI * 2),
                 index: leaf.index.next()
             }
         }))
@@ -160,21 +163,26 @@ export default function Plant({
     useFrame((state, delta) => {
         let { instances } = store.getState()
         let floorY = .25
+        let nd = ndelta(delta)
 
         for (let leaf of leaves) {
-            let t = easeOutQuad(clamp((leaf.position[1] - floorY) / 5, 0, 1))
+            let t = clamp((leaf.position[1] - floorY) / 5, 0, 1)
 
-            leaf.position[0] += leaf.acceleration[0]
-            leaf.position[1] = Math.max(floorY, leaf.position[1] - leaf.acceleration[1])
-            leaf.position[2] += leaf.acceleration[2]
+            leaf.position[0] += leaf.velocity[0] * nd
+            leaf.position[1] += leaf.velocity[1] * nd
+            leaf.position[2] += leaf.velocity[2] * nd
 
-            // fake gravity and xz movement
-            leaf.acceleration[1] += delta * .075 * leaf.scale[0]
-            leaf.acceleration[2] = damp(leaf.acceleration[2], 0, 2, delta)
-            leaf.acceleration[0] = damp(leaf.acceleration[0], 0, 2, delta)
-            leaf.rotation[1] += delta * t
+            leaf.position[1] = Math.max(leaf.position[1], floorY)
 
-            leaf.time += delta
+            leaf.velocity[2] = damp(leaf.velocity[2], 0, leaf.friction, nd)
+            leaf.velocity[1] += leaf.acceleration[1] * nd
+            leaf.velocity[0] = damp(leaf.velocity[0], 0, leaf.friction, nd)
+
+            // terminal vel
+            leaf.acceleration[1] = Math.max(leaf.acceleration[1], -5)
+
+            leaf.rotation[1] += nd * t
+            leaf.time += nd
 
             setMatrixAt({
                 instance: instances.leaf.mesh,
