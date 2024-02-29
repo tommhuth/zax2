@@ -1,9 +1,6 @@
 import { startTransition, useEffect } from "react"
 import { useStore } from "../../../data/store"
-import { floorBaseColor } from "../../../data/theme"
 import { BossState, WorldPartBoss } from "../../../data/types"
-import { glsl } from "../../../data/utils"
-import { MeshRetroMaterial } from "../MeshRetroMaterial"
 import WorldPartWrapper from "../WorldPartWrapper"
 import Boss from "../actors/Boss"
 
@@ -13,33 +10,9 @@ import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
 import Cable from "../decoration/Cable"
 import Dirt from "../decoration/Dirt" 
-
-export function BossFogMaterial({ color = floorBaseColor, name = undefined, ...rest }) {
-    return (
-        <MeshRetroMaterial 
-            color={color}
-            name={name} 
-            rightColorIntensity={.5}
-            {...rest}
-            fragmentShader={glsl` 
-                vec3 t = vec3(uTime, uTime * .25, uTime);
-                float n = easeInOutQuad((noise(vGlobalPosition * .25 + t * 1.5) + 1.) / 2.);
-                float n2 = easeInOutQuad((noise(vGlobalPosition * .1 + t * 1.) + 1.) / 2.);
-                float h = easeInQuad(clamp((-(vGlobalPosition.y + 1.) / 6.), 0., 1.));
-                float h2 = easeInQuad(clamp((-(vGlobalPosition.y + 5.5) / 1.5), 0., 1.));
  
-                vec3 color = vec3(0.01, 0.01, 0.2);
-                vec3 highlight = vec3(0., .0, .7); 
-
-                gl_FragColor.rgb = mix(gl_FragColor.rgb, highlight, clamp(n * h + h2, 0., 1.));
-                gl_FragColor.rgb = mix(gl_FragColor.rgb, color, n2 * h * 1.);
-            `}
-        />
-    )
-}
-
 export function Model(props) {
-    const { nodes } = useGLTF("/models/floor5.glb")
+    const { nodes } = useGLTF("/models/floor5.glb") as any
     const materials = useStore(i => i.materials)
 
     return (

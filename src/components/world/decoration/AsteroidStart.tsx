@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei"
-import { MeshRetroMaterial } from "../MeshRetroMaterial" 
+import { MeshRetroMaterial } from "../materials/MeshRetroMaterial" 
 import { glsl } from "../../../data/utils"
 import { useStore } from "../../../data/store"
 
@@ -18,12 +18,16 @@ export function AsteroidStart(props) {
             <mesh>
                 <primitive object={nodes.Cube004_1.geometry} attach="geometry" />
                 <MeshRetroMaterial 
-                    fragmentShader={glsl`
-                        vec3 top = mix(gl_FragColor.rgb, vec3(.0, 1., .6), .84);
-                        vec3 bottom = mix(gl_FragColor.rgb, vec3(.0, .5, 1.), .65); 
-        
-                        gl_FragColor.rgb = mix(top, bottom, clamp(-vGlobalPosition.y / 3., 0., 1.));
-                    `}
+                    shader={{
+                        fragment: {
+                            main: glsl`
+                                vec3 top = mix(gl_FragColor.rgb, vec3(.0, 1., .6), .84);
+                                vec3 bottom = mix(gl_FragColor.rgb, vec3(.0, .5, 1.), .65); 
+                
+                                gl_FragColor.rgb = mix(top, bottom, clamp(-vGlobalPosition.y / 3., 0., 1.));
+                            `
+                        } 
+                    }} 
                 />
             </mesh>
         </group>

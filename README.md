@@ -1,12 +1,10 @@
 # Zax
 
 ## Todo  
-- more destructable ground objects
-- enemy plane 3d model   
-- boss rocket 3d model 
+- more destructable ground objects  
 - actual level design   
-- plane cleanup 
-- exploding plants?  
+- plane cleanup  (enemy plane 3d model)
+- ui/intro
 
 ## Assets
 - https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html

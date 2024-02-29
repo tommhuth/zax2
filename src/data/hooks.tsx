@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react"
-import { IUniform, Shader } from "three"
+import { Color, IUniform, Shader, Vector2, Vector3 } from "three"
 import { glsl } from "./utils"
 import random from "@huth/random"
 
@@ -31,8 +31,8 @@ interface ShaderPart {
     main?: string
 }
 
-interface UseShaderParams {
-    uniforms?: Record<string, IUniform<any>>
+export interface UseShaderParams {
+    uniforms?: Record<string, IUniform<number | Color | Vector3 | Vector2 | Record<string, any>[]>>
     shared?: string
     vertex?: ShaderPart
     cacheKey?: string

@@ -1,13 +1,13 @@
 import { useFrame } from "@react-three/fiber"
 import { memo, startTransition, useEffect, useRef } from "react"
-import { Bullet } from "../../data/types"
-import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../data/utils"
-import { store, useStore } from "../../data/store"
-import { removeBullet } from "../../data/store/actors"
-import { getIntersection, getCollisions, CollisionEventDetails } from "../../data/collisions"
-import { Tuple3 } from "../../types"
+import { Bullet } from "../data/types"
+import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../data/utils"
+import { store, useStore } from "../data/store"
+import { removeBullet } from "../data/store/actors"
+import { getIntersection, getCollisions, CollisionEventDetails } from "../data/collisions"
+import { Tuple3 } from "../types"
 import { Mesh } from "three" 
-import { setLastImpactLocation } from "../../data/store/world"
+import { setLastImpactLocation } from "../data/store/world"
 
 function createCollisionEvent( 
     detail: CollisionEventDetails

@@ -1,10 +1,10 @@
 import { ReactElement, ReactNode, cloneElement, memo, startTransition, useCallback, useMemo } from "react"
 import { barellColor, buildingBaseColor, buildingHiColor, floorBaseColor, floorHiColor, floorMarkColor } from "../../../data/theme"
-import { MeshRetroMaterial } from "../MeshRetroMaterial"
+import { MeshRetroMaterial } from "./MeshRetroMaterial"
 import { BoxGeometry, BufferGeometry, Material, Mesh } from "three"
 import { setMaterial } from "../../../data/store/utils"
-import { MaterialName } from "../../../data/types"
-import { BossFogMaterial } from "../parts/Boss"
+import { MaterialName } from "../../../data/types" 
+import BossFogMaterial from "./BossFogMaterial"
 
 function MaterialLoader() { 
     let materials: Record<MaterialName, ReactNode> = useMemo(() => {
@@ -50,11 +50,11 @@ function MaterialLoader() {
             bossSecondaryBlue: <MeshRetroMaterial color="#00f" />,
             bossWhite: <meshLambertMaterial color="white" />, 
             bossFloorValley: <BossFogMaterial />, 
-            bossFloorHi: <BossFogMaterial color="#fff" />,
+            bossFloorHi: <MeshRetroMaterial color="#fff" />,
             bossCable: <BossFogMaterial color="#f00" />,
             bossHardware: <BossFogMaterial color="#00f" />,
             bossRock: <BossFogMaterial color="#00d" />,
-            bossPillar: <BossFogMaterial color="#00f" />, 
+            bossPillar: <BossFogMaterial color="#00f" />,  
         }
     }, []) 
 

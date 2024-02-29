@@ -2,7 +2,7 @@ import { DoubleSide, Mesh } from "three"
 import { useStore } from "../../../../data/store"
 import { plantColor } from "../../../../data/theme"
 import { WorldPartType } from "../../../../data/types"
-import { MeshRetroMaterial } from "../../MeshRetroMaterial"
+import { MeshRetroMaterial } from "../../materials/MeshRetroMaterial"
 import InstancedMesh from "../InstancedMesh"
 import { glsl } from "../../../../data/utils"
 import { useLoader } from "@react-three/fiber"
@@ -34,23 +34,30 @@ export default function Plant() {
                 vertexColors
                 color={plantColor}
                 side={DoubleSide}
-                vertexShader={glsl`
-                    float height = 2.75;
-                    float heightScale = easeInQuad(clamp(position.y / height, 0., 1.));
-                    float offsetSize = .3;
-                    float timeScale = 16.;
+                shader={{
+                    vertex: {
+                        head: glsl` 
+                            attribute float aTrauma;
+                        `, 
+                        main: glsl`
+                            float height = 2.75;
+                            float heightScale = easeInQuad(clamp(position.y / height, 0., 1.));
+                            float offsetSize = .3;
+                            float timeScale = 16.;
 
-                    transformed.x += cos((globalPosition.x) * .5 + uTime * timeScale) * heightScale * offsetSize;
-                    transformed.x += sin((globalPosition.x) * .4 + uTime * timeScale) * heightScale * offsetSize * 1.1;
+                            transformed.x += cos((globalPosition.x) * .5 + uTime * timeScale) * heightScale * offsetSize;
+                            transformed.x += sin((globalPosition.x) * .4 + uTime * timeScale) * heightScale * offsetSize * 1.1;
 
-                    transformed.z += cos((globalPosition.z) * .35 + uTime * timeScale * .1) * heightScale * offsetSize;
-                    transformed.z += sin((globalPosition.z) * .24 + uTime * timeScale * .1) * heightScale * offsetSize * 1.15 ;
+                            transformed.z += cos((globalPosition.z) * .35 + uTime * timeScale * .1) * heightScale * offsetSize;
+                            transformed.z += sin((globalPosition.z) * .24 + uTime * timeScale * .1) * heightScale * offsetSize * 1.15 ;
 
-                    transformed.y += cos((globalPosition.y) * .35 + uTime * timeScale * .2) * heightScale * offsetSize * .5;
-                    transformed.y += cos((globalPosition.y) * .3 + uTime * timeScale * .2) * heightScale * offsetSize * 1.25 * .5;  
+                            transformed.y += cos((globalPosition.y) * .35 + uTime * timeScale * .2) * heightScale * offsetSize * .5;
+                            transformed.y += cos((globalPosition.y) * .3 + uTime * timeScale * .2) * heightScale * offsetSize * 1.25 * .5;  
 
-                    transformed += aTrauma * random(globalPosition.xz + uTime) * normalize(transformed);
-                `} 
+                            transformed += aTrauma * random(globalPosition.xz + uTime) * normalize(transformed);
+                        `
+                    }
+                }} 
             />
         </InstancedMesh>
     )

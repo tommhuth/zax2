@@ -9,7 +9,7 @@ import { removeExplosion } from "../../../data/store/effects"
 import BlastHandler from "./BlastHandler"
 import FireballHandler from "./FireballHandler"
 import ShockwaveHandler from "./ShockwaveHandler"
-import { MeshRetroMaterial } from "../MeshRetroMaterial"
+import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 
 export default function ExplosionsHandler() {
     let decalCount = 15 
@@ -62,10 +62,14 @@ export default function ExplosionsHandler() {
                     name="impact"
                     depthWrite={false}
                     transparent 
-                    fragmentShader={glsl`
-                        gl_FragColor.rgb = vec3(0., 0., 0.); 
-                        gl_FragColor.a *= .6; 
-                    `}
+                    shader={{
+                        fragment: {
+                            main: glsl`
+                                gl_FragColor.rgb = vec3(0., 0., 0.); 
+                                gl_FragColor.a *= .7; 
+                            `
+                        }
+                    }}
                 /> 
             </InstancedMesh>
         </>

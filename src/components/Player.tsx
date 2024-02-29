@@ -11,7 +11,7 @@ import { damagePlayer, increaseScore, setPlayerObject } from "../data/store/play
 import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/store/actors"
 import { damageBarrel } from "../data/store/world"
 import { playerColor } from "../data/theme"
-import { MeshRetroMaterial } from "./world/MeshRetroMaterial"
+import { MeshRetroMaterial } from "./world/materials/MeshRetroMaterial"
 import { removeHeatSeaker, setBossProp } from "../data/store/boss"
 import { useCollisionDetection } from "../data/collisions" 
 import { easeInQuad } from "../data/shaping"

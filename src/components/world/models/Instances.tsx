@@ -13,7 +13,7 @@ import {
     turretColor,
 } from "../../../data/theme"
 import { DoubleSide, FrontSide, Mesh } from "three"
-import { MeshRetroMaterial } from "../MeshRetroMaterial"
+import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { memo } from "react"
 import Barrels from "./instances/Barrels"
 import Plant from "./instances/Plant"
@@ -180,9 +180,13 @@ function Instances() {
                     side={FrontSide}
                     name="scrap"
                     color={scrapColor}
-                    fragmentShader={glsl`
-                        gl_FragColor.rgb = mix(gl_FragColor.rgb, vColor, .6); 
-                     `}
+                    shader={{
+                        fragment: {
+                            main: glsl`
+                                gl_FragColor.rgb = mix(gl_FragColor.rgb, vColor, .6); 
+                            `
+                        }
+                    }}
                 />
             </InstancedMesh>
 

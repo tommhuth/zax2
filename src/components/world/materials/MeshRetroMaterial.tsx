@@ -1,45 +1,48 @@
 import { Color, MeshLambertMaterial, Vector3 } from "three"
-import { useShader } from "../../data/hooks"
-import { backColor as defaultBackColor, bcolor, fogColor, rightColor as defaultRightColor } from "../../data/theme"
-import easings from "../../shaders/easings.glsl"
-import dithering from "../../shaders/dither.glsl"
-import noise from "../../shaders/noise.glsl"
-import { glsl } from "../../data/utils"
+import { UseShaderParams, useShader } from "../../../data/hooks"
+import { backColor as defaultBackColor, bcolor, fogColor, rightColor as defaultRightColor } from "../../../data/theme"
+import easings from "../../../shaders/easings.glsl"
+import dithering from "../../../shaders/dither.glsl"
+import noise from "../../../shaders/noise.glsl" 
+import { glsl } from "../../../data/utils"
 import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
-import { forwardRef, useEffect } from "react"
-import { useStore } from "../../data/store"
-import Counter from "../../data/world/Counter"
+import { forwardRef, useEffect, useMemo } from "react"
+import { useStore } from "../../../data/store"
+import Counter from "../../../data/world/Counter"
 
-type MeshRetroMaterialProps = {  
-    fragmentShader?: string
-    vertexShader?: string 
+type MeshRetroMaterialProps = {   
     colorCount?: number
     dither?: number 
     rightColor?: string
     rightColorIntensity?: number
     backColor?: string
     backColorIntensity?: number
+    shader?: {
+        uniforms?: UseShaderParams["uniforms"]
+        shared?: UseShaderParams["shared"] 
+        vertex?: UseShaderParams["vertex"] 
+        fragment?: UseShaderParams["fragment"] 
+    }
 } & Omit<MeshLambertMaterialProps, "onBeforeCompile" | "dithering">
 
-// this doesn't work?!
-let counter = new Counter(1)
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
-    color = bcolor,  
-    fragmentShader = "",
-    vertexShader = "", 
+    color = bcolor,   
     colorCount = 11,
     dither = .005,
     rightColor = defaultRightColor,
     rightColorIntensity = .75,
     backColor = defaultBackColor,
     backColorIntensity = 0,
+    shader = {},
     emissive,
     ...rest
 }, ref) => {
     let player = useStore(i => i.player.object) 
+    let counter = useMemo(() => new Counter(1), [])
     let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({
         uniforms: {
+            ...shader?.uniforms,
             uTime: { value: 0 },
             uColorCount: { value: colorCount },
             uDither: { value: dither }, 
@@ -102,12 +105,11 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             ${easings} 
             ${dithering}
             ${noise}
+            ${shader?.shared || ""}
         
         `,
         vertex: { 
-            head: glsl`
-                attribute float aTrauma;
-            `,
+            head: shader?.vertex?.head,
             main: glsl`  
                 #ifdef USE_INSTANCING
                     vec4 globalPosition = instanceMatrix * vec4(position, 1.);
@@ -121,11 +123,12 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
 
                 vGlobalPosition = globalPosition.xyz;
                 vPosition = position.xyz;  
-
-                ${vertexShader}
+ 
+                ${shader?.vertex?.main || ""}
             `
         },
         fragment: { 
+            head: shader?.fragment?.head,
             main: glsl`   
                 for (int i = 0; i < uBasicDirectionLights.length(); i++) { 
                     BasicDirectionLight light = uBasicDirectionLights[i];
@@ -161,7 +164,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     min(1., (noiseEffect * heightScaler + heightMin * heightBase) * lowHeight) 
                 ); 
   
-                ${fragmentShader}  
+                ${shader?.fragment?.main || ""}
 
                 if (uDither > .0) { 
                     gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, uColorCount, uDither);

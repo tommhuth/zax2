@@ -54,15 +54,15 @@ export default function Plant({
     let createLeaves = () => { 
         let leaf = store.getState().instances.leaf
 
-        setLeaves(new Array(random.integer(6, 8)).fill(null).map(() => {
+        setLeaves(new Array(random.integer(6, 8)).fill(null).map((i, index, list) => {
             let x = position.x + random.float(-size[0] * .25, size[0] * .25)
             let z = position.z + random.float(-size[2] * .25, size[2] * .25)
-            let baseScale = random.float(scale * .2, scale * .7)
+            let baseScale = 1 + index / (list.length - 1) *  random.float(-.4, .4)
 
             return {
                 position: [
                     x,
-                    position.y + random.float(.25, size[1] * .5),
+                    position.y + random.float(.5, size[1] * .75),
                     z
                 ],
                 acceleration: [
@@ -87,6 +87,16 @@ export default function Plant({
             bullet: ({ client, type, bullet }) => {
                 if (client.data.id === id && type === "plant" && bullet.owner === Owner.PLAYER) {
                     setHealth(Math.max(health - 10, 0))
+                    createParticles({
+                        position: position.toArray(),
+                        count: [5, 10],
+                        radius: [.01 * scale, .3],
+                        normal: [0, 1, 0],
+                        spread: [[-.85, .85], [0, 1]],
+                        speed: [10, 27],
+                        color: "#00ff9d",
+                        stagger: [0, 0]
+                    })
                 }
             },
             player: () => {
