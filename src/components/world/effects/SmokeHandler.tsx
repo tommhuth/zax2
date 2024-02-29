@@ -60,8 +60,15 @@ export default function SmokeHandler() {
                     return dot(color, vec3(0.299, 0.587, 0.114));
                 }
             `,
-            main: glsl` 
+            main: glsl`   
                 gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * .9 + .075, 1., .0125);
+                gl_FragColor.rgb -= (1. - getShadow( 
+                    directionalShadowMap[0], 
+                    directionalLightShadows[0].shadowMapSize, 
+                    directionalLightShadows[0].shadowBias, 
+                    directionalLightShadows[0].shadowRadius, 
+                    vDirectionalShadowCoord[0] 
+                )) * .15;
                 gl_FragColor.a = easeOutQuad(clamp(vGlobalPosition.y / 1.25, 0., 1.)) * luma(gl_FragColor.rgb); 
             `
         }
@@ -150,7 +157,11 @@ export default function SmokeHandler() {
     })
 
     return (
-        <instancedMesh ref={instanceRef} args={[undefined, undefined, count]}>
+        <instancedMesh 
+            ref={instanceRef} 
+            receiveShadow 
+            args={[undefined, undefined, count]}
+        >
             <sphereGeometry args={[1, 16, 16]} />
             <meshLambertMaterial
                 transparent

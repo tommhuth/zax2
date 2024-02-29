@@ -18,6 +18,7 @@ function MaterialLoader() {
                     vertexColors
                     emissive={barellColor}
                     emissiveIntensity={.2}
+                    additionalShadowStrength={0}
                 />
             ),
             buildingBase: (

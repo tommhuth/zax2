@@ -17,6 +17,7 @@ type MeshRetroMaterialProps = {
     rightColorIntensity?: number
     backColor?: string
     backColorIntensity?: number
+    additionalShadowStrength?: number
     shader?: {
         uniforms?: UseShaderParams["uniforms"]
         shared?: UseShaderParams["shared"] 
@@ -36,8 +37,9 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     backColorIntensity = 0,
     shader = {},
     emissive,
+    additionalShadowStrength = .1,
     ...rest
-}, ref) => {
+}, ref) => { 
     let player = useStore(i => i.player.object) 
     let counter = useMemo(() => new Counter(1), [])
     let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({
@@ -59,6 +61,9 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                         radius: 0,
                     },
                 ]
+            },
+            uAdditionalShadowStrength: {
+                value: additionalShadowStrength,
             },
             uBasicDirectionLights: {
                 value: [ 
@@ -83,6 +88,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             uniform vec3 uPlayerPosition; 
             uniform float uDither;    
             uniform float uColorCount;   
+            uniform float uAdditionalShadowStrength;   
             varying vec3 vPosition;   
             varying vec3 vGlobalPosition;    
             varying vec3 vInstanceColor;    
@@ -156,7 +162,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 float heightScaler = 1. - clamp((vGlobalPosition.y) / 2., 0., 1.);
                 float lowHeight = 1. - clamp(abs(vGlobalPosition.y) / 2., 0., 1.);
                 float heightMin = easeInQuad(1. - clamp((vGlobalPosition.y ) / .5, 0., 1.)); 
-                float heightBase = .45;
+                float heightBase = .3;
                 
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
@@ -165,6 +171,17 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 ); 
   
                 ${shader?.fragment?.main || ""}
+
+                getDirectionalLightInfo( directionalLights[0], directLight );
+
+                gl_FragColor.rgb -= (1. - getShadow( 
+                    directionalShadowMap[0], 
+                    directionalLightShadows[0].shadowMapSize, 
+                    directionalLightShadows[0].shadowBias, 
+                    directionalLightShadows[0].shadowRadius, 
+                    vDirectionalShadowCoord[0] 
+                )) * uAdditionalShadowStrength * clamp(dot(-vGlobalNormal, vec3(0., -1., 0.)), 0., 1.);
+
 
                 if (uDither > .0) { 
                     gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, uColorCount, uDither);

@@ -31,8 +31,8 @@ interface ShaderPart {
     main?: string
 }
 
-export interface UseShaderParams {
-    uniforms?: Record<string, IUniform<number | Color | Vector3 | Vector2 | Record<string, any>[]>>
+export interface UseShaderParams<T = Record<string, IUniform<any>>> {
+    uniforms?: T 
     shared?: string
     vertex?: ShaderPart
     cacheKey?: string
