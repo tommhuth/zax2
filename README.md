@@ -5,6 +5,9 @@
 - actual level design   
 - plane cleanup  (enemy plane 3d model)
 - ui/intro
+- material review / fog tweak
+- hit effect
+- raw shader material?
 
 ## Assets
 - https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html

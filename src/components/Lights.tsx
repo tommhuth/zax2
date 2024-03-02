@@ -116,6 +116,8 @@ export default function Lights() {
                 shadow-camera-bottom={-diagonal * 1.75}
                 shadow-mapSize={[512, 512]}
                 shadow-bias={-0.0001}
+                shadow-blurSamples={15}
+                shadow-radius={4}
             />
         </>
     )

@@ -16,6 +16,7 @@ import {
     BasicShadowMap,
     InstancedMesh,
     NoToneMapping,
+    VSMShadowMap,
 } from "three"
 import { dpr, pixelSize, store, useStore, zoom } from "./data/store"
 import Models from "./components/world/models/Models"
@@ -76,7 +77,7 @@ export default function Wrapper() {
                     position: "fixed",
                 }}
                 shadows={{
-                    type: BasicShadowMap,
+                    type: VSMShadowMap,
                 }}
                 orthographic
                 camera={{

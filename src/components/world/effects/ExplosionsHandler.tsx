@@ -50,9 +50,7 @@ export default function ExplosionsHandler() {
 
             <InstancedMesh
                 name="decal"
-                count={decalCount}
-                castShadow={false}
-                receiveShadow
+                count={decalCount} 
                 colors
             >
                 <planeGeometry args={[2, 2, 1, 1]} />
