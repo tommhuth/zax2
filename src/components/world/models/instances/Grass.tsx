@@ -67,12 +67,14 @@ export default function Grass() {
                 transformed.x += (cos((vGlobalPosition.x) * .1 + uTime * timeScale)) * heightScale * offsetSize;
                 transformed.x += (sin((vGlobalPosition.z) * .6 + uTime * timeScale)) * heightScale * 1.5 * offsetSize; 
                 transformed.x += (sin((vGlobalPosition.z) * .3 + uTime * timeScale)) * heightScale * .25 * offsetSize; 
+
+                vGlobalPosition = (instanceMatrix * vec4(transformed, 1.)).xyz;
             `
         },
         fragment: {
             main: glsl` 
                 float height = 2.25; 
-                vec3 backlightColor = vec3(.8, .99, .0);  
+                vec3 backlightColor = vec3(.5, .99, .2);  
                 float playerDistanceEffect = 1. - clamp(
                     length(vGlobalPosition - vec3(uPlayerPosition.x, uPlayerPosition.y, uPlayerPosition.z - 3.)) / 5., 0., 1.
                 );
@@ -80,18 +82,21 @@ export default function Grass() {
 
                 // base color
                 gl_FragColor.rgb = mix(uColorStart, uColorEnd, easeInQuad(clamp(vGlobalPosition.y / height, 0., 1.)));
+             
+                // tip highlight
+                gl_FragColor.rgb = mix(
+                    gl_FragColor.rgb,
+                    mix(vec3(0., 1., 0.9), vec3(0., 1., 0.4), easeInOutCubic((noise(vGlobalPosition * .3 + uTime * .5) + 1.) / 2.)), // vec3(0.5, 1., 0.9),
+                    clamp((vGlobalPosition.y - 1.75) / .5, 0., 1.)
+                );
+                
                 // player highlight color
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb,
                     backlightColor,
                     playerDistanceEffect
                 );
-                // tip highlight
-                gl_FragColor.rgb = mix(
-                    gl_FragColor.rgb,
-                    vec3(0.5, 1., 0.9),
-                    clamp((vGlobalPosition.y - 1.75) / .8, 0., 1.)
-                );
+
                 // fog
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb,
@@ -100,7 +105,7 @@ export default function Grass() {
                 );
 
                 gl_FragColor.a = clamp((vPosition.y) / .5, 0., 1.);
-                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 8., .0091); 
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 11., .0025); 
             `
         }
     })
