@@ -1,11 +1,11 @@
 import { Frustum, Object3D, Vector3 } from "three"
 import type { Material } from "three"
 import { create } from "zustand"
-import { subscribeWithSelector } from 'zustand/middleware'
+import { subscribeWithSelector } from "zustand/middleware"
 import { Tuple3 } from "../../types"
 import {
     Barrel, BossState, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, MaterialName, Particle,
-    Plane, RepeaterMesh, Rocket, Shimmer, Turret, WorldPart
+    Plane, RepeaterMesh, Rocket, Turret, WorldPart
 } from "../types"
 import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D"
 import { clamp } from "../utils"
@@ -47,8 +47,7 @@ export interface Store {
         lastImpactLocation: Tuple3
     }
     effects: {
-        particles: Particle[]
-        shimmer: Shimmer[]
+        particles: Particle[] 
         explosions: Explosion[]
     }
     instances: Record<InstanceName, Instance>
@@ -106,8 +105,7 @@ const store = create(
         },
         effects: {
             explosions: [],
-            particles: [],
-            shimmer: [],
+            particles: [], 
         },
         instances: {} as Store["instances"],
         repeaters: {},

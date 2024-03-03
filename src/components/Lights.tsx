@@ -87,7 +87,7 @@ export default function Lights() {
                 ref={engineLightRef} 
                 distance={90}
                 position-y={1} 
-                intensity={65}
+                intensity={50}
                 color={"#ffffff"}
             />
 

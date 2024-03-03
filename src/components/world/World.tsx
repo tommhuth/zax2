@@ -13,8 +13,7 @@ import BuildingsGap from "./parts/BuildingsGap"
 import BuildingsLow from "./parts/BuildingsLow"
 import Rocket from "./actors/Rocket"
 import { addWorldPart } from "../../data/store/world"
-import ExplosionsHandler from "./effects/ExplosionsHandler"
-import ShimmerHandler from "./effects/ShimmerHandler"
+import ExplosionsHandler from "./effects/ExplosionsHandler" 
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
@@ -80,7 +79,6 @@ export default function World() {
             <ParticleHandler />
             <BulletHandler />
             <ExplosionsHandler />
-            <ShimmerHandler />
             <SmokeHandler />
         </>
     )

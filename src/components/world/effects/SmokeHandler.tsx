@@ -167,8 +167,7 @@ export default function SmokeHandler() {
                 transparent
                 color="#cbecff"
                 emissive={"#fff"}
-                emissiveIntensity={.65} 
-                dithering
+                emissiveIntensity={.65}  
                 name="smoke"
                 customProgramCacheKey={shader.customProgramCacheKey}
                 onBeforeCompile={shader.onBeforeCompile}

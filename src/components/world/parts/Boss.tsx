@@ -10,6 +10,7 @@ import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
 import Cable from "../decoration/Cable"
 import Dirt from "../decoration/Dirt" 
+import timeout from "../../../data/timeout"
  
 export function Model(props) {
     const { nodes } = useGLTF("/models/floor5.glb") as any
@@ -101,7 +102,7 @@ export default function BossPart({
 
     useEffect(() => {
         if (state === BossState.DEAD) {
-            setTimeout(() => setBossProp("state", BossState.OUTRO), 4000)
+            return timeout(() => setBossProp("state", BossState.OUTRO), 4000)
         }
     }, [state])
 

@@ -6,7 +6,7 @@ import { Barrel, InstanceName, Owner } from "../../../data/types"
 import { useInstance } from "../models/InstancedMesh"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
-import { createExplosion, createImpactDecal, createParticles, createScrap, createShimmer } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { damageBarrel, removeBarrel } from "../../../data/store/world"
 import { barellColor, barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
@@ -15,15 +15,7 @@ import Config from "../../../data/Config"
 
 let _size = new Vector3()
 
-function explode(position: Vector3, size: Tuple3, color: string) {
-    createShimmer({
-        position: [
-            position.x,
-            position.y + size[1] / 2,
-            position.z,
-        ],
-        size: [4, 5, 4]
-    })
+function explode(position: Vector3, size: Tuple3, color: string) { 
     createExplosion({
         position: [position.x, .5, position.z],
         count: 10,
@@ -32,13 +24,15 @@ function explode(position: Vector3, size: Tuple3, color: string) {
         fireballCount: random.pick(6, 0),
     })
     createParticles({
-        position: [position.x, 1, position.z],
-        speed: [5, 20], 
-        offset: [[-1, 1], [0, 1], [-1, 1]],
+        position: [position.x, .5, position.z],
+        offset: [[-.5, .5], [0, .5], [-.5, .5]],
+        speed: [5, 25], 
         normal: [0, 1, 0],
-        count: [10, 15],
+        spread: [[-1, 1], [.5, 2]],
+        count: [15, 20],
         radius: [.1, .4],
         color,
+        stagger: [-150,0]
     })
     createImpactDecal([position.x, 0, position.z])
     createScrap([position.x, position.y - size[1] * .65, position.z], 2, color)

@@ -14,59 +14,7 @@ function updateEffects(data: Partial<Store["effects"]>) {
             ...data
         }
     })
-}
-
-interface CreateShimmerParams {
-    position: Tuple3
-    count?: [min: number, max: number]
-    size?: Tuple3
-    radius?: [min: number, max: number]
-}
-
-export function createShimmer({
-    position = [0, 0, 0],
-    count = [6, 15],
-    size = [4, 4, 4],
-    radius = [.05, .2]
-}: CreateShimmerParams) {
-    let instance = store.getState().instances.shimmer
-
-    updateEffects({
-        shimmer: [
-            ...store.getState().effects.shimmer,
-            ...new Array(random.integer(...count)).fill(null).map(() => {
-                let offsetPosition = new Vector3(
-                    position[0] + random.float(-size[0] / 2, size[0] / 2),
-                    position[1] + random.float(-size[1] / 2, size[1] / 2),
-                    position[2] + random.float(-size[2] / 2, size[2] / 2),
-                )
-                let speed = offsetPosition.clone()
-                    .sub(new Vector3(...position))
-                    .normalize()
-                    .multiplyScalar(5)
-
-                return {
-                    id: random.id(),
-                    index: instance.index.next(),
-                    opacity: random.float(.4, 1),
-                    gravity: random.float(.1, 1.5),
-                    speed,
-                    time: random.integer(-400, 0),
-                    radius: random.float(...radius),
-                    lifetime: random.integer(2500, 5000),
-                    friction: random.float(.2, .6),
-                    position: new Vector3(...position),
-                }
-            })
-        ]
-    })
-}
-
-export function removeShimmer(id: string | string[]) {
-    updateEffects({
-        shimmer: store.getState().effects.shimmer.filter(i => Array.isArray(id) ? !id.includes(i.id) : i.id !== id)
-    })
-}
+} 
 
 interface CreateExplosionParams {
     position: Tuple3

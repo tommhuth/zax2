@@ -11,24 +11,14 @@ import Config from "../../../data/Config"
 import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
 import { damageRocket, removeRocket } from "../../../data/store/actors"
-import { createExplosion, createParticles, createShimmer } from "../../../data/store/effects"
+import { createExplosion, createParticles } from "../../../data/store/effects"
 import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
 
 let _size = new Vector3()
 
 function explode(position: Vector3, size: Tuple3) {
-    let shouldDoFireball = position.y < 2
-
-    createShimmer({
-        position: [
-            position.x,
-            position.y + size[1] / 2,
-            position.z,
-        ],
-        count: [30, 50],
-        size: [3, 6, 3]
-    })
+    let shouldDoFireball = position.y < 2 
 
     if (shouldDoFireball) {
         createParticles({

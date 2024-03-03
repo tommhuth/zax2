@@ -12,19 +12,11 @@ import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
 import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
-import { createExplosion, createImpactDecal, createParticles, createScrap, createShimmer } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 
-function explode(position: Vector3, size: Tuple3) {
-    createShimmer({
-        position: [
-            position.x,
-            position.y + size[1] / 2,
-            position.z,
-        ],
-        size: [3, 4, 3]
-    })
+function explode(position: Vector3, size: Tuple3) { 
     createExplosion({
         position: [
             position.x,
@@ -36,11 +28,13 @@ function explode(position: Vector3, size: Tuple3) {
     })
     createParticles({
         position: position.toArray(), 
-        speed: [14, 22],
-        spread: [[-1, 1], [0, 1]],
+        offset: [[-.5, .5], [0, .5], [-.5, .5]],
+        speed: [5, 25],
+        spread: [[-1, 1], [.5, 2]],
         normal: [0, 1, 0],
-        count: [8, 12],
-        radius: [.1, .5],
+        count: [16, 20],
+        radius: [.05, .4],
+        stagger: [-150, 0],
         color: turretParticleColor,
     })
 }
