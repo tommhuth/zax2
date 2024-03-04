@@ -13,7 +13,7 @@ import { damageBarrel } from "../data/store/world"
 import { playerColor } from "../data/theme"
 import { MeshRetroMaterial } from "./world/materials/MeshRetroMaterial"
 import { removeHeatSeaker, setBossProp } from "../data/store/boss"
-import { useCollisionDetection } from "../data/collisions" 
+import { useCollisionDetection } from "../data/collisions"
 import { easeInQuad } from "../data/shaping"
 import PlayerExhaust from "./PlayerExhaust"
 import { damp } from "three/src/math/MathUtils.js"
@@ -28,40 +28,40 @@ interface PlayerProps {
 
 interface LocalData {
     lastShotAt: number
-    isMovingUp: boolean 
-    bossDeadAt: number 
+    isMovingUp: boolean
+    bossDeadAt: number
     speed: number
 }
- 
+
 export default function Player({
     size = [1.5, .5, depth],
     z = 15,
     y = 1.5
 }: PlayerProps) {
-    let playerGroupRef = useRef<Group | null>(null) 
-    let grid = useStore(i => i.world.grid) 
+    let playerGroupRef = useRef<Group | null>(null)
+    let grid = useStore(i => i.world.grid)
     let weapon = useStore(i => i.player.weapon)
     let ready = useStore(i => i.ready)
     let state = useStore(i => i.state)
-    let bossState = useStore(i => i.boss.state) 
+    let bossState = useStore(i => i.boss.state)
     let position = useStore(i => i.player.position)
     let targetPosition = useStore(i => i.player.targetPosition)
     let controls = useStore(i => i.controls)
-    let models = useLoader(GLTFLoader, "/models/space.glb") 
+    let models = useLoader(GLTFLoader, "/models/space.glb")
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {
             type: "player",
             id: "player",
         })
-    }, [grid])  
-    let data = useMemo<LocalData>(()=> {
+    }, [grid])
+    let data = useMemo<LocalData>(() => {
         return {
             speed: 6,
             lastShotAt: 0,
-            isMovingUp: false, 
-            bossDeadAt: 0, 
+            isMovingUp: false,
+            bossDeadAt: 0,
         }
-    }, [])  
+    }, [])
     let handleRef = useCallback((object: Group) => {
         if (!object) {
             return
@@ -69,7 +69,7 @@ export default function Player({
 
         playerGroupRef.current = object
         setPlayerObject(object)
-    }, []) 
+    }, [])
 
     useEffect(() => {
         if (playerGroupRef.current) {
@@ -79,22 +79,22 @@ export default function Player({
         }
     }, [])
 
-    useEffect(()=> {
-        if (bossState === BossState.DEAD) { 
+    useEffect(() => {
+        if (bossState === BossState.DEAD) {
             data.bossDeadAt = Date.now()
         }
-    }, [bossState]) 
+    }, [bossState])
 
     useCollisionDetection({
-        interval: 1, 
+        interval: 1,
         size,
-        position, 
+        position,
         actions: {
-            bullet: ({ bullet, type }) => { 
+            bullet: ({ bullet, type }) => {
                 if (bullet.owner !== Owner.PLAYER || type !== "player") {
                     return
                 }
-    
+
                 damagePlayer(bullet.damage)
                 increaseScore(-10)
             },
@@ -117,7 +117,7 @@ export default function Player({
                 damageRocket(data.id, 100)
             },
             heatseaker: (data) => {
-                damagePlayer(25)
+                damagePlayer(30)
                 removeHeatSeaker(data.id)
             },
             boss: () => {
@@ -178,21 +178,21 @@ export default function Player({
 
     // movement
     useFrame((state, delta) => {
-        if (playerGroupRef.current  ) {
+        if (playerGroupRef.current) {
             let nd = ndelta(delta)
             let group = playerGroupRef.current
             let y = clamp(targetPosition.y, edgeMin.y, edgeMax.y)
             let { boss, player } = store.getState()
             let move = (speed: number) => {
                 group.position.x = damp(group.position.x, targetPosition.x, 4, nd)
-                group.position.y = damp(group.position.y, y, 5, nd)  
-                group.position.z += speed * nd 
+                group.position.y = damp(group.position.y, y, 5, nd)
+                group.position.z += speed * nd
 
-                group.rotation.z = (targetPosition.x - group.position.x) * -.15 
+                group.rotation.z = (targetPosition.x - group.position.x) * -.15
                 group.rotation.x = (targetPosition.y - group.position.y) * -.1
 
                 player.velocity.z = clamp((speed * nd) / (data.speed * nd), 0, 1)
-            } 
+            }
 
             if (boss.state === BossState.IDLE) {
                 let t = 1 - clamp((group.position.z - boss.pauseAt - 3) / 3, 0, 1)
@@ -202,16 +202,16 @@ export default function Player({
                 if (t < .5) {
                     setBossProp("state", BossState.ACTIVE)
                 }
-            } else if (boss.state === BossState.ACTIVE) { 
+            } else if (boss.state === BossState.ACTIVE) {
                 move(0)
             } else if (boss.state === BossState.DEAD) {
-                let t = easeInQuad(clamp((Date.now() - data.bossDeadAt) / 2400, 0, 1))  
+                let t = easeInQuad(clamp((Date.now() - data.bossDeadAt) / 2400, 0, 1))
 
                 move(data.speed * t)
             } else {
                 move(data.speed)
             }
- 
+
             position.copy(group.position)
             client.position = position.toArray()
             grid.updateClient(client)
@@ -231,7 +231,7 @@ export default function Player({
                     castShadow
                     position={[0, 0, 0]}
                 >
-                    <MeshRetroMaterial 
+                    <MeshRetroMaterial
                         name="player"
                         attach={"material"}
                         color={playerColor}
@@ -239,7 +239,7 @@ export default function Player({
                 </primitive>
 
                 <PlayerExhaust />
-                
+
                 <mesh visible={false}>
                     <boxGeometry args={[...size, 1, 1, 1]} />
                     <meshBasicMaterial color="red" wireframe name="debug" />

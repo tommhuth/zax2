@@ -1,4 +1,4 @@
-import { startTransition, useLayoutEffect, useMemo, useRef } from "react"
+import { startTransition, useEffect, useMemo, useRef } from "react"
 import { Owner, Rocket } from "../../../data/types"
 import { useInstance } from "../models/InstancedMesh"
 import { useFrame } from "@react-three/fiber"
@@ -107,7 +107,7 @@ export default function Rocket({
                     return
                 }
     
-                damageRocket(id, bullet.damage) 
+                damageRocket(id, bullet.damage)
             }
         }
     }) 
@@ -119,7 +119,7 @@ export default function Rocket({
         rotation: [0, random.float(0, Math.PI * 2), 0]
     })
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (health === 0) {
             startTransition(() => {
                 setTimeout(() => remove(), 450)

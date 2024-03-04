@@ -1,4 +1,4 @@
-import { memo, startTransition, useLayoutEffect, useRef } from "react"
+import { memo, startTransition, useRef } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
@@ -65,8 +65,19 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
                 if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "turret") {
                     return
                 }
-     
-                damageTurret(id, bullet.damage)
+      
+                createParticles({
+                    position: position.toArray(), 
+                    offset: [[-.5, .5], [0, .5], [-.5, .5]],
+                    speed: [5, 25],
+                    spread: [[0, .5], [.5, 2]],
+                    normal: [0, 1, -1],
+                    count: [3, 5],
+                    radius: [.05, .2],
+                    stagger: [0, 0],
+                    color: turretParticleColor,
+                })
+                damageTurret(id, bullet.damage) 
             }
         }
     }) 
@@ -84,7 +95,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
         }
     }, [instance, health, index])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (health === 0) {
             startTransition(() => {
                 remove()

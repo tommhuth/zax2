@@ -5,7 +5,7 @@ import { useInstance } from "../models/InstancedMesh"
 import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
-import { Tuple3 } from "../../../types" 
+import { Tuple3 } from "../../../types"
 import { Vector3 } from "three"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../World"
 import { Owner, Plane } from "../../../data/types"
@@ -28,11 +28,11 @@ function explode(position: Vector3) {
     createExplosion({
         position: [position.x, position.y - 1, position.z],
         count: 16,
-        radius: .55, 
+        radius: .55,
     })
     createParticles({
         position: position.toArray(),
-        speed: [12, 16], 
+        speed: [12, 16],
         spread: [[-1, 1], [-1, 1]],
         normal: [0, 0, 0],
         count: [4, 8],
@@ -72,18 +72,18 @@ function Plane({
     let remove = () => {
         removePlane(id)
         data.removed = true
-    } 
+    }
 
-    useCollisionDetection({ 
+    useCollisionDetection({
         size,
-        position, 
+        position,
         actions: {
-            bullet: ( { bullet, client, intersection, normal, type  }) => { 
+            bullet: ({ bullet, client, intersection, normal, type }) => {
                 if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "plane") {
                     return
                 }
-    
-                damagePlane(id, bullet.damage) 
+
+                damagePlane(id, bullet.damage)
                 createParticles({
                     position: intersection,
                     count: [1, 3],
@@ -92,13 +92,13 @@ function Plane({
                     spread: [[0, 0], [0, 0]],
                     normal,
                     color: "yellow",
-                }) 
+                })
             },
             turret: (data) => {
-                startTransition(() => damageTurret(data.id, 100))
+                damageTurret(data.id, 100)
             },
             barrel: (data) => {
-                startTransition(() => damageBarrel(data.id, 100))
+                damageBarrel(data.id, 100)
             },
         }
     })
@@ -176,7 +176,7 @@ function Plane({
                 index,
                 position: position.toArray(),
                 scale: .75,
-                rotation: [data.rotation[0],data.rotation[1] + Math.PI,data.rotation[2] ]
+                rotation: [data.rotation[0], data.rotation[1] + Math.PI, data.rotation[2]]
             })
 
             if (!world.frustum.intersectsBox(aabb) && player.object && position.z < player.object.position.z) {
@@ -199,13 +199,13 @@ function Plane({
                 data.rotation[0] += data.tilt * .5 * 60 * nd
                 data.rotation[2] += data.tilt * .25 * 60 * nd
                 data.actualSpeed = damp(data.actualSpeed, 0, .5, nd)
-                data.grounded = position.y <= (bottomY + .5 / 2) 
+                data.grounded = position.y <= (bottomY + .5 / 2)
 
                 if (data.grounded) {
                     startTransition(() => {
                         createExplosion({
                             position: [position.x, -.5, position.z],
-                            count: 18, 
+                            count: 18,
                             radius: .6,
                             fireballCount: 5,
                             fireballPath: [[position.x, 0, position.z], [0, 4, 0]]
@@ -213,7 +213,7 @@ function Plane({
                     })
                     createParticles({
                         position: [position.x, 0, position.z],
-                        normal: [0,1,0],
+                        normal: [0, 1, 0],
                         speed: [10, 20],
                         count: [6, 10],
                         color: planeColor,
@@ -222,7 +222,7 @@ function Plane({
                     createScrap([position.x, .1, position.z], 1, planeColor)
                     createImpactDecal([position.x, .1, position.z], 3)
                 }
-            } else { 
+            } else {
                 data.actualSpeed = damp(data.actualSpeed, 0, 2.25, delta)
                 position.y = (bottomY + .5 / 2)
             }
@@ -234,7 +234,7 @@ function Plane({
     })
 
     // takeoff
-    useFrame((state, delta)=> { 
+    useFrame((state, delta) => {
         if (takeoffDistance > position.z) {
             data.time += delta * 1000
         }

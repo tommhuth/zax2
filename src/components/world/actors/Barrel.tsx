@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { startTransition, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { Vector3 } from "three"
 import { useStore } from "../../../data/store"
 import { Barrel, InstanceName, Owner } from "../../../data/types"
@@ -15,7 +15,7 @@ import Config from "../../../data/Config"
 
 let _size = new Vector3()
 
-function explode(position: Vector3, size: Tuple3, color: string) { 
+function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({
         position: [position.x, .5, position.z],
         count: 10,
@@ -26,13 +26,13 @@ function explode(position: Vector3, size: Tuple3, color: string) {
     createParticles({
         position: [position.x, .5, position.z],
         offset: [[-.5, .5], [0, .5], [-.5, .5]],
-        speed: [5, 25], 
+        speed: [5, 25],
         normal: [0, 1, 0],
         spread: [[-1, 1], [.5, 2]],
         count: [15, 20],
         radius: [.1, .4],
         color,
-        stagger: [-150,0]
+        stagger: [-150, 0]
     })
     createImpactDecal([position.x, 0, position.z])
     createScrap([position.x, position.y - size[1] * .65, position.z], 2, color)
@@ -66,18 +66,18 @@ export default function Barrel({
 
     useCollisionDetection({
         actions: {
-            bullet: (  { bullet, client, type }  ) => {
+            bullet: ({ bullet, client, type }) => {
                 if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "barrel") {
                     return
                 }
-    
+
                 damageBarrel(id, 100)
-                increaseScore(1000)
-            } 
-        } 
+                increaseScore(1000) 
+            }
+        }
     })
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (health === 0) {
             startTransition(() => {
                 remove()

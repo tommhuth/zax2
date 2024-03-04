@@ -1,6 +1,6 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
-import { Color, ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
+import { ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
 import { Tuple3, Tuple4 } from "../../../types"
 import { store, useStore } from "../../../data/store"
 import { setInstance } from "../../../data/store/utils"
@@ -66,7 +66,7 @@ interface InstancedMeshProps {
     colors?: boolean
     visible?: boolean
     count: number
-    name: InstanceName 
+    name: InstanceName
 }
 
 export default function InstancedMesh({
@@ -76,34 +76,30 @@ export default function InstancedMesh({
     colors = false,
     visible = true,
     count,
-    name, 
+    name,
 }: InstancedMeshProps) {
     let colorData = useMemo(() => new Float32Array(count * 3).fill(0), [])
     let [instance, setInstanceRef] = useState<InstancedMeshThree | null>(null)
 
-    useEffect(() => { 
-        if (!instance || store.getState().instances[name]?.mesh === instance) { 
+    useEffect(() => {
+        if (!instance || store.getState().instances[name]?.mesh === instance) {
             return
         }
 
-        setInstance(name, instance, count)  
+        setInstance(name, instance, count)
 
         for (let i = 0; i < count; i++) {
             setMatrixAt({ instance: instance, index: i, scale: 0 })
         }
-    }, [instance])
-
-    useLayoutEffect(()=> {
-        colors && instance && setColorAt(instance, count - 1, new Color())
-    }, [instance])
+    }, [instance]) 
 
     return (
         <instancedMesh
             args={[undefined, undefined, count]}
             castShadow={castShadow}
-            receiveShadow={receiveShadow} 
-            ref={setInstanceRef} 
-            visible={visible} 
+            receiveShadow={receiveShadow}
+            ref={setInstanceRef}
+            visible={visible}
         >
             {colors ? <instancedBufferAttribute attach="instanceColor" args={[colorData, 3, true]} /> : null}
             {children}

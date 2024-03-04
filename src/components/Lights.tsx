@@ -50,15 +50,15 @@ export default function Lights() {
     })
 
     useLayoutEffect(() => {
-        if (! explosionLightRef1.current || !explosionLightRef2.current) {
-            return 
+        if (!explosionLightRef1.current || !explosionLightRef2.current) {
+            return
         }
 
         explosionLightRef1.current.intensity = 0
         explosionLightRef2.current.intensity = 0
     }, [])
 
-    useEffect(() => { 
+    useEffect(() => {
         if (lastExplosion?.radius > .5) {
             let light = explosionLights[counter.current].current
 
@@ -84,9 +84,9 @@ export default function Lights() {
     return (
         <>
             <pointLight
-                ref={engineLightRef} 
+                ref={engineLightRef}
                 distance={90}
-                position-y={1} 
+                position-y={1}
                 intensity={50}
                 color={"#ffffff"}
             />
@@ -100,14 +100,14 @@ export default function Lights() {
                 color={"#fff"}
             />
 
-            <directionalLight position={[-6, 15, -6]} intensity={.8} /> 
-            
+            <directionalLight position={[-6, 15, -6]} intensity={.8} />
+
             <directionalLight
                 ref={shadowLightRef}
                 color={"#ffffff"}
                 position={[0, 15, 0]}
                 intensity={.8}
-                castShadow  
+                castShadow
                 shadow-camera-near={0} // y
                 shadow-camera-far={15}
                 shadow-camera-left={-8} // x

@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { useEffect, useRef } from "react"
+import { startTransition, useEffect, useRef } from "react"
 import { Box3, Ray, Vector3 } from "three"
 import { SpatialHashGrid3D, Client, ClientData } from "./world/SpatialHashGrid3D"
 import { bulletSize, useStore } from "./store"
@@ -70,7 +70,7 @@ export function useCollisionDetection({
         }
 
         let onBulletCollision = ({ detail }: CustomEvent<CollisionEventDetails>) => {
-            actions.bullet?.(detail)
+            startTransition(() => actions.bullet?.(detail))
         }
 
         window.addEventListener("bulletcollision",  onBulletCollision as EventListener)
@@ -96,7 +96,7 @@ export function useCollisionDetection({
                     continue
                 }
 
-                action?.(client.data)
+                startTransition(() => action?.(client.data))
             }
         }
 

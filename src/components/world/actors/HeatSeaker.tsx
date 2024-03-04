@@ -3,7 +3,7 @@ import { store, useStore } from "../../../data/store"
 import { useFrame } from "@react-three/fiber"
 import { removeHeatSeaker } from "../../../data/store/boss"
 import { setMatrixAt, setMatrixNullAt } from "../../../data/utils"
-import { useLayoutEffect, useMemo } from "react"
+import { startTransition, useEffect, useMemo } from "react"
 import { createExplosion, createImpactDecal } from "../../../data/store/effects"
 import random from "@huth/random"
 import { HeatSeaker } from "../../../data/types"
@@ -24,9 +24,9 @@ export default function HeatSeaker({
     let grid = useStore(i => i.world.grid)
     let accuracy = useMemo(() => random.float(.25, .4), [])
 
-    useCollisionDetection({ 
+    useCollisionDetection({
         actions: {
-            bullet: ( { bullet, type } ) => {
+            bullet: ({ bullet, type }) => {
                 if (bullet.owner === "player" || type !== "heatseaker") {
                     removeHeatSeaker(id)
                 }
@@ -54,11 +54,13 @@ export default function HeatSeaker({
             || position.y > 100
             || position.y < .45
         ) {
-            removeHeatSeaker(id)
+            startTransition(() => {
+                removeHeatSeaker(id)
 
-            if ( position.y < .45 ) {
-                createImpactDecal([position.x, .05, position.z], random.float(1.5, 2))
-            }
+                if (position.y < .45) {
+                    createImpactDecal([position.x, .05, position.z], random.float(1.5, 2))
+                }
+            })
         }
 
         _dir.copy(position)
@@ -87,11 +89,10 @@ export default function HeatSeaker({
         world.grid.updateClient(client)
     })
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         return () => {
             let { instances } = store.getState()
 
-            // must happen here at the very end and after any useFrame updates??
             grid.remove(client)
             setMatrixNullAt(instances.sphere.mesh, index)
             createExplosion({

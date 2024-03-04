@@ -3,9 +3,10 @@ import { Building, InstanceName } from "../../../data/types"
 import random from "@huth/random" 
 import { createParticles } from "../../../data/store/effects" 
 import { useCollisionDetection } from "../../../data/collisions"
+import { useMemo } from "react"
 
-export default function Building({ size, id, position }: Building) {
-    let type: InstanceName = size[1] > 1 ? "device" : "device"
+export default function Building({ size, id, position }: Building) {  
+    let type = useMemo(() => random.pick<InstanceName>("box", "device"), [])
 
     useCollisionDetection({ 
         actions: {

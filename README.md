@@ -6,8 +6,9 @@
 - plane cleanup  (enemy plane 3d model)
 - ui/intro
 - material review / fog tweak
-- hit effect
+- instance color hit thing
 - raw shader material?
+- hit detection (still) accurate?
 
 ## Assets
 - https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html

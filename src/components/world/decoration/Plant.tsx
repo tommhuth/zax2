@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { useInstance } from "../models/InstancedMesh"
 import { clamp, ndelta, setBufferAttribute, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import random from "@huth/random"
@@ -25,7 +25,7 @@ interface Leaf {
     scale: Tuple3
     time: number
     index: number
-    friction: number 
+    friction: number
 }
 
 let width = 5
@@ -51,11 +51,11 @@ export default function Plant({
         )
     }, [grid])
     let trauma = useRef(0)
-    let [leaves, setLeaves] = useState<Leaf[]>([])
+    let leaves = useMemo<Leaf[]>(() => [], [])
     let createLeaves = () => {
         let leaf = store.getState().instances.leaf
 
-        setLeaves(new Array(random.integer(6, 8)).fill(null).map((i, index, list) => {
+        leaves.push(...new Array(random.integer(6, 8)).fill(null).map((_i, index, list) => {
             let x = position.x + random.float(-.5, .5)
             let z = position.z + random.float(-.5, .5)
             let baseScale = 1 + (index / (list.length - 1)) * random.float(-.4, .1)
@@ -65,16 +65,16 @@ export default function Plant({
                     x,
                     position.y + .5 + (index / (list.length - 1)) * (size[1] * .75),
                     z
-                ],
-                acceleration: [0, -random.float(8, 10), 0], 
+                ] as Tuple3,
+                acceleration: [0, -random.float(8, 10), 0] as Tuple3,
                 velocity: [
                     (x - position.x) * random.float(6, 12),
                     random.float(.0, 6),
                     (z - position.z) * random.float(6, 12),
-                ],
+                ] as Tuple3,
                 friction: random.float(.9, 1.35),
-                rotation: [0, random.float(0, Math.PI * 2), 0],
-                scale: [baseScale, random.float(1, 2.25), baseScale],
+                rotation: [0, random.float(0, Math.PI * 2), 0] as Tuple3,
+                scale: [baseScale, random.float(1, 2.25), baseScale] as Tuple3,
                 time: random.float(0, Math.PI * 2),
                 index: leaf.index.next()
             }
@@ -83,12 +83,12 @@ export default function Plant({
 
     useCollisionDetection({
         interval: 2,
-        position: position,
+        position,
         size,
         when: () => health > 0,
         actions: {
             bullet: ({ client, type, bullet }) => {
-                if (client.data.id === id && type === "plant" && bullet.owner === Owner.PLAYER) {
+                if (client.data.id === id && type === "plant" && bullet.owner === Owner.PLAYER) { 
                     setHealth(Math.max(health - 10, 0))
                     createParticles({
                         position: position.toArray(),
@@ -99,11 +99,11 @@ export default function Plant({
                         speed: [10, 27],
                         color: "#00ff9d",
                         stagger: [0, 0]
-                    })
+                    }) 
                 }
             },
-            player: () => {
-                setHealth(Math.max(health - 5, 0))
+            player: () => { 
+                setHealth(Math.max(health - 5, 0)) 
             }
         }
     })
@@ -111,19 +111,21 @@ export default function Plant({
     // health change
     useEffect(() => {
         if (health === 0 && typeof index === "number") {
-            grid.remove(client)
-            setMatrixNullAt(instance, index)
-            createLeaves()
-            createParticles({
-                position: position.toArray(),
-                count: [20, 25],
-                radius: [.01 * scale, .3],
-                normal: [0, 1, 0],
-                spread: [[-.85, .85], [0, 1]],
-                speed: [10, 27],
-                color: "#00ff9d",
-                stagger: [0, 0]
-            })
+            startTransition(()=> {
+                grid.remove(client)
+                setMatrixNullAt(instance, index as number)
+                createLeaves()
+                createParticles({
+                    position: position.toArray(),
+                    count: [20, 25],
+                    radius: [.01 * scale, .3],
+                    normal: [0, 1, 0],
+                    spread: [[-.85, .85], [0, 1]],
+                    speed: [10, 27],
+                    color: "#00ff9d",
+                    stagger: [0, 0]
+                })
+            }) 
         }
 
         trauma.current += .3

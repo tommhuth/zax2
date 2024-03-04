@@ -146,7 +146,7 @@ function Instances() {
                     args={[1, 1, 1, 1, 1, 1]}
                     attach="geometry"
                 />
-                <meshLambertMaterial color={"white"} name="box" />
+                <MeshRetroMaterial color={deviceColor} name="box" />
             </InstancedMesh>
 
             <InstancedMesh

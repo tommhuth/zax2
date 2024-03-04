@@ -61,7 +61,7 @@ export default function SmokeHandler() {
                 }
             `,
             main: glsl`   
-                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * .9 + .075, 1., .0125);
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * .9 + .095, 1., .0125);
                 gl_FragColor.rgb -= (1. - getShadow( 
                     directionalShadowMap[0], 
                     directionalLightShadows[0].shadowMapSize, 
