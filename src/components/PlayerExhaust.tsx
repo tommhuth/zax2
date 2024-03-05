@@ -7,7 +7,7 @@ import { glsl } from "../data/utils"
 
 export default function PlayerExhaust() {
     let flameRef = useRef<Mesh<BufferGeometry, Material> | null>(null)
-    let {onBeforeCompile} = useShader({
+    let { onBeforeCompile } = useShader({
         vertex: {
             head: glsl`
                 varying vec3 vPosition;
@@ -25,7 +25,7 @@ export default function PlayerExhaust() {
             `
         }
     })
- 
+
     useFrame(() => {
         if (flameRef.current) {
             flameRef.current.scale.x = random.float(.4, .6)
@@ -35,18 +35,18 @@ export default function PlayerExhaust() {
         }
     })
 
-    return ( 
-        <> 
+    return (
+        <>
             <mesh
                 scale={[.5, .21, 1]}
                 ref={flameRef}
                 position-z={-2}
             >
                 <sphereGeometry args={[1, 16, 16]} />
-                <meshBasicMaterial 
-                    onBeforeCompile={onBeforeCompile} 
-                    color="white" 
-                    transparent 
+                <meshBasicMaterial
+                    onBeforeCompile={onBeforeCompile}
+                    color="white"
+                    transparent
                     name="exhaust"
                 />
             </mesh>

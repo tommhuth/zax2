@@ -34,7 +34,7 @@ function randomDirection() {
 
 export default function SmokeHandler() {
     let instanceRef = useRef<InstancedMesh>(null)
-    let count = 300
+    let count = 200
     let index = useMemo(()=> new Counter(count), [count])
     let smokes = useRef<Smoke[]>([])
     let lastEmitted = useMemo<Record<string, number>>(() => ({}), [])

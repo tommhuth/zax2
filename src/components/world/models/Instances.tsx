@@ -121,7 +121,7 @@ function Instances() {
                     args={[1, 16, 16]}
                     attach="geometry"
                 />
-                <meshBasicMaterial color="yellow" />
+                <meshBasicMaterial color="yellow" name="sphere" />
             </InstancedMesh>
 
             <InstancedMesh
@@ -133,7 +133,7 @@ function Instances() {
                     args={[1, 3, 4]}
                     attach="geometry"
                 />
-                <MeshRetroMaterial name="sphere" />
+                <MeshRetroMaterial name="particle" />
             </InstancedMesh>
 
             <InstancedMesh

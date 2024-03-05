@@ -105,7 +105,7 @@ export default function Barrel({
     return (
         <mesh position={position.toArray()}>
             <boxGeometry args={[...size, 1, 1, 1]} />
-            <meshBasicMaterial wireframe color="orange" />
+            <meshBasicMaterial wireframe color="orange" name="debug" />
         </mesh>
     )
 }

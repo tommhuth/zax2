@@ -85,10 +85,9 @@ export default function BlastHandler() {
             receiveShadow={false}
             count={count}
             name="blast"
-            colors
-        //visible={false}
+            colors 
         >
-            <sphereGeometry args={[1, 20, 20]} />
+            <sphereGeometry args={[1, 16, 16]} />
             <meshLambertMaterial
                 name="blast"
                 onBeforeCompile={onBeforeCompile}

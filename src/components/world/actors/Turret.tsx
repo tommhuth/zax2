@@ -151,9 +151,9 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
         }
     })
 
-    if (!Config.DEBUG || false) {
+    if (!Config.DEBUG) {
         return null
-    }
+    } 
 
     return (
         <>

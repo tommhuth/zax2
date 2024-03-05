@@ -50,8 +50,7 @@ export default function ExplosionsHandler() {
 
             <InstancedMesh
                 name="decal"
-                count={decalCount} 
-                colors
+                count={decalCount}  
             >
                 <planeGeometry args={[2, 2, 1, 1]} />
                 <MeshRetroMaterial 

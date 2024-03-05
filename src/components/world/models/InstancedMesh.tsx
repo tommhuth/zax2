@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { startTransition, useEffect, useMemo, useState } from "react"
 import { setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
 import { Tuple3, Tuple4 } from "../../../types"
@@ -38,7 +38,7 @@ export function useInstance(name: InstanceName, {
 
     useEffect(() => {
         if (instance) {
-            setIndex(instance.index.next())
+            startTransition(() => setIndex(instance.index.next()))
         }
     }, [instance])
 

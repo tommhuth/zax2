@@ -165,7 +165,7 @@ export default function FireballHandler() {
         <InstancedMesh
             castShadow={false}
             receiveShadow={false}
-            count={count}
+            count={count} 
             name="fireball" 
         >
             <sphereGeometry args={[1, 32, 32]} >

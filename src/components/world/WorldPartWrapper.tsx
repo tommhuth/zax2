@@ -77,7 +77,7 @@ export default function WorldPartWrapper({
                         position-x={WORLD_CENTER_X}
                     >
                         <boxGeometry args={[width, 2, depth, 1, 1, 1]} />
-                        <meshBasicMaterial wireframe color="green" />
+                        <meshBasicMaterial wireframe color="green" name="debug" />
                     </mesh>
                 </Only>
             </context.Provider>
