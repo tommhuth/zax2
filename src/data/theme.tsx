@@ -15,7 +15,7 @@ export const deviceColor = "#4CC9F0" // "#e2eef5" // "#6fbad8" // "#141E46"
 export const turretColor = "#ffee00" // "#529fbe" // "#141E46"
 export const turretParticleColor = "#fe0" // "#529fbe" // "#141E46"
 
-export const rocketColor = turretColor // "#d9e7ed"
+export const rocketColor = "#112277" // "#d9e7ed"
 export const platformColor = floorHiColor // "#e1f6ff" // "#6fbad8" // "#141E46" 
 
 export const scrapColor = "white"
@@ -27,9 +27,9 @@ export const barellColor = "#0000bb"
 export const barrellEmissiveIntensity = .3
 export const barellParticleColor = "#1400ab"
 
-export const planeColor = "#a71cbd"
+export const planeColor = "#ffff00"
 
-export const playerColor = "#273941"
+export const playerColor = "#002277"
 
 
 

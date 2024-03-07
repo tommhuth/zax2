@@ -17,6 +17,7 @@ import { createExplosion, createImpactDecal, createParticles, createScrap } from
 import { planeColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { damp } from "three/src/math/MathUtils.js"
+import Counter from "../../../data/world/Counter"
 
 let _size = new Vector3()
 
@@ -69,6 +70,7 @@ function Plane({
     let bottomY = 0
     let grid = useStore(i => i.world.grid)
     let [index, instance] = useInstance("plane")
+    let weaponSide = useMemo(()=> new Counter(2), [])
     let remove = () => {
         removePlane(id)
         data.removed = true
@@ -139,13 +141,13 @@ function Plane({
         let shootDisabled = position.z > playerPosition.z || !world.frustum.containsPoint(position)
         let canShoot = health > 0
 
-        if (!shootDisabled && canShoot && data.shootTimer > data.nextShotAt + heightPenalty * fireFrequency) {
+        if (!shootDisabled && canShoot && data.shootTimer > data.nextShotAt + heightPenalty * fireFrequency) { 
             startTransition(() => {
                 createBullet({
                     position: [
-                        position.x,
+                        position.x + (weaponSide.current === 1 ? -.7 : .7),
                         position.y,
-                        position.z - 3
+                        position.z - 2
                     ],
                     damage: 10,
                     color: "#fff",
@@ -156,6 +158,7 @@ function Plane({
                 data.shootTimer = 0
                 data.nextShotAt = fireFrequency - fireFrequency * distanceFromPlayer * .5
             })
+            weaponSide.next()
         }
 
         data.shootTimer += ndelta(delta) * 1000
@@ -196,7 +199,7 @@ function Plane({
 
                 data.gravity += .25 * nd
                 position.y -= data.gravity * 60 * nd
-                data.rotation[0] += data.tilt * .5 * 60 * nd
+                data.rotation[0] -= data.tilt * .5 * 60 * nd
                 data.rotation[2] += data.tilt * .25 * 60 * nd
                 data.actualSpeed = damp(data.actualSpeed, 0, .5, nd)
                 data.grounded = position.y <= (bottomY + .5 / 2)

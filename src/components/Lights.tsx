@@ -43,8 +43,8 @@ export default function Lights() {
         let player = useStore.getState().player.object
 
         if (player && engineLightRef.current) {
-            engineLightRef.current.position.z = player?.position.z - 1
-            engineLightRef.current.position.y = player?.position.y + 1
+            engineLightRef.current.position.z = player?.position.z - 1.5
+            engineLightRef.current.position.y = player?.position.y + .1
             engineLightRef.current.position.x = player?.position.x
         }
     })

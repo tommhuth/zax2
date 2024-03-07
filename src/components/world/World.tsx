@@ -17,7 +17,7 @@ import ExplosionsHandler from "./effects/ExplosionsHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
-import { makeAirstrip, makeBoss, makeBuildingsLow, makeStart } from "../../data/world/generators"
+import { makeAirstrip, makeBoss, makeBuildingsLow, makeDefault, makeStart } from "../../data/world/generators"
 import { Vector3 } from "three"
 import SmokeHandler from "./effects/SmokeHandler"
 
@@ -49,7 +49,7 @@ export default function World() {
     useEffect(() => {
         if (loaded) {
             setTimeout(() => {
-                addWorldPart(makeBuildingsLow({ position: new Vector3(0, 0, 110), size: [0, 0] }))
+                addWorldPart(makeDefault({ position: new Vector3(0, 0, 110), size: [0, 0] }))
             }, 100)
         }
     }, [loaded])

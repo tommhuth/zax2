@@ -29,8 +29,7 @@ export default function PlayerExhaust() {
     useFrame(() => {
         if (flameRef.current) {
             flameRef.current.scale.x = random.float(.4, .6)
-            flameRef.current.scale.z = random.float(1.3, 1.5)
-            flameRef.current.position.z = -flameRef.current.scale.z - 1
+            flameRef.current.scale.z = random.float(1.3, 1.5) 
             flameRef.current.material.opacity = random.float(.85, 1)
         }
     })
@@ -40,7 +39,8 @@ export default function PlayerExhaust() {
             <mesh
                 scale={[.5, .21, 1]}
                 ref={flameRef}
-                position-z={-2}
+                position-z={-3.25}
+                position-y={-.25}
             >
                 <sphereGeometry args={[1, 16, 16]} />
                 <meshBasicMaterial

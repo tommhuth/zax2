@@ -47,7 +47,7 @@ export default function Player({
     let position = useStore(i => i.player.position)
     let targetPosition = useStore(i => i.player.targetPosition)
     let controls = useStore(i => i.controls)
-    let models = useLoader(GLTFLoader, "/models/space.glb")
+    let model = useLoader(GLTFLoader, "/models/player.glb")
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {
             type: "player",
@@ -77,7 +77,7 @@ export default function Player({
             playerGroupRef.current.position.y = y
             playerGroupRef.current.position.z = z
         }
-    }, [])
+    }, []) 
 
     useEffect(() => {
         if (bossState === BossState.DEAD) {
@@ -226,10 +226,11 @@ export default function Player({
                 visible={state !== "intro"}
             >
                 <primitive
-                    object={models.nodes.plane}
+                    object={model.nodes.player}
                     receiveShadow
                     castShadow
                     position={[0, 0, 0]}
+                    scale={[.65,.65,.5]}
                 >
                     <MeshRetroMaterial
                         name="player"

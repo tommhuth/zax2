@@ -2,6 +2,7 @@ import { useLoader } from "@react-three/fiber"
 import InstancedMesh from "./InstancedMesh"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 import {
+    barellColor,
     cableColor,
     deviceColor,
     dirtColor,
@@ -9,6 +10,7 @@ import {
     plantColor,
     platformColor,
     rightColor,
+    rocketColor,
     scrapColor,
     turretColor,
 } from "../../../data/theme"
@@ -20,9 +22,10 @@ import Plant from "./instances/Plant"
 import Grass from "./instances/Grass"
 import Exhaust from "./instances/Exhaust"
 import { glsl } from "../../../data/utils"
+import { useStore } from "../../../data/store"
 
 function Instances() {
-    let [turret2, rocket, platform, device, scrap, cable, dirt, plane, leaf] = useLoader(GLTFLoader, [
+    let [turret2, rocket, platform, device, scrap, cable, dirt, fighter, leaf] = useLoader(GLTFLoader, [
         "/models/turret2.glb",
         "/models/rocket.glb",
         "/models/platform.glb",
@@ -30,9 +33,9 @@ function Instances() {
         "/models/scrap.glb",
         "/models/cable.glb",
         "/models/dirt.glb",
-        "/models/space.glb",
+        "/models/fighter.glb",
         "/models/leaf.glb",
-    ]) 
+    ])  
 
     return (
         <>
@@ -43,7 +46,7 @@ function Instances() {
                 receiveShadow
             >
                 <primitive
-                    object={(plane.nodes.plane as Mesh).geometry}
+                    object={(fighter.nodes.enemy as Mesh).geometry}
                     dispose={null}
                     attach="geometry"
                 />
@@ -51,7 +54,24 @@ function Instances() {
                     color={planeColor}
                     name="plane"
                     colorCount={8} 
-                    rightColorIntensity={0}
+                    emissive={planeColor}
+                    emissiveIntensity={.2}
+                    rightColorIntensity={.5}
+                    shader={{
+                        fragment: {
+                            main: glsl`
+                                vec3 engineColor = vec3(1., 1., .8);
+                                vec3 enginePoint = vec3(0., .6, -1.6);
+                                float radius = 2.5;
+
+                                gl_FragColor.rgb = mix(
+                                    gl_FragColor.rgb,
+                                    mix(gl_FragColor.rgb, engineColor, .95),
+                                    easeInCubic(1. - clamp(length(vPosition - enginePoint) / radius, .0, 1.))
+                                );
+                            `
+                        }
+                    }}
                 />
             </InstancedMesh>
             <InstancedMesh
@@ -221,10 +241,8 @@ function Instances() {
                     attach="geometry"
                 />
                 <MeshRetroMaterial
-                    emissive={turretColor}
-                    emissiveIntensity={0.4}
+                    color={rocketColor}
                     name="rocket"
-                    color={turretColor}
                 />
             </InstancedMesh>
 
