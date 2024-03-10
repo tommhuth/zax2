@@ -169,7 +169,9 @@ export default function Rocket({
             <Exhaust
                 targetPosition={position} 
                 rotation={[-Math.PI * .5, 0, 0]} 
-                offset={[0, -3.25, 0]}
+                scale={[.5, .3, 2.5]}
+                offset={[0, -4, 0]}
+                turbulence={2}
             />
             <Only if={Config.DEBUG}>
                 <mesh position={position.toArray()} ref={ref}>

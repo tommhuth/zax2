@@ -11,6 +11,7 @@ interface ExhaustProps {
     scale?: Tuple3
     visible?: boolean
     targetPosition?: Vector3
+    turbulence?: number
 }
 
 export default function Exhaust({ 
@@ -18,15 +19,16 @@ export default function Exhaust({
     targetPosition, 
     scale = [.5, .3, 2],
     offset = [0, 0, 0],
-    visible
+    visible,
+    turbulence = 1
 }: ExhaustProps) {
     let materials = useStore(i => i.materials)
     let exhaustRef = useRef<Mesh<BufferGeometry, Material> | null>(null) 
 
     useFrame(() => {
         if (exhaustRef.current) {
-            exhaustRef.current.scale.x =   random.float(scale[0] * .65, scale[0])
-            exhaustRef.current.scale.z =   random.float(scale[2] * .65, scale[2])  
+            exhaustRef.current.scale.x = scale[0] + random.float(-.15, .15) * turbulence
+            exhaustRef.current.scale.z = scale[2] + random.float(-.25, .25) * turbulence
 
             targetPosition && exhaustRef.current.position.set(
                 targetPosition.x + offset[0], 
