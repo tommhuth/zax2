@@ -21,19 +21,18 @@ import Barrels from "./instances/Barrels"
 import Plant from "./instances/Plant"
 import Grass from "./instances/Grass"
 import Exhaust from "./instances/Exhaust"
-import { glsl } from "../../../data/utils"
-import { useStore } from "../../../data/store"
+import { glsl } from "../../../data/utils" 
 
 function Instances() {
-    let [turret2, rocket, platform, device, scrap, cable, dirt, fighter, leaf] = useLoader(GLTFLoader, [
-        "/models/turret2.glb",
+    let [turret, rocket, platform, device, scrap, cable, dirt, plane, leaf] = useLoader(GLTFLoader, [
+        "/models/turret.glb",
         "/models/rocket.glb",
         "/models/platform.glb",
         "/models/device.glb",
         "/models/scrap.glb",
         "/models/cable.glb",
         "/models/dirt.glb",
-        "/models/fighter.glb",
+        "/models/plane.glb",
         "/models/leaf.glb",
     ])  
 
@@ -46,7 +45,7 @@ function Instances() {
                 receiveShadow
             >
                 <primitive
-                    object={(fighter.nodes.enemy as Mesh).geometry}
+                    object={(plane.nodes.plane as Mesh).geometry}
                     dispose={null}
                     attach="geometry"
                 />
@@ -56,7 +55,7 @@ function Instances() {
                     colorCount={8} 
                     emissive={planeColor}
                     emissiveIntensity={.2}
-                    rightColorIntensity={.5}
+                    rightColorIntensity={.5} 
                     shader={{
                         fragment: {
                             main: glsl`
@@ -64,11 +63,13 @@ function Instances() {
                                 vec3 enginePoint = vec3(0., .6, -1.6);
                                 float radius = 2.5;
 
+                                /*
                                 gl_FragColor.rgb = mix(
                                     gl_FragColor.rgb,
                                     mix(gl_FragColor.rgb, engineColor, .95),
                                     easeInCubic(1. - clamp(length(vPosition - enginePoint) / radius, .0, 1.))
                                 );
+                                */
                             `
                         }
                     }}
@@ -217,7 +218,7 @@ function Instances() {
                 colors
             >
                 <primitive
-                    object={(turret2.nodes.turret2 as Mesh).geometry}
+                    object={(turret.nodes.turret2 as Mesh).geometry}
                     attach="geometry"
                 />
                 <MeshRetroMaterial

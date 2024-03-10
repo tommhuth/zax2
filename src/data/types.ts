@@ -120,8 +120,9 @@ export interface Plane {
     size: Tuple3
     client: Client
     aabb: Box3
+    rotation: number
     targetY: number
-    takeoffDistance: number;
+    takeoffAt: number;
     startY: number
     health: number
     fireFrequency: number

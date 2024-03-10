@@ -212,17 +212,17 @@ export function createTurret({
 interface CreatePlaneParams {
     position: Tuple3
     targetY?: number
-    speed?: number
-    takeoffDistance?: number
+    speed?: number 
     fireFrequency?: number
+    rotation?: number
 }
 
 export function createPlane({
     position: [x, y, z] = [0, 0, -10],
     targetY = y,
+    rotation = 0,
     speed = random.float(4, 5),
-    fireFrequency = random.integer(350, 700),
-    takeoffDistance = random.integer(2, 5),
+    fireFrequency = random.integer(150, 350), 
 }: CreatePlaneParams) {
     let id = random.id()
     let size = [1, 1.5, 2] as Tuple3
@@ -243,7 +243,8 @@ export function createPlane({
                 health: 20,
                 fireFrequency,
                 id,
-                takeoffDistance: position.z - takeoffDistance,
+                rotation,
+                takeoffAt: position.z - random.float(1, 4),
                 targetY,
                 startY: y,
                 speed,

@@ -37,7 +37,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     backColorIntensity = 0,
     shader = {},
     emissive,
-    additionalShadowStrength = .1,
+    additionalShadowStrength = .15,
     ...rest
 }, ref) => { 
     let player = useStore(i => i.player.object) 

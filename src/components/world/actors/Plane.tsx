@@ -1,8 +1,8 @@
 import { memo, startTransition, useMemo } from "react"
-import { useFrame } from "@react-three/fiber"
+import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
+import { clamp, ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
@@ -18,25 +18,24 @@ import { planeColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { damp } from "three/src/math/MathUtils.js"
 import Counter from "../../../data/world/Counter"
+import { easeInOutCubic } from "../../../data/shaping"
 
 let _size = new Vector3()
-
-function easeInOutCubic(x: number): number {
-    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
-}
 
 function explode(position: Vector3) {
     createExplosion({
         position: [position.x, position.y - 1, position.z],
         count: 16,
         radius: .55,
+        shockwave: true,
     })
     createParticles({
         position: position.toArray(),
-        speed: [12, 16],
-        spread: [[-1, 1], [-1, 1]],
-        normal: [0, 0, 0],
-        count: [4, 8],
+        speed: [14, 20],
+        spread: [[-.25, .25], [-.5, 1]],
+        normal: [0, -.5, 0],
+        count: [12, 16],
+        stagger: [-100, 0],
         radius: [.1, .45],
         color: planeColor,
     })
@@ -51,9 +50,10 @@ function Plane({
     aabb,
     client,
     health,
-    takeoffDistance,
-    fireFrequency = 300,
-    speed
+    takeoffAt,
+    fireFrequency,
+    speed,
+    rotation = 0,
 }: Plane) {
     let data = useMemo(() => ({
         time: 0,
@@ -62,15 +62,18 @@ function Plane({
         gravity: 0,
         actualSpeed: speed,
         rotation: [0, 0, 0] as Tuple3,
-        tilt: random.float(0.001, 0.05),
+        tilt: random.float(0.002, 0.05),
         shootTimer: random.float(0, fireFrequency),
         nextShotAt: fireFrequency * .5,
-        liftOffDuration: random.integer(3000, 5_000)
+        liftOffDuration: 4_300
     }), [])
     let bottomY = 0
     let grid = useStore(i => i.world.grid)
     let [index, instance] = useInstance("plane")
-    let weaponSide = useMemo(()=> new Counter(2), [])
+    let weaponSide = useMemo(() => new Counter(2), [])
+    let isStatic = speed === 0
+    let {viewport } = useThree()
+    let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
     let remove = () => {
         removePlane(id)
         data.removed = true
@@ -105,6 +108,17 @@ function Plane({
         }
     })
 
+    useEffect(()=> {
+        if (isStatic && instance && typeof index === "number")  {
+            setMatrixAt({
+                index,
+                instance,
+                position: position.toArray(),
+                rotation: [0, rotation, 0]
+            }) 
+        }
+    }, [isStatic, instance, index])
+
     useEffect(() => {
         if (health && health !== 100 && instance && typeof index === "number") {
             return animate({
@@ -123,16 +137,21 @@ function Plane({
             startTransition(() => {
                 increaseScore(500)
                 explode(position)
+
+                if (isStatic) {
+                    createImpactDecal([position.x, .1, position.z], 2.25)
+                    setTimeout(remove, 240)
+                }
             })
         }
-    }, [health])
+    }, [health, isStatic])
 
     // shoot
     useFrame((state, delta) => {
         let playerPosition = store.getState().player.object?.position
         let world = store.getState().world
 
-        if (!playerPosition) {
+        if (!playerPosition || isStatic) {
             return
         }
 
@@ -145,7 +164,7 @@ function Plane({
             startTransition(() => {
                 createBullet({
                     position: [
-                        position.x + (weaponSide.current === 1 ? -.7 : .7),
+                        position.x + (weaponSide.current === 1 ? -.8 : .8),
                         position.y,
                         position.z - 2
                     ],
@@ -166,10 +185,10 @@ function Plane({
 
     // move
     useFrame((state, delta) => {
-        if (instance && typeof index === "number" && !data.removed) {
-            let { world, player } = useStore.getState()
+        if (instance && typeof index === "number" && !data.removed && !isStatic) {
+            let { world, player } = useStore.getState()           
             let playerZ = player.object?.position.z || -Infinity
-            let shouldMoveForward = targetY === startY || position.z - 20 < playerZ
+            let shouldMoveForward = targetY === startY || position.z - diagonal * 1.5 < playerZ 
 
             position.z -= shouldMoveForward ? data.actualSpeed * ndelta(delta) : 0
             aabb.setFromCenterAndSize(position, _size.set(...size))
@@ -177,8 +196,7 @@ function Plane({
             setMatrixAt({
                 instance,
                 index,
-                position: position.toArray(),
-                scale: .75,
+                position: position.toArray(), 
                 rotation: [data.rotation[0], data.rotation[1] + Math.PI, data.rotation[2]]
             })
 
@@ -193,7 +211,7 @@ function Plane({
 
     // grounding
     useFrame((state, delta) => {
-        if (health === 0) {
+        if (health === 0 && !isStatic) {
             if (!data.grounded) {
                 let nd = ndelta(delta)
 
@@ -238,7 +256,7 @@ function Plane({
 
     // takeoff
     useFrame((state, delta) => {
-        if (takeoffDistance > position.z) {
+        if (takeoffAt > position.z && !isStatic) {
             data.time += delta * 1000
         }
     })

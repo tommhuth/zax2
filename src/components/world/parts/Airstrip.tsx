@@ -6,6 +6,7 @@ import { WORLD_TOP_EDGE } from "../World"
 import Floor from "../decoration/Floor"
 import Barrel from "../spawner/Barrel"
 import Turret from "../spawner/Turret"
+import Rocket from "../spawner/Rocket"
 
 export default function Airstrip({
     id,
@@ -24,53 +25,43 @@ export default function Airstrip({
                 targetY={WORLD_TOP_EDGE}
             />
             <Plane
-                position={[ 2.25, .5, 35]}
+                position={[2.25, .5, 20]}
                 targetY={WORLD_TOP_EDGE - 2}
             />
             <Plane
                 position={[-4, WORLD_TOP_EDGE - 1, 40]}
             /> 
             <Turret
-                position={[4, 0, 6]}
-                rotation={-Math.PI/2}
-                floorLevel={0}
-            />
-            <Turret
                 position={[-2, 1, 35]}
-                rotation={-Math.PI/2}
+                rotation={-Math.PI / 2}
                 floorLevel={0}
+            /> 
+            <Barrel
+                position={[4, 0, 6]}
             />
-            <Turret
-                position={[5, 0, 45]}
-                rotation={-Math.PI/2}
-                floorLevel={0}
+            <Barrel
+                position={[5, 0, 20]}
             />
-            <Barrel 
-                position={[5,0,10]}
+            <Barrel
+                position={[-3, 0, 2]}
             />
-            <Barrel 
-                position={[5,0,20]}
+            <Plane
+                position={[-3, .5, 8]}
+                rotation={.51}
+                speed={0}
             />
-            <Barrel 
-                position={[-3,0,3]}
+            <Plane
+                position={[-3, .5, 22]}
+                rotation={-.91}
+                speed={0}
             />
-            <Turret 
-                position={[-1,1,14]}
-                rotation={-Math.PI/2}
-                floorLevel={0}
-            />
-            <Barrel 
-                position={[-2,0,43]}
-            />
-            <Barrel 
-                position={[5.5,0,32]}
-            />
-            <Barrel 
-                position={[-1.5,0,28]}
-            />
+            <Barrel position={[5.5, 0, 32]} />
+            <Rocket 
+                position={[-2, 0, 43]}
+            /> 
             <Floor
                 type={"floor4"}
-                position={[position.x  , 0, size[1] / 2]}
+                position={[position.x, 0, size[1] / 2]}
             />
         </WorldPartWrapper>
     )

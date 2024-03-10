@@ -44,7 +44,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
     let materials = useStore((i) => i.materials)
     let boss = useStore((i) => i.boss)
     let bossWrapper = useRef<Group>(null)
-    let { nodes: boss2 } = useGLTF("/models/boss2.glb") as any
+    let { nodes: boss2 } = useGLTF("/models/bossdestroyed.glb") as any
     let { nodes: boss1 } = useGLTF("/models/boss.glb") as any
     let grid = useStore((i) => i.world.grid)
     let data = useMemo(() => {

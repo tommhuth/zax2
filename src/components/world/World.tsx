@@ -49,7 +49,7 @@ export default function World() {
     useEffect(() => {
         if (loaded) {
             setTimeout(() => {
-                addWorldPart(makeDefault({ position: new Vector3(0, 0, 110), size: [0, 0] }))
+                addWorldPart(makeAirstrip({ position: new Vector3(0, 0, 110), size: [0, 0] }))
             }, 100)
         }
     }, [loaded])
