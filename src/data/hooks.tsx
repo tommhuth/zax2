@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react"
-import { Color, IUniform, Shader, Vector2, Vector3 } from "three"
+import { IUniform, Shader } from "three"
 import { glsl } from "./utils"
 import random from "@huth/random"
 
