@@ -34,7 +34,7 @@ export default function Camera({ startPosition = [0, 15, 0] }: { startPosition?:
     useFrame(()=> {
         let { world } = store.getState()
 
-        _matrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
+        _matrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse) 
         world.frustum.setFromProjectionMatrix(_matrix)
 
     })

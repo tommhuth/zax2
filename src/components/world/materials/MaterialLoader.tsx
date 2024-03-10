@@ -5,6 +5,7 @@ import { BoxGeometry, BufferGeometry, Material, Mesh } from "three"
 import { setMaterial } from "../../../data/store/utils"
 import { MaterialName } from "../../../data/types" 
 import BossFogMaterial from "./BossFogMaterial"
+import ExhaustMaterial from "./ExhaustMaterial"
 
 function MaterialLoader() { 
     let materials: Record<MaterialName, ReactNode> = useMemo(() => {
@@ -40,6 +41,7 @@ function MaterialLoader() {
                     rightColorIntensity={0} 
                 />
             ), 
+            exhaust: <ExhaustMaterial />,
             floorBase: <MeshRetroMaterial color={floorBaseColor} />,
             floorHi: <MeshRetroMaterial color={floorHiColor} />,
             floorSolid: <meshBasicMaterial color={"red"} />,

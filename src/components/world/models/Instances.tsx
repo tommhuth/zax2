@@ -1,8 +1,7 @@
 import { useLoader } from "@react-three/fiber"
 import InstancedMesh from "./InstancedMesh"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
-import {
-    barellColor,
+import { 
     cableColor,
     deviceColor,
     dirtColor,
@@ -19,8 +18,7 @@ import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { memo } from "react"
 import Barrels from "./instances/Barrels"
 import Plant from "./instances/Plant"
-import Grass from "./instances/Grass"
-import Exhaust from "./instances/Exhaust"
+import Grass from "./instances/Grass" 
 import { glsl } from "../../../data/utils" 
 
 function Instances() {
@@ -284,8 +282,7 @@ function Instances() {
 
             <Barrels />
             <Plant />
-            <Grass />
-            <Exhaust />
+            <Grass /> 
         </>
     )
 }

@@ -2,7 +2,7 @@ import { startTransition, useEffect, useMemo, useRef } from "react"
 import { Owner, Rocket } from "../../../data/types"
 import { useInstance } from "../models/InstancedMesh"
 import { useFrame } from "@react-three/fiber"
-import { ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
+import { Only, ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
@@ -14,6 +14,7 @@ import { damageRocket, removeRocket } from "../../../data/store/actors"
 import { createExplosion, createParticles } from "../../../data/store/effects"
 import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
+import Exhaust from "../../Exhaust"
 
 let _size = new Vector3()
 
@@ -86,13 +87,17 @@ export default function Rocket({
     speed,
     health,
 }: Rocket) {
-    let grid = useStore(i => i.world.grid)
+    let grid = useStore(i => i.world.grid) 
     let data = useMemo(() => {
-        return { removed: false, speed, triggerZ: 25, rotationY: random.float(0, Math.PI * 2) }
+        return { 
+            removed: false, 
+            speed, 
+            triggerZ: 25, 
+            rotationY: random.float(0, Math.PI * 2) 
+        }
     }, [speed])
     let ref = useRef<Mesh>(null)
-    let [rocketIndex, rocketInstance] = useInstance("rocket", { reset: false, color: "#FFF" })
-    let [exhaustIndex, exhaustInstance] = useInstance("exhaust", { color: "#FFF" })
+    let [rocketIndex, rocketInstance] = useInstance("rocket", { reset: false, color: "#FFF" }) 
     let remove = () => {
         data.removed = true
         increaseScore(500)
@@ -126,26 +131,7 @@ export default function Rocket({
                 explode(position, size)
             })
         }
-    }, [health])
-
-    useFrame(() => {
-        if (typeof exhaustIndex === "number") {
-            setMatrixAt({
-                instance: exhaustInstance,
-                index: exhaustIndex,
-                scale: [
-                    .5 + random.float(-.15, .15),
-                    1.25 + random.float(-.4, .4),
-                    .5 + random.float(-.15, .15)
-                ],
-                position: [
-                    position.x,
-                    position.y - size[1] / 2 - 1.1,
-                    position.z,
-                ]
-            })
-        }
-    })
+    }, [health]) 
 
     useFrame((state, delta) => {
         let { player } = useStore.getState()
@@ -176,16 +162,21 @@ export default function Rocket({
             client.position = position.toArray()
             grid.updateClient(client)
         }
-    })
-
-    if (!Config.DEBUG) {
-        return null
-    }
+    }) 
 
     return (
-        <mesh position={position.toArray()} ref={ref}>
-            <boxGeometry args={[...size, 1, 1, 1]} />
-            <meshBasicMaterial wireframe color="orange" name="debug" />
-        </mesh>
+        <>  
+            <Exhaust
+                targetPosition={position} 
+                rotation={[-Math.PI * .5, 0, 0]} 
+                offset={[0, -3.25, 0]}
+            />
+            <Only if={Config.DEBUG}>
+                <mesh position={position.toArray()} ref={ref}>
+                    <boxGeometry args={[...size, 1, 1, 1]} />
+                    <meshBasicMaterial wireframe color="orange" name="debug" />
+                </mesh>
+            </Only>
+        </>
     )
 }

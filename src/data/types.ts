@@ -3,7 +3,7 @@ import { Tuple2, Tuple3 } from "../types"
 import Counter from "./world/Counter"
 import { Client } from "./world/SpatialHashGrid3D"
 
-export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
+export type MaterialName = "exhaust" | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
     | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi" | "barrel"
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi"
     | "bossCable" | "bossFloorValley" | "bossHardware" | "bossRock" | "bossPillar"
@@ -11,7 +11,7 @@ export type MaterialName = "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bos
 export type InstanceName = "leaf" | "scrap" |  "line" | "box" | "sphere" | "particle" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball" | "cable"
     | "turret" | "rocket" | "platform" | "cylinder" | "shimmer" | "dirt"
-    | "grass" | "plant" | "shockwave" | "blast" | "decal" | "exhaust" | "plane"
+    | "grass" | "plant" | "shockwave" | "blast" | "decal" | "plane"
 
 export type RepeaterName = "building1" | "building2" | "building3"
     | "building4" | "building5" | "tanks" | "wall1"

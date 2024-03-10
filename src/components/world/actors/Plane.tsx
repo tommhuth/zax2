@@ -19,6 +19,7 @@ import { useCollisionDetection } from "../../../data/collisions"
 import { damp } from "three/src/math/MathUtils.js"
 import Counter from "../../../data/world/Counter"
 import { easeInOutCubic } from "../../../data/shaping"
+import Exhaust from "../../Exhaust"
 
 let _size = new Vector3()
 
@@ -261,7 +262,19 @@ function Plane({
         }
     })
 
-    return null
+    if (speed === 0) {
+        return null
+    }
+
+    return (
+        <Exhaust 
+            targetPosition={position} 
+            offset={[0, .35, 2]} 
+            scale={[.5, .2, 1.25]} 
+            rotation={[0, -Math.PI, 0]} 
+            visible={health > 0}
+        />
+    )
 }
 
 export default memo(Plane)

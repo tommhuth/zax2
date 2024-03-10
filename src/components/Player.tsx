@@ -15,7 +15,7 @@ import { MeshRetroMaterial } from "./world/materials/MeshRetroMaterial"
 import { removeHeatSeaker, setBossProp } from "../data/store/boss"
 import { useCollisionDetection } from "../data/collisions"
 import { easeInQuad } from "../data/shaping"
-import PlayerExhaust from "./PlayerExhaust"
+import Exhaust from "./Exhaust"
 import { damp } from "three/src/math/MathUtils.js"
 
 let depth = 2
@@ -77,7 +77,7 @@ export default function Player({
             playerGroupRef.current.position.y = y
             playerGroupRef.current.position.z = z
         }
-    }, []) 
+    }, [])
 
     useEffect(() => {
         if (bossState === BossState.DEAD) {
@@ -221,16 +221,14 @@ export default function Player({
     return (
         <>
             <group
-                ref={handleRef}
-                scale={.75}
+                ref={handleRef} 
                 visible={state !== "intro"}
             >
                 <primitive
                     object={model.nodes.player}
                     receiveShadow
                     castShadow
-                    position={[0, 0, 0]}
-                    scale={[.65,.65,.5]}
+                    position={[0, 0, 0]} 
                 >
                     <MeshRetroMaterial
                         name="player"
@@ -239,12 +237,7 @@ export default function Player({
                     />
                 </primitive>
 
-                <PlayerExhaust />
-
-                <mesh visible={false}>
-                    <boxGeometry args={[...size, 1, 1, 1]} />
-                    <meshBasicMaterial color="red" wireframe name="debug" />
-                </mesh>
+                <Exhaust offset={[0, -.2, -3]} />
             </group>
         </>
     )
