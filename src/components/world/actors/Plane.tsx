@@ -2,7 +2,7 @@ import { memo, startTransition, useMemo } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
+import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
@@ -34,7 +34,7 @@ function explode(position: Vector3) {
         speed: [14, 20],
         spread: [[-.25, .25], [-.5, 1]],
         normal: [0, -.5, 0],
-        count: [12, 16],
+        count: [10, 15],
         stagger: [-100, 0],
         radius: [.1, .45],
         color: planeColor,
@@ -56,7 +56,6 @@ function Plane({
     rotation = 0,
 }: Plane) {
     let data = useMemo(() => ({
-        time: 0,
         removed: false,
         grounded: false,
         gravity: 0,
@@ -65,7 +64,8 @@ function Plane({
         tilt: random.float(0.002, 0.05),
         shootTimer: random.float(0, fireFrequency),
         nextShotAt: fireFrequency * .5,
-        liftOffDuration: 4_300
+        liftoffDuration: 4_300,
+        liftoffTimer: 0,
     }), [])
     let bottomY = 0
     let grid = useStore(i => i.world.grid)
@@ -248,7 +248,7 @@ function Plane({
                 position.y = (bottomY + .5 / 2)
             }
         } else {
-            let t = clamp(data.time / data.liftOffDuration, 0, 1)
+            let t = clamp(data.liftoffTimer / data.liftoffDuration, 0, 1)
 
             position.y = easeInOutCubic(t) * (targetY - startY) + startY
         }
@@ -257,7 +257,7 @@ function Plane({
     // takeoff
     useFrame((state, delta) => {
         if (takeoffAt > position.z && !isStatic) {
-            data.time += delta * 1000
+            data.liftoffTimer += delta * 1000
         }
     })
 
