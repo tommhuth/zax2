@@ -1,15 +1,13 @@
 # Zax
 
-## Todo  
-- more destructable ground objects  
-- actual level design   
-- plane cleanup  (enemy plane 3d model)
+## Todo   
+- actual level design    
 - ui/intro
 - material review / fog tweak
 - instance color hit thing 
-- hit detection (still) accurate?
-- clean up lights colocate
-- generic engine exhaust
+- hit detection (still) accurate? 
+- black ficker bug
+- remove repeater meshes?
 
 ## Assets
 - https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html
