@@ -7,7 +7,9 @@
 - instance color hit thing 
 - hit detection (still) accurate? 
 - black ficker bug
-- remove repeater meshes?
+- remove repeater meshes? use shared mat instead and local (shared) geometry????
+- rework boss ending
+- dispose revision do not dispose shared stuff, start lag??
 
 ## Assets
 - https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html
