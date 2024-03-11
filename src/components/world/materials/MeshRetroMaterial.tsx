@@ -26,7 +26,6 @@ type MeshRetroMaterialProps = {
     }
 } & Omit<MeshLambertMaterialProps, "onBeforeCompile" | "dithering">
 
-
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
     color = bcolor,   
     colorCount = 11,
@@ -38,6 +37,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     shader = {},
     emissive,
     additionalShadowStrength = .15,
+    children,
     ...rest
 }, ref) => { 
     let player = useStore(i => i.player.object) 
@@ -229,7 +229,9 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             ref={ref} 
             customProgramCacheKey={customProgramCacheKey}
             {...rest}
-        />
+        >
+            {children}
+        </meshLambertMaterial>
     )
 })
 

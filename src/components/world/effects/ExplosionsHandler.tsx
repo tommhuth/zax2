@@ -1,24 +1,62 @@
-import { startTransition, useEffect } from "react"
-import { LinearFilter } from "three"
+import { startTransition, useEffect, useMemo, useRef } from "react"
+import { LinearFilter, PointLight } from "three"
 import { glsl } from "../../../data/utils"
 import { useFrame, useLoader } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
 import { TextureLoader } from "three/src/loaders/TextureLoader.js"
-import { useStore } from "../../../data/store"
+import { store, useStore } from "../../../data/store"
 import { removeExplosion } from "../../../data/store/effects"
 import BlastHandler from "./BlastHandler"
 import FireballHandler from "./FireballHandler"
 import ShockwaveHandler from "./ShockwaveHandler"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
+import Counter from "../../../data/world/Counter"
+import { damp } from "three/src/math/MathUtils.js"
 
 export default function ExplosionsHandler() {
     let decalCount = 15 
-    let [impactMap] = useLoader(TextureLoader, ["/textures/decal1.png"]) 
+    let [impactMap] = useLoader(TextureLoader, ["/textures/decal1.png"])  
+    let explosionLightRef1 = useRef<PointLight>(null)
+    let explosionLightRef2 = useRef<PointLight>(null)
+    let explosionLights = [explosionLightRef1, explosionLightRef2] 
+    let counter = useMemo(() => new Counter(1), [])
 
     useEffect(() => {
-        impactMap.magFilter = LinearFilter
-        impactMap.minFilter = LinearFilter
-    }, [impactMap]) 
+        if (!explosionLightRef1.current || !explosionLightRef2.current) {
+            return
+        }
+
+        explosionLightRef1.current.intensity = 0
+        explosionLightRef2.current.intensity = 0
+    }, [])
+
+    useEffect(() => {
+        return store.subscribe(
+            (state) => state.effects.explosions[0],
+            (lastExplosion) => {
+                if (lastExplosion?.radius > .5) {
+                    let light = explosionLights[counter.current].current
+        
+                    if (light) {
+                        light.intensity = 100
+                        light.distance = Math.max(lastExplosion.radius, 5) * 3
+                        light.position.set(...lastExplosion.position)
+                        light.position.y += 2
+                    }
+        
+                    counter.next()
+                }
+            }
+        ) 
+    }, [])
+
+    useFrame((state, delta) => {
+        for (let light of explosionLights) {
+            if (light.current) {
+                light.current.intensity = damp(light.current.intensity, 0, 4, delta)
+            }
+        }
+    }) 
 
     // main
     useFrame(() => { 
@@ -53,8 +91,7 @@ export default function ExplosionsHandler() {
                 count={decalCount}  
             >
                 <planeGeometry args={[2, 2, 1, 1]} />
-                <MeshRetroMaterial 
-                    map={impactMap}
+                <MeshRetroMaterial  
                     color={"black"}
                     name="impact"
                     depthWrite={false}
@@ -67,8 +104,24 @@ export default function ExplosionsHandler() {
                             `
                         }
                     }}
-                /> 
-            </InstancedMesh>
+                >
+                    <primitive 
+                        object={impactMap} 
+                        attach="map" 
+                        magFilter={LinearFilter}
+                        minFilter={LinearFilter}
+                    />
+                </MeshRetroMaterial> 
+            </InstancedMesh> 
+
+            <pointLight
+                ref={explosionLightRef1}
+                color={"#fff"}
+            />
+            <pointLight
+                ref={explosionLightRef2}
+                color={"#fff"}
+            />
         </>
     )
 } 

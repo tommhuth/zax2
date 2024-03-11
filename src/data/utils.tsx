@@ -60,8 +60,7 @@ export function setMatrixAt({
         rotation.length === 3 ? _quaternion.setFromEuler(_euler.set(...rotation, "XYZ")) : _quaternion.set(...rotation),
         Array.isArray(scale) ? _scale.set(...scale) : _scale.set(scale, scale, scale),
     ))
-    instance.instanceMatrix.needsUpdate = true
-    instance.computeBoundingSphere()
+    instance.instanceMatrix.needsUpdate = true 
 }
 
 export function setMatrixNullAt(instance: InstancedMesh, index: number) {

@@ -100,6 +100,7 @@ export default function InstancedMesh({
             receiveShadow={receiveShadow}
             ref={setInstanceRef}
             visible={visible}
+            frustumCulled={false}
         >
             {colors ? <instancedBufferAttribute attach="instanceColor" args={[colorData, 3, true]} /> : null}
             {children}

@@ -1,21 +1,11 @@
 import { useFrame, useThree } from "@react-three/fiber"
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react"
-import { DirectionalLight, PointLight } from "three"
+import { useEffect, useRef } from "react"
+import { DirectionalLight } from "three"
 import { useStore } from "../data/store"
-import Counter from "../data/world/Counter"
-import { damp } from "three/src/math/MathUtils.js"
-
-
 
 export default function Lights() {
-    let counter = useMemo(() => new Counter(1), [])
     let shadowLightRef = useRef<DirectionalLight>(null)
-    let engineLightRef = useRef<PointLight>(null)
-    let explosionLightRef1 = useRef<PointLight>(null)
-    let explosionLightRef2 = useRef<PointLight>(null)
-    let explosionLights = [explosionLightRef1, explosionLightRef2]
     let { scene, viewport } = useThree()
-    let lastExplosion = useStore(i => i.effects.explosions[0])
     let ticks = useRef(0)
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
 
@@ -37,69 +27,10 @@ export default function Lights() {
         } else {
             ticks.current += delta * 1000
         }
-    })
-
-    useFrame(() => {
-        let player = useStore.getState().player.object
-
-        if (player && engineLightRef.current) {
-            engineLightRef.current.position.z = player?.position.z - 1.5
-            engineLightRef.current.position.y = player?.position.y + .1
-            engineLightRef.current.position.x = player?.position.x
-        }
-    })
-
-    useLayoutEffect(() => {
-        if (!explosionLightRef1.current || !explosionLightRef2.current) {
-            return
-        }
-
-        explosionLightRef1.current.intensity = 0
-        explosionLightRef2.current.intensity = 0
-    }, [])
-
-    useEffect(() => {
-        if (lastExplosion?.radius > .5) {
-            let light = explosionLights[counter.current].current
-
-            if (light) {
-                light.intensity = 150
-                light.distance = Math.max(lastExplosion.radius, 5) * 3
-                light.position.set(...lastExplosion.position)
-                light.position.y += 3
-            }
-
-            counter.next()
-        }
-    }, [lastExplosion])
-
-    useFrame((state, delta) => {
-        for (let light of explosionLights) {
-            if (light.current) {
-                light.current.intensity = damp(light.current.intensity, 0, 4, delta)
-            }
-        }
-    })
+    }) 
 
     return (
-        <>
-            <pointLight
-                ref={engineLightRef}
-                distance={90}
-                position-y={1}
-                intensity={50}
-                color={"#ffffff"}
-            />
-
-            <pointLight
-                ref={explosionLightRef1}
-                color={"#fff"}
-            />
-            <pointLight
-                ref={explosionLightRef2}
-                color={"#fff"}
-            />
-
+        <> 
             <directionalLight position={[-6, 15, -6]} intensity={.8} />
 
             <directionalLight

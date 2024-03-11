@@ -1,6 +1,6 @@
 import { useFrame, useLoader } from "@react-three/fiber"
 import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
-import { Group } from "three"
+import { Group, PointLight } from "three"
 import { Tuple3 } from "../types"
 import { WORLD_CENTER_X } from "./world/World"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
@@ -46,7 +46,8 @@ export default function Player({
     let bossState = useStore(i => i.boss.state)
     let position = useStore(i => i.player.position)
     let targetPosition = useStore(i => i.player.targetPosition)
-    let controls = useStore(i => i.controls)
+    let controls = useStore(i => i.controls) 
+    let engineLightRef = useRef<PointLight>(null)
     let model = useLoader(GLTFLoader, "/models/player.glb")
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {
@@ -216,7 +217,7 @@ export default function Player({
             client.position = position.toArray()
             grid.updateClient(client)
         }
-    })
+    }) 
 
     return (
         <>
@@ -237,7 +238,18 @@ export default function Player({
                     />
                 </primitive>
 
-                <Exhaust offset={[0, -.2, -3]} />
+                <Exhaust 
+                    offset={[0, -.15, -3.35]} 
+                    scale={[.5, .3, 1.6]}
+                />
+
+                <pointLight
+                    ref={engineLightRef}
+                    distance={90}
+                    position={[0, .1, -1.75]}
+                    intensity={50}
+                    color={"#ffffff"}
+                />
             </group>
         </>
     )

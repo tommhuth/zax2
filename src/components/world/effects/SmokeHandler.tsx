@@ -161,6 +161,7 @@ export default function SmokeHandler() {
             ref={instanceRef} 
             receiveShadow 
             args={[undefined, undefined, count]}
+            frustumCulled={false}
         >
             <sphereGeometry args={[1, 16, 16]} />
             <meshLambertMaterial

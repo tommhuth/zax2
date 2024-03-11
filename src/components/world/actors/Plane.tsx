@@ -269,8 +269,8 @@ function Plane({
     return (
         <Exhaust 
             targetPosition={position} 
-            offset={[0, .35, 2]} 
-            scale={[.5, .2, 1.25]} 
+            offset={[0, .35, 2.25]} 
+            scale={[.5, .2, 1.125]} 
             rotation={[0, -Math.PI, 0]} 
             visible={health > 0}
         />
