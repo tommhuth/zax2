@@ -265,6 +265,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                 </group>
 
                 <group
+                    dispose={null}
                     visible={boss.health > 0}
                 >
                     <mesh

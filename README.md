@@ -3,7 +3,7 @@
 ## Todo   
 - actual level design    
 - ui/intro
-- material review / fog tweak
+- material review / fog revision
 - instance color hit thing 
 - hit detection (still) accurate? 
 - black ficker bug

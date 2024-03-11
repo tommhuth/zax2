@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { startTransition, useRef } from "react"
 import { useStore } from "../../data/store"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../world/World"
 import { setState } from "../../data/store/utils"
@@ -18,7 +18,7 @@ export default function Ui() {
 
     useWindowEvent(["click", "touchstart"], () => {
         if (state === "intro" && ready) {
-            setState("running")
+            startTransition(()=> setState("running"))
         }
     }, [ready, state])
 

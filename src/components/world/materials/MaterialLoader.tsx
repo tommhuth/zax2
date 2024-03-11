@@ -6,6 +6,7 @@ import { setMaterial } from "../../../data/store/utils"
 import { MaterialName } from "../../../data/types" 
 import BossFogMaterial from "./BossFogMaterial"
 import ExhaustMaterial from "./ExhaustMaterial"
+import GrassMaterial from "./GrassMaterial"
 
 function MaterialLoader() { 
     let materials: Record<MaterialName, ReactNode> = useMemo(() => {
@@ -58,6 +59,7 @@ function MaterialLoader() {
             bossHardware: <BossFogMaterial color="#00f" />,
             bossRock: <BossFogMaterial color="#00d" />,
             bossPillar: <BossFogMaterial color="#00f" />,  
+            grass: <GrassMaterial />,  
         }
     }, []) 
 
@@ -90,6 +92,7 @@ function MaterialHandler({ children, name }: { children: React.ReactNode; name: 
         <mesh
             geometry={geometry}
             ref={handleRef}
+            dispose={null}
         >
             {cloneElement(children as ReactElement, { name })}
         </mesh>

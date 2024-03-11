@@ -1,38 +1,25 @@
-import { useEffect } from "react"
-import { useInstance } from "../models/InstancedMesh"
-import { setMatrixAt, setMatrixNullAt } from "../../../data/utils" 
-import { Tuple3 } from "../../../types"
+import { Mesh } from "three"
+import { useStore } from "../../../data/store"
+import { useLoader } from "@react-three/fiber"
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useWorldPart } from "../WorldPartWrapper"
-import random from "@huth/random"
 
-interface GrassProps {
-    position: Tuple3
-}
-
-export default function Grass({
-    position
-}: GrassProps) {
-    let [index, instance] = useInstance("grass")
+export default function Grass({ position, ...props }) { 
+    let materials = useStore(i => i.materials) 
+    let [grass] = useLoader(GLTFLoader, ["/models/grass.glb"]) 
     let partPosition = useWorldPart()
 
-    useEffect(() => {
-        if (typeof index === "number") {
-            let flip = random.pick(Math.PI, 0)  
+    return ( 
+        <mesh 
+            dispose={null}
+            position={[position[0], position[1], position[2] + partPosition[2]]}
+            scale-y={1.75}
+            {...props}
+        >
+            <primitive object={(grass.nodes.grass as Mesh).geometry} attach="geometry" />
+            <primitive object={materials.grass} attach="material" />
+        </mesh>
+    )
+} 
 
-            setMatrixAt({
-                index,
-                instance,
-                rotation: [0, flip, 0],
-                scale: [1, 1.75, 1],
-                position: [position[0], position[1], partPosition[2] + position[2]]
-            })
-
-            return () => {
-                setMatrixNullAt(instance, index as number)
-            }
-        }
-
-    }, [index])
-
-    return null
-}
+useLoader.preload(GLTFLoader, "/models/grass.glb")

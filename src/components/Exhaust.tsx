@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
-import { BufferGeometry, Material, Mesh, Vector3 } from "three"
+import { BufferGeometry, Material, Mesh, SphereGeometry, Vector3 } from "three"
 import random from "@huth/random" 
 import { useStore } from "../data/store"
 import { Tuple3 } from "../types"
@@ -13,6 +13,8 @@ interface ExhaustProps {
     targetPosition?: Vector3
     turbulence?: number
 }
+
+const geo = new SphereGeometry(1, 10, 10)
 
 export default function Exhaust({ 
     rotation, 
@@ -49,7 +51,7 @@ export default function Exhaust({
             rotation={rotation}
             visible={visible}
         >
-            <sphereGeometry args={[1, 10, 10]} />
+            <primitive object={geo} />
             <primitive object={materials.exhaust} attach="material" />
         </mesh> 
     )

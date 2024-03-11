@@ -8,8 +8,7 @@ import easings from "../../../shaders/easings.glsl"
 import dither from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
 import { useFrame } from "@react-three/fiber"
-import { blend, easeOutQuart } from "../../../data/shaping"
-import { removeExplosion } from "../../../data/store/effects"
+import { blend, easeOutQuart } from "../../../data/shaping" 
 import { useStore } from "../../../data/store"
 
 export default function FireballHandler() {
@@ -104,8 +103,7 @@ export default function FireballHandler() {
         let {
             effects: { explosions },
             instances: { fireball: { mesh: instance } }
-        } = useStore.getState()
-        let dead: string[] = []
+        } = useStore.getState() 
 
         if (!instance) {
             return
@@ -134,11 +132,7 @@ export default function FireballHandler() {
 
                 sphere.time += ndelta(delta) * 1000
             }
-        }
-
-        if (dead.length) {
-            startTransition(() => removeExplosion(dead))
-        }
+        } 
     })
 
     let latestExplosion = useStore(i => i.effects.explosions[0])
@@ -168,7 +162,7 @@ export default function FireballHandler() {
             count={count} 
             name="fireball" 
         >
-            <sphereGeometry args={[1, 32, 32]} >
+            <sphereGeometry args={[1, 24, 24]} >
                 <instancedBufferAttribute
                     needsUpdate={true}
                     attach="attributes-aCenter"

@@ -1,7 +1,7 @@
 import { startTransition, useEffect, useMemo, useRef } from "react"
 import { LinearFilter, PointLight } from "three"
 import { glsl } from "../../../data/utils"
-import { useFrame, useLoader } from "@react-three/fiber"
+import { useFrame, useLoader, useThree } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
 import { TextureLoader } from "three/src/loaders/TextureLoader.js"
 import { store, useStore } from "../../../data/store"
@@ -20,6 +20,8 @@ export default function ExplosionsHandler() {
     let explosionLightRef2 = useRef<PointLight>(null)
     let explosionLights = [explosionLightRef1, explosionLightRef2] 
     let counter = useMemo(() => new Counter(1), [])
+    let {viewport} = useThree()
+    let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
 
     useEffect(() => {
         if (!explosionLightRef1.current || !explosionLightRef2.current) {
@@ -30,6 +32,7 @@ export default function ExplosionsHandler() {
         explosionLightRef2.current.intensity = 0
     }, [])
 
+    // light update
     useEffect(() => {
         return store.subscribe(
             (state) => state.effects.explosions[0],
@@ -50,10 +53,11 @@ export default function ExplosionsHandler() {
         ) 
     }, [])
 
+    // lightout
     useFrame((state, delta) => {
         for (let light of explosionLights) {
             if (light.current) {
-                light.current.intensity = damp(light.current.intensity, 0, 4, delta)
+                light.current.intensity = damp(light.current.intensity, 0, 3, delta)
             }
         }
     }) 
@@ -61,15 +65,15 @@ export default function ExplosionsHandler() {
     // main
     useFrame(() => { 
         let {
-            effects: { explosions }, 
+            effects: { explosions },  player
         } = useStore.getState()
         let dead: string[] = []
 
-        for (let { shockwave, fireballs, blast, ...explosion } of explosions) { 
+        for (let { shockwave, fireballs, ...explosion } of explosions) { 
             let shockwaveDone = shockwave ? shockwave.time > shockwave.lifetime : true
-            let blastDone = blast.time > blast.lifetime
+            let past = explosion.position[2] < player.position.z - diagonal * .5
 
-            if (fireballs[0].time > fireballs[0].lifetime && shockwaveDone && blastDone) {
+            if ((fireballs[0].time > fireballs[0].lifetime && shockwaveDone) || past) {
                 dead.push(explosion.id)
                 continue
             } 

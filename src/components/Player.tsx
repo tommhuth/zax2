@@ -223,7 +223,7 @@ export default function Player({
         <>
             <group
                 ref={handleRef} 
-                visible={state !== "intro"}
+                visible={ready ? state !== "intro" : true} 
             >
                 <primitive
                     object={model.nodes.player}

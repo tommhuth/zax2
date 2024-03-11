@@ -3,7 +3,7 @@ import { Tuple2, Tuple3 } from "../types"
 import Counter from "./world/Counter"
 import { Client } from "./world/SpatialHashGrid3D"
 
-export type MaterialName = "exhaust" | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
+export type MaterialName = "grass" | "exhaust" | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
     | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi" | "barrel"
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi"
     | "bossCable" | "bossFloorValley" | "bossHardware" | "bossRock" | "bossPillar"

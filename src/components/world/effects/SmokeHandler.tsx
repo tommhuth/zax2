@@ -34,7 +34,7 @@ function randomDirection() {
 
 export default function SmokeHandler() {
     let instanceRef = useRef<InstancedMesh>(null)
-    let count = 250
+    let count = 150
     let index = useMemo(()=> new Counter(count), [count])
     let smokes = useRef<Smoke[]>([])
     let lastEmitted = useMemo<Record<string, number>>(() => ({}), [])
@@ -75,7 +75,7 @@ export default function SmokeHandler() {
     })
 
     useFrame(() => {
-        let smokeInterval = random.integer(12, 20)
+        let smokeInterval = random.integer(16, 20)
         let { rockets } = store.getState().world
 
         for (let { position, health, id } of rockets) {
@@ -163,7 +163,7 @@ export default function SmokeHandler() {
             args={[undefined, undefined, count]}
             frustumCulled={false}
         >
-            <sphereGeometry args={[1, 16, 16]} />
+            <sphereGeometry args={[1, 13, 13]} />
             <meshLambertMaterial
                 transparent
                 color="#cbecff"

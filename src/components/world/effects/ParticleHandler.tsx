@@ -23,7 +23,7 @@ function ParticleHandler() {
             } = particle 
             let grounded = position.y <= radius + .15
             // haha
-            let magnitude = Math.abs(velocity.x) + Math.abs( velocity.z) 
+            let magnitude = Math.abs(velocity.x) + Math.abs(velocity.z) 
 
             if (!mounted) {
                 setColorAt(instance.mesh, index, color)
@@ -67,8 +67,7 @@ function ParticleHandler() {
                 position: position.toArray(),
                 scale: radius,
                 rotation: rotation.toArray()
-            })
-
+            }) 
         }
 
         if (dead.length) {

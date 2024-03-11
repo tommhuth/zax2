@@ -17,8 +17,7 @@ import { DoubleSide, FrontSide, Mesh } from "three"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { memo } from "react"
 import Barrels from "./instances/Barrels"
-import Plant from "./instances/Plant"
-import Grass from "./instances/Grass" 
+import Plant from "./instances/Plant" 
 import { glsl } from "../../../data/utils" 
 
 function Instances() {
@@ -95,7 +94,7 @@ function Instances() {
 
             <InstancedMesh
                 name="cable"
-                count={5}
+                count={4}
                 castShadow
                 receiveShadow
             >
@@ -281,8 +280,7 @@ function Instances() {
             </InstancedMesh>
 
             <Barrels />
-            <Plant />
-            <Grass /> 
+            <Plant /> 
         </>
     )
 }

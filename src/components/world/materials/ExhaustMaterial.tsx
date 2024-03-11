@@ -74,6 +74,7 @@ export default function ExhaustMaterial() {
             transparent
             name="exhaust"
             ref={ref}
+            depthWrite={false}
         />
     )
 }
