@@ -115,6 +115,7 @@ export default function GrassMaterial() {
             side={DoubleSide}  
             name="grass" 
             transparent 
+            depthWrite={true}
             onBeforeCompile={onBeforeCompile}
         /> 
     )

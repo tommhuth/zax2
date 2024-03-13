@@ -46,7 +46,7 @@ export default function Player({
     let bossState = useStore(i => i.boss.state)
     let position = useStore(i => i.player.position)
     let targetPosition = useStore(i => i.player.targetPosition)
-    let controls = useStore(i => i.controls) 
+    let controls = useStore(i => i.controls)
     let engineLightRef = useRef<PointLight>(null)
     let model = useLoader(GLTFLoader, "/models/player.glb")
     let client = useMemo(() => {
@@ -201,7 +201,7 @@ export default function Player({
                 move(data.speed * t)
 
                 if (t < .5) {
-                    setBossProp("state", BossState.ACTIVE)
+                    startTransition(() => setBossProp("state", BossState.ACTIVE))
                 }
             } else if (boss.state === BossState.ACTIVE) {
                 move(0)
@@ -217,19 +217,19 @@ export default function Player({
             client.position = position.toArray()
             grid.updateClient(client)
         }
-    }) 
+    })
 
     return (
         <>
             <group
-                ref={handleRef} 
-                visible={ready ? state !== "intro" : true} 
+                ref={handleRef}
+                visible={ready ? state !== "intro" : true}
             >
                 <primitive
                     object={model.nodes.player}
                     receiveShadow
                     castShadow
-                    position={[0, 0, 0]} 
+                    position={[0, 0, 0]}
                 >
                     <MeshRetroMaterial
                         name="player"
@@ -238,8 +238,8 @@ export default function Player({
                     />
                 </primitive>
 
-                <Exhaust 
-                    offset={[0, -.15, -3.35]} 
+                <Exhaust
+                    offset={[0, -.15, -3.35]}
                     scale={[.5, .3, 1.6]}
                 />
 

@@ -86,11 +86,7 @@ export default function InstancedMesh({
             return
         }
 
-        setInstance(name, instance, count)
-
-        for (let i = 0; i < count; i++) {
-            setMatrixAt({ instance: instance, index: i, scale: 0 })
-        }
+        setInstance(name, instance, count)  
     }, [instance]) 
 
     return (

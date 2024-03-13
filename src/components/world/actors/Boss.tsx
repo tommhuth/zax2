@@ -300,3 +300,4 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
 }
 
 useGLTF.preload("/models/boss.glb")
+useGLTF.preload("/models/bossdestroyed.glb")

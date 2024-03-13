@@ -7,7 +7,6 @@ canvas {
     image-rendering: pixelated;
 }
 
-
 body::before {
     content: "";
     position: fixed;
@@ -16,9 +15,11 @@ body::before {
     height: 100%; 
     width: 100%; 
     z-index: 1;
-    //background-image: linear-gradient(to top right, red 30%, blue 70%) ;
-    //opacity: .5;
-    display: none;
+    background-image: linear-gradient(to top right, rgb(0 0 0 / 50%) 30%, rgb(0 0 0 / 0%) 50%);
+    opacity: .8;
+    display: block;
+    mix-blend-mode: overlay;
+    pointer-events: none;
 }
   
 #shoot { 
@@ -109,4 +110,25 @@ body::before {
     left: 50%;
     z-index: 1000;
     transform: translate(-50%, -50%);
+}
+
+#root { 
+    top: 0; 
+    position: fixed;
+    display: block;
+    height: 100vh !important; 
+    width: 100% !important;
+    right: 0;
+    left: 0;
+}
+
+#debug {
+    position: fixed;
+    top: 1em;
+    right: 1em; 
+    color: wheat;
+    z-index: 1000000;
+    padding: 1em;
+    padding: 1em;
+    border: 1px solid red;
 }

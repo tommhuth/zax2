@@ -9,11 +9,8 @@ import { store } from "../../../data/store"
 import { Tuple3 } from "../../../types"
 import { useShader } from "../../../data/hooks"
 import Counter from "../../../data/world/Counter"
-
-function easeInOutCubic(x: number): number {
-    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
-}
-
+import { easeInOutCubic } from "../../../data/shaping"
+ 
 interface Smoke {
     id: string
     position: Tuple3

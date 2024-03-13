@@ -110,15 +110,20 @@ function Loader() {
     useEffect(() => {
         // not sure this is really needed
         gl.compile(scene, camera)
-        startTransition(setLoaded)
+        
+        requestIdleCallback(() => { 
+            startTransition(setLoaded)
+        })
     }, [scene, camera])
 
     useEffect(() => {
         if (loaded) {
             setTimeout(() => {
-                document.getElementById("loading")?.remove()
-                setReady()
-            }, 1000)
+                requestIdleCallback(() => { 
+                    document.getElementById("loading")?.remove() 
+                    startTransition(setReady)
+                })
+            }, 2000) 
         }
     }, [loaded])
 
