@@ -16,7 +16,7 @@ body::before {
     width: 100%; 
     z-index: 1;
     background-image: linear-gradient(to top right, rgb(0 0 0 / 50%) 30%, rgb(0 0 0 / 0%) 50%);
-    opacity: .8;
+    opacity: .5;
     display: block;
     mix-blend-mode: overlay;
     pointer-events: none;

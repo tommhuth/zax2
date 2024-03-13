@@ -1,6 +1,6 @@
 import { useFrame, useLoader } from "@react-three/fiber"
 import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
-import { Group, PointLight } from "three"
+import { AdditiveBlending, Group, MultiplyBlending, PointLight, SubtractiveBlending, TextureLoader } from "three"
 import { Tuple3 } from "../types"
 import { WORLD_CENTER_X } from "./world/World"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
@@ -49,6 +49,7 @@ export default function Player({
     let controls = useStore(i => i.controls)
     let engineLightRef = useRef<PointLight>(null)
     let model = useLoader(GLTFLoader, "/models/player.glb")
+    let text = useLoader(TextureLoader, "/textures/glow.png")
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {
             type: "player",
@@ -237,6 +238,21 @@ export default function Player({
                         color={playerColor}
                     />
                 </primitive>
+
+                <mesh
+                    scale={[3.5,6,1]} 
+                    rotation-x={-Math.PI * .5} 
+                    position={[0, -.25, -.7]}
+                >
+                    <planeGeometry args={[1,1,1,1]} />
+                    <meshBasicMaterial 
+                        map={text} 
+                        transparent 
+                        depthWrite={false}
+                        opacity={.35} 
+                        blending={AdditiveBlending}
+                    />
+                </mesh> 
 
                 <Exhaust
                     offset={[0, -.15, -3.35]}
