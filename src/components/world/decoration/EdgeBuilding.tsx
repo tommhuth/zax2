@@ -1,9 +1,9 @@
 import { useEffect } from "react"
-import { useRepeater } from "../models/RepeaterMesh"
-import { WORLD_LEFT_EDGE } from "../World"
+import { useRepeater } from "../models/RepeaterMesh" 
 import random from "@huth/random"
 import { RepeaterName } from "../../../data/types"
 import { useWorldPart } from "../WorldPartWrapper"
+import { WORLD_LEFT_EDGE } from "../../../data/const"
 
 interface EdgeBuildingProps {
     x?: number

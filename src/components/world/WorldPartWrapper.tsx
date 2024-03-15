@@ -3,11 +3,11 @@ import React, { createContext, startTransition, useContext, useMemo, useRef } fr
 import { Box3, Vector3 } from "three"
 import { Tuple2, Tuple3 } from "../../types"
 import { Only } from "../../data/utils"
-import random from "@huth/random"
-import { WORLD_CENTER_X } from "./World"
+import random from "@huth/random" 
 import Config from "../../data/Config"
 import { store } from "../../data/store"
 import { removeWorldPart } from "../../data/store/world"
+import { WORLD_CENTER_X } from "../../data/const"
 
 interface WorldPartWrapperProps {
     position: Vector3

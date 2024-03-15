@@ -5,8 +5,7 @@ import { useFrame } from "@react-three/fiber"
 import { Only, ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
 import random from "@huth/random"
-import { Tuple3 } from "../../../types"
-import { WORLD_TOP_EDGE } from "../World"
+import { Tuple3 } from "../../../types" 
 import Config from "../../../data/Config"
 import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
@@ -15,6 +14,7 @@ import { createExplosion, createParticles } from "../../../data/store/effects"
 import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
 import Exhaust from "../../Exhaust"
+import { WORLD_TOP_EDGE } from "../../../data/const"
 
 let _size = new Vector3()
 

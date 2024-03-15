@@ -7,19 +7,8 @@ import {
     Barrel, BossState, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, MaterialName, Particle,
     Plane, RepeaterMesh, Rocket, Turret, WorldPart
 } from "../types"
-import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D"
-import { clamp } from "../utils"
-import { WORLD_BOTTOM_EDGE, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_TOP_EDGE } from "../../components/world/World"
+import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D" 
 
-export const zoom = 70 - clamp(1 - (Math.min(window.innerWidth, window.innerHeight) - 400) / 600, 0, 1) * 30
-
-export let isSmallScreen = Math.min(window.innerWidth, window.innerHeight) < 800
-export const pixelSize = isSmallScreen ? 3 : 4
-export const dpr = 1 / pixelSize
-export const bulletSize: Tuple3 = [.15, .2, 1.5]
-
-export const edgeMin = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -Infinity)
-export const edgeMax = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, Infinity)
 
 interface ControlsMap {
     d?: boolean
@@ -31,6 +20,7 @@ interface ControlsMap {
 
 export interface Store {
     loaded: boolean
+    setup: boolean
     ready: boolean
     state: "intro" | "running" | "gameover"
     world: {
@@ -88,6 +78,7 @@ export interface Store {
 const store = create(
     subscribeWithSelector<Store>(() => ({
         loaded: false,
+        setup: false,
         ready: false,
         state: "intro",
         world: {

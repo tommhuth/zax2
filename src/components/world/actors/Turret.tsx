@@ -5,8 +5,7 @@ import { useInstance } from "../models/InstancedMesh"
 import { clamp, ndelta, setColorAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
-import { Vector3 } from "three"
-import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../World"
+import { Vector3 } from "three" 
 import { Owner, Turret } from "../../../data/types"
 import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
@@ -15,6 +14,7 @@ import { store, useStore } from "../../../data/store"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
+import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 
 function explode(position: Vector3, size: Tuple3) { 
     createExplosion({

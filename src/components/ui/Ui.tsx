@@ -1,11 +1,11 @@
 import { startTransition, useRef } from "react"
-import { useStore } from "../../data/store"
-import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../world/World"
+import { useStore } from "../../data/store" 
 import { setState } from "../../data/store/utils"
 import { useAnimationFrame, useWindowEvent } from "../../data/hooks"
 import { BossState } from "../../data/types" 
 
 import "./Ui.scss" 
+import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../data/const"
 
 export default function Ui() {
     let state = useStore(i => i.state)
@@ -30,7 +30,7 @@ export default function Ui() {
 
             currentHeightRef.current.style.height = (height * 100 + 1).toFixed(1) + "%"
         }
-    })
+    }) 
 
     return (
         <>

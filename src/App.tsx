@@ -14,21 +14,24 @@ import {
     NoToneMapping,
     VSMShadowMap,
 } from "three"
-import { dpr, pixelSize, useStore, zoom } from "./data/store"
+import { useStore } from "./data/store"
 import Models from "./components/world/models/Models"
 import EdgeOverlay from "./components/EdgeOverlay"
 import { Perf } from "r3f-perf"
 import MaterialLoader from "./components/world/materials/MaterialLoader"
 import { Only } from "./data/utils"
 import Config from "./data/Config"
-import { setLoaded, setReady } from "./data/store/utils"
+import { setLoaded, setReady, setSetup } from "./data/store/utils"
 import Controls from "./components/Controls"
+import { DPR, PIXEL_SIZE, ZOOM } from "./data/const"
+
+// round up to full pixel
+let getSize = () => [
+    Math.ceil(window.innerWidth / PIXEL_SIZE) * PIXEL_SIZE,
+    Math.ceil(window.innerHeight / PIXEL_SIZE) * PIXEL_SIZE,
+]
 
 export default function Wrapper() {
-    let getSize = () => [
-        Math.ceil(window.innerWidth / pixelSize) * pixelSize,
-        Math.ceil(window.innerHeight / pixelSize) * pixelSize,
-    ]
     let [size, setSize] = useState(() => getSize())
     let ready = useStore((i) => i.ready)
 
@@ -73,11 +76,11 @@ export default function Wrapper() {
                 }}
                 orthographic
                 camera={{
-                    zoom,
+                    zoom: ZOOM,
                     near: 0,
                     far: 150,
                 }}
-                dpr={dpr}
+                dpr={DPR}
             >
                 <Suspense fallback={null}>
                     <EdgeOverlay />
@@ -90,7 +93,7 @@ export default function Wrapper() {
                 <Controls />
                 <Camera />
                 <Lights />
-                <MaterialLoader /> 
+                <MaterialLoader />
 
                 <Only if={Config.STATS}>
                     <Perf
@@ -110,8 +113,8 @@ function Loader() {
     useEffect(() => {
         // not sure this is really needed
         gl.compile(scene, camera)
-        
-        requestIdleCallback(() => { 
+
+        requestIdleCallback(() => {
             startTransition(setLoaded)
         })
     }, [scene, camera])
@@ -119,11 +122,12 @@ function Loader() {
     useEffect(() => {
         if (loaded) {
             setTimeout(() => {
-                requestIdleCallback(() => { 
-                    document.getElementById("loading")?.remove() 
-                    startTransition(setReady)
+                requestIdleCallback(() => {
+                    document.getElementById("loading")?.remove()
+                    startTransition(setSetup)
+                    setTimeout(() => startTransition(setReady), 1000)
                 })
-            }, 2000) 
+            }, 1000)
         }
     }, [loaded])
 

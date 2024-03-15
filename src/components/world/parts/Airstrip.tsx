@@ -1,12 +1,12 @@
 import { WorldPartAirstrip } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import EdgeBuilding from "../decoration/EdgeBuilding"
-import Plane from "../spawner/Plane"
-import { WORLD_TOP_EDGE } from "../World"
+import Plane from "../spawner/Plane" 
 import Floor from "../decoration/Floor"
 import Barrel from "../spawner/Barrel"
 import Turret from "../spawner/Turret"
 import Rocket from "../spawner/Rocket"
+import { WORLD_TOP_EDGE } from "../../../data/const"
 
 export default function Airstrip({
     id,

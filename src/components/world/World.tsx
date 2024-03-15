@@ -17,15 +17,10 @@ import ExplosionsHandler from "./effects/ExplosionsHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
-import { makeAirstrip, makeBoss, makeBuildingsLow, makeDefault, makeStart } from "../../data/world/generators"
+import { makeBuildingsLow } from "../../data/world/generators"
 import { Vector3 } from "three"
 import SmokeHandler from "./effects/SmokeHandler"
-
-export const WORLD_CENTER_X = 0
-export const WORLD_LEFT_EDGE = 5
-export const WORLD_RIGHT_EDGE = -4
-export const WORLD_TOP_EDGE = 5
-export const WORLD_BOTTOM_EDGE = 1
+import { WORLD_START_Z } from "../../data/const"
 
 export default function World() {
     let parts = useStore(i => i.world.parts)
@@ -38,7 +33,9 @@ export default function World() {
         let forwardWorldPart = parts[parts.length - 1]
 
         if (forwardWorldPart) {
-            let lastPartIsAtEdge = forwardWorldPart && player && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
+            let lastPartIsAtEdge = forwardWorldPart 
+                && player 
+                && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
  
             if ((lastPartIsAtEdge || !forwardWorldPart) && loaded) { 
                 startTransition(addWorldPart)
@@ -48,9 +45,11 @@ export default function World() {
 
     useEffect(() => {
         if (loaded) {
-            setTimeout(() => {
-                addWorldPart(makeBuildingsLow({ position: new Vector3(0, 0, 110), size: [0, 0] }))
-            }, 100)
+            startTransition(() => {
+                addWorldPart(
+                    makeBuildingsLow({ position: new Vector3(0, 0, WORLD_START_Z), size: [0, 0] })
+                )
+            })
         }
     }, [loaded])
 
@@ -83,7 +82,6 @@ export default function World() {
         </>
     )
 }
-
 
 const Actors = memo(() => {
     let buildings = useStore(i => i.world.buildings)

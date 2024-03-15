@@ -1,12 +1,11 @@
 import { useFrame, useLoader } from "@react-three/fiber"
-import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
-import { AdditiveBlending, Group, MultiplyBlending, PointLight, SubtractiveBlending, TextureLoader } from "three"
-import { Tuple3 } from "../types"
-import { WORLD_CENTER_X } from "./world/World"
+import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
+import { AdditiveBlending, Group, PointLight, TextureLoader } from "three"
+import { Tuple3 } from "../types" 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
 import { BossState, Owner } from "../data/types"
-import { bulletSize, edgeMax, edgeMin, store, useStore } from "../data/store"
+import {  store, useStore } from "../data/store"
 import { damagePlayer, increaseScore, setPlayerObject } from "../data/store/player"
 import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/store/actors"
 import { damageBarrel } from "../data/store/world"
@@ -17,6 +16,7 @@ import { useCollisionDetection } from "../data/collisions"
 import { easeInQuad } from "../data/shaping"
 import Exhaust from "./Exhaust"
 import { damp } from "three/src/math/MathUtils.js"
+import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "../data/const"
 
 let depth = 2
 
@@ -35,13 +35,13 @@ interface LocalData {
 
 export default function Player({
     size = [1.5, .5, depth],
-    z = 15,
+    z = 0,
     y = 1.5
 }: PlayerProps) {
     let playerGroupRef = useRef<Group | null>(null)
     let grid = useStore(i => i.world.grid)
     let weapon = useStore(i => i.player.weapon)
-    let ready = useStore(i => i.ready)
+    let setup = useStore(i => i.setup)
     let state = useStore(i => i.state)
     let bossState = useStore(i => i.boss.state)
     let position = useStore(i => i.player.position)
@@ -128,11 +128,12 @@ export default function Player({
         }
     })
 
-    useEffect(() => {
-        if (ready && playerGroupRef.current) {
-            playerGroupRef.current.position.z = 100
+    // init player ready position
+    useLayoutEffect(() => {
+        if (setup && playerGroupRef.current) {
+            playerGroupRef.current.position.z = WORLD_PLAYER_START_Z
         }
-    }, [ready])
+    }, [setup])
 
     // input
     useFrame((state, delta) => {
@@ -153,19 +154,19 @@ export default function Player({
                 targetPosition.y -= speedy * nd
             }
 
-            targetPosition.clamp(edgeMin, edgeMax)
+            targetPosition.clamp(EDGE_MIN, EDGE_MAX)
         }
     })
 
     // shoot
     useFrame(() => {
-        if (Date.now() - data.lastShotAt > weapon.fireFrequency && controls.keys.space) {
+        if (Date.now() - data.lastShotAt > weapon.fireFrequency && controls.keys.space && setup) {
             startTransition(() => {
                 createBullet({
                     position: [
                         position.x,
                         position.y,
-                        position.z + (depth / 2 + bulletSize[2] / 2) * 1.5
+                        position.z + (depth / 2 + BULLET_SIZE[2] / 2) * 1.5
                     ],
                     owner: Owner.PLAYER,
                     damage: weapon.damage,
@@ -180,10 +181,12 @@ export default function Player({
 
     // movement
     useFrame((state, delta) => {
-        if (playerGroupRef.current) {
+        let { ready } = useStore.getState()
+
+        if (playerGroupRef.current && ready) {
             let nd = ndelta(delta)
             let group = playerGroupRef.current
-            let y = clamp(targetPosition.y, edgeMin.y, edgeMax.y)
+            let y = clamp(targetPosition.y, EDGE_MIN.y, EDGE_MAX.y)
             let { boss, player } = store.getState()
             let move = (speed: number) => {
                 group.position.x = damp(group.position.x, targetPosition.x, 4, nd)
@@ -224,7 +227,7 @@ export default function Player({
         <>
             <group
                 ref={handleRef}
-                visible={ready ? state !== "intro" : true}
+                visible={setup ? state !== "intro" : true}
             >
                 <primitive
                     object={model.nodes.player}

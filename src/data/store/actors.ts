@@ -1,9 +1,10 @@
 import random from "@huth/random"
-import { bulletSize, store } from "./index"
+import { store } from "./index"
 import { Plane, Turret } from "../types"
 import { Box3, Matrix4, Quaternion, Vector3 } from "three"
 import { Tuple3 } from "../../types"
 import { updateWorld } from "./utils"
+import { BULLET_SIZE } from "../const"
 
 let _mat4 = new Matrix4() 
 let _yAxis = new Vector3(0,1,0)
@@ -13,7 +14,7 @@ export function createBullet({
     position = [0, 0, 0],
     rotation = 0,
     owner,
-    size = bulletSize,
+    size = BULLET_SIZE,
     speed = 10,
     damage,
     color = "#fff",

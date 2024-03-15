@@ -6,10 +6,9 @@
 - material review / fog revision
 - instance color hit thing 
 - hit detection (still) accurate? 
-- black ficker bug
 - remove repeater meshes? use shared mat instead and local (shared) geometry????
 - rework boss ending 
-- akward startup/prep handling
+- use other stage for prep setup??
 
 53 mat + 22 instnaces
 

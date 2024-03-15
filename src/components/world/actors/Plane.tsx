@@ -6,8 +6,7 @@ import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
-import { Vector3 } from "three"
-import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../World"
+import { Vector3 } from "three" 
 import { Owner, Plane } from "../../../data/types"
 import { createBullet, damagePlane, damageTurret, removePlane } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
@@ -20,6 +19,7 @@ import { damp } from "three/src/math/MathUtils.js"
 import Counter from "../../../data/world/Counter"
 import { easeInOutCubic } from "../../../data/shaping"
 import Exhaust from "../../Exhaust"
+import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 
 let _size = new Vector3()
 

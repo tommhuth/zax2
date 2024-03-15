@@ -71,3 +71,9 @@ export function setReady() {
         ready: true,
     })
 }
+
+export function setSetup() {
+    store.setState({
+        setup: true,
+    })
+}

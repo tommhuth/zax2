@@ -1,13 +1,25 @@
 import { useFrame, useThree } from "@react-three/fiber"
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react"
 import { DirectionalLight } from "three"
 import { useStore } from "../data/store"
+import { CAMERA_OFFSET, CAMERA_POSITION } from "../data/const"
 
 export default function Lights() {
     let shadowLightRef = useRef<DirectionalLight>(null)
     let { scene, viewport } = useThree()
-    let ticks = useRef(0)
+    let time = useRef(0)
+    let ready = useStore(i => i.ready)
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
+    let updateShadowCamera = useCallback(() => {
+        let { player } = useStore.getState()
+
+        if (!player.object || !shadowLightRef.current) {
+            return
+        } 
+
+        shadowLightRef.current.position.z = player.object.position.z + CAMERA_OFFSET.z  
+        shadowLightRef.current.target.position.z = player.object.position.z + CAMERA_OFFSET.z 
+    }, [])
 
     useEffect(() => {
         if (!shadowLightRef.current) {
@@ -17,21 +29,30 @@ export default function Lights() {
         scene.add(shadowLightRef.current.target)
     }, [scene])
 
-    useFrame((state, delta) => {
-        let player = useStore.getState().player.object
-
-        if (shadowLightRef.current && player && ticks.current > 1500) {
-            shadowLightRef.current.position.z = player.position.z
-            shadowLightRef.current.target.position.z = player.position.z
-            ticks.current = 0
-        } else {
-            ticks.current += delta * 1000
+    useLayoutEffect(() => {
+        if (ready) {
+            updateShadowCamera()
         }
-    }) 
+    }, [ready])
+
+    useFrame((state, delta) => {
+        let { ready } = useStore.getState()
+
+        // update camera shadow position every 1s
+        if (shadowLightRef.current && ready && time.current >= 1000) { 
+            updateShadowCamera()
+            time.current = 0
+        } else {
+            time.current += delta * 1000
+        }
+    })
 
     return (
-        <> 
-            <directionalLight position={[-6, 15, -6]} intensity={.8} />
+        <>
+            <directionalLight
+                position={[-6, 15, -6]}
+                intensity={.8}
+            />
 
             <directionalLight
                 ref={shadowLightRef}

@@ -2,7 +2,8 @@ import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
 import { Mesh } from "three" 
 import { useWindowEvent } from "../data/hooks"
-import { edgeMax, edgeMin, useStore } from "../data/store" 
+import { useStore } from "../data/store" 
+import { EDGE_MAX, EDGE_MIN } from "../data/const"
  
 export default function Controls() {
     let {pointerPosition, keys, startPointerPosition} = useStore(i => i.controls)
@@ -80,7 +81,7 @@ export default function Controls() {
                     }
 
                     playerTargetPosition.x += (point.x - pointerPosition.x) * 1.5
-                    playerTargetPosition.clamp(edgeMin, edgeMax)
+                    playerTargetPosition.clamp(EDGE_MIN, EDGE_MAX)
                     pointerPosition.copy(point)
                 }
             }}
