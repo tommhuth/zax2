@@ -50,18 +50,9 @@ export default function Ui() {
                     display: boss?.state === BossState.OUTRO ? "block": "none"
                 }}
             >
-                <h1>Level complete</h1> 
-            </div>
-
-            <div
-                className={"leveln"}
-                style={{
-                    display: boss?.state === BossState.OUTRO ? "block": "none"
-                }}
-            >
                 <h1>Level#{level}</h1>
-                <p>Now entering</p>
-            </div>
+                <p>Evil robot defeated</p> 
+            </div> 
 
             <div
                 className="height"
@@ -101,7 +92,7 @@ export default function Ui() {
             <div
                 className="boss"
                 style={{
-                    display: boss?.state === BossState.ACTIVE ? undefined : "none",
+                    display: [BossState.ACTIVE].includes(boss.state) ? undefined : "none",
                 }}
             >
                 <div

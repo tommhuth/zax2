@@ -41,40 +41,21 @@
     translate: 0 50%;
     z-index: 1000000000; 
     pointer-events: none;
-
+ 
     h1 {
-        font-size: clamp(2em, 10vw, 9em); 
-        line-height: 1;
-        margin-bottom: 1rem;
-        letter-spacing: -.01em;
-        animation: infoin 5s both;
-    } 
-}
-
-.leveln {
-    position: absolute;
-    pointer-events: none;
-    left: 10vw;
-    right: 10vw;
-    bottom: 50%;
-    translate: 0 50%;
-    text-transform: uppercase;
-    z-index: 1000000000; 
-
-    h1 {
-        font-size: clamp(2em, 10vw, 9em); 
+        font-size: clamp(2.5em, 5vw, 4em); 
         line-height: .9;
         margin-bottom: .75rem;
         letter-spacing: -.01em;
-        animation: infoin 5.5s 4.5s both  ;
+       animation: infoin 5s .25s both  ;
     }
 
     p {
-        font-size: clamp(1em, 4vw, 3em); 
-        color: rgb(21, 0, 214);
-        animation: infoin 6s 4s both;
+        font-size: clamp(1.5em, 2vw, 2.5em);  
+        animation: infoin 5s both;
     }
 }
+ 
 
 
 @keyframes infoin {
@@ -87,15 +68,12 @@
         opacity: 1;
         translate: 0 0;
     }
-
-    50% {
+    
+    90% {
         opacity: 1;
         translate: 0 0;
     }
-    60% {
-        opacity: 0;
-        translate: 0 -1rem;
-    }
+
     100% {
         opacity: 0;
         translate: 0 -1rem;

@@ -160,7 +160,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
 
                 float noiseEffect = easeInOutSine((noise(vGlobalPosition * .1 + uTime * 1.4) + 1.) / 2.) * .8;
                 float heightScaler = 1. - clamp((vGlobalPosition.y) / 2., 0., 1.);
-                float lowHeight = 1. - clamp(abs(vGlobalPosition.y) / 2., 0., 1.);
+                float lowHeight = 1. - clamp(abs(vGlobalPosition.y) / 4., 0., 1.);
                 float heightMin = easeInQuad(1. - clamp((vGlobalPosition.y ) / .5, 0., 1.)); 
                 float heightBase = .3;
                 

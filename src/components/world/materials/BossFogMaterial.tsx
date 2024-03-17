@@ -9,20 +9,21 @@ export default function BossFogMaterial({ color = floorBaseColor, name = undefin
             name={name} 
             rightColorIntensity={.5}
             {...rest}
+            additionalShadowStrength={0}
             shader={{
                 fragment: {
                     main: glsl` 
-                        vec3 t = vec3(uTime, uTime * .25, uTime);
-                        float n = easeInOutQuad((noise(vGlobalPosition * .25 + t * 1.5) + 1.) / 2.);
-                        float n2 = easeInOutQuad((noise(vGlobalPosition * .1 + t * 1.) + 1.) / 2.);
-                        float h = easeInQuad(clamp((-(vGlobalPosition.y + 1.) / 6.), 0., 1.));
-                        float h2 = easeInQuad(clamp((-(vGlobalPosition.y + 5.5) / 1.5), 0., 1.));
+                        vec3 t = vec3(uTime * .75, uTime * .25, uTime * .6);
+                        float baseNoise = easeInOutQuad((noise(vGlobalPosition * .25 + t * 1.5) + 1.) / 2.);
+                        float baseHeightEffect = easeInQuad(clamp((-(vGlobalPosition.y + 2.) / 4.), 0., 1.));
+                        float highlightNoise = easeInQuad((noise(vGlobalPosition * .1 + t * .8) + 1.) / 2.);
+                        float heightEffect = easeInQuad(clamp((-(vGlobalPosition.y + 4.) / 3.), 0., 1.));
         
-                        vec3 color = vec3(0.01, 0.01, 0.2);
-                        vec3 highlight = vec3(0., .0, .7); 
+                        vec3 baseColor = vec3(0.0, 0.0, 0.2);
+                        vec3 highlightColor = vec3(0., .2, .98); 
 
-                        gl_FragColor.rgb = mix(gl_FragColor.rgb, highlight, clamp(n * h + h2, 0., 1.));
-                        gl_FragColor.rgb = mix(gl_FragColor.rgb, color, n2 * h * 1.);
+                        gl_FragColor.rgb = mix(gl_FragColor.rgb, baseColor, max(baseNoise * baseHeightEffect, heightEffect));
+                        gl_FragColor.rgb = mix(gl_FragColor.rgb, highlightColor, highlightNoise * baseHeightEffect);
                     `
                 }
             }}

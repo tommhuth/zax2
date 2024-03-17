@@ -183,7 +183,8 @@ interface CreateParticlesParams {
     delay?: number // base delay
 }
 
-let _vec3 = new Vector3()
+let _normal = new Vector3()
+let _spread = new Vector3()
 
 export function createParticles({
     position = [0, 0, 0],
@@ -204,8 +205,8 @@ export function createParticles({
         let instance = store.getState().instances.particle
         let amount = Array.isArray(count) ? random.integer(...count) : count
         let particles: Particle[] = new Array(amount).fill(null).map((i, index, list) => {
-            normal = _vec3.set(...normal)
-                .add(new Vector3(
+            normal = _normal.set(...normal)
+                .add(_spread.set(
                     random.float(...spread[0]),
                     random.float(...spread[1]),
                     random.float(...spread[0])
@@ -213,11 +214,11 @@ export function createParticles({
                 .normalize()
                 .toArray()
 
-            let velocity = new Vector3(
+            let velocity = [
                 normal[0] * random.float(...speed),
                 normal[1] * random.float(...speed),
                 normal[2] * random.float(...speed),
-            )
+            ]
             let j = instance.index.next()
 
             return {
@@ -225,15 +226,13 @@ export function createParticles({
                 instance,
                 mounted: false,
                 index: j,
-                position: new Vector3(
-                    ...position.map((i, index) => i + random.float(...offset[index]))
-                ),
-                acceleration: new Vector3(...gravity),
-                rotation: new Vector3(
+                position: position.map((i, index) => i + random.float(...offset[index])) ,
+                acceleration: gravity,
+                rotation:[
                     random.float(0, Math.PI * 2),
                     random.float(0, Math.PI * 2),
                     random.float(0, Math.PI * 2)
-                ),
+                ],
                 velocity,
                 restitution: random.float(...restitution),
                 friction: typeof friction == "number" ? friction : random.float(...friction),

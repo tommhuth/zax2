@@ -53,7 +53,7 @@ function MaterialLoader() {
             bossBlue: <MeshRetroMaterial color="blue" />, 
             bossSecondaryBlue: <MeshRetroMaterial color="#00f" />,
             bossWhite: <meshLambertMaterial color="white" />, 
-            bossFloorValley: <BossFogMaterial />, 
+            bossFloorValley: <BossFogMaterial color="#016" />, 
             bossFloorHi: <MeshRetroMaterial color="#fff" />,
             bossCable: <BossFogMaterial color="#f00" />,
             bossHardware: <BossFogMaterial color="#00f" />,

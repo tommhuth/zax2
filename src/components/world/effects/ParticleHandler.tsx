@@ -21,9 +21,9 @@ function ParticleHandler() {
                 friction, restitution, index, instance,
                 mounted, color, rotation, time
             } = particle 
-            let grounded = position.y <= radius + .15
+            let grounded = position[1] <= radius + .15
             // haha
-            let magnitude = Math.abs(velocity.x) + Math.abs(velocity.z) 
+            let magnitude = Math.abs(velocity[0]) + Math.abs(velocity[2]) 
 
             if (!mounted) {
                 setColorAt(instance.mesh, index, color)
@@ -37,36 +37,36 @@ function ParticleHandler() {
             }
 
             // after 15 seconds, kill anyway
-            if ((magnitude < .1 && grounded) || time > 15_000) { 
+            if ((magnitude < .1 && grounded) || time > 10_000) { 
                 dead.push(particle)
                 continue
             }
 
-            velocity.x += acceleration.x * nd
-            velocity.y += acceleration.y * nd
-            velocity.z += acceleration.z * nd
+            velocity[0] += acceleration[0] * nd
+            velocity[1] += acceleration[1] * nd
+            velocity[2] += acceleration[2] * nd
 
-            velocity.x = damp(velocity.x, 0, grounded ? 3 : friction , nd)
-            velocity.z = damp(velocity.z, 0, grounded ? 3 : friction , nd)
+            velocity[0] = damp(velocity[0], 0, grounded ? 3 : friction , nd)
+            velocity[2] = damp(velocity[2], 0, grounded ? 3 : friction , nd)
 
-            position.x += velocity.x * nd
-            position.y = Math.max(floorY + radius * .25, position.y + velocity.y * nd)
-            position.z += velocity.z * nd
+            position[0] += velocity[0] * nd
+            position[1] = Math.max(floorY + radius * .25, position[1] + velocity[1] * nd)
+            position[2] += velocity[2] * nd
 
-            rotation.x += -velocity.x * .075
-            rotation.y += -velocity.y * .015
-            rotation.z += -velocity.z * .075
+            rotation[0] += -velocity[0] * .075
+            rotation[1] += -velocity[1] * .015
+            rotation[2] += -velocity[2] * .075
 
-            if (position.y <= floorY + radius * .25) {
-                velocity.y *= -restitution 
+            if (position[1] <= floorY + radius * .25) {
+                velocity[1] *= -restitution 
             }
 
             setMatrixAt({
                 instance: instance.mesh,
                 index,
-                position: position.toArray(),
+                position,
                 scale: radius,
-                rotation: rotation.toArray()
+                rotation,
             }) 
         }
 

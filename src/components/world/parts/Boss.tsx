@@ -102,7 +102,10 @@ export default function BossPart({
 
     useEffect(() => {
         if (state === BossState.DEAD) {
-            return timeout(() => setBossProp("state", BossState.OUTRO), 4000)
+            timeout(() => {
+                setBossProp("state", BossState.OUTRO)
+                timeout(() => setBossProp("state", BossState.UNKNOWN), 7_000)
+            }, 2000)
         }
     }, [state])
 
@@ -124,7 +127,9 @@ export default function BossPart({
             id={id}
         > 
             <Boss startPosition={[0, 0, bossZ]} />
+
             <Model position={[10, 0, position.z]} />
+            
             <Barrel
                 position={[6, 0, 15]}
             />

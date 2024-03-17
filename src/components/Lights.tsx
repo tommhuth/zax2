@@ -57,15 +57,15 @@ export default function Lights() {
             <directionalLight
                 ref={shadowLightRef}
                 color={"#ffffff"}
-                position={[0, 15, 0]}
+                position={[0, 10, 0]}
                 intensity={.8}
                 castShadow
                 shadow-camera-near={0} // y
-                shadow-camera-far={15}
+                shadow-camera-far={20}
                 shadow-camera-left={-8} // x
                 shadow-camera-right={14}
-                shadow-camera-top={diagonal * .5} // z
-                shadow-camera-bottom={-diagonal * 1.75}
+                shadow-camera-top={diagonal * .75} // z
+                shadow-camera-bottom={-diagonal * .75}
                 shadow-mapSize={[512, 512]}
                 shadow-bias={-0.0001}
                 shadow-blurSamples={12}

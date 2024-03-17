@@ -192,16 +192,16 @@ export interface Bullet {
 }
 
 export interface Particle {
-    velocity: Vector3
-    position: Vector3
-    acceleration: Vector3
+    velocity: Tuple3
+    position: Tuple3
+    acceleration: Tuple3
     friction: number
     mounted: boolean
     restitution: number
     time: number 
     instance: Instance
     radius: number
-    rotation: Vector3
+    rotation: Tuple3
     index: number
     color: string
     id: string
