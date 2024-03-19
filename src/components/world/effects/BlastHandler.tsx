@@ -65,13 +65,13 @@ export default function BlastHandler() {
         }
 
         for (let { blast, position } of explosions) { 
-            let t2 = 1 - clamp(blast.time / (blast.lifetime), 0, 1)
+            let t = 1 - clamp(blast.time / (blast.lifetime), 0, 1)
 
             setMatrixAt({
                 instance: instance.mesh,
                 index: blast.index,
                 position: [position[0], position[1], position[2]],
-                scale: blast.radius * easeInQuad(t2),
+                scale: blast.radius * easeInQuad(t),
             })
 
             blast.time += ndelta(delta) * 1000

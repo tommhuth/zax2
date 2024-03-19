@@ -1,18 +1,70 @@
-import { startTransition, useEffect, useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import InstancedMesh from "../models/InstancedMesh"
 import { useShader } from "../../../data/hooks"
-import { Color } from "three"
+import { Color, InstancedMesh as InstancedMeshThree } from "three"
 import { explosionCenterColor, explosionEndColor, explosionHighlightColor } from "../../../data/theme"
 import { clamp, glsl, ndelta, setBufferAttribute, setMatrixAt } from "../../../data/utils"
 import easings from "../../../shaders/easings.glsl"
 import dither from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
 import { useFrame } from "@react-three/fiber"
-import { blend, easeOutQuart } from "../../../data/shaping" 
+import { blend, easeInOutCubic, easeInQuad, easeInQuint, easeOutCubic, easeOutQuart } from "../../../data/shaping" 
 import { useStore } from "../../../data/store"
+import { Fireball } from "../../../data/types"
+import { Tuple3 } from "../../../types"
+
+type TransformReturn = { scale: number, position: Tuple3 }
+type FireballTransformer = (fireball: Fireball, delta: number, instance: InstancedMeshThree) => TransformReturn
+
+export const transformer: Record<Fireball["type"], FireballTransformer> = {
+    primary: (fireball, delta, instance) => {
+        let t = clamp(fireball.time / fireball.lifetime, 0, 1)
+        let scale = blend([fireball.startRadius, fireball.maxRadius, 0], easeOutQuart(t))
+
+        setBufferAttribute(instance.geometry, "aLifetime", t, fireball.index)
+
+        if (fireball.time < 0) {
+            scale = 0
+        }  
+
+        let position: Tuple3 = [
+            fireball.position[0],
+            fireball.position[1] + t * (fireball.index % 3 + 1) ,
+            fireball.position[2],
+        ]
+
+        return { scale, position }
+    },
+    secondary: (fireball, delta, instance) => {
+        let introDur = 250
+        let t = easeInOutCubic (1 -  clamp((fireball.time - introDur) / (fireball.lifetime-introDur), 0, 1))
+
+        if (fireball.time < introDur) {
+            t = easeOutCubic (clamp(fireball.time/introDur, 0, 1))
+        }
+
+        let scale = fireball.startRadius * t
+
+        setBufferAttribute(instance.geometry, "aLifetime", t, fireball.index)
+
+        if (fireball.time < 0) {
+            scale = 0
+        }   else {
+            fireball.position[1] -= 1.5* fireball.startRadius * delta 
+        }
+
+        let position: Tuple3 = [
+            fireball.position[0],
+            fireball.position[1],
+            fireball.position[2],
+        ]
+
+        return { scale, position }
+    }
+}
 
 export default function FireballHandler() {
-    let count = 150
+    let count = 250
     let centerAttributes = useMemo(() => {
         return new Float32Array(new Array(count * 3).fill(0))
     }, [count])
@@ -110,27 +162,17 @@ export default function FireballHandler() {
         }
 
         for (let { fireballs } of explosions) {
-            for (let sphere of fireballs) {
-                let t = clamp(sphere.time / sphere.lifetime, 0, 1)
-                let scale = blend([sphere.startRadius, sphere.maxRadius, 0], easeOutQuart(t))
+            for (let fireball of fireballs) {
+                let type = fireball.type || "primary"
+                let result = transformer[type](fireball, ndelta(delta), instance)
 
-                if (sphere.time < 0) {
-                    scale = 0
-                }
-
-                setBufferAttribute(instance.geometry, "aLifetime", t, sphere.index)
                 setMatrixAt({
                     instance: instance,
-                    index: sphere.index,
-                    position: [
-                        sphere.position[0],
-                        sphere.position[1] + t * (sphere.index % 3 + 1),
-                        sphere.position[2],
-                    ],
-                    scale
+                    index: fireball.index,
+                    ...result,
                 })
 
-                sphere.time += ndelta(delta) * 1000
+                fireball.time += ndelta(delta) * 1000
             }
         } 
     })
@@ -150,7 +192,7 @@ export default function FireballHandler() {
     }, [latestExplosion])
  
     useFrame((state, delta) => {
-        uniforms.uTime.value += delta
+        uniforms.uTime.value += delta * .5
         uniforms.uTime.needsUpdate = true
     })
 

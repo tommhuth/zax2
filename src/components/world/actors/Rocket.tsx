@@ -36,6 +36,7 @@ function explode(position: Vector3, size: Tuple3) {
             position: [position.x, 0, position.z],
             count: 16,
             shockwave: false,
+            secondaryFireballCount: 3,
             radius: random.float(.65, .75),
             fireballCount: 8,
             fireballPath: [[position.x, 0, position.z], [0, 6, 0]]
@@ -62,7 +63,8 @@ function explode(position: Vector3, size: Tuple3) {
             position: [position.x, position.y, position.z],
             count: 20,
             radius: random.float(.8, 1),
-            delay: 520
+            delay: 520,
+            secondaryFireballCount: 3
         })
 
         createParticles({

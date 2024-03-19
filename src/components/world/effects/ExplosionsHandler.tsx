@@ -63,20 +63,21 @@ export default function ExplosionsHandler() {
     }) 
 
     // main
-    useFrame(() => { 
+    useFrame((state, delta) => { 
         let {
             effects: { explosions },  player
         } = useStore.getState()
-        let dead: string[] = []
+        let dead: string[] = [] 
 
-        for (let { shockwave, fireballs, ...explosion } of explosions) { 
-            let shockwaveDone = shockwave ? shockwave.time > shockwave.lifetime : true
-            let past = explosion.position[2] < player.position.z - diagonal * .5
+        for (let explosion of explosions) {  
+            let outside = explosion.position[2] < player.position.z - diagonal
 
-            if ((fireballs[0].time > fireballs[0].lifetime && shockwaveDone) || past) {
+            if (outside || explosion.time > explosion.lifetime) {
                 dead.push(explosion.id)
                 continue
-            } 
+            }  else {
+                explosion.time += delta * 1000
+            }
         }
 
         if (dead.length) {

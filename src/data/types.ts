@@ -33,14 +33,17 @@ export interface Fireball {
     index: number
     startRadius: number
     maxRadius: number
-    lifetime: number
+    lifetime: number 
     time: number
     id: string
+    type?: "primary" | "secondary"
 }
 
 export interface Explosion {
     position: Tuple3
     radius: number
+    lifetime: number
+    time: number
     id: string
     blast: {
         radius: number

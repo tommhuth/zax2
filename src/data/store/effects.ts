@@ -2,10 +2,10 @@ import random from "@huth/random"
 import { Tuple2, Tuple3 } from "../../types"
 import { Store, store } from "."
 import { ColorRepresentation, Vector3 } from "three"
-import { Particle } from "../types"
+import { Explosion, Particle } from "../types"
 import { setCameraShake } from "./player"
 import { clamp, setColorAt, setMatrixAt } from "../utils"
-import { easeOutCubic } from "../shaping"
+import { easeInQuad, easeOutCubic } from "../shaping"
 
 function updateEffects(data: Partial<Store["effects"]>) {
     store.setState({
@@ -14,7 +14,7 @@ function updateEffects(data: Partial<Store["effects"]>) {
             ...data
         }
     })
-} 
+}
 
 interface CreateExplosionParams {
     position: Tuple3
@@ -24,6 +24,7 @@ interface CreateExplosionParams {
     fireballCount?: number
     shockwave?: boolean
     delay?: number
+    secondaryFireballCount?: number
 }
 
 export function createExplosion({
@@ -32,6 +33,7 @@ export function createExplosion({
     radius = .75,
     fireballPath: [fireballStart, fireballDirection] = [[0, 0, 0], [0, 0, 0]],
     fireballCount = 0,
+    secondaryFireballCount = radius > .65 ? random.integer(0, 3) : 0,
     shockwave = random.boolean(.5),
     delay = 0,
 }: CreateExplosionParams) {
@@ -42,73 +44,95 @@ export function createExplosion({
         let blastInstance = store.getState().instances.blast
         let { cameraShake, object } = store.getState().player
         let playerZ = object?.position.z || 0
-        let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 5, 0, 1)
+        let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 5, 0, 1) 
+        let explosion: Explosion = {
+            position,
+            id: random.id(),
+            lifetime: baseLifetime * .85,
+            time: 0,
+            radius: radius * 7 + (fireballCount ? 1.5 : 0),
+            blast: {
+                lifetime: random.float(baseLifetime * .375, baseLifetime * .45),
+                radius: radius * 6,
+                time: 0,
+                index: blastInstance.index.next(),
+            },
+            shockwave: shockwave || fireballCount ? {
+                lifetime: random.float(baseLifetime * .5, baseLifetime * .65),
+                radius: random.float(radius * 2.5, radius * 3),
+                time: random.integer(100, 300),
+                index: shockwaveInstance.index.next(),
+            } : null,
+            fireballs: [
+                ...new Array(secondaryFireballCount).fill(null).map(() => {
+                    let angle = random.float(0, Math.PI * 2)
+                    let distance = random.float(4, 5)
+                    let range = random.float(.75, 1)
+                    let duration = random.integer(-650, -500)
+                    let durationOffset = random.integer(100, 200)
+                    let radiusScaler = random.float(.75, 1.5)
+
+                    return new Array(random.integer(8, 10)).fill(null).map((i, index, list) => {
+                        let t = index / (list.length - 1)
+                        let radius = random.float(.5, .7)
+
+                        return {
+                            index: fireBallInstance.index.next(),
+                            id: random.id(),
+                            position: [
+                                position[0] + Math.cos(angle) * distance * t,
+                                position[1] - Math.cos(Math.PI * .5 + t * range * Math.PI) * distance * .5 * t + 1,
+                                position[2] + Math.sin(angle) * distance * t,
+                            ] as Tuple3,
+                            startRadius: radius * radiusScaler,
+                            maxRadius: 0,
+                            time: t * duration + durationOffset,
+                            lifetime: random.integer(600, 900),
+                            type: "secondary"
+                        }
+                    })
+                }).flat(1),
+                ...new Array(fireballCount).fill(null).map((i, index) => {
+                    let tn = index / (fireballCount - 1)
+
+                    return {
+                        index: fireBallInstance.index.next(),
+                        id: random.id(),
+                        position: [
+                            fireballStart[0] + tn * fireballDirection[0] + random.float(-.25, .25),
+                            fireballStart[1] + tn * fireballDirection[1],
+                            fireballStart[2] + tn * fireballDirection[2] + random.float(-.25, .25),
+                        ] as Tuple3,
+                        startRadius: radius * 1.5,
+                        maxRadius: radius * 3.5,
+                        time: index * -random.integer(75, 100),
+                        lifetime: 1100 + random.integer(0, 200),
+                    }
+                }),
+                ...new Array(count).fill(null).map((i, index, list) => {
+                    let startRadius = (index / list.length) * (radius * 1.5 - radius * .25) + radius * .25
+
+                    return {
+                        index: fireBallInstance.index.next(),
+                        position: [
+                            random.pick(-radius, radius) + position[0],
+                            random.float(0, radius * 3) + position[1],
+                            random.pick(-radius, radius) + position[2]
+                        ] as Tuple3,
+                        startRadius,
+                        id: random.id(),
+                        maxRadius: startRadius * 2.5,
+                        time: random.integer(-200, 0),
+                        lifetime: random.integer(baseLifetime * .375, baseLifetime * .975),
+                    }
+                })
+            ],
+        }
 
         setCameraShake(Math.min(cameraShake + easeOutCubic(shake), 1))
         updateEffects({
             explosions: [
-                {
-                    position,
-                    id: random.id(),
-                    radius: radius * 7 + (fireballCount ? 1.5 : 0),
-                    blast: {
-                        lifetime: random.float(baseLifetime * 1.25, baseLifetime * 1.5) * .3,
-                        radius: radius * 6,
-                        time: 0,
-                        index: blastInstance.index.next(),
-                    },
-                    shockwave: shockwave || fireballCount ? {
-                        lifetime: random.float(baseLifetime * .5, baseLifetime * .65),
-                        radius: random.float(radius * 2.5, radius * 3),
-                        time: random.integer(100, 300),
-                        index: shockwaveInstance.index.next(),
-                    } : null,
-                    fireballs: [
-                        {
-                            id: random.id(),
-                            index: fireBallInstance.index.next(),
-                            position,
-                            startRadius: radius * .25,
-                            maxRadius: radius,
-                            time: 0,
-                            lifetime: baseLifetime * 1.5
-                        },
-                        ...new Array(fireballCount).fill(null).map((i, index) => {
-                            let tn = index / (fireballCount - 1)
-
-                            return {
-                                index: fireBallInstance.index.next(),
-                                id: random.id(),
-                                position: [
-                                    fireballStart[0] + tn * fireballDirection[0] + random.float(-.25, .25),
-                                    fireballStart[1] + tn * fireballDirection[1],
-                                    fireballStart[2] + tn * fireballDirection[2] + random.float(-.25, .25),
-                                ] as Tuple3,
-                                startRadius: radius * 1.5,
-                                maxRadius: radius * 3.5,
-                                time: index * -random.integer(75, 100),
-                                lifetime: 750 * 1.5 + random.integer(0, 200)
-                            }
-                        }),
-                        ...new Array(count).fill(null).map((i, index, list) => {
-                            let startRadius = (index / list.length) * (radius * 1.5 - radius * .25) + radius * .25
-
-                            return {
-                                index: fireBallInstance.index.next(),
-                                position: [
-                                    random.pick(-radius, radius) + position[0],
-                                    random.float(0, radius * 3) + position[1],
-                                    random.pick(-radius, radius) + position[2]
-                                ] as Tuple3,
-                                startRadius,
-                                id: random.id(),
-                                maxRadius: startRadius * 2.5,
-                                time: random.integer(-200, 0),
-                                lifetime: random.integer(baseLifetime * .25, baseLifetime * .65) * 1.5
-                            }
-                        })
-                    ],
-                },
+                explosion,
                 ...store.getState().effects.explosions,
             ]
         })
@@ -214,7 +238,7 @@ export function createParticles({
                 .normalize()
                 .toArray()
 
-            let velocity = [
+            let velocity: Tuple3 = [
                 normal[0] * random.float(...speed),
                 normal[1] * random.float(...speed),
                 normal[2] * random.float(...speed),
@@ -226,13 +250,13 @@ export function createParticles({
                 instance,
                 mounted: false,
                 index: j,
-                position: position.map((i, index) => i + random.float(...offset[index])) ,
-                acceleration: gravity,
-                rotation:[
+                position: position.map((i, index) => i + random.float(...offset[index])) as Tuple3,
+                acceleration: gravity as Tuple3,
+                rotation: [
                     random.float(0, Math.PI * 2),
                     random.float(0, Math.PI * 2),
                     random.float(0, Math.PI * 2)
-                ],
+                ] as Tuple3,
                 velocity,
                 restitution: random.float(...restitution),
                 friction: typeof friction == "number" ? friction : random.float(...friction),
