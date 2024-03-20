@@ -10,11 +10,12 @@ import { Owner, Turret } from "../../../data/types"
 import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
 import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
-import { store, useStore } from "../../../data/store"
+import { store } from "../../../data/store"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
+import { useRemoveWhenBehind } from "../../../data/hooks"
 
 function explode(position: Vector3, size: Tuple3) { 
     createExplosion({
@@ -39,8 +40,7 @@ function explode(position: Vector3, size: Tuple3) {
     })
 }
 
-function Turret({ id, size, position, health, fireFrequency, rotation, aabb, floorLevel }: Turret) {
-    let removed = useRef(false)
+function Turret({ id, size, position, health, fireFrequency, rotation, floorLevel }: Turret) {
     let { viewport } = useThree()
     let [index, instance] = useInstance("turret", {
         color: turretColor,
@@ -55,9 +55,10 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
     let shootTimer = useRef(0)
     let nextShotAt = useRef(fireFrequency)
     let remove = () => {
-        setTimeout(() => removeTurret(id), 350)
-        removed.current = true
+        setTimeout(() => startTransition(() => removeTurret(id)), 350) 
     }
+    
+    useRemoveWhenBehind(position, remove)
 
     useCollisionDetection({
         actions: {
@@ -140,16 +141,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, aabb, flo
         }
 
         shootTimer.current += ndelta(delta) * 1000
-    })
-
-    useFrame(() => {
-        let { world, player } = useStore.getState()
-        let outsideFrustum = !world.frustum.intersectsBox(aabb) && player.object && position.z < player.object.position.z
-
-        if (!removed.current && outsideFrustum) {
-            startTransition(remove)
-        }
-    })
+    }) 
 
     if (!Config.DEBUG) {
         return null

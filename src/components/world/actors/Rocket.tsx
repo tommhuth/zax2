@@ -129,7 +129,7 @@ export default function Rocket({
     useEffect(() => {
         if (health === 0) {
             startTransition(() => {
-                setTimeout(() => remove(), 450)
+                setTimeout(() => startTransition(remove), 450)
                 explode(position, size)
             })
         }

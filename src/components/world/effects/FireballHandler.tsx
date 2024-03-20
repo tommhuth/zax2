@@ -8,7 +8,7 @@ import easings from "../../../shaders/easings.glsl"
 import dither from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
 import { useFrame } from "@react-three/fiber"
-import { blend, easeInOutCubic, easeInQuad, easeInQuint, easeOutCubic, easeOutQuart } from "../../../data/shaping" 
+import { blend, easeInOutCubic, easeOutCubic, easeOutQuart } from "../../../data/shaping" 
 import { useStore } from "../../../data/store"
 import { Fireball } from "../../../data/types"
 import { Tuple3 } from "../../../types"
@@ -16,7 +16,7 @@ import { Tuple3 } from "../../../types"
 type TransformReturn = { scale: number, position: Tuple3 }
 type FireballTransformer = (fireball: Fireball, delta: number, instance: InstancedMeshThree) => TransformReturn
 
-export const transformer: Record<Fireball["type"], FireballTransformer> = {
+export const transformer: Record<Exclude<Fireball["type"], undefined>, FireballTransformer> = {
     primary: (fireball, delta, instance) => {
         let t = clamp(fireball.time / fireball.lifetime, 0, 1)
         let scale = blend([fireball.startRadius, fireball.maxRadius, 0], easeOutQuart(t))

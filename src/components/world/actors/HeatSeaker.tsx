@@ -28,7 +28,7 @@ export default function HeatSeaker({
         actions: {
             bullet: ({ bullet, type }) => {
                 if (bullet.owner === "player" || type !== "heatseaker") {
-                    removeHeatSeaker(id)
+                    removeHeatSeaker(id) 
                 }
             }
         }
@@ -95,10 +95,12 @@ export default function HeatSeaker({
 
             grid.remove(client)
             setMatrixNullAt(instances.sphere.mesh, index)
-            createExplosion({
-                position: position.toArray(),
-                shockwave: false,
-                radius: random.float(.45, .55)
+            startTransition(() => {
+                createExplosion({
+                    position: position.toArray(),
+                    shockwave: false,
+                    radius: random.float(.45, .55)
+                })
             })
         }
     }, [index, grid])

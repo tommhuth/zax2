@@ -5,7 +5,7 @@ import { store, useStore } from "../data/store"
 import { setCameraShake } from "../data/store/player"
 import random from "@huth/random"
 import { damp } from "three/src/math/MathUtils.js"
-import { CAMERA_CENTER_OFFSET, CAMERA_OFFSET, CAMERA_POSITION, WORLD_PLAYER_START_Z } from "../data/const"
+import { CAMERA_OFFSET, CAMERA_POSITION, WORLD_PLAYER_START_Z } from "../data/const"
 
 let _matrix = new Matrix4()
 

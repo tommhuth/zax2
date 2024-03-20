@@ -6,7 +6,7 @@ import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import animate from "@huth/animate"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
-import { Vector3 } from "three" 
+import { Vector3 } from "three"
 import { Owner, Plane } from "../../../data/types"
 import { createBullet, damagePlane, damageTurret, removePlane } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
@@ -73,10 +73,10 @@ function Plane({
     let [index, instance] = useInstance("plane")
     let weaponSide = useMemo(() => new Counter(2), [])
     let isStatic = speed === 0
-    let {viewport } = useThree()
+    let { viewport } = useThree()
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
     let remove = () => {
-        removePlane(id)
+        startTransition(() => removePlane(id))
         data.removed = true
     }
 
@@ -109,14 +109,14 @@ function Plane({
         }
     })
 
-    useEffect(()=> {
-        if (isStatic && instance && typeof index === "number")  {
+    useEffect(() => {
+        if (isStatic && instance && typeof index === "number") {
             setMatrixAt({
                 index,
                 instance,
                 position: position.toArray(),
                 rotation: [0, rotation, 0]
-            }) 
+            })
         }
     }, [isStatic, instance, index])
 
@@ -161,7 +161,7 @@ function Plane({
         let shootDisabled = position.z > playerPosition.z || !world.frustum.containsPoint(position)
         let canShoot = health > 0
 
-        if (!shootDisabled && canShoot && data.shootTimer > data.nextShotAt + heightPenalty * fireFrequency) { 
+        if (!shootDisabled && canShoot && data.shootTimer > data.nextShotAt + heightPenalty * fireFrequency) {
             startTransition(() => {
                 createBullet({
                     position: [
@@ -187,9 +187,9 @@ function Plane({
     // move
     useFrame((state, delta) => {
         if (instance && typeof index === "number" && !data.removed && !isStatic) {
-            let { world, player } = useStore.getState()           
+            let { world, player } = useStore.getState()
             let playerZ = player.object?.position.z || -Infinity
-            let shouldMoveForward = targetY === startY || position.z - diagonal * 1.5 < playerZ 
+            let shouldMoveForward = targetY === startY || position.z - diagonal * 1.5 < playerZ
 
             position.z -= shouldMoveForward ? data.actualSpeed * ndelta(delta) : 0
             aabb.setFromCenterAndSize(position, _size.set(...size))
@@ -197,7 +197,7 @@ function Plane({
             setMatrixAt({
                 instance,
                 index,
-                position: position.toArray(), 
+                position: position.toArray(),
                 rotation: [data.rotation[0], data.rotation[1] + Math.PI, data.rotation[2]]
             })
 
@@ -267,11 +267,11 @@ function Plane({
     }
 
     return (
-        <Exhaust 
-            targetPosition={position} 
-            offset={[0, .35, 2]} 
-            scale={[.4, .2, .9]} 
-            rotation={[0, -Math.PI, 0]} 
+        <Exhaust
+            targetPosition={position}
+            offset={[0, .35, 2]}
+            scale={[.4, .2, .9]}
+            rotation={[0, -Math.PI, 0]}
             visible={health > 0}
         />
     )

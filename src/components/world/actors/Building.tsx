@@ -14,7 +14,7 @@ export default function Building({ size, id, position }: Building) {
                 if (client.data.id !== id || type !== "building") {
                     return
                 } 
-      
+       
                 createParticles({
                     position: intersection, 
                     speed: [7, 14], 
@@ -23,7 +23,7 @@ export default function Building({ size, id, position }: Building) {
                     stagger: [0,0],
                     radius: [.1, .2], 
                     color: "#fff",
-                }) 
+                })  
             }
         } 
     })

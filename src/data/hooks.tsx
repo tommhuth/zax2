@@ -1,7 +1,28 @@
-import { useEffect, useMemo, useRef } from "react"
-import { IUniform, Shader } from "three"
+import { startTransition, useEffect, useMemo, useRef } from "react"
+import { IUniform, Shader, Vector3 } from "three"
 import { glsl } from "./utils"
 import random from "@huth/random"
+import { useFrame, useThree } from "@react-three/fiber"
+import { useStore } from "./store"
+
+export function useRemoveWhenBehind(position: Vector3, removeFunc: () => void) {
+    let removed = useRef(false)
+    let { viewport } = useThree()
+    let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
+
+    useFrame(() => {
+        let { player } = useStore.getState()
+        let outsideFrustum =  player.object && position.z < player.object.position.z - diagonal * .5
+
+        if (!removed.current && outsideFrustum) {
+            removed.current = true
+            console.log("REm")
+            startTransition(removeFunc)
+        }
+    })
+
+    return removed
+}
 
 export const useAnimationFrame = (callback: (delta: number) => void) => {
     // Use useRef for mutable variables that we want to persist

@@ -2,7 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber"
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react"
 import { DirectionalLight } from "three"
 import { useStore } from "../data/store"
-import { CAMERA_OFFSET, CAMERA_POSITION } from "../data/const"
+import { CAMERA_OFFSET } from "../data/const"
 
 export default function Lights() {
     let shadowLightRef = useRef<DirectionalLight>(null)

@@ -1,7 +1,5 @@
-import { useFrame } from "@react-three/fiber"
-import { startTransition, useEffect, useMemo, useRef, useState } from "react"
+import { startTransition, useEffect, useMemo, useState } from "react"
 import { Vector3 } from "three"
-import { useStore } from "../../../data/store"
 import { Barrel, InstanceName, Owner } from "../../../data/types"
 import { useInstance } from "../models/InstancedMesh"
 import random from "@huth/random"
@@ -12,8 +10,7 @@ import { barellColor, barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
 import { useCollisionDetection } from "../../../data/collisions"
 import Config from "../../../data/Config"
-
-let _size = new Vector3()
+import { useRemoveWhenBehind } from "../../../data/hooks" 
 
 function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({
@@ -39,13 +36,11 @@ function explode(position: Vector3, size: Tuple3, color: string) {
 }
 
 export default function Barrel({
-    position,
-    aabb,
+    position, 
     size = [1, 2, 1],
     id,
     health,
-}: Barrel) {
-    let removed = useRef(false)
+}: Barrel) { 
     let [rotation] = useState(random.pick(
         ...new Array(8 * 2)
             .fill(null)
@@ -54,15 +49,17 @@ export default function Barrel({
     let model: InstanceName = useMemo(() => {
         return random.pick("barrel1", "barrel2", "barrel3", "barrel4")
     }, [])
-    let [index, instance] = useInstance(model, {
+    let remove = () => {
+        setTimeout(() => startTransition(() => removeBarrel(id)), 300) 
+    }
+
+    useInstance(model, {
         position: [position.x, position.y - size[1] / 2, position.z],
         rotation: [0, rotation, 0],
         color: barellColor
     })
-    let remove = () => {
-        setTimeout(() => removeBarrel(id), 300)
-        removed.current = true
-    }
+
+    useRemoveWhenBehind(position, remove)
 
     useCollisionDetection({
         actions: {
@@ -72,7 +69,7 @@ export default function Barrel({
                 }
 
                 damageBarrel(id, 100)
-                increaseScore(1000) 
+                increaseScore(1000)  
             }
         }
     })
@@ -84,19 +81,7 @@ export default function Barrel({
                 explode(position, size, barellParticleColor)
             })
         }
-    }, [health])
-
-    useFrame(() => {
-        let { world, player } = useStore.getState()
-
-        if (instance && typeof index === "number" && !removed.current) {
-            aabb.setFromCenterAndSize(position, _size.set(...size))
-
-            if (!world.frustum.intersectsBox(aabb) && player.object && position.z < player.object.position.z) {
-                remove()
-            }
-        }
-    })
+    }, [health]) 
 
     if (!Config.DEBUG) {
         return null

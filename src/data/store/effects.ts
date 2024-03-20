@@ -5,7 +5,7 @@ import { ColorRepresentation, Vector3 } from "three"
 import { Explosion, Particle } from "../types"
 import { setCameraShake } from "./player"
 import { clamp, setColorAt, setMatrixAt } from "../utils"
-import { easeInQuad, easeOutCubic } from "../shaping"
+import { easeOutCubic } from "../shaping"
 
 function updateEffects(data: Partial<Store["effects"]>) {
     store.setState({
