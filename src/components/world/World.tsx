@@ -23,7 +23,6 @@ import SmokeHandler from "./effects/SmokeHandler"
 import { WORLD_START_Z } from "../../data/const"
 
 export default function World() {
-    let parts = useStore(i => i.world.parts)
     let loaded = useStore(i => i.loaded)
     let { viewport } = useThree()
     let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
@@ -54,25 +53,7 @@ export default function World() {
 
     return (
         <>
-            {parts.map(i => {
-                switch (i.type) {
-                    case WorldPartType.DEFAULT:
-                        return <Default key={i.id} {...i as WorldPartDefault} />
-                    case WorldPartType.START:
-                        return <Start key={i.id} {...i as WorldPartStart} />
-                    case WorldPartType.BUILDINGS_GAP:
-                        return <BuildingsGap key={i.id} {...i as WorldPartBuildingsGap} />
-                    case WorldPartType.BUILDINGS_LOW:
-                        return <BuildingsLow key={i.id} {...i as WorldPartBuildingsLow} />
-                    case WorldPartType.AIRSTRIP:
-                        return <Airstrip key={i.id} {...i as WorldPartAirstrip} />
-                    case WorldPartType.BOSS:
-                        return <BossPart key={i.id} {...i as WorldPartBoss} />
-                    default:
-                        throw new Error(`Unknown type: ${i.type}`)
-                }
-            })}
-
+            <WorldParts />
             <Actors />
             <ParticleHandler />
             <BulletHandler />
@@ -80,6 +61,29 @@ export default function World() {
             <SmokeHandler />
         </>
     )
+}
+
+function WorldParts() {
+    let parts = useStore(i => i.world.parts) 
+
+    return parts.map(i => {
+        switch (i.type) {
+            case WorldPartType.DEFAULT:
+                return <Default key={i.id} {...i as WorldPartDefault} />
+            case WorldPartType.START:
+                return <Start key={i.id} {...i as WorldPartStart} />
+            case WorldPartType.BUILDINGS_GAP:
+                return <BuildingsGap key={i.id} {...i as WorldPartBuildingsGap} />
+            case WorldPartType.BUILDINGS_LOW:
+                return <BuildingsLow key={i.id} {...i as WorldPartBuildingsLow} />
+            case WorldPartType.AIRSTRIP:
+                return <Airstrip key={i.id} {...i as WorldPartAirstrip} />
+            case WorldPartType.BOSS:
+                return <BossPart key={i.id} {...i as WorldPartBoss} />
+            default:
+                throw new Error(`Unknown type: ${i.type}`)
+        }
+    }) 
 }
 
 const Actors = memo(() => {

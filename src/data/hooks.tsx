@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useMemo, useRef } from "react"
+import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
 import { IUniform, Shader, Vector3 } from "three"
 import { glsl } from "./utils"
 import random from "@huth/random"
@@ -15,8 +15,7 @@ export function useRemoveWhenBehind(position: Vector3, removeFunc: () => void) {
         let outsideFrustum =  player.object && position.z < player.object.position.z - diagonal * .5
 
         if (!removed.current && outsideFrustum) {
-            removed.current = true
-            console.log("REm")
+            removed.current = true 
             startTransition(removeFunc)
         }
     })
@@ -97,10 +96,11 @@ export function useShader({
             .reduce((previous, current) => ({ ...previous, ...current }), {})
     }, [])
     let id = useMemo(() => cacheKey || random.id(), [cacheKey])
+    let customProgramCacheKey = useCallback(()=> id, [id])
 
     return {
         uniforms,
-        customProgramCacheKey: () => id,
+        customProgramCacheKey,
         onBeforeCompile(shader: Shader) {
             shader.uniforms = {
                 ...shader.uniforms,

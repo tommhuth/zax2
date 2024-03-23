@@ -50,6 +50,7 @@ export default function Exhaust({
             ref={exhaustRef} 
             rotation={rotation}
             visible={visible}
+            dispose={null}
         >
             <primitive object={geo} />
             <primitive object={materials.exhaust} attach="material" />
