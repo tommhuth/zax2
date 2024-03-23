@@ -10,14 +10,14 @@ import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
 import Cable from "../decoration/Cable"
 import Dirt from "../decoration/Dirt" 
-import timeout from "../../../data/timeout"
+import timeout from "../../../data/timeout" 
  
-export function Model(props) {
+export function BossFloor(props) {
     const { nodes } = useGLTF("/models/floor5.glb") as any
-    const materials = useStore(i => i.materials)
+    const materials = useStore(i => i.materials) 
 
     return (
-        <group {...props} dispose={null} receiveShadow>
+        <group {...props} dispose={null}>
             {/* cylinder base */}   
             <mesh
                 receiveShadow 
@@ -98,7 +98,7 @@ export default function BossPart({
 }: WorldPartBoss) {
     let bossZ = position.z + 23
     let pauseAt = position.z + 5
-    let state = useStore(i => i.boss.state)
+    let state = useStore(i => i.boss.state) 
 
     useEffect(() => {
         if (state === BossState.DEAD) {
@@ -127,8 +127,7 @@ export default function BossPart({
             id={id}
         > 
             <Boss startPosition={[0, 0, bossZ]} />
-
-            <Model position={[10, 0, position.z]} />
+            <BossFloor position={[9.5, 0, position.z]} />
             
             <Barrel
                 position={[6, 0, 15]}

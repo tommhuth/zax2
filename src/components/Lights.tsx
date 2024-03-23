@@ -6,10 +6,10 @@ import { CAMERA_OFFSET } from "../data/const"
 
 export default function Lights() {
     let shadowLightRef = useRef<DirectionalLight>(null)
-    let { scene, viewport } = useThree()
+    let { scene } = useThree()
     let time = useRef(0)
     let ready = useStore(i => i.ready)
-    let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
+    let diagonal = useStore(i => i.world.diagonal)
     let updateShadowCamera = useCallback(() => {
         let { player } = useStore.getState()
 
@@ -32,6 +32,7 @@ export default function Lights() {
     useLayoutEffect(() => {
         if (ready) {
             updateShadowCamera()
+            shadowLightRef.current?.shadow.camera.updateProjectionMatrix()
         }
     }, [ready])
 
@@ -65,7 +66,7 @@ export default function Lights() {
                 shadow-camera-left={-8} // x
                 shadow-camera-right={14}
                 shadow-camera-top={diagonal * .75} // z
-                shadow-camera-bottom={-diagonal * .75}
+                shadow-camera-bottom={-diagonal * 1}
                 shadow-mapSize={[512, 512]}
                 shadow-bias={-0.0001}
                 shadow-blurSamples={12}

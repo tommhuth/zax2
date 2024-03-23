@@ -1,16 +1,15 @@
 import { memo, startTransition, useRef } from "react"
-import { useFrame, useThree } from "@react-three/fiber"
+import { useFrame } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta, setColorAt } from "../../../data/utils"
-import animate from "@huth/animate"
+import { clamp, ndelta } from "../../../data/utils"
 import random from "@huth/random"
 import { Vector3 } from "three" 
 import { Owner, Turret } from "../../../data/types"
 import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
 import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
-import { store } from "../../../data/store"
+import { store, useStore } from "../../../data/store"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
@@ -40,10 +39,8 @@ function explode(position: Vector3, size: Tuple3) {
     })
 }
 
-function Turret({ id, size, position, health, fireFrequency, rotation, floorLevel }: Turret) {
-    let { viewport } = useThree()
-    let [index, instance] = useInstance("turret", {
-        color: turretColor,
+function Turret({ id, size, position, health, fireFrequency, rotation, floorLevel }: Turret) { 
+    let [index, instance] = useInstance("turret", { 
         rotation: [0, -rotation + Math.PI * .5, 0],
         position: [
             position.x,
@@ -51,7 +48,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
             position.z,
         ]
     })
-    let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
+    let diagonal = useStore(i => i.world.diagonal)
     let shootTimer = useRef(0)
     let nextShotAt = useRef(fireFrequency)
     let remove = () => {
@@ -81,20 +78,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
                 damageTurret(id, bullet.damage) 
             }
         }
-    }) 
-
-    useEffect(() => {
-        if (instance && typeof index === "number") { 
-            return animate({
-                from: "#ffffff",
-                to: turretColor,
-                duration: 400,
-                render(color) { 
-                    setColorAt(instance, index as number, color)
-                },
-            })
-        }
-    }, [instance, health, index])
+    })  
 
     useEffect(() => {
         if (health === 0) {

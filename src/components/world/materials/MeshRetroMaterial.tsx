@@ -43,6 +43,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     let player = useStore(i => i.player.object) 
     let counter = useMemo(() => new Counter(1), [])
     let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({
+        cacheKey: rest.name,
         uniforms: {
             ...shader?.uniforms,
             uTime: { value: 0 },

@@ -16,6 +16,16 @@ export function setLastImpactLocation(x: number, y: number, z: number) {
 
 }
 
+export function setDiagonal(diagonal: number) {
+    store.setState({
+        world: {
+            ...store.getState().world,
+            diagonal
+        },
+    })
+
+}
+
 
 export function addWorldPart(part?: WorldPart) {
     let world = store.getState().world

@@ -75,6 +75,7 @@ export default function FireballHandler() {
         return new Float32Array(new Array(count).fill(0))
     }, [count])
     let { onBeforeCompile, uniforms } = useShader({
+        cacheKey: "fireball",
         uniforms: {
             uEndColor: { value: new Color(explosionEndColor) },
             uCenterColor: { value: new Color(explosionCenterColor) },
@@ -222,7 +223,7 @@ export default function FireballHandler() {
                 />
             </sphereGeometry>
             <meshPhongMaterial
-                transparent
+                transparent 
                 onBeforeCompile={onBeforeCompile}
                 color={"#fff"}
                 name="fireball"

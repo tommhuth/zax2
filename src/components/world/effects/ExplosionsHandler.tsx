@@ -1,7 +1,7 @@
 import { startTransition, useEffect, useMemo, useRef } from "react"
 import { LinearFilter, PointLight } from "three"
 import { glsl } from "../../../data/utils"
-import { useFrame, useLoader, useThree } from "@react-three/fiber"
+import { useFrame, useLoader } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
 import { TextureLoader } from "three/src/loaders/TextureLoader.js"
 import { store, useStore } from "../../../data/store"
@@ -20,8 +20,7 @@ export default function ExplosionsHandler() {
     let explosionLightRef2 = useRef<PointLight>(null)
     let explosionLights = [explosionLightRef1, explosionLightRef2] 
     let counter = useMemo(() => new Counter(1), [])
-    let {viewport} = useThree()
-    let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
+    let diagonal = useStore(i => i.world.diagonal)
 
     useEffect(() => {
         if (!explosionLightRef1.current || !explosionLightRef2.current) {
@@ -100,7 +99,7 @@ export default function ExplosionsHandler() {
                     color={"black"}
                     name="impact"
                     depthWrite={false}
-                    transparent 
+                    transparent  
                     shader={{
                         fragment: {
                             main: glsl`

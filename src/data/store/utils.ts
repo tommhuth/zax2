@@ -32,9 +32,7 @@ export function setRepeater(name: string, meshes: Object3D[], count: number) {
 
 export function requestRepeater(name: string) {
     let nextIndex = store.getState().repeaters[name].index.next()
-    let mesh = store.getState().repeaters[name].meshes[nextIndex]
-
-    mesh.visible = true
+    let mesh = store.getState().repeaters[name].meshes[nextIndex] 
 
     return mesh
 }

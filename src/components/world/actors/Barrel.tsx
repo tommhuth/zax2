@@ -6,7 +6,7 @@ import random from "@huth/random"
 import { Tuple3 } from "../../../types"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { damageBarrel, removeBarrel } from "../../../data/store/world"
-import { barellColor, barellParticleColor } from "../../../data/theme"
+import { barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
 import { useCollisionDetection } from "../../../data/collisions"
 import Config from "../../../data/Config"
@@ -55,8 +55,7 @@ export default function Barrel({
 
     useInstance(model, {
         position: [position.x, position.y - size[1] / 2, position.z],
-        rotation: [0, rotation, 0],
-        color: barellColor
+        rotation: [0, rotation, 0], 
     })
 
     useRemoveWhenBehind(position, remove)

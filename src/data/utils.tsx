@@ -80,6 +80,8 @@ export function setColorAt(instance: InstancedMesh, index: number, color: ColorR
 
     if (instance.instanceColor) {
         instance.instanceColor.needsUpdate = true
+    } else {
+        console.warn("Instance is not initialized with instanceColor: setColorAt will do nothing.")
     }
 }
 

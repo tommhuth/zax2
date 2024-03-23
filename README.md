@@ -2,15 +2,13 @@
 
 ## Todo   
 - actual level design    
-- ui/intro
-- material review / fog revision
+- ui/intro 
 - instance color hit thing 
-- hit detection (still) accurate? 
+- hit detection edge case fix 
 - remove repeater meshes? use shared mat instead and local (shared) geometry????
-- rework boss ending 
-- use other stage for prep setup??
+- rework boss ending  
 
-53 mat + 22 instnaces
+53 mat + 22 instances
 
 ## Resources
 - https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html

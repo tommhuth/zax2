@@ -21,7 +21,10 @@ import Plant from "./instances/Plant"
 import { glsl } from "../../../data/utils" 
 
 function Instances() {
-    let [turret, rocket, platform, device, scrap, cable, dirt, plane, leaf] = useLoader(GLTFLoader, [
+    let [
+        turret, rocket, platform, device, 
+        scrap, cable, dirt, plane, leaf
+    ] = useLoader(GLTFLoader, [
         "/models/turret.glb",
         "/models/rocket.glb",
         "/models/platform.glb",
@@ -52,24 +55,7 @@ function Instances() {
                     colorCount={8} 
                     emissive={planeColor}
                     emissiveIntensity={.2}
-                    rightColorIntensity={.5} 
-                    shader={{
-                        fragment: {
-                            main: glsl`
-                                vec3 engineColor = vec3(1., 1., .8);
-                                vec3 enginePoint = vec3(0., .6, -1.6);
-                                float radius = 2.5;
-
-                                /*
-                                gl_FragColor.rgb = mix(
-                                    gl_FragColor.rgb,
-                                    mix(gl_FragColor.rgb, engineColor, .95),
-                                    easeInCubic(1. - clamp(length(vPosition - enginePoint) / radius, .0, 1.))
-                                );
-                                */
-                            `
-                        }
-                    }}
+                    rightColorIntensity={.5}  
                 />
             </InstancedMesh>
             <InstancedMesh
@@ -143,18 +129,6 @@ function Instances() {
             </InstancedMesh>
 
             <InstancedMesh
-                name="particle"
-                count={100}
-                castShadow
-            >
-                <sphereGeometry
-                    args={[1, 3, 4]}
-                    attach="geometry"
-                />
-                <MeshRetroMaterial name="particle" />
-            </InstancedMesh>
-
-            <InstancedMesh
                 name="box"
                 count={20}
                 castShadow
@@ -187,7 +161,7 @@ function Instances() {
                 name="scrap"
                 count={50}
                 receiveShadow
-                colors={true}
+                colors={true} 
             >
                 <primitive
                     object={(scrap.nodes.scrap as Mesh).geometry}

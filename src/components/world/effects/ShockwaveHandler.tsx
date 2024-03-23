@@ -14,6 +14,7 @@ export default function ShockwaveHandler() {
         return new Float32Array(new Array(count).fill(0))
     }, [count])
     let { onBeforeCompile } = useShader({
+        cacheKey: "shocwave",
         vertex: {
             head: glsl` 
                 attribute float aOpacity;  
@@ -77,8 +78,7 @@ export default function ShockwaveHandler() {
             castShadow={false}
             receiveShadow={false}
             count={count}
-            name="shockwave"
-            colors
+            name="shockwave" 
         >
             <cylinderGeometry args={[1, 1, .01, 32, 1]}>
                 <instancedBufferAttribute
@@ -92,6 +92,7 @@ export default function ShockwaveHandler() {
                 name="shockwave"
                 depthWrite={false}
                 transparent
+                forceSinglePass
                 onBeforeCompile={onBeforeCompile}
             />
         </InstancedMesh>

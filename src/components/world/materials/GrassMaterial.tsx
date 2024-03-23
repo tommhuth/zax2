@@ -10,6 +10,7 @@ import { store } from "../../../data/store"
 
 export default function GrassMaterial() {  
     let { onBeforeCompile, uniforms } = useShader({
+        cacheKey: "grass",
         uniforms: {
             uTime: {
                 value: 0,

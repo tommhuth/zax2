@@ -36,6 +36,7 @@ export default function SmokeHandler() {
     let smokes = useRef<Smoke[]>([])
     let lastEmitted = useMemo<Record<string, number>>(() => ({}), [])
     let shader = useShader({
+        cacheKey: "smooke",
         vertex: {
             head: glsl` 
                 varying vec3 vGlobalPosition;  
@@ -164,7 +165,7 @@ export default function SmokeHandler() {
             <meshLambertMaterial
                 transparent
                 color="#cbecff"
-                emissive={"#fff"}
+                emissive={"#fff"} 
                 emissiveIntensity={.65}  
                 name="smoke"
                 customProgramCacheKey={shader.customProgramCacheKey}

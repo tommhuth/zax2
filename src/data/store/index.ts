@@ -24,6 +24,7 @@ export interface Store {
     ready: boolean
     state: "intro" | "running" | "gameover"
     world: {
+        diagonal: number
         parts: WorldPart[]
         frustum: Frustum
         level: number
@@ -82,6 +83,7 @@ const store = create(
         ready: false,
         state: "intro",
         world: {
+            diagonal: 1,
             grid: new SpatialHashGrid3D([4, 3, 4]),
             frustum: new Frustum(),
             level: 1,

@@ -17,25 +17,24 @@ import ExplosionsHandler from "./effects/ExplosionsHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
-import { makeBoss, makeBuildingsLow } from "../../data/world/generators"
+import { makeBuildingsLow } from "../../data/world/generators"
 import { Vector3 } from "three"
 import SmokeHandler from "./effects/SmokeHandler"
-import { WORLD_START_Z } from "../../data/const"
+import { WORLD_START_Z } from "../../data/const" 
 
 export default function World() {
-    let loaded = useStore(i => i.loaded)
-    let { viewport } = useThree()
-    let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
+    let diagonal = useStore(i => i.world.diagonal)
+    let loaded = useStore(i => i.loaded)  
 
     useFrame(() => {
-        let { world: { parts }, loaded, player: { object: player } } = store.getState()
-        let forwardWorldPart = parts[parts.length - 1]
+        let { world: { parts }, ready, player: { object: player } } = store.getState()
+        let forwardWorldPart = parts[parts.length - 1] 
 
         if (forwardWorldPart) {
             let lastPartIsAtEdge = player 
                 && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
  
-            if ((lastPartIsAtEdge || !forwardWorldPart) && loaded) { 
+            if ((lastPartIsAtEdge || !forwardWorldPart) && ready) { 
                 startTransition(addWorldPart)
             }
         }

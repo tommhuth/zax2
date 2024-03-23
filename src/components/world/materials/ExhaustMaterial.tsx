@@ -11,6 +11,7 @@ import noise from "../../../shaders/noise.glsl"
 export default function ExhaustMaterial() {
     let ref = useRef<MeshBasicMaterial>(null)
     let { onBeforeCompile, uniforms } = useShader({
+        cacheKey: "exhaust",
         uniforms: {
             uTime: { value: 0 }
         },
@@ -71,7 +72,7 @@ export default function ExhaustMaterial() {
         <meshBasicMaterial
             onBeforeCompile={onBeforeCompile}
             color="white"
-            transparent
+            transparent 
             name="exhaust"
             ref={ref}
             depthWrite={false}

@@ -1,9 +1,8 @@
 import { memo, startTransition, useMemo } from "react"
-import { useFrame, useThree } from "@react-three/fiber"
+import { useFrame } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
-import animate from "@huth/animate"
+import { clamp, ndelta, setMatrixAt } from "../../../data/utils"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
 import { Vector3 } from "three"
@@ -72,9 +71,8 @@ function Plane({
     let grid = useStore(i => i.world.grid)
     let [index, instance] = useInstance("plane")
     let weaponSide = useMemo(() => new Counter(2), [])
-    let isStatic = speed === 0
-    let { viewport } = useThree()
-    let diagonal = Math.sqrt(viewport.width ** 2 + viewport.height ** 2)
+    let isStatic = speed === 0 
+    let diagonal = useStore(i => i.world.diagonal)
     let remove = () => {
         startTransition(() => removePlane(id))
         data.removed = true
@@ -119,19 +117,6 @@ function Plane({
             })
         }
     }, [isStatic, instance, index])
-
-    useEffect(() => {
-        if (health && health !== 100 && instance && typeof index === "number") {
-            return animate({
-                from: "#FFFFFF",
-                to: planeColor,
-                duration: 200,
-                render(color) {
-                    setColorAt(instance, index as number, color)
-                },
-            })
-        }
-    }, [instance, health, index])
 
     useEffect(() => {
         if (health === 0) {

@@ -10,6 +10,7 @@ import { easeInQuad } from "../../../data/shaping"
 export default function BlastHandler() {
     let count = 20
     let { onBeforeCompile } = useShader({
+        cacheKey: "blast",
         vertex: {
             head: glsl` 
                 varying vec3 vGlobalNormal;
@@ -84,14 +85,13 @@ export default function BlastHandler() {
             castShadow={false}
             receiveShadow={false}
             count={count}
-            name="blast"
-            colors 
+            name="blast" 
         >
             <sphereGeometry args={[1, 16, 16]} />
             <meshLambertMaterial
                 name="blast"
                 onBeforeCompile={onBeforeCompile}
-                transparent
+                transparent 
                 depthWrite={false}
             />
         </InstancedMesh>

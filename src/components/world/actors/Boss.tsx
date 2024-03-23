@@ -41,7 +41,7 @@ function useGravity({ ref, active, force = -15, stopAt = 0 }) {
 }
 
 export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
-    let materials = useStore((i) => i.materials)
+    let materials = useStore((i) => i.materials) 
     let boss = useStore((i) => i.boss)
     let bossWrapper = useRef<Group>(null)
     let { nodes: boss2 } = useGLTF("/models/bossdestroyed.glb") as any

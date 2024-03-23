@@ -24,6 +24,9 @@ import Config from "./data/Config"
 import { setLoaded, setReady, setSetup } from "./data/store/utils"
 import Controls from "./components/Controls"
 import { DPR, PIXEL_SIZE, ZOOM } from "./data/const"
+import Boss from "./components/world/actors/Boss"
+import { BossFloor } from "./components/world/parts/Boss"
+import { setDiagonal } from "./data/store/world"
 
 // round up to full pixel
 let getSize = () => [
@@ -34,6 +37,7 @@ let getSize = () => [
 export default function Wrapper() {
     let [size, setSize] = useState(() => getSize())
     let ready = useStore((i) => i.ready)
+    let loaded = useStore((i) => i.loaded) 
 
     useEffect(() => {
         let tid: ReturnType<typeof setTimeout>
@@ -66,7 +70,7 @@ export default function Wrapper() {
                 style={{
                     height: size[1],
                     width: size[0],
-                    opacity: ready ? 1 : 0,
+                    opacity: ready ? 1 : 0, 
                     left: 0,
                     top: 0,
                     position: "fixed",
@@ -75,26 +79,34 @@ export default function Wrapper() {
                     type: VSMShadowMap,
                 }}
                 orthographic
-                camera={{
+                camera={{ 
                     zoom: ZOOM,
-                    near: 0,
+                    near: 1,
                     far: 150,
                 }}
                 dpr={DPR}
-            >
-                <Suspense fallback={null}>
-                    <EdgeOverlay />
-                    <Models />
-                    <World />
-                    <Player />
-                    <Loader />
-                </Suspense>
-
+            > 
                 <Controls />
                 <Camera />
                 <Lights />
                 <MaterialLoader />
 
+                <Suspense fallback={null}>
+                    <EdgeOverlay />
+                    <Models />
+                    <World />
+                    <Player />
+
+                    {!loaded && (
+                        <>
+                            <Boss startPosition={[0, 0, 0]} /> 
+                            <BossFloor />
+                        </>
+                    )}
+
+                    <Loader />  
+                </Suspense>
+ 
                 <Only if={Config.STATS}>
                     <Perf
                         deepAnalyze
@@ -107,27 +119,42 @@ export default function Wrapper() {
 }
 
 function Loader() {
-    let { scene, gl, camera } = useThree()
-    let loaded = useStore((i) => i.loaded)
+    let { scene, gl, camera, viewport: { getCurrentViewport } } = useThree()
+    let loaded = useStore((i) => i.loaded) 
+ 
+    useEffect(() => { 
+        let onResize = () => {
+            let viewport = getCurrentViewport(camera) 
+    
+            startTransition(() => setDiagonal(Math.hypot(viewport.width, viewport.height)))
+        } 
+
+        startTransition(onResize)
+        window.addEventListener("resize", onResize)
+
+        return () => {
+            window.removeEventListener("resize", onResize)
+        }
+    }, [])
 
     useEffect(() => {
         // not sure this is really needed
-        gl.compile(scene, camera)
+        gl.compile(scene, camera)  
 
-        requestIdleCallback(() => {
+        setTimeout(() => { 
             startTransition(setLoaded)
-        })
+        }, 2000)
     }, [scene, camera])
 
-    useEffect(() => {
+    useEffect(() => { 
         if (loaded) {
-            setTimeout(() => {
-                requestIdleCallback(() => {
-                    document.getElementById("loading")?.remove()
-                    startTransition(setSetup)
-                    setTimeout(() => startTransition(setReady), 1000)
-                })
-            }, 1000)
+            setTimeout(() => {   
+                document.getElementById("loading")?.remove()
+                startTransition(setSetup)
+                setTimeout(() => { 
+                    startTransition(setReady)
+                }, 1000) 
+            }, 2000)
         }
     }, [loaded])
 

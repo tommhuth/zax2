@@ -1,3 +1,4 @@
+import { BossFloor } from "../parts/Boss"
 import RepeaterMesh from "./RepeaterMesh"
 import Building1 from "./repeaters/Building1"
 import Building2 from "./repeaters/Building2"
@@ -20,7 +21,7 @@ export default function Repeaters() {
                 count={5}
             >
                 <Building1 />
-            </RepeaterMesh>
+            </RepeaterMesh> 
 
             <RepeaterMesh
                 name="building2"

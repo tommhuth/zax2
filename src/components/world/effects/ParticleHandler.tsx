@@ -5,6 +5,8 @@ import { ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import { store } from "../../../data/store"
 import { removeParticle } from "../../../data/store/effects"
 import { damp } from "three/src/math/MathUtils.js"
+import InstancedMesh from "../models/InstancedMesh"
+import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 
 function ParticleHandler() { 
     let floorY = 0
@@ -75,7 +77,20 @@ function ParticleHandler() {
         } 
     })
 
-    return null
+    return ( 
+        <InstancedMesh
+            name="particle"
+            count={100}
+            castShadow
+            colors
+        >
+            <sphereGeometry
+                args={[1, 3, 4]}
+                attach="geometry"
+            />
+            <MeshRetroMaterial name="particle" />
+        </InstancedMesh>
+    )
 }
 
 export default memo(ParticleHandler)

@@ -83,7 +83,7 @@ let geometry = new BoxGeometry()
 
 function MaterialHandler({ children, name }: { children: React.ReactNode; name: MaterialName }) {
     let handleRef = useCallback((mesh: Mesh<BufferGeometry, Material>) => {
-        if (mesh) {
+        if (mesh) { 
             startTransition(() => setMaterial(name, mesh.material))
         }
     }, [])
@@ -93,6 +93,7 @@ function MaterialHandler({ children, name }: { children: React.ReactNode; name: 
             geometry={geometry}
             ref={handleRef}
             dispose={null}
+            frustumCulled={false}
         >
             {cloneElement(children as ReactElement, { name })}
         </mesh>

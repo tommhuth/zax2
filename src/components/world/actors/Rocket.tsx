@@ -99,13 +99,19 @@ export default function Rocket({
         }
     }, [speed])
     let ref = useRef<Mesh>(null)
-    let [rocketIndex, rocketInstance] = useInstance("rocket", { reset: false, color: "#FFF" }) 
+    let [rocketIndex, rocketInstance] = useInstance("rocket", { reset: false }) 
     let remove = () => {
         data.removed = true
         increaseScore(500)
         removeRocket(id)
         setMatrixNullAt(rocketInstance, rocketIndex as number)
     }
+
+    useInstance("platform", { 
+        reset: false,
+        position: [position.x, 0, position.z],
+        rotation: [0, random.float(0, Math.PI * 2), 0]
+    })
 
     useCollisionDetection({
         actions: {
@@ -118,13 +124,6 @@ export default function Rocket({
             }
         }
     }) 
-
-    useInstance("platform", {
-        color: "#ddd",
-        reset: false,
-        position: [position.x, 0, position.z],
-        rotation: [0, random.float(0, Math.PI * 2), 0]
-    })
 
     useEffect(() => {
         if (health === 0) {
