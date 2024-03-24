@@ -25,6 +25,12 @@ export function useInstance(name: InstanceName, {
     let [index, setIndex] = useState<null | number>(null)
 
     useEffect(() => {
+        if (instance) {
+            startTransition(() => setIndex(instance.index.next()))
+        }
+    }, [instance])
+
+    useEffect(() => {
         if (typeof index === "number" && instance && (position || rotation || scale)) {
             setMatrixAt({
                 instance: instance.mesh,
@@ -35,12 +41,6 @@ export function useInstance(name: InstanceName, {
             })
         }
     }, [index, instance])
-
-    useEffect(() => {
-        if (instance) {
-            startTransition(() => setIndex(instance.index.next()))
-        }
-    }, [instance])
 
     useEffect(() => {
         if (typeof index === "number" && instance && reset) {

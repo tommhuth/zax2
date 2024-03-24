@@ -1,5 +1,6 @@
 import dither from "../../../shaders/dither.glsl"
 import easings from "../../../shaders/easings.glsl"
+import utils from "../../../shaders/utils.glsl"
 import { InstancedMesh, Vector3 } from "three"
 import random from "@huth/random"
 import { useMemo, useRef } from "react"
@@ -35,29 +36,21 @@ export default function SmokeHandler() {
     let index = useMemo(()=> new Counter(count), [count])
     let smokes = useRef<Smoke[]>([])
     let lastEmitted = useMemo<Record<string, number>>(() => ({}), [])
-    let shader = useShader({
-        cacheKey: "smooke",
-        vertex: {
-            head: glsl` 
-                varying vec3 vGlobalPosition;  
-            `,
+    let shader = useShader({ 
+        shared: glsl`
+            varying vec3 vGlobalPosition; 
+            ${dither}
+            ${easings} 
+            ${utils}  
+        `,
+        vertex: { 
             main: glsl` 
                 vec4 globalPosition = instanceMatrix * vec4(position, 1.);
 
                 vGlobalPosition = globalPosition.xyz;  
             `
         },
-        fragment: {
-            head: glsl`
-                varying vec3 vGlobalPosition;
-
-                ${dither}
-                ${easings}
-
-                float luma(vec3 color) {
-                    return dot(color, vec3(0.299, 0.587, 0.114));
-                }
-            `,
+        fragment: { 
             main: glsl`   
                 gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * .9 + .095, 1., .0125);
                 gl_FragColor.rgb -= (1. - getShadow( 

@@ -9,8 +9,7 @@ import { glsl } from "../../../data/utils"
 import { store } from "../../../data/store"
 
 export default function GrassMaterial() {  
-    let { onBeforeCompile, uniforms } = useShader({
-        cacheKey: "grass",
+    let { onBeforeCompile, uniforms } = useShader({ 
         uniforms: {
             uTime: {
                 value: 0,

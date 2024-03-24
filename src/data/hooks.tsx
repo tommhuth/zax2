@@ -2,7 +2,7 @@ import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
 import { IUniform, Shader, Vector3 } from "three"
 import { glsl } from "./utils"
 import random from "@huth/random"
-import { useFrame } from "@react-three/fiber"
+import { useFrame, useThree } from "@react-three/fiber"
 import { useStore } from "./store"
 
 export function useRemoveWhenBehind(position: Vector3, removeFunc: () => void) {
@@ -53,8 +53,7 @@ interface ShaderPart {
 export interface UseShaderParams<T = Record<string, IUniform<any>>> {
     uniforms?: T
     shared?: string
-    vertex?: ShaderPart
-    cacheKey?: string
+    vertex?: ShaderPart 
     fragment?: ShaderPart
 }
 
@@ -76,8 +75,7 @@ export function useWindowEvent(name: string | string[], func: (e: any) => void, 
     }, deps)
 }
 
-export function useShader({
-    cacheKey,
+export function useShader({ 
     uniforms: incomingUniforms = {},
     shared = "",
     vertex = {
@@ -88,13 +86,13 @@ export function useShader({
         head: "",
         main: "",
     }
-}: UseShaderParams) {
+}: UseShaderParams) { 
     let uniforms = useMemo(() => {
         return Object.entries(incomingUniforms)
             .map(([key, value]) => ({ [key]: { needsUpdate: true, ...value } }))
             .reduce((previous, current) => ({ ...previous, ...current }), {})
     }, [])
-    let id = useMemo(() => cacheKey || random.id(), [cacheKey])
+    let id = useMemo(() => random.id(), [])
     let customProgramCacheKey = useCallback(() => id, [id])
     let onBeforeCompile = useCallback((shader: Shader) => {
         shader.uniforms = {
@@ -124,7 +122,7 @@ export function useShader({
 
             ${fragment?.main}  
         `)
-    }, [])
+    }, [vertex?.head, vertex?.main, fragment?.head, fragment?.main]) 
 
     return {
         uniforms,

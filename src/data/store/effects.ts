@@ -53,7 +53,7 @@ export function createExplosion({
             radius: radius * 7 + (fireballCount ? 1.5 : 0),
             blast: {
                 lifetime: random.float(baseLifetime * .375, baseLifetime * .45),
-                radius: radius * 6,
+                radius: radius * random.float(4, 5),
                 time: 0,
                 index: blastInstance.index.next(),
             },
@@ -205,6 +205,7 @@ interface CreateParticlesParams {
     color?: string
     name?: string
     delay?: number // base delay
+    gravity?: Tuple3
 }
 
 let _normal = new Vector3()
@@ -223,9 +224,9 @@ export function createParticles({
     radius = [.15, .25],
     stagger = [-150, 0],
     delay = 0,
+    gravity = [0, -random.integer(45,50), 0],
 }: CreateParticlesParams) {
-    setTimeout(() => {
-        let gravity = [0, -50, 0]
+    setTimeout(() => { 
         let instance = store.getState().instances.particle
         let amount = Array.isArray(count) ? random.integer(...count) : count
         let particles: Particle[] = new Array(amount).fill(null).map((i, index, list) => {

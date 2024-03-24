@@ -98,7 +98,8 @@ export default function Plant({
                         spread: [[-.85, .85], [0, 1]],
                         speed: [10, 27],
                         color: "#00ff9d",
-                        stagger: [0, 0]
+                        stagger: [0, 0],
+                        gravity: [0, -random.integer(35, 50), 0]
                     }) 
                 }
             },
@@ -123,7 +124,8 @@ export default function Plant({
                     spread: [[-.85, .85], [0, 1]],
                     speed: [10, 27],
                     color: "#00ff9d",
-                    stagger: [0, 0]
+                    stagger: [0, 0],
+                    gravity: [0, -random.integer(35, 50), 0]
                 })
             }) 
         }
@@ -158,7 +160,7 @@ export default function Plant({
         let { instances } = store.getState()
 
         setBufferAttribute(instances.plant.mesh.geometry, "aTrauma", trauma.current, index)
-        trauma.current = damp(trauma.current, 0, 8, delta)
+        trauma.current = damp(trauma.current, 0, 8, ndelta(delta))
     })
 
     // leaves

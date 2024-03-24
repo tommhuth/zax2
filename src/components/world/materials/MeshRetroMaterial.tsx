@@ -42,8 +42,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
 }, ref) => { 
     let player = useStore(i => i.player.object) 
     let counter = useMemo(() => new Counter(1), [])
-    let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({
-        cacheKey: rest.name,
+    let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({ 
         uniforms: {
             ...shader?.uniforms,
             uTime: { value: 0 },
@@ -123,7 +122,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     vGlobalNormal = mat3(instanceMatrix) * normal;
 	            #else 
                     vec4 globalPosition = modelMatrix * vec4(position, 1.);
-                    vGlobalNormal = mat3(modelMatrix) *  normal;
+                    vGlobalNormal = mat3(modelMatrix) * normal;
 	            #endif 
 
                 vGlobalNormal = normalize(vGlobalNormal);

@@ -147,14 +147,12 @@ function Loader() {
     }, [scene, camera])
 
     useEffect(() => { 
-        if (loaded) {
-            setTimeout(() => {   
+        if (loaded) {  
+            startTransition(setSetup)
+            setTimeout(() => { 
                 document.getElementById("loading")?.remove()
-                startTransition(setSetup)
-                setTimeout(() => { 
-                    startTransition(setReady)
-                }, 1000) 
-            }, 2000)
+                startTransition(setReady)
+            }, 1000)  
         }
     }, [loaded])
 

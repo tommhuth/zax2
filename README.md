@@ -2,11 +2,13 @@
 
 ## Todo   
 - actual level design    
-- ui/intro 
+- ui
+- intro 
 - instance color hit thing 
 - hit detection edge case fix 
 - remove repeater meshes? use shared mat instead and local (shared) geometry????
 - rework boss ending  
+- pull out uneccessary zustand instances
 
 53 mat + 22 instances
 

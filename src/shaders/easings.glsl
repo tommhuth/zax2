@@ -8,12 +8,17 @@ float easeInOutQuad(float x) {
   return x < 0.5 ? 2. * x * x : 1. - pow(-2. * x + 2., 2.) / 2.;
 } 
 
-float easeOutExpo(float x) {
+// pw = 10
+float easeInExpo(float x, float pw) {
+  return x == 0. ? 0. : pow(2., pw * x - pw);
+}
+
+float easeOutExpo(float x, float pw) {
   if (x == 1.) {
     return 1.;
   }
 
-  return  1. - pow(2., -10. * x);
+  return  1. - pow(2., -pw * x);
 }
 
 float easeInQuint(float x) {
@@ -40,4 +45,12 @@ float easeOutCubic(float x) {
 
 float easeOutQuart(float x) {
   return 1. - pow(1. - x, 2.);
+}
+
+float easeOutSine(float x) {
+  return sin((x * 3.14159) / 2.);
+}
+
+float easeInOutQuart(float x) {
+  return x < 0.5 ? 8. * x * x * x * x : 1. - pow(-2. * x + 2., 4.) / 2.;
 }

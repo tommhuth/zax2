@@ -1,12 +1,12 @@
 import { useEffect, useMemo } from "react"
 import InstancedMesh from "../models/InstancedMesh"
 import { useShader } from "../../../data/hooks"
-import { Color, InstancedMesh as InstancedMeshThree } from "three"
-import { explosionCenterColor, explosionEndColor, explosionHighlightColor } from "../../../data/theme"
+import { InstancedMesh as InstancedMeshThree } from "three"
 import { clamp, glsl, ndelta, setBufferAttribute, setMatrixAt } from "../../../data/utils"
 import easings from "../../../shaders/easings.glsl"
 import dither from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
+import utils from "../../../shaders/utils.glsl"
 import { useFrame } from "@react-three/fiber"
 import { blend, easeInOutCubic, easeOutCubic, easeOutQuart } from "../../../data/shaping" 
 import { useStore } from "../../../data/store"
@@ -17,11 +17,9 @@ type TransformReturn = { scale: number, position: Tuple3 }
 type FireballTransformer = (fireball: Fireball, delta: number, instance: InstancedMeshThree) => TransformReturn
 
 export const transformer: Record<Exclude<Fireball["type"], undefined>, FireballTransformer> = {
-    primary: (fireball, delta, instance) => {
+    primary: (fireball) => {
         let t = clamp(fireball.time / fireball.lifetime, 0, 1)
         let scale = blend([fireball.startRadius, fireball.maxRadius, 0], easeOutQuart(t))
-
-        setBufferAttribute(instance.geometry, "aLifetime", t, fireball.index)
 
         if (fireball.time < 0) {
             scale = 0
@@ -35,7 +33,7 @@ export const transformer: Record<Exclude<Fireball["type"], undefined>, FireballT
 
         return { scale, position }
     },
-    secondary: (fireball, delta, instance) => {
+    secondary: (fireball, delta) => {
         let introDur = 250
         let t = easeInOutCubic (1 -  clamp((fireball.time - introDur) / (fireball.lifetime-introDur), 0, 1))
 
@@ -43,9 +41,7 @@ export const transformer: Record<Exclude<Fireball["type"], undefined>, FireballT
             t = easeOutCubic (clamp(fireball.time/introDur, 0, 1))
         }
 
-        let scale = fireball.startRadius * t
-
-        setBufferAttribute(instance.geometry, "aLifetime", t, fireball.index)
+        let scale = fireball.startRadius * t 
 
         if (fireball.time < 0) {
             scale = 0
@@ -74,27 +70,27 @@ export default function FireballHandler() {
     let radiusAttributes = useMemo(() => {
         return new Float32Array(new Array(count).fill(0))
     }, [count])
-    let { onBeforeCompile, uniforms } = useShader({
-        cacheKey: "fireball",
-        uniforms: {
-            uEndColor: { value: new Color(explosionEndColor) },
-            uCenterColor: { value: new Color(explosionCenterColor) },
-            uHighlightColor: { value: new Color(explosionHighlightColor) },
+    let { onBeforeCompile, uniforms } = useShader({ 
+        shared: glsl`
+            varying float vRadius;
+            varying float vDistance;
+            varying float vLifetime;
+            varying vec3 vGlobalPosition; 
+            uniform float uTime;       
+                 
+            ${noise}
+            ${easings} 
+            ${dither}
+            ${utils}
+        `,
+        uniforms: { 
             uTime: { value: 0 },
         },
         vertex: {
             head: glsl` 
                 attribute vec3 aCenter;   
                 attribute float aRadius;   
-                varying float vRadius;
-                varying float vDistance;
-                varying float vLifetime;
-                varying vec3 vGlobalPosition;
                 attribute float aLifetime;   
-                uniform float uTime;   
-                 
-                ${noise}
-                ${easings}
             `,
             main: glsl`
                 vec4 globalPosition = instanceMatrix * vec4(transformed, 1.);   
@@ -108,29 +104,10 @@ export default function FireballHandler() {
                 vRadius = aRadius;  
             `
         },
-        fragment: {
-            head: glsl`  
-                varying float vDistance; 
-                varying float vLifetime;
-                varying float vRadius;
-                varying vec3 vGlobalPosition; 
-                uniform float uTime;    
-                uniform vec3 uEndColor;   
-                uniform vec3 uCenterColor;   
-                uniform vec3 uHighlightColor;   
-                 
-                ${easings}
-                ${noise}
-                ${dither}
-
-                float luma(vec3 color) {
-                    return dot(color, vec3(0.299, 0.587, 0.114));
-                }
-            `,
+        fragment: { 
             main: glsl`      
-                float noiseEffect = (noise(vGlobalPosition * .65 + uTime * 7.) + 1.) / 2.;
-                vec3 cameraDirection = normalize(vec3(-57.2, -50., -61.2)); 
-                float edgeEffect = clamp(-dot(cameraDirection, normal), 0., 1.) ; 
+                float noiseEffect = (noise(vGlobalPosition * .65 + uTime * 7.) + 1.) / 2.; 
+                float edgeEffect = clamp(-dot(CAMERA_POSITION, normal), 0., 1.) ; 
 
                 vec3 color = mix(
                     vec3(1., .4, 0.), 
@@ -141,11 +118,9 @@ export default function FireballHandler() {
                 gl_FragColor.rgb += .5;
                 gl_FragColor.rgb *= color * 1.6;
                 gl_FragColor.rgb = mix(vec3(0.8, 0.4, 0.), gl_FragColor.rgb, easeInOutQuad(noiseEffect)); 
-                gl_FragColor.rgb = mix(vec3(1., 0., 0.), gl_FragColor.rgb, vDistance);
-                
-                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * 1.2, 4., .05);
+                gl_FragColor.rgb = mix(vec3(1., 0., 0.), gl_FragColor.rgb, vDistance); 
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * 1.2, 4., .05); 
 
-           
                 gl_FragColor.a = max(luma(gl_FragColor.rgb), .65);
             `
         }
@@ -166,7 +141,8 @@ export default function FireballHandler() {
             for (let fireball of fireballs) {
                 let type = fireball.type || "primary"
                 let result = transformer[type](fireball, ndelta(delta), instance)
-
+ 
+                setBufferAttribute(instance.geometry, "aLifetime", fireball.time / fireball.lifetime, fireball.index)
                 setMatrixAt({
                     instance: instance,
                     index: fireball.index,

@@ -6,6 +6,7 @@ import InstancedMesh from "../models/InstancedMesh"
 import { useStore } from "../../../data/store"
 import easings from "../../../shaders/easings.glsl"
 import dither from "../../../shaders/dither.glsl"
+import utils from "../../../shaders/utils.glsl"
 import { easeOutCubic, easeOutQuad } from "../../../data/shaping"
 
 export default function ShockwaveHandler() {
@@ -13,31 +14,24 @@ export default function ShockwaveHandler() {
     let opacityAttributes = useMemo(() => {
         return new Float32Array(new Array(count).fill(0))
     }, [count])
-    let { onBeforeCompile } = useShader({
-        cacheKey: "shocwave",
+    let { onBeforeCompile } = useShader({ 
+        shared: glsl`
+            varying float vOpacity;  
+            varying float vDistanceFromCenter;   
+            ${easings}
+            ${dither} 
+            ${utils}  
+        `,
         vertex: {
             head: glsl` 
                 attribute float aOpacity;  
-                varying float vOpacity;  
-                varying float vDistanceFromCenter;   
             `,
             main: glsl`
                 vOpacity = aOpacity;
                 vDistanceFromCenter = clamp(length(vec3(0., 0., 0.) - position) / 1., 0., 1.); 
             `
         },
-        fragment: {
-            head: glsl`   
-                varying float vOpacity;  
-                varying float vDistanceFromCenter;   
-
-                ${easings}
-                ${dither} 
-
-                float luma(vec3 color) {
-                    return dot(color, vec3(0.299, 0.587, 0.114));
-                }
-            `,
+        fragment: { 
             main: glsl`     
                 gl_FragColor.rgb = mix(vec3(0.), vec3(1.) * 1.5, easeInQuad(vDistanceFromCenter) * vOpacity);
                 gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 1., .05);

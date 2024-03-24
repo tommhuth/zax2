@@ -40,8 +40,8 @@ export default function ExplosionsHandler() {
                     let light = explosionLights[counter.current].current
         
                     if (light) {
-                        light.intensity = 100
-                        light.distance = Math.max(lastExplosion.radius, 5) * 3
+                        light.intensity = 40
+                        light.distance = lastExplosion.radius * 16
                         light.position.set(...lastExplosion.position)
                         light.position.y += 2
                     }

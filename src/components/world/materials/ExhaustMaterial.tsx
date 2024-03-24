@@ -7,38 +7,31 @@ import { glsl } from "../../../data/utils"
 import dither from "../../../shaders/dither.glsl"
 import easings from "../../../shaders/easings.glsl"
 import noise from "../../../shaders/noise.glsl"
+import utils from "../../../shaders/utils.glsl"
 
 export default function ExhaustMaterial() {
     let ref = useRef<MeshBasicMaterial>(null)
-    let { onBeforeCompile, uniforms } = useShader({
-        cacheKey: "exhaust",
+    let { onBeforeCompile, uniforms } = useShader({ 
+        shared: glsl`
+            varying vec3 vPosition;
+            varying vec3 vGlobalPosition;
+            uniform float uTime;
+            
+            ${dither}
+            ${easings}
+            ${noise}
+            ${utils} 
+        `,
         uniforms: {
             uTime: { value: 0 }
         },
-        vertex: {
-            head: glsl`
-                varying vec3 vPosition;
-                varying vec3 vGlobalPosition;
-            `,
+        vertex: { 
             main: glsl`
                 vPosition = position;
                 vGlobalPosition = (modelMatrix * vec4(position, 1.)).xyz;
             `
         },
-        fragment: {
-            head: glsl`
-                varying vec3 vPosition;
-                varying vec3 vGlobalPosition;
-                uniform float uTime;
-                
-                ${dither}
-                ${easings}
-                ${noise}
-
-                float luma(vec3 color) {
-                    return dot(color, vec3(0.299, 0.587, 0.114));
-                }
-            `,
+        fragment: { 
             main: glsl`
                 float grad = clamp((vPosition.z + .5 ) / 1., 0., 1.);
  
