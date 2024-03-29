@@ -1,4 +1,4 @@
-import { DoubleSide, Mesh } from "three"
+import { DoubleSide, Mesh, RGBADepthPacking } from "three"
 import { useStore } from "../../../../data/store"
 import { plantColor } from "../../../../data/theme"
 import { WorldPartType } from "../../../../data/types"
@@ -19,26 +19,33 @@ export default function Plant() {
     let [plant] = useLoader(GLTFLoader, ["/models/plant.glb"])
     let traumaData = useMemo(() => new Float32Array(count).fill(0), [])
     let uniforms = useMemo(() => ({ uTime: { value: 0, needsUpdate: true }}), [])
-    let vertexShader = glsl`
-        float height = 2.75;
-        float heightScale = easeInQuad(clamp(position.y / height, 0., 1.));
-        float offsetSize = .3;
-        float timeScale = 16.;
+    let getPlantTransform = glsl`
+        vec3 getPlantTransform(vec3 localPosition, vec3 globalPosition) {
+            vec3 result = vec3(0.);
+            float height = 2.75;
+            float offsetSize = .3;
+            float offsetScale = offsetSize 
+                * clamp(localPosition.y / height, 0., 1.) 
+                * clamp(length(localPosition) / 3. - .2, 0., 1.);
+            float time = uTime * 16.; 
+    
+            result.x += cos(globalPosition.x * .5 + time) * offsetScale;
+            result.x += sin(globalPosition.x * .4 + time) * offsetScale * 1.1;
+    
+            result.y += cos(globalPosition.y * .35 + time) * offsetScale * .6;
+            result.y += sin(globalPosition.y * .2 + time * .5) * offsetScale * .25;  
+    
+            result.z += cos(globalPosition.z * .35 + time * .1) * offsetScale;
+            result.z += sin(globalPosition.z * .24 + time * .1) * offsetScale * 1.15;
+    
+            result += random(globalPosition.xz + uTime) * normalize(localPosition) * aTrauma;
 
-        transformed.x += cos((globalPosition.x) * .5 + uTime * timeScale) * heightScale * offsetSize;
-        transformed.x += sin((globalPosition.x) * .4 + uTime * timeScale) * heightScale * offsetSize * 1.1;
-
-        transformed.z += cos((globalPosition.z) * .35 + uTime * timeScale * .1) * heightScale * offsetSize;
-        transformed.z += sin((globalPosition.z) * .24 + uTime * timeScale * .1) * heightScale * offsetSize * 1.15 ;
-
-        transformed.y += cos((globalPosition.y) * .35 + uTime * timeScale * .2) * heightScale * offsetSize * .5;
-        transformed.y += cos((globalPosition.y) * .3 + uTime * timeScale * .2) * heightScale * offsetSize * 1.25 * .5;  
-
-        transformed += aTrauma * random(globalPosition.xz + uTime) * normalize(transformed);
+            return result;
+        }
     `
 
     useFrame((state, delta)=> {
-        uniforms.uTime.value += delta * .2 
+        uniforms.uTime.value += delta * .2
         uniforms.uTime.needsUpdate = true
     })
 
@@ -62,28 +69,32 @@ export default function Plant() {
 
             <meshDepthMaterial
                 attach="customDepthMaterial"
-                onBeforeCompile={(shader) => {
+                depthPacking={RGBADepthPacking}
+                alphaTest={.5} 
+                onBeforeCompile={(shader) =>{
                     shader.uniforms = {
                         ...shader.uniforms,
                         ...uniforms
                     }
-
-                    const chunk = glsl`
-                        #include <begin_vertex> 
-
-                        vec3 globalPosition = (instanceMatrix * vec4(position, 1.)).xyz;
-                        ${vertexShader}
-                    ` 
-
-                    shader.vertexShader = glsl` 
+  
+                    shader.vertexShader = shader.vertexShader.replace("#include <common>", glsl`
+                        #include <common>
+                        
                         uniform float uTime; 
                         attribute float aTrauma;
 
                         ${easings}
-                        ${noise} 
-                        ${shader.vertexShader}
-                    `.replace("#include <begin_vertex>", chunk)
-                }} 
+                        ${noise}  
+                        ${getPlantTransform}
+                    `)
+                    shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", glsl`
+                        #include <begin_vertex>
+
+                        vec3 globalPosition = (instanceMatrix * vec4(position, 1.)).xyz; 
+
+                        transformed += getPlantTransform(position, globalPosition);
+                    `)
+                }}
             />
             
             <MeshRetroMaterial 
@@ -96,9 +107,10 @@ export default function Plant() {
                     vertex: {
                         head: glsl` 
                             attribute float aTrauma;
+                            ${getPlantTransform}
                         `, 
                         main: glsl`
-                            ${vertexShader}
+                            transformed += getPlantTransform(position, globalPosition.xyz);
                         `
                     }
                 }} 

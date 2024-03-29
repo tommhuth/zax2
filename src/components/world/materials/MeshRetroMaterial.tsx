@@ -123,14 +123,14 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
 	            #else 
                     vec4 globalPosition = modelMatrix * vec4(position, 1.);
                     vGlobalNormal = mat3(modelMatrix) * normal;
-	            #endif 
+	            #endif  
+ 
+                ${shader?.vertex?.main || ""}
 
                 vGlobalNormal = normalize(vGlobalNormal);
 
                 vGlobalPosition = globalPosition.xyz;
                 vPosition = position.xyz;  
- 
-                ${shader?.vertex?.main || ""}
             `
         },
         fragment: { 
