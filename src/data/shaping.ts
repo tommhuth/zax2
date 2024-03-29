@@ -40,6 +40,20 @@ export function easeOutElastic(x: number): number {
             : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1
 }
 
+export function easeInBack(x: number): number {
+    const c1 = 1.70158
+    const c3 = c1 + 1
+    
+    return c3 * x * x * x - c1 * x * x
+}
+
+export function easeOutBack(x: number): number {
+    const c1 = 1.70158
+    const c3 = c1 + 1
+    
+    return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2)
+}
+
 export function blend(values = [75, 100, 0], t = 0, threshold = .5) {
     let left = t >= threshold ? 1 : 0
     let right = left + 1
@@ -49,4 +63,4 @@ export function blend(values = [75, 100, 0], t = 0, threshold = .5) {
     }
 
     return (1 - (t - threshold) / (1 - threshold)) * values[left] + (t - threshold) / (1 - threshold) * values[right]
-} 
+}  

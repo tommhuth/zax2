@@ -5,8 +5,8 @@ import InstancedMesh from "../models/InstancedMesh"
 import { useStore } from "../../../data/store" 
 import easings from "../../../shaders/easings.glsl"
 import dither from "../../../shaders/dither.glsl"
-import utils from "../../../shaders/utils.glsl"
-import { easeInQuad } from "../../../data/shaping"
+import utils from "../../../shaders/utils.glsl" 
+import { easeInBack, easeOutBack } from "../../../data/shaping"
 
 export default function BlastHandler() {
     let count = 20 
@@ -52,13 +52,13 @@ export default function BlastHandler() {
         }
 
         for (let { blast, position } of explosions) { 
-            let t = 1 - clamp(blast.time / (blast.lifetime), 0, 1)
+            let t = 1 - clamp(blast.time / (blast.lifetime * .5), 0, 1)
 
             setMatrixAt({
                 instance: instance.mesh,
                 index: blast.index,
-                position: [position[0], position[1], position[2]],
-                scale: blast.radius * easeInQuad(t),
+                position,
+                scale: blast.radius * easeOutBack(t),
             })
 
             blast.time += ndelta(delta) * 1000
