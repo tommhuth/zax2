@@ -3,12 +3,11 @@
 ## Todo   
 - actual level design    
 - ui
-- intro 
-- instance color hit thing 
-- hit detection edge case fix 
-- remove repeater meshes? use shared mat instead and local (shared) geometry????
+- intro  
+- hit detection edge case fix  
 - rework boss ending  
-- pull out uneccessary zustand instances
+- pull out uneccessary zustand instances 
+- blast + shockwave tweak/coord
 
 53 mat + 22 instances
 
