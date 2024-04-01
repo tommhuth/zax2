@@ -2,7 +2,7 @@ import { memo, startTransition, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta } from "../../../data/utils"
+import { clamp, ndelta, setBufferAttribute } from "../../../data/utils"
 import random from "@huth/random"
 import { Vector3 } from "three" 
 import { Owner, Turret } from "../../../data/types"
@@ -15,6 +15,7 @@ import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 import { useRemoveWhenBehind } from "../../../data/hooks"
+import { damp } from "three/src/math/MathUtils.js"
 
 function explode(position: Vector3, size: Tuple3) { 
     createExplosion({
@@ -51,6 +52,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
     let diagonal = useStore(i => i.world.diagonal)
     let shootTimer = useRef(0)
     let nextShotAt = useRef(fireFrequency)
+    let trauma = useRef(0)
     let remove = () => {
         setTimeout(() => startTransition(() => removeTurret(id)), 350) 
     }
@@ -79,6 +81,18 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
             }
         }
     })  
+
+    useEffect(() => {
+        trauma.current = 1
+    }, [health])
+
+    useFrame((state, delta) => {
+        if (typeof index === "number" && trauma.current > .001) {
+            setBufferAttribute(instance.geometry, "aTrauma", trauma.current, index)
+        }
+
+        trauma.current = damp(trauma.current, 0, 6, ndelta(delta)) 
+    })
 
     useEffect(() => {
         if (health === 0) {

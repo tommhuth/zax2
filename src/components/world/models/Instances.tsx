@@ -10,8 +10,7 @@ import {
     platformColor,
     rightColor,
     rocketColor,
-    scrapColor,
-    turretColor,
+    scrapColor, 
 } from "../../../data/theme"
 import { DoubleSide, FrontSide, Mesh } from "three"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
@@ -19,13 +18,13 @@ import { memo } from "react"
 import Barrels from "./instances/Barrels"
 import Plant from "./instances/Plant" 
 import { glsl } from "../../../data/utils" 
+import Turrets from "./instances/Turrets"
 
 function Instances() {
     let [
-        turret, rocket, platform, device, 
+        rocket, platform, device, 
         scrap, cable, dirt, plane, leaf
-    ] = useLoader(GLTFLoader, [
-        "/models/turret.glb",
+    ] = useLoader(GLTFLoader, [ 
         "/models/rocket.glb",
         "/models/platform.glb",
         "/models/device.glb",
@@ -37,7 +36,11 @@ function Instances() {
     ])  
 
     return (
-        <>
+        <> 
+            <Barrels />
+            <Plant /> 
+            <Turrets />
+
             <InstancedMesh
                 name="plane"
                 count={20}
@@ -58,6 +61,7 @@ function Instances() {
                     rightColorIntensity={.5}  
                 />
             </InstancedMesh>
+            
             <InstancedMesh
                 name="leaf"
                 count={40}
@@ -183,27 +187,6 @@ function Instances() {
             </InstancedMesh>
 
             <InstancedMesh
-                name="turret"
-                count={14}
-                receiveShadow
-                colors
-            >
-                <primitive
-                    object={(turret.nodes.turret2 as Mesh).geometry}
-                    attach="geometry"
-                />
-                <MeshRetroMaterial
-                    color={turretColor}
-                    name="turret"
-                    emissive={turretColor}
-                    emissiveIntensity={0.3}
-                    rightColorIntensity={.4}
-                    backColor="#ff0"
-                    backColorIntensity={.7}
-                />
-            </InstancedMesh>
-
-            <InstancedMesh
                 name="rocket"
                 count={8}
                 castShadow={false}
@@ -252,9 +235,6 @@ function Instances() {
 
                 />
             </InstancedMesh>
-
-            <Barrels />
-            <Plant /> 
         </>
     )
 }
