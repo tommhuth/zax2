@@ -1,6 +1,6 @@
 import { startTransition, useEffect, useMemo, useRef } from "react"
 import { LinearFilter, PointLight } from "three"
-import { glsl } from "../../../data/utils"
+import { glsl, ndelta } from "../../../data/utils"
 import { useFrame, useLoader } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
 import { TextureLoader } from "three/src/loaders/TextureLoader.js"
@@ -75,7 +75,7 @@ export default function ExplosionsHandler() {
                 dead.push(explosion.id)
                 continue
             }  else {
-                explosion.time += delta * 1000
+                explosion.time += ndelta(delta) * 1000
             }
         }
 
