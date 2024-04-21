@@ -24,6 +24,6 @@ export const CAMERA_POSITION = new Vector3().setFromSphericalCoords(
 
 export const ZOOM = 70 - clamp(1 - (Math.min(window.innerWidth, window.innerHeight) - 400) / 600, 0, 1) * 30
  
-export const PIXEL_SIZE = Math.min(window.innerWidth, window.innerHeight) < 800 ? 3 : 4
+export const PIXEL_SIZE = Math.min(window.innerWidth, window.innerHeight) < 800 ? 4 : 4
 export const DPR = 1 / PIXEL_SIZE
 export const BULLET_SIZE: Tuple3 = [.15, .2, 1.5]

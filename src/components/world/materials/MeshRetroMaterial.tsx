@@ -28,8 +28,8 @@ type MeshRetroMaterialProps = {
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
     color = bcolor,   
-    colorCount = 11,
-    dither = .005,
+    colorCount = 6,
+    dither = .015,
     rightColor = defaultRightColor,
     rightColorIntensity = .75,
     backColor = defaultBackColor,

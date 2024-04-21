@@ -45,7 +45,7 @@ export const explosionColor = "#ffffff"
 
 export const shimmerColor = "#ffffff"
 
-export const plantColor = "#27fff4" 
+export const plantColor = "#1df0d4" 
 
  
 export const grassColorStart = new Color("#005229")

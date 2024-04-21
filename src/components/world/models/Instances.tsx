@@ -55,10 +55,14 @@ function Instances() {
                 <MeshRetroMaterial
                     color={planeColor}
                     name="plane"
-                    colorCount={8} 
+                    colorCount={5} 
                     emissive={planeColor}
                     emissiveIntensity={.2}
                     rightColorIntensity={.5}  
+                    rightColor="#f00"
+                    backColor="#f00"
+                    backColorIntensity={.1}
+                    dither={.005}
                 />
             </InstancedMesh>
             
@@ -77,8 +81,9 @@ function Instances() {
                     name="leaf"
                     vertexColors
                     side={DoubleSide}
-                    colorCount={8} 
-                    rightColorIntensity={0}
+                    colorCount={6}  
+                    rightColorIntensity={.5}
+                    rightColor="#ff0"
                 />
             </InstancedMesh>
 
@@ -96,7 +101,7 @@ function Instances() {
                 <MeshRetroMaterial
                     color={cableColor}
                     name="cable"
-                    colorCount={6}
+                    //colorCount={6}
                     emissive={cableColor}
                     emissiveIntensity={.05}
                 />

@@ -21,7 +21,7 @@ export default function Turrets() {
             name="turret"
             count={count}
             receiveShadow
-            colors
+            //colors
         >
             <primitive
                 object={(turret.nodes.turret2 as Mesh).geometry}
@@ -38,9 +38,11 @@ export default function Turrets() {
                 name="turret"
                 emissive={turretColor}
                 emissiveIntensity={0.3}
-                rightColorIntensity={.4}
-                backColor="#ff0"
-                backColorIntensity={.7}
+                rightColorIntensity={.3} 
+                backColor="#f00"
+                backColorIntensity={.1}
+                colorCount={8}
+                dither={.005}
                 shader={{
                     shared: glsl`
                         varying float vTrauma;
@@ -50,11 +52,13 @@ export default function Turrets() {
                             attribute float aTrauma;
                         `,
                         main: glsl`
-                            vTrauma = aTrauma;
+                        vTrauma = aTrauma;
+                        /*
                             transformed += normalize(vec3(position.x, 0., position.z)) 
                                 * .25 
                                 * random(globalPosition.xz + uTime) 
                                 * aTrauma ;
+                                * */
                         `
                     },
                     fragment: {

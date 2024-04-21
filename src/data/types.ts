@@ -6,7 +6,6 @@ import { Client } from "./world/SpatialHashGrid3D"
 export type MaterialName = "grass" | "exhaust" | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
     | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi" | "barrel"
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi"
-    | "bossCable" | "bossFloorValley" | "bossHardware" | "bossRock" | "bossPillar"
 
 export type InstanceName = "leaf" | "scrap" |  "line" | "box" | "sphere" | "particle" | "device"
     | "barrel1" | "barrel2" | "barrel3" | "barrel4" | "fireball" | "cable"

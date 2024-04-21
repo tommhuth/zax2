@@ -18,76 +18,42 @@ export function BossFloor(props) {
 
     return (
         <group {...props} dispose={null}>
-            {/* cylinder base */}   
+            {/* cylinders */}
             <mesh
-                receiveShadow 
+                castShadow
+                receiveShadow
                 geometry={nodes.bossfloor_1.geometry}
                 material={materials.floorBase}
             />
 
-            {/* cylinder hi */}
+            {/* cylinders hi */}
             <mesh
+                castShadow
                 receiveShadow
                 geometry={nodes.bossfloor_2.geometry}
-                material={materials.bossFloorHi}
+                material={materials.bossLightBlue}
             />
-
-            {/* building hi */}
             <mesh
+                castShadow
                 receiveShadow
                 geometry={nodes.bossfloor_3.geometry}
                 material={materials.buildingHi}
             />
-
-            {/* coords */}
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.bossfloor_4.geometry}
+                material={materials.buildingBase}
+            />
             <mesh
                 castShadow
                 receiveShadow
                 geometry={nodes.bossfloor_5.geometry}
-                material={materials.bossCable}
-            /> 
-
-            {/* floor valley */}
-            <mesh 
-                receiveShadow
-                geometry={nodes.bossfloor_4.geometry}
-                material={materials.bossFloorValley}
-            />
-            {/* hardware */}
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.bossfloor_6.geometry}
-                material={materials.bossHardware}
-            />
-            {/* rocks */}
-            <mesh
-                castShadow 
-                receiveShadow 
-                geometry={nodes.bossfloor_7.geometry}
-                material={materials.bossRock}
-            />
-            {/* edge building */}
-            <mesh 
-                receiveShadow
-                geometry={nodes.bossfloor_8.geometry}
-                material={materials.buildingBase} 
-            />
-            {/* base floor */}
-            <mesh 
-                receiveShadow
-                geometry={nodes.bossfloor_9.geometry}
-                material={materials.floorBase} 
-            />
-            {/* pillars */}
-            <mesh 
-                receiveShadow
-                geometry={nodes.bossfloor_10.geometry}
-                material={materials.bossPillar}
-            />
+                material={materials.floorBase}
+            />  
         </group>
     )
-}
+} 
 
 useGLTF.preload("/models/floor5.glb")
 
@@ -104,7 +70,7 @@ export default function BossPart({
         if (state === BossState.DEAD) {
             timeout(() => {
                 setBossProp("state", BossState.OUTRO)
-                timeout(() => setBossProp("state", BossState.UNKNOWN), 7_000)
+                timeout(() => setBossProp("state", BossState.UNKNOWN), 6_000)
             }, 2000)
         }
     }, [state])

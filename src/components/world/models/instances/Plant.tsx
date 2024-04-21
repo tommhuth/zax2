@@ -99,10 +99,13 @@ export default function Plant() {
             
             <MeshRetroMaterial 
                 name="plant"
-                colorCount={12}
+                colorCount={7}
                 vertexColors
                 color={plantColor}
                 side={DoubleSide}
+                rightColorIntensity={.5}
+                rightColor="#ff0"
+                dither={.015}
                 shader={{
                     vertex: {
                         head: glsl` 

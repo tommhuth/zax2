@@ -58,7 +58,7 @@ export default function Player({
     }, [grid])
     let data = useMemo<LocalData>(() => {
         return {
-            speed: 6,
+            speed: 4, //6,
             lastShotAt: 0,
             isMovingUp: false,
             bossDeadAt: 0,
@@ -239,6 +239,7 @@ export default function Player({
                         name="player"
                         attach={"material"}
                         color={playerColor}
+                        colorCount={3}
                     />
                 </primitive>
 
@@ -266,7 +267,7 @@ export default function Player({
                     ref={engineLightRef}
                     distance={90}
                     position={[0, .1, -1.75]}
-                    intensity={50}
+                    intensity={60}
                     color={"#ffffff"}
                 />
             </group>

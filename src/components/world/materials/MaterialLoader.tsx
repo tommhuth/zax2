@@ -3,8 +3,7 @@ import { barellColor, buildingBaseColor, buildingHiColor, floorBaseColor, floorH
 import { MeshRetroMaterial } from "./MeshRetroMaterial"
 import { BoxGeometry, BufferGeometry, Material, Mesh } from "three"
 import { setMaterial } from "../../../data/store/utils"
-import { MaterialName } from "../../../data/types" 
-import BossFogMaterial from "./BossFogMaterial"
+import { MaterialName } from "../../../data/types"  
 import ExhaustMaterial from "./ExhaustMaterial"
 import GrassMaterial from "./GrassMaterial"
 
@@ -52,13 +51,8 @@ function MaterialLoader() {
             bossDarkBlue: <MeshRetroMaterial color="darkblue" />,
             bossBlue: <MeshRetroMaterial color="blue" />, 
             bossSecondaryBlue: <MeshRetroMaterial color="#00f" />,
-            bossWhite: <meshLambertMaterial color="white" />, 
-            bossFloorValley: <BossFogMaterial color="#016" />, 
-            bossFloorHi: <MeshRetroMaterial color="#fff" />,
-            bossCable: <BossFogMaterial color="#f00" />,
-            bossHardware: <BossFogMaterial color="#00f" />,
-            bossRock: <BossFogMaterial color="#00d" />,
-            bossPillar: <BossFogMaterial color="#00f" />,  
+            bossWhite: <meshLambertMaterial color="white" />,  
+            bossFloorHi: <meshBasicMaterial color="#fff" />, 
             grass: <GrassMaterial />,  
         }
     }, []) 
