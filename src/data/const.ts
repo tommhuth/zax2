@@ -3,7 +3,7 @@ import { clamp } from "./utils"
 import { Tuple3 } from "../types"
 
 export const WORLD_START_Z = 100
-export const WORLD_PLAYER_START_Z = WORLD_START_Z - 15
+export const WORLD_PLAYER_START_Z = WORLD_START_Z - 20
 
 export const WORLD_CENTER_X = 0
 export const WORLD_LEFT_EDGE = 5

@@ -5,6 +5,8 @@
 canvas {
     image-rendering: crisp-edges;
     image-rendering: pixelated;
+
+     
 }
 
 body::before {
@@ -49,7 +51,7 @@ body::before {
     z-index: 100;
     top: 0;  
     color: #fff;
-    flex-direction: column; 
+    flex-direction: column;  
 }
 
 .introold {
@@ -71,6 +73,7 @@ body::before {
     color: #fff;
     flex-direction: column;
     mix-blend-mode: multiply; 
+    opacity: .1;
 }
 
 .start {
@@ -89,10 +92,16 @@ body::before {
 }
 
 .title {
-    font-size: min(9vw, 15vh); 
+    font-size: min(9vw * .5, 15vh * .5); 
     font-weight: bold; 
-    line-height: 1; 
-    letter-spacing: -.01em;
+    line-height: .9; 
+    letter-spacing: -.01em;   
+    text-transform: uppercase;
+    text-align: left;
+    display: none;
+    margin-left: -1em;
+    text-wrap: balance; 
+    max-width: 14em;
 
     @media (max-width: 700px), (max-height: 500px) { 
         line-height: .9;

@@ -104,7 +104,7 @@ export default function Plant() {
                 color={plantColor}
                 side={DoubleSide}
                 rightColorIntensity={.5}
-                rightColor="#ff0"
+                rightColor="#ff0"  
                 dither={.015}
                 shader={{
                     vertex: {

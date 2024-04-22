@@ -40,7 +40,9 @@ export default function Ui() {
                     visibility: ready && state === "intro" ? undefined : "hidden"
                 }}
             >
-                <h1 className="title">Untitled arcade knockoff</h1>
+                <h1 className="title">
+                    Untitled <br /> arcade <br/>   knockoff
+                </h1>
             </div>
  
 

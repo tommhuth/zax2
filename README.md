@@ -8,6 +8,8 @@
 - rework boss ending  
 - pull out uneccessary zustand instances 
 - blast + shockwave tweak/coord
+- abstract out fake physics to a single handler?
+- colocate more stuff 
 
 53 mat + 22 instances
 

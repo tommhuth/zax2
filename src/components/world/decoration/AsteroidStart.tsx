@@ -24,7 +24,7 @@ export function AsteroidStart(props) {
                                 vec3 top = mix(gl_FragColor.rgb, vec3(.0, 1., .6), .84);
                                 vec3 bottom = mix(gl_FragColor.rgb, vec3(.0, .5, 1.), .65); 
                 
-                                gl_FragColor.rgb = mix(top, bottom, clamp(-vGlobalPosition.y / 3., 0., 1.));
+                               //gl_FragColor.rgb = mix(top, bottom, clamp(-vGlobalPosition.y / 3., 0., 1.));
                             `
                         } 
                     }} 

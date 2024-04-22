@@ -9,23 +9,99 @@ import random from "@huth/random"
 import Floor from "../decoration/Floor"
 import { AsteroidStart } from "../decoration/AsteroidStart"
 import Dirt from "../decoration/Dirt"
+import { Text, Text3D, useGLTF } from "@react-three/drei"
+import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
+import { useStore } from "../../../data/store"
+import Cable from "../decoration/Cable"
+
+// 40 
 
 export default function Start({
     id,
     position,
-    size,
+    size, 
 }: WorldPartStart) {
+    const materials = useStore(i => i.materials)
+
     return (
         <WorldPartWrapper
             size={size}
             position={position}
             id={id}
-        >
-            <Dirt 
-                position={[0,0,-5]}
-                scale={2}
+        > 
+            <AsteroidStart position={[4, 0,  position.z + 10 ]} />
+       
+
+            <Cable 
+                position={[-4, 0,  35]}
+                scale={1.25}
+                rotation={.5}
             />
-            <AsteroidStart position={[0, 0, position.z]} />
+
+            <Barrel position={[4,0, 21]} /> 
+            <Barrel position={[2,0, 23.5]} />
+            <Barrel position={[-4,0, 10]} />
+ 
+            <Dirt 
+                position={[-4, 0,   30]}
+                scale={2}
+                rotation={2.985}
+            />   
+
+            <EdgeBuilding 
+                type="tanks" 
+                z={13}  
+                x={4}
+            />
+            <EdgeBuilding 
+                type="tanks" 
+                z={size[1] / 2 + 10} 
+                x={0}
+            />
+
+            <Logo 
+                position={[2, .15 + 2 * .125, position.z + 9 ]} 
+                scale={[5, 1.5, 5]} 
+                rotation={[0, -Math.PI * .5,0]} 
+            /> 
+
+            <mesh
+                position={[0, -.5, position.z + size[1] / 2 + 10 ]} 
+                receiveShadow
+                material={materials.floorBase}
+            >
+                <boxGeometry args={[30, 1,  size[1], 1, 1]} /> 
+            </mesh> 
+        </WorldPartWrapper>
+    )
+}
+
+/*
+
+            <AsteroidStart position={[0, 0, position.z + 50]} />
+            */
+function Logo(props) {
+    const { nodes, materials } = useGLTF("/models/logo.glb")
+
+    return (
+        <group {...props} dispose={null}>
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Text.geometry}
+                material={nodes.Text.material} 
+            >
+                <MeshRetroMaterial color="blue" />
+            </mesh>
+        </group>
+    )
+}
+  
+useGLTF.preload("/models/logo.glb")
+
+// 
+
+/*
 
             <Building
                 position={[4, 0, 1]}
@@ -41,10 +117,6 @@ export default function Start({
                 position={[-2, 1, 2]}
                 rotation={-Math.PI / 2}
                 floorLevel={1}
-            />
-            <Building
-                position={[-2, 0, 2]}
-                size={[3, 1, 3]}
             />
             <Barrel
                 position={[-2, 0, 7]}
@@ -77,8 +149,4 @@ export default function Start({
             />
 
             <EdgeBuilding type="tanks" z={size[1] / 2} />
-        </WorldPartWrapper>
-    )
-}
-
-// 
+            */

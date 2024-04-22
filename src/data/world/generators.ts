@@ -38,7 +38,7 @@ export function makeDefault(previous: BaseWorldPart): WorldPartDefault {
 }
 
 export function makeStart(previous: BaseWorldPart): WorldPartStart {
-    let depth = 20
+    let depth = 40
 
     return {
         ...baseProps(previous),

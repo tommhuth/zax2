@@ -47,7 +47,7 @@ export default function Barrel({
             .map((i, index, list) => (index / list.length) * Math.PI * 2)
     ))
     let model: InstanceName = useMemo(() => {
-        return random.pick("barrel1", "barrel2", "barrel3", "barrel4")
+        return  random.pick("barrel1", "barrel2", "barrel3", "barrel4")
     }, [])
     let remove = () => {
         setTimeout(() => startTransition(() => removeBarrel(id)), 300) 
