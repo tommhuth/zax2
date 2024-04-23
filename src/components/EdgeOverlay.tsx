@@ -1,12 +1,16 @@
 import { useFrame } from "@react-three/fiber"
 import { useStore } from "../data/store"
-import { useRef } from "react"
-import { Group, MeshBasicMaterial } from "three" 
+import { useLayoutEffect, useRef } from "react"
+import { Group, MeshBasicMaterial } from "three"
+import animate from "@huth/animate"
+import { easeInOutCubic, easeInOutQuart, easeOutCubic, easeOutExpo } from "../data/shaping"
 
 let material = new MeshBasicMaterial({ color: "#000", name: "edge" })
 
 export default function EdgeOverlay() {
-    let groupRef = useRef<Group>(null) 
+    let groupRef = useRef<Group>(null)
+    let ready = useStore(i => i.ready)
+    let diagonal = useStore(i => i.world.diagonal)
 
     useFrame(() => {
         let player = useStore.getState().player.object
@@ -16,24 +20,59 @@ export default function EdgeOverlay() {
         }
     })
 
+    useLayoutEffect(() => {
+        if (!groupRef.current) {
+            return
+        }
+
+        let xRight = -31
+        let xLeft = 13
+        let offset = 12
+
+        groupRef.current.children[0].position.x = xRight + offset
+        groupRef.current.children[1].position.x = xLeft - offset
+ 
+        if (ready) {
+
+            return animate({
+                from: {
+                    xRight: xRight + offset,
+                    xLeft: xLeft - offset,
+                },
+                to: {
+                    xLeft,
+                    xRight
+                },
+                easing: easeInOutQuart,
+                duration: 2000, 
+                render({ xLeft, xRight }) {
+                    if (!groupRef.current) {
+                        return
+                    }
+
+                    groupRef.current.children[0].position.x = xLeft
+                    groupRef.current.children[1].position.x = xRight
+                },
+            })
+        }
+    }, [ready, diagonal])
+
     return (
         <group ref={groupRef}>
             <mesh
                 rotation-x={-Math.PI / 2}
-                position-y={13}
-                position-x={6}
+                position-y={13} 
                 rotation-y={-.65}
                 material={material}
             >
-                <planeGeometry args={[12, 100, 1, 1]} /> 
+                <planeGeometry args={[22, 100, 1, 1]} />
             </mesh>
             <mesh
                 rotation-x={-Math.PI / 2}
-                position-y={12}
-                position-x={ -26 }
+                position-y={12} 
                 material={material}
             >
-                <planeGeometry args={[12, 100, 1, 1]} /> 
+                <planeGeometry args={[22, 100, 1, 1]} />
             </mesh>
         </group>
 

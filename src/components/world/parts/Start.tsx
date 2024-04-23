@@ -1,25 +1,17 @@
 import { WorldPartStart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
-import Turret from "../spawner/Turret"
 import EdgeBuilding from "../decoration/EdgeBuilding"
 import Barrel from "../spawner/Barrel"
-import Building from "../spawner/Building"
-import Rocket from "../spawner/Rocket" 
-import random from "@huth/random"
-import Floor from "../decoration/Floor"
-import { AsteroidStart } from "../decoration/AsteroidStart"
 import Dirt from "../decoration/Dirt"
-import { Text, Text3D, useGLTF } from "@react-three/drei"
+import { useGLTF } from "@react-three/drei"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { useStore } from "../../../data/store"
 import Cable from "../decoration/Cable"
-
-// 40 
-
+ 
 export default function Start({
     id,
     position,
-    size, 
+    size,
 }: WorldPartStart) {
     const materials = useStore(i => i.materials)
 
@@ -28,60 +20,56 @@ export default function Start({
             size={size}
             position={position}
             id={id}
-        > 
-            <AsteroidStart position={[4, 0,  position.z + 10 ]} />
-       
-
-            <Cable 
-                position={[-4, 0,  35]}
+        >
+            <Cable
+                position={[-4, 0, 35]}
                 scale={1.25}
                 rotation={.5}
             />
 
-            <Barrel position={[4,0, 21]} /> 
-            <Barrel position={[2,0, 23.5]} />
-            <Barrel position={[-4,0, 10]} />
- 
-            <Dirt 
-                position={[-4, 0,   30]}
+            <Barrel position={[3, 0, 14]} />
+            <Barrel position={[3, 0, 17]} /> 
+
+
+            <Barrel position={[-2, 0, 26]} />              
+
+            <Dirt
+                position={[-4, 0, 30]}
                 scale={2}
                 rotation={2.985}
-            />   
-
-            <EdgeBuilding 
-                type="tanks" 
-                z={13}  
-                x={4}
             />
-            <EdgeBuilding 
-                type="tanks" 
-                z={size[1] / 2 + 10} 
+ 
+            <EdgeBuilding
+                type="tanks"
+                z={20}
                 x={0}
             />
+            <EdgeBuilding
+                type="tanks"
+                z={6}
+                x={-18}
+                
+            />
 
-            <Logo 
-                position={[2, .15 + 2 * .125, position.z + 9 ]} 
-                scale={[5, 1.5, 5]} 
-                rotation={[0, -Math.PI * .5,0]} 
-            /> 
+            <Logo
+                position={[3, .15 + 2 * .125, position.z + 5 ]}
+                scale={[5, 1.5, 5]}
+                rotation={[0, -Math.PI * .5, 0]}
+            />
 
             <mesh
-                position={[0, -.5, position.z + size[1] / 2 + 10 ]} 
+                position={[0, -.5, position.z + size[1] / 2 - 15]}
                 receiveShadow
                 material={materials.floorBase}
             >
-                <boxGeometry args={[30, 1,  size[1], 1, 1]} /> 
-            </mesh> 
+                <boxGeometry args={[30, 1, size[1] + 10 + 20 + 20, 1, 1]} />
+            </mesh>
         </WorldPartWrapper>
     )
 }
-
-/*
-
-            <AsteroidStart position={[0, 0, position.z + 50]} />
-            */
+ 
 function Logo(props) {
-    const { nodes, materials } = useGLTF("/models/logo.glb")
+    const { nodes } = useGLTF("/models/logo.glb")
 
     return (
         <group {...props} dispose={null}>
@@ -89,64 +77,13 @@ function Logo(props) {
                 castShadow
                 receiveShadow
                 geometry={nodes.Text.geometry}
-                material={nodes.Text.material} 
+                material={nodes.Text.material}
             >
-                <MeshRetroMaterial color="blue" />
+                <MeshRetroMaterial color="#fff" emissive={"#fff"} emissiveIntensity={.4} />
             </mesh>
         </group>
     )
 }
-  
+
 useGLTF.preload("/models/logo.glb")
-
-// 
-
-/*
-
-            <Building
-                position={[4, 0, 1]}
-                size={[3, 3, 3]}
-            />
-            <Turret
-                position={[4, 3, 1]}
-                rotation={Math.PI}
-                floorLevel={3}
-            />
-
-            <Turret
-                position={[-2, 1, 2]}
-                rotation={-Math.PI / 2}
-                floorLevel={1}
-            />
-            <Barrel
-                position={[-2, 0, 7]}
-            />
-            <Barrel
-                position={[3, 0, -4]}
-            />
-            <Rocket
-                position={[5, 0, 10]}
-            />
-            <Rocket
-                position={[5, 0, 15]}
-            />
-            <Barrel
-                position={[-3, 0, 19]}
-            />
-            <Barrel
-                position={[-4, 0, 14]}
-            />
-
-            <Turret
-                position={[-2, 0, 11]}
-                floorLevel={0}
-            />
-
-            <Floor
-                type={"floor1"}
-                scale={[random.pick(-1, 1), 1, random.pick(-1, 1)]}
-                position={[position.x, 0, size[1] / 2]}
-            />
-
-            <EdgeBuilding type="tanks" z={size[1] / 2} />
-            */
+ 

@@ -33,33 +33,21 @@ export default function Ui() {
     }) 
 
     return (
-        <>
-            <div
-                className="intro"
-                style={{
-                    visibility: ready && state === "intro" ? undefined : "hidden"
-                }}
-            >
-                <h1 className="title">
-                    Untitled <br /> arcade <br/>   knockoff
-                </h1>
-            </div>
- 
-
+        <> 
             <div
                 className={"levelc"}
                 style={{
                     display: boss?.state === BossState.OUTRO ? "block": "none"
                 }}
             >
-                <h1>Level#{level}</h1>
-                <p>Evil robot defeated</p> 
+                <h1>Level#{level}</h1> 
             </div> 
 
             <div
                 className="height"
                 style={{
-                    opacity: state === "intro" || !ready || boss?.state === BossState.OUTRO ? 0 : 1
+                    opacity: !ready || boss?.state === BossState.OUTRO ? 0 : 1,
+                    marginLeft: ready ? 0 : "-1em",
                 }}
             >
                 <div className="height__top">H</div>
@@ -84,7 +72,8 @@ export default function Ui() {
             <div
                 className="ui"
                 style={{
-                    opacity: state === "intro" || !ready || boss?.state === BossState.OUTRO ? 0 : 1
+                    opacity: !ready || boss?.state === BossState.OUTRO ? 0 : 1,
+                    marginBottom: ready ? 0 : "-1em",
                 }}
             >
                 {player.health.toFixed(0)}%

@@ -5,6 +5,7 @@ import { Tuple3 } from "../types"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
 import { BossState, Owner } from "../data/types"
+import animate from "@huth/animate"
 import {  store, useStore } from "../data/store"
 import { damagePlayer, increaseScore, setPlayerObject } from "../data/store/player"
 import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/store/actors"
@@ -13,7 +14,7 @@ import { playerColor } from "../data/theme"
 import { MeshRetroMaterial } from "./world/materials/MeshRetroMaterial"
 import { removeHeatSeaker, setBossProp } from "../data/store/boss"
 import { useCollisionDetection } from "../data/collisions"
-import { easeInQuad } from "../data/shaping"
+import { easeInQuad, easeOutCubic, easeOutExpo } from "../data/shaping"
 import Exhaust from "./Exhaust"
 import { damp } from "three/src/math/MathUtils.js"
 import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "../data/const"
@@ -41,12 +42,14 @@ export default function Player({
     let playerGroupRef = useRef<Group | null>(null)
     let grid = useStore(i => i.world.grid)
     let weapon = useStore(i => i.player.weapon)
-    let setup = useStore(i => i.setup)
-    let state = useStore(i => i.state)
+    let ready = useStore(i => i.ready) 
+    let setup = useStore(i => i.setup) 
+    let innerRef = useRef<Group>(null)
     let bossState = useStore(i => i.boss.state)
     let position = useStore(i => i.player.position)
     let targetPosition = useStore(i => i.player.targetPosition)
-    let controls = useStore(i => i.controls)
+    let controls = useStore(i => i.controls) 
+    let diagonal = useStore(i => i.world.diagonal) 
     let engineLightRef = useRef<PointLight>(null)
     let model = useLoader(GLTFLoader, "/models/player.glb")
     let text = useLoader(TextureLoader, "/textures/glow.png")
@@ -223,53 +226,80 @@ export default function Player({
         }
     })
 
+    useLayoutEffect(() => {
+        if (!innerRef.current) {
+            return 
+        }
+
+        innerRef.current.position.z = -diagonal  
+
+        if (ready) {
+            return animate({
+                from: -diagonal ,
+                to: 0,
+                easing: easeOutExpo,
+                duration: 4000,
+                delay: 2000,
+                render(z) {
+                    if (!innerRef.current) {
+                        return 
+                    }
+                    
+                    innerRef.current.position.z = z 
+                },
+            })
+        } 
+    }, [ready, diagonal])
+
     return (
         <>
             <group
                 ref={handleRef}
                 //visible={setup ? state !== "intro" : true}
             >
-                <primitive
-                    object={model.nodes.player}
-                    receiveShadow
-                    castShadow
-                    position={[0, 0, 0]}
-                >
-                    <MeshRetroMaterial
-                        name="player"
-                        attach={"material"}
-                        color={playerColor}
-                        colorCount={3}
+                <group ref={innerRef}>  
+                    <primitive
+                        object={model.nodes.player}
+                        receiveShadow
+                        castShadow
+                        position={[0, 0, 0]}
+                    >
+                        <MeshRetroMaterial
+                            name="player"
+                            attach={"material"}
+                            color={playerColor}
+                            colorCount={3}
+                        />
+                    </primitive>
+
+                    <mesh
+                        scale={[3.5,6,1]} 
+                        rotation-x={-Math.PI * .5} 
+                        position={[0, -.25, -.7]}
+                    >
+                        <planeGeometry args={[1,1,1,1]} />
+                        <meshBasicMaterial 
+                            map={text} 
+                            transparent 
+                            depthWrite={false}
+                            opacity={.35} 
+                            blending={AdditiveBlending}
+                        />
+                    </mesh> 
+
+                    <Exhaust
+                        offset={[0, -.15, -3.35]}
+                        scale={[.5, .3, 1.6]}
                     />
-                </primitive>
 
-                <mesh
-                    scale={[3.5,6,1]} 
-                    rotation-x={-Math.PI * .5} 
-                    position={[0, -.25, -.7]}
-                >
-                    <planeGeometry args={[1,1,1,1]} />
-                    <meshBasicMaterial 
-                        map={text} 
-                        transparent 
-                        depthWrite={false}
-                        opacity={.35} 
-                        blending={AdditiveBlending}
+                    <pointLight
+                        ref={engineLightRef}
+                        distance={90}
+                        position={[0, .1, -1.75]}
+                        intensity={60}
+                        color={"#ffffff"}
                     />
-                </mesh> 
-
-                <Exhaust
-                    offset={[0, -.15, -3.35]}
-                    scale={[.5, .3, 1.6]}
-                />
-
-                <pointLight
-                    ref={engineLightRef}
-                    distance={90}
-                    position={[0, .1, -1.75]}
-                    intensity={60}
-                    color={"#ffffff"}
-                />
+                </group>
             </group>
         </>
     )
