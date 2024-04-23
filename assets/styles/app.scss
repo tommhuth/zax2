@@ -4,9 +4,17 @@
 
 canvas {
     image-rendering: crisp-edges;
-    image-rendering: pixelated;
+    image-rendering: pixelated;    
+}
 
-     
+#root { 
+    top: 0; 
+    position: fixed;
+    display: block;
+    height: 100vh !important; 
+    width: 100% !important;
+    right: 0;
+    left: 0;
 }
 
 body::before {
@@ -19,99 +27,10 @@ body::before {
     z-index: 1;
     background-image: linear-gradient(to top right, rgb(0 0 0 / 50%) 30%, rgb(0 0 0 / 0%) 50%);
     opacity: .5;
-    display: block;
-    mix-blend-mode: overlay;
+    display: none;  
     pointer-events: none;
 }
   
-#shoot { 
-    right: 0; 
-    display: block;
-    width: 30%;
-    position: fixed;
-    width: 50%;
-    top: 0;
-    bottom: 0; 
-    z-index: 10000000; 
-} 
-
-.intro {
-    pointer-events: none;
-    text-align: center;
-    position: fixed;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    padding: .25em; 
-    height: 100%; 
-    width: 100%; 
-    z-index: 100;
-    top: 0;  
-    color: #fff;
-    flex-direction: column;  
-}
-
-.introold {
-    pointer-events: none;
-    text-align: center;
-    position: fixed;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    padding: .25em;
-    height: 100%; 
-    width: 100%; 
-    z-index: 100;
-    top: 0; 
-    background-color: #000;
-    color: #fff;
-    flex-direction: column;
-    mix-blend-mode: multiply; 
-    opacity: .1;
-}
-
-.start {
-    font-family: joystix;
-    margin-top: 4em;
-    font-size: clamp(1em, min(3.5vw, 3.5vh), 1.25em);
-    letter-spacing: .1em;
-    white-space: nowrap;
-
-    @media (max-width: 800px) {
-        position: absolute;
-        left: 50%;
-        bottom: 10vh;
-        transform: translateX(-50%);
-    }
-}
-
-.title {
-    font-size: min(9vw * .5, 15vh * .5); 
-    font-weight: bold; 
-    line-height: .9; 
-    letter-spacing: -.01em;   
-    text-transform: uppercase;
-    text-align: left;
-    display: none;
-    margin-left: -1em;
-    text-wrap: balance; 
-    max-width: 14em;
-
-    @media (max-width: 700px), (max-height: 500px) { 
-        line-height: .9;
-    }
-
-    @media (max-width: 700px) {
-        margin-bottom: 0; 
-    }
-}
-
 #loading {
     position: absolute;
     font-size: clamp(1em, min(1vw, 1vh), 1.25em);
@@ -122,6 +41,7 @@ body::before {
     display: flex;
     place-content: center;
     place-items: center;
+    color: #fff;
 
     span {
         animation: jump .5s infinite both;
@@ -135,16 +55,6 @@ body::before {
     }
 }
 
-#root { 
-    top: 0; 
-    position: fixed;
-    display: block;
-    height: 100vh !important; 
-    width: 100% !important;
-    right: 0;
-    left: 0;
-}
-
 #debug {
     position: fixed;
     top: 1em;
@@ -155,7 +65,17 @@ body::before {
     padding: 1em;
     border: 1px solid transparent;
 }
-
+  
+#shoot { 
+    right: 0; 
+    display: block;
+    width: 30%;
+    position: fixed;
+    width: 50%;
+    top: 0;
+    bottom: 0; 
+    z-index: 10000000; 
+}   
 
 @keyframes jump {
     from {
