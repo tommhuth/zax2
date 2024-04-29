@@ -3,16 +3,18 @@ import { UseShaderParams, useShader } from "../../../data/hooks"
 import { backColor as defaultBackColor, bcolor, fogColor, rightColor as defaultRightColor } from "../../../data/theme"
 import easings from "../../../shaders/easings.glsl"
 import dithering from "../../../shaders/dither.glsl"
-import noise from "../../../shaders/noise.glsl" 
+import noise from "../../../shaders/noise.glsl"
 import { glsl } from "../../../data/utils"
 import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef, useEffect, useMemo } from "react"
 import { useStore } from "../../../data/store"
 import Counter from "../../../data/world/Counter"
 
-type MeshRetroMaterialProps = {   
+const lightSourceCount = 4
+
+type MeshRetroMaterialProps = {
     colorCount?: number
-    dither?: number 
+    dither?: number
     rightColor?: string
     rightColorIntensity?: number
     backColor?: string
@@ -20,14 +22,14 @@ type MeshRetroMaterialProps = {
     additionalShadowStrength?: number
     shader?: {
         uniforms?: UseShaderParams["uniforms"]
-        shared?: UseShaderParams["shared"] 
-        vertex?: UseShaderParams["vertex"] 
-        fragment?: UseShaderParams["fragment"] 
+        shared?: UseShaderParams["shared"]
+        vertex?: UseShaderParams["vertex"]
+        fragment?: UseShaderParams["fragment"]
     }
 } & Omit<MeshLambertMaterialProps, "onBeforeCompile" | "dithering">
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
-    color = bcolor,   
+    color = bcolor,
     colorCount = 6,
     dither = .015,
     rightColor = defaultRightColor,
@@ -39,47 +41,42 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     additionalShadowStrength = .15,
     children,
     ...rest
-}, ref) => { 
-    let player = useStore(i => i.player.object) 
-    let counter = useMemo(() => new Counter(1), [])
-    let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({ 
+}, ref) => {
+    let player = useStore(i => i.player.object)
+    let lightSourceCounter = useMemo(() => new Counter(lightSourceCount - 1), [])
+    let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({
         uniforms: {
             ...shader?.uniforms,
             uTime: { value: 0 },
             uColorCount: { value: colorCount },
-            uDither: { value: dither }, 
+            uDither: { value: dither },
             uLightSources: {
-                value: [ 
-                    {
-                        position: new Vector3(), 
+                value: new Array(lightSourceCount).fill(null).map(() => {
+                    return {
+                        position: new Vector3(),
                         strength: 0,
                         radius: 0,
-                    },
-                    {
-                        position: new Vector3(), 
-                        strength: 0,
-                        radius: 0,
-                    },
-                ]
+                    }
+                })
             },
             uAdditionalShadowStrength: {
                 value: additionalShadowStrength,
             },
             uBasicDirectionLights: {
-                value: [ 
+                value: [
                     {
-                        direction: new Vector3(-1,0, .75),
+                        direction: new Vector3(-1, 0, .75),
                         color: new Color(rightColor),
                         strength: rightColorIntensity,
                     },
                     {
-                        direction: new Vector3(0,0, -1),
+                        direction: new Vector3(0, 0, -1),
                         color: new Color(backColor),
                         strength: backColorIntensity,
                     },
                 ]
             },
-            uPlayerPosition: { value: new Vector3() }, 
+            uPlayerPosition: { value: new Vector3() },
             uFogColor: { value: new Color(fogColor) },
         },
         shared: glsl`  
@@ -106,7 +103,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 float strength;
                 float radius;
             };
-            uniform LightSource uLightSources[2];
+            uniform LightSource uLightSources[${lightSourceCount}];
 
             ${easings} 
             ${dithering}
@@ -114,7 +111,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             ${shader?.shared || ""}
         
         `,
-        vertex: { 
+        vertex: {
             head: shader?.vertex?.head,
             main: glsl`  
                 #ifdef USE_INSTANCING
@@ -133,7 +130,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 vPosition = position.xyz;  
             `
         },
-        fragment: { 
+        fragment: {
             head: shader?.fragment?.head,
             main: glsl`   
                 for (int i = 0; i < uBasicDirectionLights.length(); i++) { 
@@ -147,32 +144,39 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 } 
 
                 vec3 baseFogColor = vec3(0.0, 0.0, 0.3);
-                vec3 fogColorHi = vec3(0.3, 0.3, 0.99);
-                float fogLightEffect = 1. - clamp(length(uPlayerPosition - vGlobalPosition) / 8.5, 0., 1.);
+                vec3 fogColorHi = vec3(1., 0.75, 0.01) * 1.3;
+                float fogLightEffect = 0.;
 
                 for (int i = 0; i < uLightSources.length(); i++) { 
                     LightSource light = uLightSources[i];
 
-                    float effect = (1. - clamp(length(light.position - vGlobalPosition) / light.radius, 0., 1.)) * light.strength;
+                    float currentLightEffect = (1. - clamp(length(light.position - vGlobalPosition) / light.radius, 0., 1.)) 
+                        * light.strength;
 
-                    fogLightEffect = max(fogLightEffect, effect);
+                    fogLightEffect = max(fogLightEffect, currentLightEffect);
                 } 
 
                 float noiseEffect = easeInOutSine((noise(vGlobalPosition * .1 + uTime * 1.4) + 1.) / 2.) * .8;
-                float heightScaler = 1. - clamp((vGlobalPosition.y) / 2., 0., 1.);
-                float lowHeight = 1. - clamp(abs(vGlobalPosition.y) / 4., 0., 1.);
-                float heightMin = easeInQuad(1. - clamp((vGlobalPosition.y ) / .5, 0., 1.)); 
-                float heightBase = .3;
-                
+                float heightScaler = 1. - clamp((vGlobalPosition.y) / 2., 0., 1.);  
+                float heightMin = easeInQuad(1. - clamp((vGlobalPosition.y ) / .5, 0., 1.)) * .3; 
+
+                // base fog
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
-                    mix(baseFogColor, fogColorHi, easeInQuad(fogLightEffect)), 
-                    min(1., (noiseEffect * heightScaler + heightMin * heightBase) * lowHeight) 
-                ); 
+                    baseFogColor, 
+                    min(1., noiseEffect * heightScaler + heightMin) 
+                );  
+
+                // light highlights
+                gl_FragColor.rgb = mix(
+                    gl_FragColor.rgb, 
+                    fogColorHi,
+                    easeInOutCubic(fogLightEffect)
+                );
   
                 ${shader?.fragment?.main || ""}
 
-                getDirectionalLightInfo( directionalLights[0], directLight );
+                getDirectionalLightInfo(directionalLights[0], directLight);
 
                 gl_FragColor.rgb -= (1. - getShadow( 
                     directionalShadowMap[0], 
@@ -195,19 +199,19 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             state => state.effects.explosions[0],
             (lastExplosion) => {
                 if (!lastExplosion) {
-                    return 
-                } 
-         
-                uniforms.uLightSources.value[counter.current].strength = 1
-                uniforms.uLightSources.value[counter.current].radius = lastExplosion.radius * 2
-                uniforms.uLightSources.value[counter.current].position.set(...lastExplosion.position)
-        
-                counter.next()
+                    return
+                }
+
+                uniforms.uLightSources.value[lightSourceCounter.current].strength = 1
+                uniforms.uLightSources.value[lightSourceCounter.current].radius = lastExplosion.radius * 1.6
+                uniforms.uLightSources.value[lightSourceCounter.current].position.set(...lastExplosion.position)
+
+                lightSourceCounter.next()
             }
         )
-    }, []) 
+    }, [])
 
-    useFrame((state, delta) => { 
+    useFrame((state, delta) => {
         if (player) {
             uniforms.uPlayerPosition.value = player.position.toArray()
             uniforms.uPlayerPosition.needsUpdate = true
@@ -216,8 +220,10 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         uniforms.uTime.value += delta * .2
         uniforms.uTime.needsUpdate = true
 
-        uniforms.uLightSources.value[0].strength *= .97
-        uniforms.uLightSources.value[1].strength *= .97
+        for (let i = 0; i < uniforms.uLightSources.value.length; i++) {
+            uniforms.uLightSources.value[i].strength *= .97
+        }
+
         uniforms.uLightSources.needsUpdate = true
     })
 
@@ -226,7 +232,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             onBeforeCompile={onBeforeCompile}
             color={color}
             emissive={emissive}
-            ref={ref} 
+            ref={ref}
             customProgramCacheKey={customProgramCacheKey}
             {...rest}
         >
