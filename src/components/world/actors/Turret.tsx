@@ -5,7 +5,7 @@ import { useInstance } from "../models/InstancedMesh"
 import { clamp, ndelta, setBufferAttribute } from "../../../data/utils"
 import random from "@huth/random"
 import { Vector3 } from "three" 
-import { Owner, Turret } from "../../../data/types"
+import { Owner, Turret as TurretType } from "../../../data/types"
 import Config from "../../../data/Config"
 import { Tuple3 } from "../../../types"
 import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
@@ -40,12 +40,12 @@ function explode(position: Vector3, size: Tuple3) {
     })
 }
 
-function Turret({ id, size, position, health, fireFrequency, rotation, floorLevel }: Turret) { 
+function Turret({ id, size, position, health, fireFrequency, rotation, floorLevel }: TurretType) { 
     let [index, instance] = useInstance("turret", { 
         rotation: [0, -rotation + Math.PI * .5, 0],
         position: [
             position.x,
-            position.y - .1,
+            position.y - .45,
             position.z,
         ]
     })

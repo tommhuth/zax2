@@ -9,6 +9,7 @@ interface EdgeBuildingProps {
     x?: number
     y?: number
     z?: number
+    rotation?: number
     type?: RepeaterName
 }
 
@@ -16,6 +17,7 @@ export default function EdgeBuilding({
     x = 0,
     z = 0,
     y = 0,
+    rotation = Math.PI,
     type = random.pick("building1", "building2", "building3", "building4", "building5")
 }: EdgeBuildingProps) {
     let building = useRepeater(type) 
@@ -24,7 +26,7 @@ export default function EdgeBuilding({
     useEffect(() => {
         if (building?.mesh) { 
             building.mesh.position.set(x + WORLD_LEFT_EDGE + 4, y, z + partPosition[2])
-            building.mesh.rotation.y = Math.PI
+            building.mesh.rotation.y = rotation
         }
     }, [building])
 

@@ -180,7 +180,7 @@ export function createTurret({
     floorLevel,
 }) {
     let id = random.id()
-    let size = [1.65, 1.5, 1.65] as Tuple3
+    let size = [1.75, 1.5, 1.75] as Tuple3
     let position = new Vector3(x, y + size[1] / 2, z)
     let aabb = new Box3().setFromCenterAndSize(position, new Vector3(...size))
     let { grid, turrets } = store.getState().world

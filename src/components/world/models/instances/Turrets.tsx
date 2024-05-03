@@ -9,24 +9,25 @@ import { glsl } from "../../../../data/utils"
 
 export default function Turrets() {
     let count = 14
-    let [ turret ] = useLoader(GLTFLoader, [
-        "/models/turret.glb", 
-    ])  
+    let [turret] = useLoader(GLTFLoader, [
+        "/models/turret2.glb",
+    ])
     let traumaAttributes = useMemo(() => {
         return new Float32Array(new Array(count).fill(0))
     }, [count])
 
-    return ( 
+    console.log((turret.nodes.turret2 as Mesh).geometry.id)
+
+    return (
         <InstancedMesh
             name="turret"
             count={count}
-            receiveShadow
-            //colors
+            receiveShadow 
         >
             <primitive
                 object={(turret.nodes.turret2 as Mesh).geometry}
                 attach="geometry"
-            > 
+            >
                 <instancedBufferAttribute
                     needsUpdate={true}
                     attach="attributes-aTrauma"
@@ -38,7 +39,7 @@ export default function Turrets() {
                 name="turret"
                 emissive={turretColor}
                 emissiveIntensity={0.3}
-                rightColorIntensity={.3} 
+                rightColorIntensity={.3}
                 backColor="#f00"
                 backColorIntensity={.1}
                 colorCount={8}

@@ -25,13 +25,9 @@ export default function Start({
                 position={[-4, 0, 35]}
                 scale={1.25}
                 rotation={.5}
-            />
-
-            <Barrel position={[3, 0, 14]} />
-            <Barrel position={[3, 0, 17]} /> 
-
-
-            <Barrel position={[-2, 0, 26]} />              
+            /> 
+ 
+            <Barrel position={[3, 0, 29]} />              
 
             <Dirt
                 position={[-4, 0, 30]}
@@ -41,14 +37,31 @@ export default function Start({
  
             <EdgeBuilding
                 type="tanks"
-                z={20}
+                z={34}
                 x={0}
+                rotation={-Math.PI * .5}
+            />
+            <EdgeBuilding
+                type="tanks"
+                z={20}
+                x={1}
             />
             <EdgeBuilding
                 type="tanks"
                 z={6}
-                x={-18}
-                
+                x={-18} 
+            />
+            <EdgeBuilding
+                type="tanks"
+                z={-12}
+                x={1} 
+                rotation={Math.PI * .75}
+            />
+            <EdgeBuilding
+                type="tanks"
+                z={-12}
+                x={-15} 
+                rotation={Math.PI * -.75}
             />
 
             <Logo

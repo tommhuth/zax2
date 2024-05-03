@@ -144,7 +144,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 } 
 
                 vec3 baseFogColor = vec3(0.0, 0.0, 0.3);
-                vec3 fogColorHi = vec3(1., 0.75, 0.01) * 1.3;
+                vec3 highlightColor = vec3(1., 0.75, 0.01) * 1.3;
                 float fogLightEffect = 0.;
 
                 for (int i = 0; i < uLightSources.length(); i++) { 
@@ -170,7 +170,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 // light highlights
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
-                    fogColorHi,
+                    highlightColor,
                     easeInOutCubic(fogLightEffect)
                 );
   
