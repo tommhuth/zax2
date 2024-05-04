@@ -32,7 +32,7 @@ export default function Airstrip({
                 position={[-4, WORLD_TOP_EDGE - 1, 40]}
             /> 
             <Turret
-                position={[-2, 1, 35]}
+                position={[-2, 0, 35]}
                 rotation={-Math.PI / 2}
                 floorLevel={0}
             /> 

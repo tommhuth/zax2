@@ -173,19 +173,26 @@ export function removePlane(id: string) {
 }
 
 
+interface CreateTurretParam {
+    fireFrequency?: number
+    position: Tuple3
+    rotation?: number
+    floorLevel: number
+}
+
 export function createTurret({
     fireFrequency = random.integer(1500, 2200),
-    position: [x = 0, y = 0, z = -10] = [0, 0, 0],
+    position: [x, y, z],
     rotation = 0,
     floorLevel,
-}) {
+}: CreateTurretParam) {
     let id = random.id()
-    let size = [1.75, 1.5, 1.75] as Tuple3
-    let position = new Vector3(x, y + size[1] / 2, z)
+    let size = [1.85, 4.4, 1.85] as Tuple3
+    let position = new Vector3(x, y , z) // + size[1] / 2
     let aabb = new Box3().setFromCenterAndSize(position, new Vector3(...size))
     let { grid, turrets } = store.getState().world
     let client = grid.createClient(
-        position.toArray(),
+        [x, y, z],
         [...size],
         { type: "turret", id }
     ) 

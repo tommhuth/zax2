@@ -25,7 +25,7 @@ export default function Default({
                 size={[5, 2, 5]}
             />
             <Turret
-                position={[3, 2, 10]}
+                position={[3, 1, 10]}
                 rotation={-Math.PI / 2}
                 floorLevel={2}
             />
@@ -39,7 +39,7 @@ export default function Default({
                 size={[3, 1, 3]}
             />
             <Turret
-                position={[3, 1, 6]}
+                position={[3, 0, 6]}
                 rotation={-Math.PI / 2}
                 floorLevel={1}
             />

@@ -1,15 +1,53 @@
 import { ReactElement, ReactNode, cloneElement, memo, startTransition, useCallback, useMemo } from "react"
-import { barellColor, buildingBaseColor, buildingHiColor, floorBaseColor, floorHiColor, floorMarkColor } from "../../../data/theme"
+import { barellColor, buildingBaseColor, buildingHiColor, floorBaseColor, floorHiColor, floorMarkColor, turretColor } from "../../../data/theme"
 import { MeshRetroMaterial } from "./MeshRetroMaterial"
 import { BoxGeometry, BufferGeometry, Material, Mesh } from "three"
 import { setMaterial } from "../../../data/store/utils"
 import { MaterialName } from "../../../data/types"  
 import ExhaustMaterial from "./ExhaustMaterial"
 import GrassMaterial from "./GrassMaterial"
+import { glsl } from "../../../data/utils"
 
 function MaterialLoader() { 
     let materials: Record<MaterialName, ReactNode> = useMemo(() => {
         return {
+            turret:  (
+                <MeshRetroMaterial
+                    color={turretColor}
+                    name="turret"
+                    emissive={turretColor}
+                    emissiveIntensity={0.3}
+                    rightColorIntensity={.5}
+                    backColor="#f00"
+                    backColorIntensity={.1}
+                    colorCount={8}
+                    dither={.005}
+                    shader={{
+                        shared: glsl`
+                        varying float vTrauma;
+                    `,
+                        vertex: {
+                            head: glsl`
+                            attribute float aTrauma;
+                        `,
+                            main: glsl`
+                        vTrauma = aTrauma;
+                        /*
+                            transformed += normalize(vec3(position.x, 0., position.z)) 
+                                * .25 
+                                * random(globalPosition.xz + uTime) 
+                                * aTrauma ;
+                                * */
+                        `
+                        },
+                        fragment: {
+                            main: glsl`
+                            gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1.), vTrauma);
+                        `
+                        }
+                    }}
+                />
+            ),
             barrel:  (
                 <MeshRetroMaterial 
                     backColorIntensity={.0}  

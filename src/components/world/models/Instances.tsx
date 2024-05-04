@@ -17,8 +17,7 @@ import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { memo } from "react"
 import Barrels from "./instances/Barrels"
 import Plant from "./instances/Plant" 
-import { glsl } from "../../../data/utils" 
-import Turrets from "./instances/Turrets"
+import { glsl } from "../../../data/utils"  
 
 function Instances() {
     let [
@@ -38,8 +37,7 @@ function Instances() {
     return (
         <> 
             <Barrels />
-            <Plant /> 
-            <Turrets />
+            <Plant />  
 
             <InstancedMesh
                 name="plane"

@@ -29,7 +29,7 @@ export default function BuildingsLow({
                 floorLevel={0}
             />
             <Turret 
-                position={[4, 0, 10]}
+                position={[4, -.5, 10]}
                 rotation={-Math.PI/2}
                 floorLevel={0}
             />
@@ -53,7 +53,7 @@ export default function BuildingsLow({
             />
             
             <Turret 
-                position={[0, 1, size[1] - 2]}
+                position={[0, 0, size[1] - 2]}
                 rotation={-Math.PI / 2}
                 floorLevel={1}
             />
