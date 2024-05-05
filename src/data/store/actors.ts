@@ -226,7 +226,7 @@ interface CreatePlaneParams {
 }
 
 export function createPlane({
-    position: [x, y, z] = [0, 0, -10],
+    position: [x, y, z],
     targetY = y,
     rotation = 0,
     speed = random.float(4, 5),
@@ -239,7 +239,7 @@ export function createPlane({
     let { grid, planes } = store.getState().world
     let client = grid.createClient(
         position.toArray(),
-        [size[0], size[1], size[2]],
+        [...size],
         { type: "plane", id }
     )
 

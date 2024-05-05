@@ -1,5 +1,5 @@
 import { ReactElement, ReactNode, cloneElement, memo, startTransition, useCallback, useMemo } from "react"
-import { barellColor, buildingBaseColor, buildingHiColor, floorBaseColor, floorHiColor, floorMarkColor, turretColor } from "../../../data/theme"
+import { barellColor, buildingBaseColor, buildingHiColor, floorBaseColor, floorHiColor, floorMarkColor, planeColor, platformColor, rocketColor, turretColor } from "../../../data/theme"
 import { MeshRetroMaterial } from "./MeshRetroMaterial"
 import { BoxGeometry, BufferGeometry, Material, Mesh } from "three"
 import { setMaterial } from "../../../data/store/utils"
@@ -11,11 +11,37 @@ import { glsl } from "../../../data/utils"
 function MaterialLoader() { 
     let materials: Record<MaterialName, ReactNode> = useMemo(() => {
         return {
+            rocket: ( 
+                <MeshRetroMaterial
+                    color={rocketColor}
+                    name="rocket"
+                />
+            ),
+            platform: ( 
+                <MeshRetroMaterial
+                    color={platformColor}
+                    name="rocket"
+                />
+            ),
+            plane: ( 
+                <MeshRetroMaterial
+                    color={planeColor}
+                    name="plane"
+                    colorCount={5} 
+                    emissive={planeColor}
+                    emissiveIntensity={.2}
+                    rightColorIntensity={.5}  
+                    rightColor="#f00"
+                    backColor="#f00"
+                    backColorIntensity={.1}
+                    dither={.005}
+                />
+            ),
             turret:  (
                 <MeshRetroMaterial
                     color={turretColor}
                     name="turret"
-                    emissive={turretColor}
+                    emissive={turretColor} 
                     emissiveIntensity={0.3}
                     rightColorIntensity={.5}
                     backColor="#f00"
@@ -31,14 +57,14 @@ function MaterialLoader() {
                             attribute float aTrauma;
                         `,
                             main: glsl`
-                        vTrauma = aTrauma;
-                        /*
-                            transformed += normalize(vec3(position.x, 0., position.z)) 
-                                * .25 
-                                * random(globalPosition.xz + uTime) 
-                                * aTrauma ;
-                                * */
-                        `
+                                vTrauma = aTrauma;
+                                /*
+                                transformed += normalize(vec3(position.x, 0., position.z)) 
+                                    * .25 
+                                    * random(globalPosition.xz + uTime) 
+                                    * aTrauma ;
+                                    * */
+                            `
                         },
                         fragment: {
                             main: glsl`

@@ -13,7 +13,7 @@ import { createExplosion, createImpactDecal, createParticles, createScrap } from
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
-import { useRemoveWhenBehind } from "../../../data/hooks"
+import { useRemoveWhenBehindPlayer } from "../../../data/hooks"
 import { useGLTF } from "@react-three/drei"
 import { damp } from "three/src/math/MathUtils.js"
 import Config from "../../../data/Config"
@@ -60,9 +60,9 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
     let nextShotAt = useRef(fireFrequency)
     let remove = () => {
         setTimeout(() => startTransition(() => removeTurret(id)), 350)
-    } 
+    }
 
-    useRemoveWhenBehind(position, remove)
+    useRemoveWhenBehindPlayer(position, remove)
 
     useCollisionDetection({
         actions: {
@@ -158,9 +158,13 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes.Cylinder.geometry}
                     material={materials.turret}
-                />
+                >
+                    <primitive
+                        object={nodes.Cylinder.geometry}
+                        attach="geometry"
+                    />
+                </mesh>
                 {/* barrell */}
                 <mesh
                     castShadow
@@ -175,7 +179,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
                 <mesh>
                     <boxGeometry args={[...size, 1, 1, 1]} />
                     <meshBasicMaterial wireframe color="orange" name="debug" />
-                </mesh> 
+                </mesh>
             )}
         </group>
     )

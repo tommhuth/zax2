@@ -3,7 +3,7 @@ import { useStore } from "../data/store"
 import { useLayoutEffect, useRef } from "react"
 import { Group, MeshBasicMaterial } from "three"
 import animate from "@huth/animate"
-import { easeInOutCubic, easeInOutQuart, easeOutCubic, easeOutExpo } from "../data/shaping"
+import { easeInOutQuart } from "../data/shaping"
 
 let material = new MeshBasicMaterial({ color: "#000", name: "edge" })
 

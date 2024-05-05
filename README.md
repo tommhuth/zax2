@@ -5,10 +5,10 @@
 - ui
 - intro  
 - hit detection edge case fix  
-- rework boss ending  
-- pull out uneccessary zustand instances 
+- rework boss ending   
 - blast + shockwave tweak/coord
 - abstract out fake physics to a single handler?
+- remove instancing for actors (plane, barell, building, rocket)
 - colocate more stuff 
 
 53 mat + 22 instances

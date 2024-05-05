@@ -4,16 +4,16 @@ import Turret from "../spawner/Turret"
 import EdgeBuilding from "../decoration/EdgeBuilding"
 import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
-import Rocket from "../spawner/Rocket"  
-import random from "@huth/random" 
-import Floor from "../decoration/Floor"  
+import Rocket from "../spawner/Rocket"
+import random from "@huth/random"
+import Floor from "../decoration/Floor"
 import Plane from "../spawner/Plane"
 
 export default function Default({
     id,
     position,
     size,
-}: WorldPartDefault) { 
+}: WorldPartDefault) {
     return (
         <WorldPartWrapper
             size={size}
@@ -56,8 +56,8 @@ export default function Default({
                 position={[5, 0, 2]}
             />
 
-            <Plane 
-                position={[0,.5,1]}
+            <Plane
+                position={[0, .5, 1]}
                 speed={0}
                 rotation={.5}
             />

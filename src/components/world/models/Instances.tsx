@@ -4,65 +4,31 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 import { 
     cableColor,
     deviceColor,
-    dirtColor,
-    planeColor,
+    dirtColor, 
     plantColor,
-    platformColor,
     rightColor,
-    rocketColor,
     scrapColor, 
 } from "../../../data/theme"
 import { DoubleSide, FrontSide, Mesh } from "three"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
-import { memo } from "react"
-import Barrels from "./instances/Barrels"
+import { memo } from "react" 
 import Plant from "./instances/Plant" 
 import { glsl } from "../../../data/utils"  
 
 function Instances() {
     let [
-        rocket, platform, device, 
-        scrap, cable, dirt, plane, leaf
-    ] = useLoader(GLTFLoader, [ 
-        "/models/rocket.glb",
-        "/models/platform.glb",
+        device, scrap, cable, dirt, leaf
+    ] = useLoader(GLTFLoader, [  
         "/models/device.glb",
         "/models/scrap.glb",
         "/models/cable.glb",
-        "/models/dirt.glb",
-        "/models/plane.glb",
+        "/models/dirt.glb", 
         "/models/leaf.glb",
     ])  
 
     return (
-        <> 
-            <Barrels />
+        <>  
             <Plant />  
-
-            <InstancedMesh
-                name="plane"
-                count={20}
-                castShadow
-                receiveShadow
-            >
-                <primitive
-                    object={(plane.nodes.plane as Mesh).geometry}
-                    dispose={null}
-                    attach="geometry"
-                />
-                <MeshRetroMaterial
-                    color={planeColor}
-                    name="plane"
-                    colorCount={5} 
-                    emissive={planeColor}
-                    emissiveIntensity={.2}
-                    rightColorIntensity={.5}  
-                    rightColor="#f00"
-                    backColor="#f00"
-                    backColorIntensity={.1}
-                    dither={.005}
-                />
-            </InstancedMesh>
             
             <InstancedMesh
                 name="leaf"
@@ -187,37 +153,7 @@ function Instances() {
                         }
                     }}
                 />
-            </InstancedMesh>
-
-            <InstancedMesh
-                name="rocket"
-                count={8}
-                castShadow={false}
-            >
-                <primitive
-                    object={(rocket.nodes.rocket as Mesh).geometry}
-                    attach="geometry"
-                />
-                <MeshRetroMaterial
-                    color={rocketColor}
-                    name="rocket"
-                />
-            </InstancedMesh>
-
-            <InstancedMesh
-                name="platform"
-                count={8}
-                receiveShadow
-            >
-                <primitive
-                    object={(platform.nodes.platform as Mesh).geometry}
-                    attach="geometry"
-                />
-                <MeshRetroMaterial
-                    color={platformColor}
-                    name="platform"
-                />
-            </InstancedMesh>
+            </InstancedMesh> 
 
             <InstancedMesh
                 name="device"

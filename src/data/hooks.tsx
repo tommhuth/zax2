@@ -2,10 +2,10 @@ import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
 import { IUniform, Shader, Vector3 } from "three"
 import { glsl } from "./utils"
 import random from "@huth/random"
-import { useFrame, useThree } from "@react-three/fiber"
+import { useFrame } from "@react-three/fiber"
 import { useStore } from "./store"
 
-export function useRemoveWhenBehind(position: Vector3, removeFunc: () => void) {
+export function useRemoveWhenBehindPlayer(position: Vector3, removeFunc: () => void) {
     let removed = useRef(false)
     let diagonal = useStore(i => i.world.diagonal)
 

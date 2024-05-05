@@ -1,12 +1,10 @@
-import { startTransition, useEffect, useMemo, useRef } from "react"
+import { startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { Owner, Rocket } from "../../../data/types"
-import { useInstance } from "../models/InstancedMesh"
-import { useFrame } from "@react-three/fiber"
-import { Only, ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
+import { useFrame, useLoader } from "@react-three/fiber"
+import { ndelta } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types" 
-import Config from "../../../data/Config"
 import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
 import { damageRocket, removeRocket } from "../../../data/store/actors"
@@ -15,6 +13,7 @@ import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
 import Exhaust from "../../Exhaust"
 import { WORLD_TOP_EDGE } from "../../../data/const"
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
 let _size = new Vector3()
 
@@ -80,6 +79,9 @@ function explode(position: Vector3, size: Tuple3) {
     }
 }
 
+useLoader.preload(GLTFLoader, "/models/rocket.glb")
+useLoader.preload(GLTFLoader, "/models/platform.glb")
+
 export default function Rocket({
     position,
     aabb,
@@ -88,8 +90,17 @@ export default function Rocket({
     client,
     speed,
     health,
-}: Rocket) {
+}: Rocket) { 
+    let [
+        rocket, platform
+    ] = useLoader(GLTFLoader, [ 
+        "/models/rocket.glb",
+        "/models/platform.glb", 
+    ]) 
+    let rocketRef = useRef<Mesh>(null)
+    let platformRef = useRef<Mesh>(null)
     let grid = useStore(i => i.world.grid) 
+    let [removed, setRemoved] = useState(false)
     let data = useMemo(() => {
         return { 
             removed: false, 
@@ -98,20 +109,13 @@ export default function Rocket({
             rotationY: random.float(0, Math.PI * 2) 
         }
     }, [speed])
-    let ref = useRef<Mesh>(null)
-    let [rocketIndex, rocketInstance] = useInstance("rocket", { reset: false }) 
+    let materials = useStore(i => i.materials)
     let remove = () => {
         data.removed = true
         increaseScore(500)
         removeRocket(id)
-        setMatrixNullAt(rocketInstance, rocketIndex as number)
-    }
-
-    useInstance("platform", { 
-        reset: false,
-        position: [position.x, 0, position.z],
-        rotation: [0, random.float(0, Math.PI * 2), 0]
-    })
+        setRemoved(true) 
+    }  
 
     useCollisionDetection({
         actions: {
@@ -134,11 +138,12 @@ export default function Rocket({
         }
     }, [health]) 
 
+    // movement
     useFrame((state, delta) => {
         let { player } = useStore.getState()
         let d = ndelta(delta)
 
-        if (rocketInstance && typeof rocketIndex === "number" && !data.removed && player.object) {
+        if (rocketRef.current && platformRef.current && !data.removed && player.object) {
             if (Math.abs(position.z - player.object.position.z) < data.triggerZ) {
                 position.y += data.speed * d
 
@@ -150,16 +155,10 @@ export default function Rocket({
                     data.speed += .01 * 60 * d
                 }
             }
-
+ 
+            rocketRef.current.position.copy(position) 
+ 
             aabb.setFromCenterAndSize(position, _size.set(...size))
-            setMatrixAt({
-                instance: rocketInstance,
-                index: rocketIndex,
-                position: position.toArray(),
-                rotation: [0, data.rotationY, 0]
-            })
-
-            ref.current?.position.copy(position)
             client.position = position.toArray()
             grid.updateClient(client)
         }
@@ -167,19 +166,38 @@ export default function Rocket({
 
     return (
         <>  
+            <mesh  
+                ref={rocketRef}
+                rotation-y={data.rotationY}
+                material={materials.rocket}
+                visible={!removed}
+            >
+                <primitive
+                    object={(rocket.nodes.rocket as Mesh).geometry}
+                    attach="geometry"
+                /> 
+            </mesh>
+
+            <mesh 
+                receiveShadow
+                castShadow
+                ref={platformRef}
+                position={[position.x, 0, position.z]}
+                material={materials.platform}
+            >
+                <primitive
+                    object={(platform.nodes.platform as Mesh).geometry}
+                    attach="geometry"
+                /> 
+            </mesh>
+
             <Exhaust
                 targetPosition={position} 
                 rotation={[-Math.PI * .5, 0, 0]} 
                 scale={[.65, .5, 2]}
                 offset={[0, -4, 0]}
                 turbulence={2}
-            />
-            <Only if={Config.DEBUG}>
-                <mesh position={position.toArray()} ref={ref}>
-                    <boxGeometry args={[...size, 1, 1, 1]} />
-                    <meshBasicMaterial wireframe color="orange" name="debug" />
-                </mesh>
-            </Only>
+            /> 
         </>
     )
 }

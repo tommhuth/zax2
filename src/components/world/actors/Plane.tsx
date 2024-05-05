@@ -1,12 +1,11 @@
-import { memo, startTransition, useMemo } from "react"
-import { useFrame } from "@react-three/fiber"
+import { memo, startTransition, useMemo, useRef } from "react"
+import { useFrame, useLoader } from "@react-three/fiber"
 import { useEffect } from "react"
-import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta, setMatrixAt } from "../../../data/utils"
+import { clamp, ndelta } from "../../../data/utils"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
-import { Vector3 } from "three"
-import { Owner, Plane } from "../../../data/types"
+import { Mesh, Vector3 } from "three"
+import { Owner, Plane as PlaneType } from "../../../data/types"
 import { createBullet, damagePlane, damageTurret, removePlane } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
 import { damageBarrel } from "../../../data/store/world"
@@ -19,6 +18,7 @@ import Counter from "../../../data/world/Counter"
 import { easeInOutCubic } from "../../../data/shaping"
 import Exhaust from "../../Exhaust"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
 let _size = new Vector3()
 
@@ -41,6 +41,8 @@ function explode(position: Vector3) {
     })
 }
 
+useLoader.preload(GLTFLoader, "/models/plane.glb")
+
 function Plane({
     id,
     size,
@@ -54,13 +56,16 @@ function Plane({
     fireFrequency,
     speed,
     rotation = 0,
-}: Plane) {
+}: PlaneType) {
+    let model = useLoader(GLTFLoader, "/models/plane.glb" )
+    let materials = useStore(i => i.materials)
+    let planeRef = useRef<Mesh>(null)
     let data = useMemo(() => ({
         removed: false,
         grounded: false,
         gravity: 0,
         actualSpeed: speed,
-        rotation: [0, 0, 0] as Tuple3,
+        rotation: [0, rotation + Math.PI, 0] as Tuple3,
         tilt: random.float(0.002, 0.05),
         shootTimer: random.float(0, fireFrequency),
         nextShotAt: fireFrequency * .5,
@@ -69,14 +74,13 @@ function Plane({
     }), [])
     let bottomY = 0
     let grid = useStore(i => i.world.grid)
-    let [index, instance] = useInstance("plane")
     let weaponSide = useMemo(() => new Counter(2), [])
-    let isStatic = speed === 0 
+    let isStatic = speed === 0
     let diagonal = useStore(i => i.world.diagonal)
     let remove = () => {
         startTransition(() => removePlane(id))
         data.removed = true
-    }
+    }  
 
     useCollisionDetection({
         size,
@@ -106,17 +110,6 @@ function Plane({
             },
         }
     })
-
-    useEffect(() => {
-        if (isStatic && instance && typeof index === "number") {
-            setMatrixAt({
-                index,
-                instance,
-                position: position.toArray(),
-                rotation: [0, rotation, 0]
-            })
-        }
-    }, [isStatic, instance, index])
 
     useEffect(() => {
         if (health === 0) {
@@ -171,7 +164,7 @@ function Plane({
 
     // move
     useFrame((state, delta) => {
-        if (instance && typeof index === "number" && !data.removed && !isStatic) {
+        if (planeRef.current && !data.removed && !isStatic) {
             let { world, player } = useStore.getState()
             let playerZ = player.object?.position.z || -Infinity
             let shouldMoveForward = targetY === startY || position.z - diagonal * 1.5 < playerZ
@@ -179,14 +172,14 @@ function Plane({
             position.z -= shouldMoveForward ? data.actualSpeed * ndelta(delta) : 0
             aabb.setFromCenterAndSize(position, _size.set(...size))
 
-            setMatrixAt({
-                instance,
-                index,
-                position: position.toArray(),
-                rotation: [data.rotation[0], data.rotation[1] + Math.PI, data.rotation[2]]
-            })
+            planeRef.current.position.copy(position)
+            planeRef.current.rotation.set(...data.rotation)
 
-            if (!world.frustum.intersectsBox(aabb) && player.object && position.z < player.object.position.z) {
+            if (
+                !world.frustum.intersectsBox(aabb)
+                && player.object
+                && position.z < player.object.position.z
+            ) {
                 startTransition(remove)
             } else {
                 client.position = position.toArray()
@@ -233,7 +226,7 @@ function Plane({
                 data.actualSpeed = damp(data.actualSpeed, 0, 2.25, delta)
                 position.y = (bottomY + .5 / 2)
             }
-        } else {
+        } else if (!isStatic) {
             let t = clamp(data.liftoffTimer / data.liftoffDuration, 0, 1)
 
             position.y = easeInOutCubic(t) * (targetY - startY) + startY
@@ -247,18 +240,33 @@ function Plane({
         }
     })
 
-    if (speed === 0) {
-        return null
-    }
-
     return (
-        <Exhaust
-            targetPosition={position}
-            offset={[0, .35, 2]}
-            scale={[.4, .2, .9]}
-            rotation={[0, -Math.PI, 0]}
-            visible={health > 0}
-        />
+        <>
+            <mesh
+                castShadow
+                receiveShadow
+                rotation={data.rotation}
+                position={position.toArray()}
+                ref={planeRef}
+                material={materials.plane}
+            >
+                <primitive
+                    object={(model.nodes.plane as Mesh).geometry}
+                    dispose={null}
+                    attach="geometry"
+                />
+            </mesh>
+
+            {!isStatic && (
+                <Exhaust
+                    targetPosition={position}
+                    offset={[0, .35, 2]}
+                    scale={[.4, .2, .9]}
+                    rotation={[0, -Math.PI, 0]}
+                    visible={health > 0}
+                /> 
+            )}
+        </>
     )
 }
 
