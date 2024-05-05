@@ -92,19 +92,14 @@ export default function Wrapper() {
                 <MaterialLoader />
 
                 <Suspense fallback={null}>
-                    <EdgeOverlay />
-                    <Models />
-                    <World />
-                    <Player />
+                    <group dispose={null}>
+                        <EdgeOverlay />
+                        <Models />
+                        <World />
+                        <Player /> 
 
-                    {!loaded && (
-                        <>
-                            <Boss startPosition={[0, 0, 0]} /> 
-                            <BossFloor />
-                        </>
-                    )}
-
-                    <Loader />  
+                        <Loader />  
+                    </group>
                 </Suspense>
  
                 <Only if={Config.STATS}>
