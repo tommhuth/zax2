@@ -108,6 +108,7 @@ export default function FireballHandler() {
             main: glsl`      
                 float noiseEffect = (noise(vGlobalPosition * .65 + uTime * 7.) + 1.) / 2.; 
                 float edgeEffect = clamp(-dot(CAMERA_POSITION, normal), 0., 1.) ; 
+                float intensity = easeInOutCubic(luma(gl_FragColor.rgb));
 
                 vec3 color = mix(
                     vec3(1., .4, 0.), 
@@ -119,8 +120,9 @@ export default function FireballHandler() {
                 gl_FragColor.rgb *= color * 1.6;
                 gl_FragColor.rgb = mix(vec3(0.8, 0.4, 0.), gl_FragColor.rgb, easeInOutQuad(noiseEffect)); 
                 gl_FragColor.rgb = mix(vec3(1., 0., 0.), gl_FragColor.rgb, vDistance); 
-                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * 1.2, 4., .05); 
-
+                gl_FragColor.rgb = mix(vec3(0.5, 0.3, 0.), gl_FragColor.rgb, intensity);
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * 1.2, 4., .05);
+                 
                 gl_FragColor.a = max(luma(gl_FragColor.rgb), .65);
             `
         }
