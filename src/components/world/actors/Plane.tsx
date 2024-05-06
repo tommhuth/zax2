@@ -82,6 +82,10 @@ function Plane({
         data.removed = true
     }  
 
+    useEffect(()=> {
+        document.getElementById("debug").innerText += " P"
+    }, [])
+
     useCollisionDetection({
         size,
         position,

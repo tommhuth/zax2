@@ -62,6 +62,10 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
         setTimeout(() => startTransition(() => removeTurret(id)), 350)
     }
 
+    useEffect(()=> {
+        document.getElementById("debug").innerText += " T"
+    }, [])
+
     useRemoveWhenBehindPlayer(position, remove)
 
     useCollisionDetection({

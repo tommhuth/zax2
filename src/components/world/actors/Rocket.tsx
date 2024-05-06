@@ -117,6 +117,10 @@ export default function Rocket({
         setRemoved(true) 
     }  
 
+    useEffect(()=> {
+        document.getElementById("debug").innerText += " R"
+    }, [])
+
     useCollisionDetection({
         actions: {
             bullet: ( { bullet, client, type }  ) => {
