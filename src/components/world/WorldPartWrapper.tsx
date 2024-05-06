@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import React, { createContext, startTransition, useContext, useMemo, useRef } from "react"
+import React, { createContext, startTransition, useContext, useEffect, useMemo, useRef } from "react"
 import { Box3, Vector3 } from "three"
 import { Tuple2, Tuple3 } from "../../types"
 import { Only } from "../../data/utils"
@@ -47,7 +47,7 @@ export default function WorldPartWrapper({
     useFrame(() => {
         i.current++
 
-        if (dead.current || i.current % 20 > 0 || !store.getState().loaded) {
+        if (dead.current || i.current % 20 > 0 || !store.getState().ready) {
             return
         }
 
@@ -62,6 +62,14 @@ export default function WorldPartWrapper({
             startTransition(() => removeWorldPart(id))
         }
     })
+
+    useEffect(()=> {
+        document.getElementById("debug").innerText += " +W"
+
+        return () => {
+            document.getElementById("debug").innerText += " -W"
+        }
+    }, [])
 
     return (
         <>

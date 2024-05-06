@@ -118,7 +118,7 @@ export default function Rocket({
     }  
 
     useEffect(()=> {
-        document.getElementById("debug").innerText += " R"
+        //document.getElementById("debug").innerText += " R"
     }, [])
 
     useCollisionDetection({

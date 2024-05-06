@@ -54,7 +54,7 @@ export default function Barrel({
     id,
     health,
 }: BarrelType) { 
-    let type = useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), []) 
+    let type = "barrel4" // useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), []) 
     let model = useLoader(GLTFLoader, `/models/${type}.glb`)
     let [rotation] = useState(random.pick(...rotations))
     let materials = useStore(i => i.materials)
@@ -63,6 +63,10 @@ export default function Barrel({
             startTransition(() => removeBarrel(id))
         }, 300) 
     }  
+
+    useEffect(()=> {
+        document.getElementById("debug").innerText += " B"
+    }, [])
 
     useRemoveWhenBehindPlayer(position, remove)
 

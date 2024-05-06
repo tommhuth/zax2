@@ -83,7 +83,7 @@ function Plane({
     }  
 
     useEffect(()=> {
-        document.getElementById("debug").innerText += " P"
+        //document.getElementById("debug").innerText += " P"
     }, [])
 
     useCollisionDetection({
