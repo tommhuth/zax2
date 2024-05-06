@@ -12,10 +12,7 @@ import easings from "../../../../shaders/easings.glsl"
 import noise from "../../../../shaders/noise.glsl"
 
 export default function Plant() {
-    let count = 10
-    let parts = useStore(i => i.world.parts)
-    let ready = useStore(i => i.ready)
-    let hasFoliage = ready ? parts.some(i => i.type === WorldPartType.BUILDINGS_LOW) : true
+    let count = 10 
     let [plant] = useLoader(GLTFLoader, ["/models/plant.glb"])
     let traumaData = useMemo(() => new Float32Array(count).fill(0), [])
     let uniforms = useMemo(() => ({ uTime: { value: 0, needsUpdate: true }}), [])
@@ -55,7 +52,7 @@ export default function Plant() {
             count={count}
             receiveShadow
             castShadow
-            visible={hasFoliage}
+            //visible={hasFoliage}
         >
             <primitive 
                 object={(plant.nodes.plant as Mesh).geometry} 

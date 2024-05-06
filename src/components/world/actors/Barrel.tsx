@@ -50,11 +50,11 @@ const rotations = new Array(8 * 2)
 
 export default function Barrel({
     position, 
-    size = [1, 2, 1],
+    size,
     id,
     health,
 }: BarrelType) { 
-    let type = "barrel4" // useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), []) 
+    let type = useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), []) 
     let model = useLoader(GLTFLoader, `/models/${type}.glb`)
     let [rotation] = useState(random.pick(...rotations))
     let materials = useStore(i => i.materials)
@@ -62,11 +62,7 @@ export default function Barrel({
         setTimeout(() => {
             startTransition(() => removeBarrel(id))
         }, 300) 
-    }  
-
-    useEffect(()=> {
-        document.getElementById("debug").innerText += " B"
-    }, [])
+    }   
 
     useRemoveWhenBehindPlayer(position, remove)
 
@@ -99,6 +95,7 @@ export default function Barrel({
                 receiveShadow
                 position={[position.x, position.y - size[1] / 2, position.z]}
                 rotation-y={rotation}
+                dispose={null}
             >
                 <primitive
                     object={(model.nodes[type] as Mesh).geometry}

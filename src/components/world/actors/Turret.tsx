@@ -60,11 +60,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
     let nextShotAt = useRef(fireFrequency)
     let remove = () => {
         setTimeout(() => startTransition(() => removeTurret(id)), 350)
-    }
-
-    useEffect(()=> {
-        //document.getElementById("debug").innerText += " T"
-    }, [])
+    } 
 
     useRemoveWhenBehindPlayer(position, remove)
 

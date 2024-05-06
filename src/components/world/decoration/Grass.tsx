@@ -2,13 +2,13 @@ import { Mesh } from "three"
 import { useStore } from "../../../data/store"
 import { useLoader } from "@react-three/fiber"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
-import { useWorldPart } from "../WorldPartWrapper"
+import { useWorldPart } from "../WorldPartWrapper" 
 
 export default function Grass({ position, ...props }) { 
     let materials = useStore(i => i.materials) 
     let [grass] = useLoader(GLTFLoader, ["/models/grass.glb"]) 
-    let partPosition = useWorldPart()
-
+    let partPosition = useWorldPart() 
+ 
     return ( 
         <mesh 
             dispose={null}

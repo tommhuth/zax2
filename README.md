@@ -10,6 +10,7 @@
 - abstract out fake physics to a single handler?
 - remove instancing for actors (plane, barell, building, rocket)
 - colocate more stuff 
+- rework actor lifecycle to keep component and children around
 
 53 mat + 22 instances
 

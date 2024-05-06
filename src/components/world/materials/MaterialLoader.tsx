@@ -79,8 +79,7 @@ function MaterialLoader() {
                     backColorIntensity={.0}  
                     color={barellColor} 
                     rightColorIntensity={.5} 
-                    rightColor="#f00"
-                    vertexColors
+                    rightColor="#f00" 
                     emissive={barellColor}
                     emissiveIntensity={.2}
                     additionalShadowStrength={0}

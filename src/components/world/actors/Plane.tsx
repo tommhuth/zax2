@@ -80,11 +80,7 @@ function Plane({
     let remove = () => {
         startTransition(() => removePlane(id))
         data.removed = true
-    }  
-
-    useEffect(()=> {
-        //document.getElementById("debug").innerText += " P"
-    }, [])
+    }   
 
     useCollisionDetection({
         size,
@@ -253,6 +249,7 @@ function Plane({
                 position={position.toArray()}
                 ref={planeRef}
                 material={materials.plane}
+                dispose={null}
             >
                 <primitive
                     object={(model.nodes.plane as Mesh).geometry}

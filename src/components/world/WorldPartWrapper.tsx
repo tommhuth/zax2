@@ -61,15 +61,7 @@ export default function WorldPartWrapper({
             dead.current = true
             startTransition(() => removeWorldPart(id))
         }
-    })
-
-    useEffect(()=> {
-        document.getElementById("debug").innerText += " +W"
-
-        return () => {
-            document.getElementById("debug").innerText += " -W"
-        }
-    }, [])
+    }) 
 
     return (
         <>

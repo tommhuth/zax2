@@ -112,14 +112,15 @@ export default function Rocket({
     let materials = useStore(i => i.materials)
     let remove = () => {
         data.removed = true
-        increaseScore(500)
-        removeRocket(id)
+        increaseScore(500) 
         setRemoved(true) 
-    }  
+    }   
 
     useEffect(()=> {
-        //document.getElementById("debug").innerText += " R"
-    }, [])
+        return () => {
+            removeRocket(id)
+        }
+    }, [id])
 
     useCollisionDetection({
         actions: {
@@ -175,6 +176,7 @@ export default function Rocket({
                 rotation-y={data.rotationY}
                 material={materials.rocket}
                 visible={!removed}
+                dispose={null}
             >
                 <primitive
                     object={(rocket.nodes.rocket as Mesh).geometry}
@@ -188,6 +190,7 @@ export default function Rocket({
                 ref={platformRef}
                 position={[position.x, 0, position.z]}
                 material={materials.platform}
+                dispose={null}
             >
                 <primitive
                     object={(platform.nodes.platform as Mesh).geometry}
