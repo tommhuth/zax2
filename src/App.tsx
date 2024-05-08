@@ -24,8 +24,6 @@ import Config from "./data/Config"
 import { setLoaded, setReady, setSetup } from "./data/store/utils"
 import Controls from "./components/Controls"
 import { DPR, PIXEL_SIZE, ZOOM } from "./data/const"
-import Boss from "./components/world/actors/Boss"
-import { BossFloor } from "./components/world/parts/Boss"
 import { setDiagonal } from "./data/store/world"
 
 // round up to full pixel
@@ -36,8 +34,7 @@ let getSize = () => [
 
 export default function Wrapper() {
     let [size, setSize] = useState(() => getSize())
-    let ready = useStore((i) => i.ready)
-    let loaded = useStore((i) => i.loaded) 
+    let ready = useStore((i) => i.ready) 
 
     useEffect(() => {
         let tid: ReturnType<typeof setTimeout>

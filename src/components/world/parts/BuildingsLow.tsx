@@ -7,6 +7,7 @@ import random from "@huth/random"
 import Floor from "../decoration/Floor"
 import Grass from "../decoration/Grass"
 import Plant from "../decoration/Plant"
+import Traffic from "../actors/Traffic"
 
 export default function BuildingsLow({
     id,
@@ -56,6 +57,10 @@ export default function BuildingsLow({
                 position={[0, 0, size[1] - 2]}
                 rotation={-Math.PI / 2}
                 floorLevel={1}
+            />
+
+            <Traffic
+                z={position.z + 1}          
             />
 
             <Plant

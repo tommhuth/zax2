@@ -7,6 +7,7 @@ import { useGLTF } from "@react-three/drei"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { useStore } from "../../../data/store"
 import Cable from "../decoration/Cable"
+import Traffic from "../actors/Traffic"
  
 export default function Start({
     id,
@@ -62,6 +63,10 @@ export default function Start({
                 z={-12}
                 x={-15} 
                 rotation={Math.PI * -.75}
+            />
+
+            <Traffic 
+                z={position.z + 20}    
             />
 
             <Logo

@@ -103,7 +103,7 @@ function Instances() {
 
             <InstancedMesh
                 name="box"
-                count={20}
+                count={100}
                 castShadow
                 receiveShadow
             >

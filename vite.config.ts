@@ -8,12 +8,13 @@ export default defineConfig({
     server: {
         port: 3000,
     },
+    assetsInclude: ["**/*.glb"],
     plugins: [
         react(),
         glsl(),
         VitePWA({
             registerType: "prompt", 
-            includeAssets: ["fonts/*.woff", "models/*.glb", "textures/*.png"],
+            includeAssets: ["fonts/*.woff", "**/*.glb", "textures/*.png"],
             manifest: {
                 name: "Zax",
                 short_name: "Zax",

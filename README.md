@@ -8,9 +8,10 @@
 - rework boss ending   
 - blast + shockwave tweak/coord
 - abstract out fake physics to a single handler?
-- remove instancing for actors (plane, barell, building, rocket)
-- colocate more stuff 
-- rework actor lifecycle to keep component and children around
+- remove instancing for actors (building)
+- colocate more stuff  
+- rework loading to make sure no suspending mid game
+- traffic
 
 53 mat + 22 instances
 

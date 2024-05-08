@@ -4,7 +4,7 @@ import { useFrame, useLoader } from "@react-three/fiber"
 import { ndelta } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
 import random from "@huth/random"
-import { Tuple3 } from "../../../types" 
+import { Tuple3 } from "../../../types"
 import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
 import { damageRocket, removeRocket } from "../../../data/store/actors"
@@ -15,15 +15,19 @@ import Exhaust from "../../Exhaust"
 import { WORLD_TOP_EDGE } from "../../../data/const"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
+
+import rocketModel from "../../../../assets/models/rocket.glb"
+import platformModel from "../../../../assets/models/platform.glb"
+
 let _size = new Vector3()
 
 function explode(position: Vector3, size: Tuple3) {
-    let shouldDoFireball = position.y < 2 
+    let shouldDoFireball = position.y < 2
 
     if (shouldDoFireball) {
         createParticles({
             position: position.toArray(),
-            speed: [15, 25], 
+            speed: [15, 25],
             normal: [0, 0, 0],
             spread: [[-1, 1], [-1, 1]],
             count: [10, 15],
@@ -48,16 +52,16 @@ function explode(position: Vector3, size: Tuple3) {
             [0, [.2, -size[1] / 2, -.25], .2],
         ]
 
-        for (let [delay, [x, y, z], radius] of explosions) { 
+        for (let [delay, [x, y, z], radius] of explosions) {
             createExplosion({
                 position: [position.x + x, position.y + y, position.z + z],
                 count: 10,
                 shockwave: true,
                 radius,
                 delay
-            }) 
+            })
         }
- 
+
         createExplosion({
             position: [position.x, position.y, position.z],
             count: 20,
@@ -68,19 +72,21 @@ function explode(position: Vector3, size: Tuple3) {
 
         createParticles({
             position: position.toArray(),
-            speed: [5, 20],  
+            speed: [5, 20],
             normal: [0, 0, 0],
             spread: [[-1, 1], [-1, 1]],
             count: [10, 15],
             radius: [.1, .55],
             color: rocketColor,
             delay: 520
-        }) 
+        })
     }
 }
 
-useLoader.preload(GLTFLoader, "/models/rocket.glb")
-useLoader.preload(GLTFLoader, "/models/platform.glb")
+useLoader.preload(GLTFLoader, [
+    rocketModel,
+    platformModel,
+])
 
 export default function Rocket({
     position,
@@ -90,33 +96,33 @@ export default function Rocket({
     client,
     speed,
     health,
-}: Rocket) { 
+}: Rocket) {
     let [
         rocket, platform
-    ] = useLoader(GLTFLoader, [ 
-        "/models/rocket.glb",
-        "/models/platform.glb", 
-    ]) 
+    ] = useLoader(GLTFLoader, [
+        rocketModel,
+        platformModel,
+    ])
     let rocketRef = useRef<Mesh>(null)
     let platformRef = useRef<Mesh>(null)
-    let grid = useStore(i => i.world.grid) 
+    let grid = useStore(i => i.world.grid)
     let [removed, setRemoved] = useState(false)
     let data = useMemo(() => {
-        return { 
-            removed: false, 
-            speed, 
-            triggerZ: 25, 
-            rotationY: random.float(0, Math.PI * 2) 
+        return {
+            removed: false,
+            speed,
+            triggerZ: 25,
+            rotationY: random.float(0, Math.PI * 2)
         }
     }, [speed])
     let materials = useStore(i => i.materials)
     let remove = () => {
         data.removed = true
-        increaseScore(500) 
-        setRemoved(true) 
-    }   
+        increaseScore(500)
+        setRemoved(true)
+    }
 
-    useEffect(()=> {
+    useEffect(() => {
         return () => {
             removeRocket(id)
         }
@@ -124,15 +130,15 @@ export default function Rocket({
 
     useCollisionDetection({
         actions: {
-            bullet: ( { bullet, client, type }  ) => {
+            bullet: ({ bullet, client, type }) => {
                 if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "rocket") {
                     return
                 }
-    
+
                 damageRocket(id, bullet.damage)
             }
         }
-    }) 
+    })
 
     useEffect(() => {
         if (health === 0) {
@@ -141,7 +147,7 @@ export default function Rocket({
                 explode(position, size)
             })
         }
-    }, [health]) 
+    }, [health])
 
     // movement
     useFrame((state, delta) => {
@@ -160,18 +166,18 @@ export default function Rocket({
                     data.speed += .01 * 60 * d
                 }
             }
- 
-            rocketRef.current.position.copy(position) 
- 
+
+            rocketRef.current.position.copy(position)
+
             aabb.setFromCenterAndSize(position, _size.set(...size))
             client.position = position.toArray()
             grid.updateClient(client)
         }
-    }) 
+    })
 
     return (
-        <>  
-            <mesh  
+        <>
+            <mesh
                 ref={rocketRef}
                 rotation-y={data.rotationY}
                 material={materials.rocket}
@@ -181,10 +187,10 @@ export default function Rocket({
                 <primitive
                     object={(rocket.nodes.rocket as Mesh).geometry}
                     attach="geometry"
-                /> 
+                />
             </mesh>
 
-            <mesh 
+            <mesh
                 receiveShadow
                 castShadow
                 ref={platformRef}
@@ -195,16 +201,18 @@ export default function Rocket({
                 <primitive
                     object={(platform.nodes.platform as Mesh).geometry}
                     attach="geometry"
-                /> 
+                />
             </mesh>
 
-            <Exhaust
-                targetPosition={position} 
-                rotation={[-Math.PI * .5, 0, 0]} 
-                scale={[.65, .5, 2]}
-                offset={[0, -4, 0]}
-                turbulence={2}
-            /> 
+            {!removed && (
+                <Exhaust
+                    targetPosition={position}
+                    rotation={[-Math.PI * .5, 0, 0]}
+                    scale={[.65, .5, 2]}
+                    offset={[0, -4, 0]}
+                    turbulence={2}
+                />
+            )}
         </>
     )
 }

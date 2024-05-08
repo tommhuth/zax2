@@ -4,6 +4,8 @@ import { useLoader } from "@react-three/fiber"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useWorldPart } from "../WorldPartWrapper" 
 
+useLoader.preload(GLTFLoader, "/models/grass.glb")
+
 export default function Grass({ position, ...props }) { 
     let materials = useStore(i => i.materials) 
     let [grass] = useLoader(GLTFLoader, ["/models/grass.glb"]) 
@@ -21,5 +23,3 @@ export default function Grass({ position, ...props }) {
         </mesh>
     )
 } 
-
-useLoader.preload(GLTFLoader, "/models/grass.glb")

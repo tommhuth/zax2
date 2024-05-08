@@ -6,6 +6,7 @@ import Turret from "../spawner/Turret"
 import Floor from "../decoration/Floor"
 import Building from "../spawner/Building"
 import { Only } from "../../../data/utils"
+import Traffic from "../actors/Traffic"
 
 export default function BuildingsGap({
     id,
@@ -25,6 +26,7 @@ export default function BuildingsGap({
                 rotation={random.pick(-Math.PI / 2, Math.PI)}
                 floorLevel={0}
             />
+ 
             <Turret
                 position={[-3, -.5, 2]}
                 rotation={random.pick(0, -Math.PI / 2)}

@@ -17,7 +17,7 @@ export type RepeaterName = "building1" | "building2" | "building3"
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
 
 export type CollisionObjectType = "plant" | "barrel" | "player" | "boss" | "heatseaker" 
-    | "plane" | "turret" | "building" | "rocket"
+    | "plane" | "turret" | "building" | "rocket" | "vehicle"
 
 export enum BossState {
     IDLE = "idle",

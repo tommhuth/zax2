@@ -44,7 +44,7 @@ export default function World() {
         if (loaded) {
             startTransition(() => {
                 addWorldPart(
-                    makeDefault({ position: new Vector3(0, 0, WORLD_START_Z - 10), size: [0, 0] }),
+                    makeStart({ position: new Vector3(0, 0, WORLD_START_Z - 10), size: [0, 0] }),
                 )
             })
         }

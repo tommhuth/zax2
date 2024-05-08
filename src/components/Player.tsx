@@ -254,8 +254,7 @@ export default function Player({
     return (
         <>
             <group
-                ref={handleRef}
-                //visible={setup ? state !== "intro" : true}
+                ref={handleRef} 
             >
                 <group ref={innerRef}>  
                     <primitive

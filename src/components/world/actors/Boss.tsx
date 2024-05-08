@@ -22,7 +22,7 @@ interface BossProps {
     startPosition: Tuple3
 }
 
-function useGravity({ ref, active, force = -15, stopAt = 0 }) {
+export function useGravity({ ref, active, force = -15, stopAt = 0 }) {
     let velocity = useRef(0)
     let acceleration = useRef(0)
 

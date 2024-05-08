@@ -1,12 +1,13 @@
 import { WorldPartAirstrip } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import EdgeBuilding from "../decoration/EdgeBuilding"
-import Plane from "../spawner/Plane" 
+import Plane from "../spawner/Plane"
 import Floor from "../decoration/Floor"
 import Barrel from "../spawner/Barrel"
 import Turret from "../spawner/Turret"
 import Rocket from "../spawner/Rocket"
 import { WORLD_TOP_EDGE } from "../../../data/const"
+import Traffic from "../actors/Traffic"
 
 export default function Airstrip({
     id,
@@ -30,12 +31,12 @@ export default function Airstrip({
             />
             <Plane
                 position={[-4, WORLD_TOP_EDGE - 1, 40]}
-            /> 
+            />
             <Turret
                 position={[-2, 0, 35]}
                 rotation={-Math.PI / 2}
                 floorLevel={0}
-            /> 
+            />
             <Barrel
                 position={[4, 0, 6]}
             />
@@ -56,9 +57,14 @@ export default function Airstrip({
                 speed={0}
             />
             <Barrel position={[5.5, 0, 32]} />
-            <Rocket 
+            <Rocket
                 position={[-2, 0, 43]}
-            /> 
+            />
+
+            <Traffic
+                z={position.z + 42}
+            />
+
             <Floor
                 type={"floor4"}
                 position={[position.x, 0, size[1] / 2]}

@@ -24,7 +24,7 @@ let _box1 = new Box3()
 let _box2 = new Box3()
 let _size1 = new Vector3()
 let _size2 = new Vector3()
-let _center1 = new Vector3()
+let _center1 = new Vector3() 
 
 interface GetCollisionsParam{
     grid: SpatialHashGrid3D
@@ -37,7 +37,7 @@ export function getCollisions({
     position,
     size,
 }: GetCollisionsParam) {
-    let near = grid.findNear(position.toArray(), size)
+    let near = grid.findNear( position.toArray(), size)
     let result: Client[] = []
 
     for (let i = 0; i < near.length; i++) {

@@ -1,6 +1,6 @@
 import { startTransition, useEffect, useMemo, useState } from "react"
 import { Mesh, Vector3 } from "three"
-import { Barrel as BarrelType, Owner } from "../../../data/types" 
+import { Barrel as BarrelType, Owner } from "../../../data/types"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
@@ -9,10 +9,15 @@ import { barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
 import { useCollisionDetection } from "../../../data/collisions"
 import Config from "../../../data/Config"
-import { useRemoveWhenBehindPlayer } from "../../../data/hooks" 
+import { useRemoveWhenBehindPlayer } from "../../../data/hooks"
 import { useLoader } from "@react-three/fiber"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js" 
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useStore } from "../../../data/store"
+
+import barrel1Model from "../../../../assets/models/barrel1.glb"
+import barrel2Model from "../../../../assets/models/barrel2.glb"
+import barrel3Model from "../../../../assets/models/barrel3.glb"
+import barrel4Model from "../../../../assets/models/barrel4.glb"
 
 function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({
@@ -37,11 +42,11 @@ function explode(position: Vector3, size: Tuple3, color: string) {
     createScrap([position.x, position.y - size[1] * .65, position.z], 2, color)
 }
 
-useLoader.preload(GLTFLoader,[
-    "/models/barrel1.glb",
-    "/models/barrel2.glb",
-    "/models/barrel3.glb",
-    "/models/barrel4.glb",
+useLoader.preload(GLTFLoader, [
+    barrel1Model,
+    barrel2Model,
+    barrel3Model,
+    barrel4Model
 ])
 
 const rotations = new Array(8 * 2)
@@ -49,20 +54,33 @@ const rotations = new Array(8 * 2)
     .map((i, index, list) => (index / list.length) * Math.PI * 2)
 
 export default function Barrel({
-    position, 
+    position,
     size,
     id,
     health,
-}: BarrelType) { 
-    let type = useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), []) 
-    let model = useLoader(GLTFLoader, `/models/${type}.glb`)
+}: BarrelType) {
+    let type = useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), [])
+    let models = useLoader(GLTFLoader, [
+        barrel1Model,
+        barrel2Model,
+        barrel3Model,
+        barrel4Model,
+    ])
+    let model = {
+        barrel1: models[0],
+        barrel2: models[1],
+        barrel3: models[2],
+        barrel4: models[3],
+    }
     let [rotation] = useState(random.pick(...rotations))
     let materials = useStore(i => i.materials)
     let remove = () => {
         setTimeout(() => {
             startTransition(() => removeBarrel(id))
-        }, 300) 
-    }   
+        }, 300)
+    }
+
+    useEffect(() => console.log(type), [])
 
     useRemoveWhenBehindPlayer(position, remove)
 
@@ -74,7 +92,7 @@ export default function Barrel({
                 }
 
                 damageBarrel(id, 100)
-                increaseScore(1000)  
+                increaseScore(1000)
             }
         }
     })
@@ -86,11 +104,11 @@ export default function Barrel({
                 explode(position, size, barellParticleColor)
             })
         }
-    }, [health])  
- 
+    }, [health])
+
     return (
         <>
-            <mesh 
+            <mesh
                 castShadow
                 receiveShadow
                 position={[position.x, position.y - size[1] / 2, position.z]}
@@ -98,11 +116,13 @@ export default function Barrel({
                 dispose={null}
             >
                 <primitive
-                    object={(model.nodes[type] as Mesh).geometry}
-                    dispose={null}
+                    object={(model[type].nodes[type] as Mesh).geometry}
                     attach="geometry"
                 />
-                <primitive object={materials.barrel} attach="material" />
+                <primitive
+                    object={materials.barrel}
+                    attach="material"
+                />
             </mesh>
 
             {Config.DEBUG && (
@@ -111,6 +131,6 @@ export default function Barrel({
                     <meshBasicMaterial wireframe color="orange" name="debug" />
                 </mesh>
             )}
-        </> 
+        </>
     )
 }

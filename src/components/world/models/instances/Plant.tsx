@@ -1,7 +1,5 @@
 import { DoubleSide, Mesh, RGBADepthPacking } from "three"
-import { useStore } from "../../../../data/store"
 import { plantColor } from "../../../../data/theme"
-import { WorldPartType } from "../../../../data/types"
 import { MeshRetroMaterial } from "../../materials/MeshRetroMaterial"
 import InstancedMesh from "../InstancedMesh"
 import { glsl } from "../../../../data/utils"
@@ -10,6 +8,8 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useMemo } from "react"
 import easings from "../../../../shaders/easings.glsl"
 import noise from "../../../../shaders/noise.glsl"
+
+useLoader.preload(GLTFLoader, ["/models/plant.glb"])
 
 export default function Plant() {
     let count = 10 
@@ -51,8 +51,7 @@ export default function Plant() {
             name="plant"
             count={count}
             receiveShadow
-            castShadow
-            //visible={hasFoliage}
+            castShadow 
         >
             <primitive 
                 object={(plant.nodes.plant as Mesh).geometry} 

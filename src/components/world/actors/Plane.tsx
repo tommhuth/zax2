@@ -20,6 +20,8 @@ import Exhaust from "../../Exhaust"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
+import planeModel from "../../../../assets/models/plane.glb"
+ 
 let _size = new Vector3()
 
 function explode(position: Vector3) {
@@ -41,7 +43,7 @@ function explode(position: Vector3) {
     })
 }
 
-useLoader.preload(GLTFLoader, "/models/plane.glb")
+useLoader.preload(GLTFLoader, planeModel)
 
 function Plane({
     id,
@@ -57,7 +59,7 @@ function Plane({
     speed,
     rotation = 0,
 }: PlaneType) {
-    let model = useLoader(GLTFLoader, "/models/plane.glb" )
+    let model = useLoader(GLTFLoader, planeModel)
     let materials = useStore(i => i.materials)
     let planeRef = useRef<Mesh>(null)
     let data = useMemo(() => ({
@@ -252,8 +254,7 @@ function Plane({
                 dispose={null}
             >
                 <primitive
-                    object={(model.nodes.plane as Mesh).geometry}
-                    dispose={null}
+                    object={(model.nodes.plane as Mesh).geometry} 
                     attach="geometry"
                 />
             </mesh>

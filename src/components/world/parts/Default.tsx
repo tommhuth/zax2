@@ -8,6 +8,7 @@ import Rocket from "../spawner/Rocket"
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
 import Plane from "../spawner/Plane"
+import Traffic from "../actors/Traffic"
 
 export default function Default({
     id,
@@ -55,7 +56,7 @@ export default function Default({
             <Barrel
                 position={[5, 0, 2]}
             />
-
+ 
             <Plane
                 position={[0, .5, 1]}
                 speed={0}
