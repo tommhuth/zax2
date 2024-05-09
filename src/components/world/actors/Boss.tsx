@@ -22,9 +22,10 @@ interface BossProps {
     startPosition: Tuple3
 }
 
-export function useGravity({ ref, active, force = -15, stopAt = 0 }) {
+export function useGravity({ ref, active, force = -15, stopAt = 0, onGrounded = () => {} }) {
     let velocity = useRef(0)
     let acceleration = useRef(0)
+    let grounded = useRef(false)
 
     useFrame((state, delta) => {
         if (active && ref.current.position.y > stopAt) {
@@ -36,6 +37,9 @@ export function useGravity({ ref, active, force = -15, stopAt = 0 }) {
             ref.current.rotation.x += force * delta * .001
             ref.current.rotation.y += force * delta * .0005
             ref.current.rotation.z += force * delta * -.008
+        }  else if (active && !grounded.current) {
+            onGrounded()
+            grounded.current = true
         }
     })
 }

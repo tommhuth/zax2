@@ -78,9 +78,7 @@ export default function Barrel({
         setTimeout(() => {
             startTransition(() => removeBarrel(id))
         }, 300)
-    }
-
-    useEffect(() => console.log(type), [])
+    } 
 
     useRemoveWhenBehindPlayer(position, remove)
 

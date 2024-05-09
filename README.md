@@ -11,7 +11,7 @@
 - remove instancing for actors (building)
 - colocate more stuff  
 - rework loading to make sure no suspending mid game
-- traffic
+- collision hook improv
 
 53 mat + 22 instances
 
@@ -23,3 +23,4 @@
 - https://cults3d.com/en/3d-model/game/lasercannon-and-twin-linked-plasma-gun-turret
 - https://cults3d.com/en/3d-model/tool/pot-noodle-turret
 - https://cults3d.com/en/3d-model/game/pot-noddle-missile-turret
+- https://cults3d.com/en/3d-model/game/wolven-space-ship-transport-remix

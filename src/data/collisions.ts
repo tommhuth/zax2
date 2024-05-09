@@ -25,6 +25,7 @@ let _box2 = new Box3()
 let _size1 = new Vector3()
 let _size2 = new Vector3()
 let _center1 = new Vector3() 
+let _center2 = new Vector3() 
 
 interface GetCollisionsParam{
     grid: SpatialHashGrid3D
@@ -43,8 +44,8 @@ export function getCollisions({
     for (let i = 0; i < near.length; i++) {
         let client = near[i]
 
-        _box1.setFromCenterAndSize(_center1.set(...client.position), _size1.set(...client.size as Tuple3))
-        _box2.setFromCenterAndSize(position, _size2.set(...size))
+        _box1.setFromCenterAndSize(_center1.set(...client.position), _size1.set(...client.size))
+        _box2.setFromCenterAndSize(_center2.copy(position), _size2.set(...size))
 
         if (_box1.intersectsBox(_box2)) {
             result.push(client)
@@ -104,6 +105,64 @@ export function useCollisionDetection({
         tick.current++
     })
 }
+
+interface UseCollisionDetectionParams2 {
+    interval?: number
+    client: Client
+    when?: () => boolean
+    actions: BulletActions
+}
+
+export function useCollisionDetection2({
+    interval = 1,
+    client,
+    actions,
+    when = () => true,
+}: UseCollisionDetectionParams2) {
+    let grid = useStore(i => i.world.grid)
+    let tick = useRef(0)
+    let types = Object.keys(actions)
+
+    useEffect(() => { 
+        if (!actions.bullet || !when()) {
+            return 
+        }
+
+        let onBulletCollision = ({ detail }: CustomEvent<CollisionEventDetails>) => {
+            startTransition(() => actions.bullet?.(detail))
+        }
+
+        window.addEventListener("bulletcollision",  onBulletCollision as EventListener)
+
+        return () => {
+            window.removeEventListener("bulletcollision", onBulletCollision as EventListener)
+        }
+    }, [actions.bullet, when])
+
+    useFrame(() => {
+        if (when() && tick.current % interval === 0) { 
+            let collisions = getCollisions({
+                grid, 
+                position: new Vector3(...client.position),
+                size: client.size,
+            })
+
+            for (let i = 0; i < collisions.length; i++) {
+                let otherClient = collisions[i]
+                let action = actions[otherClient.data.type]
+
+                if (!types.includes(otherClient.data.type) || otherClient === client) {
+                    continue
+                }
+ 
+                startTransition(() => action?.(otherClient.data))
+            }
+        }
+
+        tick.current++
+    })
+}
+
 
 export interface CollisionEventDetails {
     client: Client
