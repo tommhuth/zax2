@@ -224,24 +224,26 @@ function VehicleElement({ vehicle, remove }: { vehicle: Vehicle; remove: () => v
 
     useEffect(() => {
         if (dead) {
-            createExplosion({
-                position: [
-                    vehicle.position.x,
-                    vehicle.position.y - 1,
-                    vehicle.position.z,
-                ],
-                count: 10,
-                radius: .65,
-                fireballCount: 17
-            })
-            createParticles({
-                position: vehicle.position.toArray(),
-                count: 10,
-                radius: [.1, .5],
-                normal: [0, 0, 0],
-                spread: [[-1, 1], [-1, 1]],
-                speed: [5, 20],
-                color: barellColor
+            startTransition(() => { 
+                createExplosion({
+                    position: [
+                        vehicle.position.x,
+                        vehicle.position.y - 1,
+                        vehicle.position.z,
+                    ],
+                    count: 10,
+                    radius: .65,
+                    fireballCount: 17
+                })
+                createParticles({
+                    position: vehicle.position.toArray(),
+                    count: 10,
+                    radius: [.1, .5],
+                    normal: [0, 0, 0],
+                    spread: [[-1, 1], [-1, 1]],
+                    speed: [5, 20],
+                    color: barellColor
+                }) 
             })
         }
     }, [dead])
@@ -317,11 +319,15 @@ export default function Traffic({
     }, [])
 
     useFrame((state, delta) => {
-        if (lastAdd.current > frequency) {
-            setVehicles([
-                ...vehicles,
-                createVehicle(z - 2, level, depth)
-            ])
+        let player = useStore.getState().player.object
+
+        if (lastAdd.current > frequency && player && player.position.z < z) {
+            startTransition(() => { 
+                setVehicles([
+                    ...vehicles,
+                    createVehicle(z - 2, level, depth)
+                ]) 
+            })
 
             lastAdd.current = 0
         } else {

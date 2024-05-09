@@ -38,7 +38,7 @@ export function useGravity({ ref, active, force = -15, stopAt = 0, onGrounded = 
             ref.current.rotation.y += force * delta * .0005
             ref.current.rotation.z += force * delta * -.008
         }  else if (active && !grounded.current) {
-            onGrounded()
+            startTransition(onGrounded)
             grounded.current = true
         }
     })
