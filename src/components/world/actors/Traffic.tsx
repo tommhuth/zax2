@@ -53,10 +53,16 @@ function VehicleElement({ vehicle, remove }: { vehicle: Vehicle; remove: () => v
 
     useCollisionDetection({
         position: vehicle.position,
-        size: vehicle.size,
+        size: vehicle.size, 
         actions: {
             player: () => {
                 vehicle.health = 0
+            },
+            vehicle: ({id}) => {
+                if  (id !== vehicle.id) { 
+                    console.log("sss")
+                    vehicle.health = 0 
+                }
             },
             bullet: ({ client, type }) => {
                 if (type === "vehicle" && vehicle.id === client.data.id) {
@@ -142,8 +148,8 @@ interface Vehicle {
 
 export default function Traffic({
     z,
-    depth = 4,
-    frequency = 1000,
+    depth = 3,
+    frequency = 1500,
 }) {
     let lastAdd = useRef(Infinity)
     let level = useMemo(() => new Counter(3), [])
@@ -152,9 +158,7 @@ export default function Traffic({
             createVehicle(z, level, depth, 6),
             createVehicle(z, level, depth, -4)
         ]
-    })
-
-    console.log(vehicles)
+    }) 
 
     useFrame((state, delta) => {
         if (lastAdd.current >= frequency) {
