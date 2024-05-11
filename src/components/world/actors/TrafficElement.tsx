@@ -130,7 +130,7 @@ export function createTrafficElement(z: number, level: Counter, depth: number, f
         position: new Vector3(...position),
         rotation: new Vector3(0, -Math.PI * .5 * Math.sign(-x), 0),
         size,
-        speed: random.float(2, 2.5) * Math.sign(-x) * speeds[y % speeds.length],
+        speed: 2 * Math.sign(-x) * speeds[y % speeds.length],
         index: box.index.next(),
         client,
         health: random.integer(10, 35),

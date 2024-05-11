@@ -17,7 +17,7 @@ interface TrafficProps {
 export default function Traffic({
     z,
     depth = 3,
-    frequency = 2000,
+    frequency = 1800,
     levels: [minLevel, maxLevel] = [0, 2]
 }: TrafficProps) {
     let lastAddAt = useRef(0)
