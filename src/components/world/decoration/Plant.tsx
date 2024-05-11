@@ -83,9 +83,8 @@ export default function Plant({
 
     useCollisionDetection({
         interval: 2,
-        position,
-        size,
-        when: () => health > 0,
+        client,
+        active: () => health > 0,
         actions: {
             bullet: ({ client, type, bullet }) => {
                 if (client.data.id === id && type === "plant" && bullet.owner === Owner.PLAYER) { 

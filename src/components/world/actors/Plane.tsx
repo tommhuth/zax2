@@ -85,8 +85,7 @@ function Plane({
     }   
 
     useCollisionDetection({
-        size,
-        position,
+        client,
         actions: {
             bullet: ({ bullet, client, intersection, normal, type }) => {
                 if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "plane") {

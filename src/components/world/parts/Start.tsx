@@ -66,7 +66,7 @@ export default function Start({
             />
 
             <Traffic 
-                z={position.z + 20}    
+                z={position.z + .20}    
             />
 
             <Logo

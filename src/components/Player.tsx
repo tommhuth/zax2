@@ -92,8 +92,7 @@ export default function Player({
 
     useCollisionDetection({
         interval: 1,
-        size,
-        position,
+        client,
         actions: {
             bullet: ({ bullet, type }) => {
                 if (bullet.owner !== Owner.PLAYER || type !== "player") {

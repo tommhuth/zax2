@@ -35,7 +35,7 @@ function BulletHandler() {
         for (let bullet of bullets) {
             let collisions = getCollisions({
                 grid, 
-                position: bullet.position,
+                position: bullet.position.toArray(),
                 size: bullet.obb, 
             })
 

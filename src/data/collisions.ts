@@ -6,46 +6,37 @@ import { useStore } from "./store"
 import { Tuple3 } from "../types"
 import { Bullet, CollisionObjectType } from "./types"
 import { BULLET_SIZE } from "./const"
-   
+
 interface BulletActions extends Partial<Record<CollisionObjectType, (data: ClientData) => void>> {
     bullet?: (e: CollisionEventDetails) => void
 }
- 
-interface UseCollisionDetectionParams {
-    interval?: number
-    position?: Vector3
-    size?: Tuple3
-    when?: () => boolean
-    actions: BulletActions
-}
-
 
 let _box1 = new Box3()
 let _box2 = new Box3()
 let _size1 = new Vector3()
 let _size2 = new Vector3()
-let _center1 = new Vector3() 
-let _center2 = new Vector3() 
+let _center1 = new Vector3()
+let _center2 = new Vector3()
 
-interface GetCollisionsParam{
+interface GetCollisionsParam {
     grid: SpatialHashGrid3D
-    position: Vector3
+    position: Tuple3
     size: Tuple3
 }
 
 export function getCollisions({
-    grid, 
+    grid,
     position,
     size,
 }: GetCollisionsParam) {
-    let near = grid.findNear( position.toArray(), size)
+    let near = grid.findNear(position, size)
     let result: Client[] = []
 
     for (let i = 0; i < near.length; i++) {
         let client = near[i]
 
         _box1.setFromCenterAndSize(_center1.set(...client.position), _size1.set(...client.size))
-        _box2.setFromCenterAndSize(_center2.copy(position), _size2.set(...size))
+        _box2.setFromCenterAndSize(_center2.set(...position), _size2.set(...size))
 
         if (_box1.intersectsBox(_box2)) {
             result.push(client)
@@ -55,95 +46,44 @@ export function getCollisions({
     return result
 }
 
+interface UseCollisionDetectionParams {
+    interval?: number
+    client?: Client // test collisions against this
+    active?: () => boolean
+    actions: BulletActions
+}
+
 export function useCollisionDetection({
-    interval = 1, 
-    position,
-    size,
+    interval = 1,
+    client,
     actions,
-    when = () => true,
+    active = () => true,
 }: UseCollisionDetectionParams) {
     let grid = useStore(i => i.world.grid)
     let tick = useRef(0)
     let types = Object.keys(actions)
 
-    useEffect(() => { 
-        if (!actions.bullet || !when()) {
-            return 
+    useEffect(() => {
+        if (!actions.bullet || !active()) {
+            return
         }
 
         let onBulletCollision = ({ detail }: CustomEvent<CollisionEventDetails>) => {
             startTransition(() => actions.bullet?.(detail))
         }
 
-        window.addEventListener("bulletcollision",  onBulletCollision as EventListener)
+        window.addEventListener("bulletcollision", onBulletCollision as EventListener)
 
         return () => {
             window.removeEventListener("bulletcollision", onBulletCollision as EventListener)
         }
-    }, [actions.bullet, when])
+    }, [actions.bullet, active])
 
     useFrame(() => {
-        if (when() && tick.current % interval === 0 && position && size) {
+        if (active() && tick.current % interval === 0 && client) {
             let collisions = getCollisions({
-                grid, 
-                position,
-                size,
-            })
-
-            for (let i = 0; i < collisions.length; i++) {
-                let client = collisions[i]
-                let action = actions[client.data.type]
-
-                if (!types.includes(client.data.type)) {
-                    continue
-                }
-
-                startTransition(() => action?.(client.data))
-            }
-        }
-
-        tick.current++
-    })
-}
-
-interface UseCollisionDetectionParams2 {
-    interval?: number
-    client: Client
-    when?: () => boolean
-    actions: BulletActions
-}
-
-export function useCollisionDetection2({
-    interval = 1,
-    client,
-    actions,
-    when = () => true,
-}: UseCollisionDetectionParams2) {
-    let grid = useStore(i => i.world.grid)
-    let tick = useRef(0)
-    let types = Object.keys(actions)
-
-    useEffect(() => { 
-        if (!actions.bullet || !when()) {
-            return 
-        }
-
-        let onBulletCollision = ({ detail }: CustomEvent<CollisionEventDetails>) => {
-            startTransition(() => actions.bullet?.(detail))
-        }
-
-        window.addEventListener("bulletcollision",  onBulletCollision as EventListener)
-
-        return () => {
-            window.removeEventListener("bulletcollision", onBulletCollision as EventListener)
-        }
-    }, [actions.bullet, when])
-
-    useFrame(() => {
-        if (when() && tick.current % interval === 0) { 
-            let collisions = getCollisions({
-                grid, 
-                position: new Vector3(...client.position),
+                grid,
+                position: client.position,
                 size: client.size,
             })
 
@@ -154,7 +94,7 @@ export function useCollisionDetection2({
                 if (!types.includes(otherClient.data.type) || otherClient === client) {
                     continue
                 }
- 
+
                 startTransition(() => action?.(otherClient.data))
             }
         }
@@ -170,8 +110,8 @@ export interface CollisionEventDetails {
     intersection: Tuple3
     normal: Tuple3
     type: CollisionObjectType
-} 
- 
+}
+
 let _box3 = new Box3()
 let _ray = new Ray()
 let _center = new Vector3()
@@ -179,7 +119,7 @@ let _size = new Vector3()
 let _origin = new Vector3()
 let _direction = new Vector3()
 let _offset = new Vector3()
-let _intersection = new Vector3() 
+let _intersection = new Vector3()
 
 interface BoxParams {
     position: Tuple3
