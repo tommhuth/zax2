@@ -63,11 +63,7 @@ export default function Start({
                 z={-12}
                 x={-15} 
                 rotation={Math.PI * -.75}
-            />
-
-            <Traffic 
-                z={position.z + .20}    
-            />
+            /> 
 
             <Logo
                 position={[3, .15 + 2 * .125, position.z + 5 ]}

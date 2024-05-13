@@ -1,15 +1,13 @@
 import { useFrame } from "@react-three/fiber"
 import { useState, useRef, useEffect, startTransition } from "react"
 import { Group, Vector3 } from "three"
-import { clamp } from "three/src/math/MathUtils.js" 
+import { clamp } from "three/src/math/MathUtils.js"
 import { useCollisionDetection } from "../../../data/collisions"
 import { createExplosion, createParticles } from "../../../data/store/effects"
 import { barellColor } from "../../../data/theme"
 import { ndelta } from "../../../data/utils"
 import { useGravity } from "./Boss"
 
-import cargoShip1 from "../../../../assets/models/cargoship1.glb"
-import cargoShip2 from "../../../../assets/models/cargoship2.glb" 
 import { useGLTF } from "@react-three/drei"
 import { useStore } from "../../../data/store"
 import { Tuple3 } from "../../../types"
@@ -19,16 +17,55 @@ import random from "@huth/random"
 import cycler from "../../../data/world/cycler"
 import { WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "../../../data/const"
 
-useGLTF.preload([cargoShip1, cargoShip2])
 
-function CargoShip({ type = 1 }) {
-    const ship2 = useGLTF(cargoShip2)
+import cargoShip1 from "../../../../assets/models/cargoship1.glb"
+import cargoShip2 from "../../../../assets/models/cargoship2.glb"
+import cargoShip2Destroyed from "../../../../assets/models/cargoship2_destroyed.glb"
+import cargoShip1Destroyed from "../../../../assets/models/cargoship1_destroyed.glb"
+
+useGLTF.preload([cargoShip1, cargoShip2, cargoShip1Destroyed, cargoShip2Destroyed])
+
+function CargoShip({ type = 1, destroyed }) {
     const ship1 = useGLTF(cargoShip1)
+    const ship2 = useGLTF(cargoShip2)
+    const ship1Destroyed = useGLTF(cargoShip1Destroyed)
+    const ship2Destroyed = useGLTF(cargoShip2Destroyed)
     const materials = useStore(i => i.materials)
 
     if (type === 2) {
+        if (destroyed) {
+            return (
+                <group dispose={null}>
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={ship2Destroyed.nodes.Mesh_craft_cargoB001.geometry}
+                        material={materials.bossDarkBlue}
+                    />
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={ship2Destroyed.nodes.Mesh_craft_cargoB001_1.geometry}
+                        material={materials.bossBlue}
+                    />
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={ship2Destroyed.nodes.Mesh_craft_cargoB001_2.geometry}
+                        material={materials.bossDarkBlue}
+                    />
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={ship2Destroyed.nodes.Mesh_craft_cargoB001_3.geometry}
+                        material={materials.bossBlue}
+                    />
+                </group>
+            )
+        }
+
         return (
-            <group>  
+            <group>
                 <mesh
                     castShadow
                     receiveShadow
@@ -57,8 +94,39 @@ function CargoShip({ type = 1 }) {
         )
     }
 
+    if (destroyed) {
+        return (
+            <group dispose={null}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={ship1Destroyed.nodes.Mesh_craft_cargoA001.geometry}
+                    material={materials.bossDarkBlue}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={ship1Destroyed.nodes.Mesh_craft_cargoA001_1.geometry}
+                    material={materials.bossBlue}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={ship1Destroyed.nodes.Mesh_craft_cargoA001_2.geometry}
+                    material={materials.bossDarkBlue}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={ship1Destroyed.nodes.Mesh_craft_cargoA001_3.geometry}
+                    material={materials.bossBlue}
+                />
+            </group>
+        )
+    }
+
     return (
-        <group> 
+        <group>
             <mesh
                 castShadow
                 receiveShadow
@@ -114,7 +182,7 @@ export function createTrafficElement(z: number, level: Counter, depth: number, f
     let y = level.next()
     let sizes: Record<typeof type, Tuple3> = {
         1: [4, 1.25, 2.5],
-        2: [4, 1.25, 2.5], 
+        2: [4, 1.25, 2.5],
     }
     let size: Tuple3 = sizes[type]
     let x = typeof forceX === "number" ? forceX : y % 2 === 0 ? SPAWN_RIGHT : SPAWN_LEFT
@@ -123,8 +191,8 @@ export function createTrafficElement(z: number, level: Counter, depth: number, f
         y * 3 + 1.5,
         z + random.float(-depth / 2, depth / 2)
     ]
-    let client = grid.createClient(position, [3, 1, 2], { type: collisionType, id }) 
- 
+    let client = grid.createClient(position, [3, 1, 2], { type: collisionType, id })
+
     return {
         id,
         position: new Vector3(...position),
@@ -139,7 +207,7 @@ export function createTrafficElement(z: number, level: Counter, depth: number, f
 }
 
 interface TrafficElementProps {
-    vehicle: TrafficElementObject; 
+    vehicle: TrafficElementObject;
     remove: () => void;
 }
 
@@ -147,6 +215,7 @@ export default function TrafficElement({ vehicle, remove }: TrafficElementProps)
     let [dead, setDead] = useState(false)
     let ref = useRef(vehicle)
     let ref2 = useRef<Group>(null)
+    let [shouldDisintegrate] = useState(() => random.boolean(.5))
 
     useGravity({
         ref,
@@ -177,7 +246,7 @@ export default function TrafficElement({ vehicle, remove }: TrafficElementProps)
                 speed: [5, 20],
                 color: barellColor
             })
-            setTimeout(remove, 200)
+            setTimeout(() => shouldDisintegrate && remove(), 200)
         }
     })
 
@@ -257,10 +326,8 @@ export default function TrafficElement({ vehicle, remove }: TrafficElementProps)
     })
 
     return (
-        <>
-            <group dispose={null} ref={ref2} scale={1.3}>
-                <CargoShip type={vehicle.type} />
-            </group> 
-        </>
+        <group dispose={null} ref={ref2} scale={1.3}>
+            <CargoShip type={vehicle.type} destroyed={dead} />
+        </group>
     )
 }
