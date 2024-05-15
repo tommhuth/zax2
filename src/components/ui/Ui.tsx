@@ -6,6 +6,7 @@ import { BossState } from "../../data/types"
 
 import "./Ui.scss" 
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../data/const"
+import Map from "./Map"
 
 export default function Ui() {
     let state = useStore(i => i.state)
@@ -34,6 +35,7 @@ export default function Ui() {
 
     return (
         <> 
+            <Map />
             <div
                 className={"levelc"}
                 style={{
@@ -43,32 +45,6 @@ export default function Ui() {
                 <h1>Level#{level}</h1> 
             </div> 
 
-            <div
-                className="height"
-                style={{
-                    opacity: !ready || boss?.state === BossState.OUTRO ? 0 : 1,
-                    marginLeft: ready ? 0 : "-1em",
-                }}
-            >
-                <div className="height__top">H</div>
-                <div
-                    className="height__current"
-                    ref={currentHeightRef}
-                />
-                {new Array(bars).fill(null).map((i, index) => {
-
-                    return (
-                        <div
-                            className="height__bar"
-                            key={index}
-                            style={{
-                                bottom: (index) / (bars - 1) * 100 + "%"
-                            }}
-                        />
-                    )
-                })}
-                <div className="height__bottom">L</div>
-            </div>
             <div
                 className="ui"
                 style={{
@@ -96,3 +72,33 @@ export default function Ui() {
         </>
     )
 }
+
+/*
+
+            <div
+                className="height"
+                style={{
+                    opacity: !ready || boss?.state === BossState.OUTRO ? 0 : 1,
+                    marginLeft: ready ? 0 : "-1em",
+                }}
+            >
+                <div className="height__top">H</div>
+                <div
+                    className="height__current"
+                    ref={currentHeightRef}
+                />
+                {new Array(bars).fill(null).map((i, index) => {
+
+                    return (
+                        <div
+                            className="height__bar"
+                            key={index}
+                            style={{
+                                bottom: (index) / (bars - 1) * 100 + "%"
+                            }}
+                        />
+                    )
+                })}
+                <div className="height__bottom">L</div>
+            </div>
+            */

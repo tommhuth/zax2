@@ -17,7 +17,7 @@ import ExplosionsHandler from "./effects/ExplosionsHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
-import { makeBuildingsLow, makeDefault, makeStart } from "../../data/world/generators"
+import { makeBuildingsGap, makeBuildingsLow, makeDefault, makeStart } from "../../data/world/generators"
 import { Vector3 } from "three"
 import SmokeHandler from "./effects/SmokeHandler"
 import { WORLD_START_Z } from "../../data/const" 
@@ -44,7 +44,7 @@ export default function World() {
         if (loaded) {
             startTransition(() => {
                 addWorldPart(
-                    makeStart({ position: new Vector3(0, 0, WORLD_START_Z - 10), size: [0, 0] }),
+                    makeBuildingsGap({ position: new Vector3(0, 0, WORLD_START_Z - 10), size: [0, 0] }),
                 )
             })
         }

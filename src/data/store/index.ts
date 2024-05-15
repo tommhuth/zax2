@@ -121,7 +121,7 @@ const store = create(
             position: new Vector3(),
             targetPosition: new Vector3(),
             velocity: new Vector3(),
-            speed: 0,
+            speed: 4,
             cameraShake: 0,
             health: 100,
             score: 0,

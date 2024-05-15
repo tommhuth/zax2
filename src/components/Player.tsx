@@ -30,8 +30,7 @@ interface PlayerProps {
 interface LocalData {
     lastShotAt: number
     isMovingUp: boolean
-    bossDeadAt: number
-    speed: number
+    bossDeadAt: number 
 }
 
 export default function Player({
@@ -47,6 +46,7 @@ export default function Player({
     let innerRef = useRef<Group>(null)
     let bossState = useStore(i => i.boss.state)
     let position = useStore(i => i.player.position)
+    let speed = useStore(i => i.player.speed)
     let targetPosition = useStore(i => i.player.targetPosition)
     let controls = useStore(i => i.controls) 
     let diagonal = useStore(i => i.world.diagonal) 
@@ -60,8 +60,7 @@ export default function Player({
         })
     }, [grid])
     let data = useMemo<LocalData>(() => {
-        return {
-            speed: 4, //6,
+        return { 
             lastShotAt: 0,
             isMovingUp: false,
             bossDeadAt: 0,
@@ -198,13 +197,13 @@ export default function Player({
                 group.rotation.z = (targetPosition.x - group.position.x) * -.15
                 group.rotation.x = (targetPosition.y - group.position.y) * -.1
 
-                player.velocity.z = clamp((speed * nd) / (data.speed * nd), 0, 1)
+                player.velocity.z = clamp((speed * nd) / (speed * nd), 0, 1)
             }
 
             if (boss.state === BossState.IDLE) {
                 let t = 1 - clamp((group.position.z - boss.pauseAt - 3) / 3, 0, 1)
 
-                move(data.speed * t)
+                move(speed * t)
 
                 if (t < .5) {
                     startTransition(() => setBossProp("state", BossState.ACTIVE))
@@ -214,9 +213,9 @@ export default function Player({
             } else if (boss.state === BossState.DEAD) {
                 let t = easeInQuad(clamp((Date.now() - data.bossDeadAt) / 2400, 0, 1))
 
-                move(data.speed * t)
+                move(speed * t)
             } else {
-                move(data.speed)
+                move(speed)
             }
 
             position.copy(group.position)
