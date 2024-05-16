@@ -12,9 +12,9 @@ function Line({ z }) {
     let tr = useRef(0)
 
     useAnimationFrame((delta) => {
-        p.z -= useStore.getState().player.speed * ndelta(delta)
-        tr.current += useStore.getState().player.speed * ndelta(delta)
-        let pos = toIsometric(p)
+        p.z -= useStore.getState().player.speed * ndelta(delta/1000)
+        tr.current += useStore.getState().player.speed * ndelta(delta/1000)
+        let pos = toIsometric(p)  
 
         if (tr.current > 2) {
             p.z = bz
