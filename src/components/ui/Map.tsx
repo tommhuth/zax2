@@ -147,7 +147,7 @@ function Grid() {
                 maskImage: "radial-gradient(at center 60%, black, transparent 70%)",
             }}
         >
-            {new Array(30).fill(null).map((i, index, list) => {
+            {new Array(15).fill(null).map((i, index, list) => {
                 return <Line z={index - list.length * .35} key={index} />
             })}
         </svg>
