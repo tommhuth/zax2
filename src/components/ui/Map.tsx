@@ -5,18 +5,19 @@ import { Vector3 } from "three"
 import { clamp, ndelta } from "../../data/utils"
 
 function Line({ z }) {
-    let bz = z * 2
+    let gap = 3.5
+    let bz = z * gap
     let p = useMemo(() => new Vector3(0, 0, bz), [])
-    let w = 400
+    let w = 500
     let refline = useRef<SVGLineElement>(null)
     let tr = useRef(0)
 
     useAnimationFrame((delta) => {
         p.z -= useStore.getState().player.speed * ndelta(delta/1000)
         tr.current += useStore.getState().player.speed * ndelta(delta/1000)
-        let pos = toIsometric(p)  
+        let pos = toIsometric(p) 
 
-        if (tr.current > 2) {
+        if (tr.current >= gap) {
             p.z = bz
             tr.current = 0
         }
@@ -31,16 +32,16 @@ function Line({ z }) {
         <line
             ref={refline}
             strokeWidth={3}
-            stroke="rgb(255, 255, 255, .5)"
+            stroke="rgb(255, 255, 255, 1)"
         />
     )
 }
 
-let width = 1150
-let height = 500
+let width = 1300
+let height = 700
 
 function toIsometric(position: Vector3) {
-    let by = (position.z) * -15
+    let by = (position.z) * -10 //-15
     let bx = -position.x * 45
     let x = bx + width * .5 - by * 2
     let y = by + height * .5 + bx * (.5)
@@ -52,6 +53,7 @@ let _p = new Vector3()
 
 function Dot({ position, color = "red" }) {
     let ref = useRef<SVGCircleElement>(null)
+    let ref2 = useRef<SVGCircleElement>(null)
     let refline = useRef<SVGLineElement>(null)
     let player = useStore(i => i.player.position)
     let diagonal = useStore(i => i.world.diagonal)
@@ -60,15 +62,16 @@ function Dot({ position, color = "red" }) {
         _p.copy(position)
         _p.z -= player.z
         let pos = toIsometric(_p)
+        let pos2 = toIsometric(_p.set(_p.x, 0, _p.z))
         let h = -position.y * 40
         let opacity = 1 - clamp((position.z - (player.z + diagonal *.5)) / (diagonal * .25), 0, 1)
 
         ref.current.style.opacity = opacity
-        refline.current.style.opacity = opacity
+        refline.current.style.opacity = opacity 
 
         if (position.z - player.z < diagonal) {
             ref.current?.setAttribute("cx", pos.x.toFixed(1))
-            ref.current?.setAttribute("cy", (pos.y + h).toFixed(1))
+            ref.current?.setAttribute("cy", (pos.y + h).toFixed(1)) 
 
             refline.current?.setAttribute("x1", pos.x.toFixed(1))
             refline.current?.setAttribute("y1", (pos.y + h).toFixed(1))
@@ -83,12 +86,12 @@ function Dot({ position, color = "red" }) {
                 ref={ref}
                 r={16}
                 fill={color}
-            />
+            /> 
             <line
                 ref={refline}
                 stroke={color}
-                strokeWidth={4}
-                strokeDasharray={"4 10"}
+                strokeWidth={5}
+                strokeDasharray={"12 10"}
             />
         </>
     )
@@ -102,22 +105,22 @@ export default function Map() {
         <div
             style={{
                 position: "absolute",
-                bottom: 0,
-                left: 0,
+               
                 height: 200,
-                right: 0,
+                
                 zIndex: 100000000,
                 display: "flex",
-                placeItems: "flex-end",
+                placeItems: "center",
+                placeContent: "center",
                 pointerEvents: "none"
             }}
+            className="map"
         >
             <svg
                 viewBox={`0 0 ${width} ${height}`}
                 style={{
-                    width: "clamp(14em, 45vw, 400px)",
-                    overflow: "visible",
-                    margin: "0 0 -1.5em -1.5em"
+                    width: "clamp(8em, 30vw, 350px)",
+                    overflow: "visible", 
                 }}
             >
 
@@ -134,16 +137,17 @@ function Grid() {
         <svg
             viewBox={`0 0 ${width} ${height}`}
             style={{
-                width: "clamp(14em, 45vw, 400px)",
+                width: "clamp(8em, 30vw, 350px)",
                 overflow: "visible",
                 zIndex: 0,
                 position: "absolute",
-                left: 0,
+                left: "50%",
+                translate:"-50% 0",
                 bottom: 0,
-                maskImage: "linear-gradient(to top right, black, black 20%, transparent 80%)",
+                maskImage: "radial-gradient(at center 60%, black, transparent 70%)",
             }}
         >
-            {new Array(25).fill(null).map((i, index, list) => {
+            {new Array(30).fill(null).map((i, index, list) => {
                 return <Line z={index - list.length * .35} key={index} />
             })}
         </svg>

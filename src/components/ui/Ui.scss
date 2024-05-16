@@ -25,6 +25,17 @@
     }
 }    
 
+.map {
+    bottom: -48px;
+    right: 0;
+    left: 0; 
+
+    @media (orientation: landscape) and (max-height: 600px) {
+        //left: 25vw;
+        bottom: -60px;
+    }
+}
+
 .levelc {
     position: absolute;
     left: 10vw;
