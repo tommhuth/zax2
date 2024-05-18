@@ -303,10 +303,13 @@ export default function TrafficElement({ vehicle, remove }: TrafficElementProps)
 
     useFrame((state, delta) => {
         let grid = useStore.getState().world.grid
+        let diagonal = useStore.getState().world.diagonal
+        let playerPosition = useStore.getState().player.position
 
         if (
             vehicle.position.x < SPAWN_RIGHT
             || vehicle.position.x > SPAWN_LEFT
+            || vehicle.position.z + diagonal * .75 < playerPosition.z
         ) {
             return startTransition(remove)
         }

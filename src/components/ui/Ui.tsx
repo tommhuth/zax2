@@ -1,37 +1,24 @@
-import { startTransition, useRef } from "react"
+import { startTransition } from "react"
 import { useStore } from "../../data/store" 
 import { setState } from "../../data/store/utils"
-import { useAnimationFrame, useWindowEvent } from "../../data/hooks"
+import { useWindowEvent } from "../../data/hooks"
 import { BossState } from "../../data/types" 
+import Map from "./Map"
 
 import "./Ui.scss" 
-import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../data/const"
-import Map from "./Map"
 
 export default function Ui() {
     let state = useStore(i => i.state)
     let ready = useStore(i => i.ready)
     let player = useStore(i => i.player) 
     let boss = useStore(i => i.boss)
-    let level = useStore(i => i.world.level)
-    let currentHeightRef = useRef<HTMLDivElement>(null)
-    let bars = 5
+    let level = useStore(i => i.world.level) 
 
     useWindowEvent(["click", "touchstart"], () => {
         if (state === "intro" && ready) {
             startTransition(()=> setState("running"))
         }
-    }, [ready, state])
-
-    useAnimationFrame(() => {
-        let player = useStore.getState().player.object
-
-        if (player && currentHeightRef.current) {
-            let height = (player.position.y - WORLD_BOTTOM_EDGE) / (WORLD_TOP_EDGE - WORLD_BOTTOM_EDGE)
-
-            currentHeightRef.current.style.height = (height * 100 + 1).toFixed(1) + "%"
-        }
-    }) 
+    }, [ready, state]) 
 
     return (
         <> 
@@ -72,33 +59,4 @@ export default function Ui() {
         </>
     )
 }
-
-/*
-
-            <div
-                className="height"
-                style={{
-                    opacity: !ready || boss?.state === BossState.OUTRO ? 0 : 1,
-                    marginLeft: ready ? 0 : "-1em",
-                }}
-            >
-                <div className="height__top">H</div>
-                <div
-                    className="height__current"
-                    ref={currentHeightRef}
-                />
-                {new Array(bars).fill(null).map((i, index) => {
-
-                    return (
-                        <div
-                            className="height__bar"
-                            key={index}
-                            style={{
-                                bottom: (index) / (bars - 1) * 100 + "%"
-                            }}
-                        />
-                    )
-                })}
-                <div className="height__bottom">L</div>
-            </div>
-            */
+ 

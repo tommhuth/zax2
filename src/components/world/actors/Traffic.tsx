@@ -17,7 +17,7 @@ interface TrafficProps {
 export default function Traffic({
     z,
     depth = 3,
-    frequency = 1800,
+    frequency = 3250, // per level
     levels: [minLevel, maxLevel] = [0, 2]
 }: TrafficProps) {
     let lastAddAt = useRef(0)
@@ -40,17 +40,25 @@ export default function Traffic({
 
     useFrame((state, delta) => {
         let player = useStore.getState().player.object
+        let diagonal = useStore.getState().world.diagonal
 
-        if (lastAddAt.current > nextAddAt.current && player && player.position.z < z) {
+        if (
+            lastAddAt.current > nextAddAt.current 
+            && player && player.position.z < z
+            && z > player.position.z - diagonal 
+        ) { 
             startTransition(() => { 
                 setVehicles([
                     ...vehicles,
-                    createTrafficElement(z - 2, level, depth)
-                ]) 
+                    ...new Array(maxLevel - minLevel)
+                        .fill(null)
+                        .map(() => createTrafficElement(z - 2, level, depth))
+
+                ])
             })
 
             lastAddAt.current = 0
-            nextAddAt.current = random.integer(frequency * .9, frequency * 1.1)
+            nextAddAt.current = random.integer(frequency, frequency * 1.3)
         } else {
             lastAddAt.current += ndelta(delta) * 1000
         }

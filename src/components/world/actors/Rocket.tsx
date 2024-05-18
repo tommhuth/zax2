@@ -111,7 +111,7 @@ export default function Rocket({
         return {
             removed: false,
             speed,
-            triggerZ: 25,
+            triggerZ: 20,
             rotationY: random.float(0, Math.PI * 2)
         }
     }, [speed])
@@ -131,7 +131,11 @@ export default function Rocket({
     useCollisionDetection({
         actions: {
             bullet: ({ bullet, client, type }) => {
-                if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "rocket") {
+                if (
+                    bullet.owner !== Owner.PLAYER 
+                    || client.data.id !== id 
+                    || type !== "rocket"
+                ) {
                     return
                 }
 
@@ -154,7 +158,7 @@ export default function Rocket({
         let { player } = useStore.getState()
         let d = ndelta(delta)
 
-        if (rocketRef.current && platformRef.current && !data.removed && player.object) {
+        if (rocketRef.current && platformRef.current && !data.removed && player.object) { 
             if (Math.abs(position.z - player.object.position.z) < data.triggerZ) {
                 position.y += data.speed * d
 
