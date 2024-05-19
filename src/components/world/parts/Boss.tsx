@@ -9,12 +9,13 @@ import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
 import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
 import Cable from "../decoration/Cable"
-import Dirt from "../decoration/Dirt" 
-import timeout from "../../../data/timeout" 
- 
+import Dirt from "../decoration/Dirt"
+import timeout from "../../../data/timeout"
+import { uiTunnel } from "../../ui/tunnels"
+
 export function BossFloor(props) {
     const { nodes } = useGLTF("/models/floor5.glb") as any
-    const materials = useStore(i => i.materials) 
+    const materials = useStore(i => i.materials)
 
     return (
         <group {...props} dispose={null}>
@@ -50,10 +51,10 @@ export function BossFloor(props) {
                 receiveShadow
                 geometry={nodes.bossfloor_5.geometry}
                 material={materials.floorBase}
-            />  
+            />
         </group>
     )
-} 
+}
 
 useGLTF.preload("/models/floor5.glb")
 
@@ -64,16 +65,17 @@ export default function BossPart({
 }: WorldPartBoss) {
     let bossZ = position.z + 23
     let pauseAt = position.z + 5
-    let state = useStore(i => i.boss.state) 
+    let boss = useStore(i => i.boss)
+    let level = useStore(i => i.world.level)
 
     useEffect(() => {
-        if (state === BossState.DEAD) {
+        if (boss.state === BossState.DEAD) {
             timeout(() => {
                 setBossProp("state", BossState.OUTRO)
                 timeout(() => setBossProp("state", BossState.UNKNOWN), 6_000)
             }, 2000)
         }
-    }, [state])
+    }, [boss.state])
 
     useEffect(() => {
         startTransition(() => {
@@ -91,10 +93,10 @@ export default function BossPart({
             size={size}
             position={position}
             id={id}
-        > 
+        >
             <Boss startPosition={[0, 0, bossZ]} />
             <BossFloor position={[9.5, 0, position.z]} />
-            
+
             <Barrel
                 position={[6, 0, 15]}
             />
@@ -122,6 +124,33 @@ export default function BossPart({
                 scale={2}
                 rotation={1}
             />
+
+            <uiTunnel.In>
+                <div
+                    className="boss-health"
+                    style={{
+                        display: boss.state === BossState.ACTIVE ? "block" : "none"
+                    }} 
+                    key="bosshealth"
+                >
+                    <div
+                        className="boss-health__bar"
+                        style={{
+                            width: boss ? (boss.health / boss.maxHealth) * 100 + "%" : 0,
+                        }}
+                    />
+                </div>
+
+                <div
+                    className={"level"}
+                    key="level"
+                    style={{
+                        display: boss?.state === BossState.OUTRO ? "block" : "none"
+                    }}
+                >
+                    <h1>Level#{level}</h1>
+                </div>
+            </uiTunnel.In>
         </WorldPartWrapper>
     )
 }

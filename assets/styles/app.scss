@@ -15,21 +15,7 @@ canvas {
     width: 100% !important;
     right: 0;
     left: 0;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    left: 0;
-    top: 0;   
-    height: 100%; 
-    width: 100%; 
-    z-index: 1;
-    background-image: linear-gradient(to top right, rgb(0 0 0 / 50%) 30%, rgb(0 0 0 / 0%) 50%);
-    opacity: .5;
-    display: none;  
-    pointer-events: none;
-}
+} 
   
 #loading {
     position: absolute;

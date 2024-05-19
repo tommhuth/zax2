@@ -14,9 +14,7 @@ export const validator: Record<WorldPartType, (previous: WorldPart) => boolean> 
     },
     [WorldPartType.AIRSTRIP]: () => true,
     [WorldPartType.BOSS]: () => {
-        let { boss } = store.getState() 
-
-        return false
+        let { boss } = store.getState()  
 
         if (Date.now() - lastBossAt.getTime() > bossInterval && boss.state === BossState.UNKNOWN) {
             lastBossAt = new Date()

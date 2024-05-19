@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { useState, useRef, useEffect, startTransition } from "react"
+import { useState, useRef, useEffect, startTransition, useMemo } from "react"
 import { Group, Vector3 } from "three"
 import { clamp } from "three/src/math/MathUtils.js"
 import { useCollisionDetection } from "../../../data/collisions"
@@ -216,6 +216,10 @@ export default function TrafficElement({ vehicle, remove }: TrafficElementProps)
     let ref = useRef(vehicle)
     let ref2 = useRef<Group>(null)
     let [shouldDisintegrate] = useState(() => random.boolean(.5))
+    let xp = useRef(0)
+    let rp = useRef(0)
+    let basez = useMemo(() => vehicle.position.z, [])
+    let baser = useMemo(() => vehicle.rotation.y, [])
 
     useGravity({
         ref,
@@ -259,9 +263,11 @@ export default function TrafficElement({ vehicle, remove }: TrafficElementProps)
             vehicle: () => {
                 vehicle.health = 0
             },
-            bullet: ({ client, type }) => {
+            bullet: ({ client, type, bullet }) => {
                 if (type === "vehicle" && vehicle.id === client.data.id) {
                     vehicle.health = clamp(vehicle.health - 10, 0, 100)
+                    xp.current += .13
+                    rp.current += .15 * -clamp((bullet.position.x - vehicle.position.x) / 2, -1, 1)
                 }
             }
         }
@@ -322,6 +328,11 @@ export default function TrafficElement({ vehicle, remove }: TrafficElementProps)
             vehicle.position.x += ndelta(delta) * vehicle.speed
         }
 
+        vehicle.position.z = (basez + xp.current)
+        vehicle.rotation.y = (baser + rp.current )
+        xp.current += -xp.current * .15
+        rp.current += -rp.current * .1
+
         ref2.current?.position.copy(vehicle.position)
         ref2.current?.rotation.set(...vehicle.rotation.toArray())
         vehicle.client.position = vehicle.position.toArray()
@@ -329,7 +340,11 @@ export default function TrafficElement({ vehicle, remove }: TrafficElementProps)
     })
 
     return (
-        <group dispose={null} ref={ref2} scale={1.3}>
+        <group
+            dispose={null}
+            ref={ref2}
+            scale={1.3}
+        >
             <CargoShip type={vehicle.type} destroyed={dead} />
         </group>
     )

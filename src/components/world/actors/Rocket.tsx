@@ -97,9 +97,7 @@ export default function Rocket({
     speed,
     health,
 }: Rocket) {
-    let [
-        rocket, platform
-    ] = useLoader(GLTFLoader, [
+    let [rocket, platform] = useLoader(GLTFLoader, [
         rocketModel,
         platformModel,
     ])

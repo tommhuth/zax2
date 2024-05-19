@@ -1,12 +1,12 @@
 import { useFrame, useLoader } from "@react-three/fiber"
 import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
 import { AdditiveBlending, Group, PointLight, TextureLoader } from "three"
-import { Tuple3 } from "../types" 
+import { Tuple3 } from "../types"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
 import { BossState, Owner } from "../data/types"
 import animate from "@huth/animate"
-import {  store, useStore } from "../data/store"
+import { store, useStore } from "../data/store"
 import { damagePlayer, increaseScore, setPlayerObject } from "../data/store/player"
 import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/store/actors"
 import { damageBarrel } from "../data/store/world"
@@ -18,6 +18,7 @@ import { easeInQuad, easeOutExpo } from "../data/shaping"
 import Exhaust from "./Exhaust"
 import { damp } from "three/src/math/MathUtils.js"
 import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "../data/const"
+import { uiTunnel } from "../components/ui/tunnels"
 
 let depth = 2
 
@@ -30,7 +31,7 @@ interface PlayerProps {
 interface LocalData {
     lastShotAt: number
     isMovingUp: boolean
-    bossDeadAt: number 
+    bossDeadAt: number
 }
 
 export default function Player({
@@ -39,17 +40,19 @@ export default function Player({
     y = 1.5
 }: PlayerProps) {
     let playerGroupRef = useRef<Group | null>(null)
+    let scoreRef = useRef<HTMLDivElement>(null)
     let grid = useStore(i => i.world.grid)
     let weapon = useStore(i => i.player.weapon)
-    let ready = useStore(i => i.ready) 
-    let setup = useStore(i => i.setup) 
+    let ready = useStore(i => i.ready)
+    let setup = useStore(i => i.setup)
     let innerRef = useRef<Group>(null)
     let bossState = useStore(i => i.boss.state)
     let position = useStore(i => i.player.position)
+    let player = useStore(i => i.player)
     let speed = useStore(i => i.player.speed)
     let targetPosition = useStore(i => i.player.targetPosition)
-    let controls = useStore(i => i.controls) 
-    let diagonal = useStore(i => i.world.diagonal) 
+    let controls = useStore(i => i.controls)
+    let diagonal = useStore(i => i.world.diagonal)
     let engineLightRef = useRef<PointLight>(null)
     let model = useLoader(GLTFLoader, "/models/player.glb")
     let text = useLoader(TextureLoader, "/textures/glow.png")
@@ -60,7 +63,7 @@ export default function Player({
         })
     }, [grid])
     let data = useMemo<LocalData>(() => {
-        return { 
+        return {
             lastShotAt: 0,
             isMovingUp: false,
             bossDeadAt: 0,
@@ -128,6 +131,16 @@ export default function Player({
             }
         }
     })
+
+    useEffect(() => {
+        return useStore.subscribe((state) => {
+            if (!scoreRef.current) {
+                return
+            }
+
+            scoreRef.current.innerText = state.player.score.toLocaleString("en")
+        })
+    }, [])
 
     // init player ready position
     useLayoutEffect(() => {
@@ -226,35 +239,35 @@ export default function Player({
 
     useLayoutEffect(() => {
         if (!innerRef.current) {
-            return 
+            return
         }
 
-        innerRef.current.position.z = -diagonal  
+        innerRef.current.position.z = -diagonal
 
         if (ready) {
             return animate({
-                from: -diagonal ,
+                from: -diagonal,
                 to: 0,
                 easing: easeOutExpo,
                 duration: 4000,
                 delay: 2000,
                 render(z) {
                     if (!innerRef.current) {
-                        return 
+                        return
                     }
-                    
-                    innerRef.current.position.z = z 
+
+                    innerRef.current.position.z = z
                 },
             })
-        } 
+        }
     }, [ready, diagonal])
 
     return (
         <>
             <group
-                ref={handleRef} 
+                ref={handleRef}
             >
-                <group ref={innerRef}>  
+                <group ref={innerRef}>
                     <primitive
                         object={model.nodes.player}
                         receiveShadow
@@ -270,19 +283,19 @@ export default function Player({
                     </primitive>
 
                     <mesh
-                        scale={[3.5,6,1]} 
-                        rotation-x={-Math.PI * .5} 
+                        scale={[3.5, 6, 1]}
+                        rotation-x={-Math.PI * .5}
                         position={[0, -.25, -.7]}
                     >
-                        <planeGeometry args={[1,1,1,1]} />
-                        <meshBasicMaterial 
-                            map={text} 
-                            transparent 
+                        <planeGeometry args={[1, 1, 1, 1]} />
+                        <meshBasicMaterial
+                            map={text}
+                            transparent
                             depthWrite={false}
-                            opacity={.35} 
+                            opacity={.35}
                             blending={AdditiveBlending}
                         />
-                    </mesh> 
+                    </mesh>
 
                     <Exhaust
                         offset={[0, -.15, -3.35]}
@@ -298,6 +311,21 @@ export default function Player({
                     />
                 </group>
             </group>
+
+            <uiTunnel.In>
+                <div
+                    className="player-ui"
+                    key="player"
+                    style={{
+                        opacity: !ready ? 0 : 1,
+                        marginBottom: ready ? 0 : "-1em",
+                    }}
+                >
+                    {player.health.toFixed(0)}%
+
+                    <div ref={scoreRef} />
+                </div>
+            </uiTunnel.In>
         </>
     )
 }

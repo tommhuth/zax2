@@ -167,7 +167,7 @@ function Plane({
     useFrame((state, delta) => {
         if (planeRef.current && !data.removed && !isStatic) {
             let { world, player } = useStore.getState()
-            let playerZ = player.object?.position.z || -Infinity
+            let playerZ = player.object?.position.z || Infinity
             let shouldMoveForward = targetY === startY || position.z - diagonal * 1.5 < playerZ
 
             position.z -= shouldMoveForward ? data.actualSpeed * ndelta(delta) : 0
@@ -177,10 +177,9 @@ function Plane({
             planeRef.current.rotation.set(...data.rotation)
 
             if (
-                !world.frustum.intersectsBox(aabb)
-                && player.object
-                && position.z < player.object.position.z
-            ) {
+                position.z - world.diagonal * .5 > playerZ
+                && player.object 
+            ) { 
                 startTransition(remove)
             } else {
                 client.position = position.toArray()
