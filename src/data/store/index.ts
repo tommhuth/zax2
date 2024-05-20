@@ -7,7 +7,7 @@ import {
     Barrel, BossState, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, MaterialName, Particle,
     Plane, RepeaterMesh, Rocket, Turret, WorldPart
 } from "../types"
-import { SpatialHashGrid3D } from "../world/SpatialHashGrid3D" 
+import { SpatialHashGrid3D } from "../SpatialHashGrid3D" 
 
 
 interface ControlsMap {

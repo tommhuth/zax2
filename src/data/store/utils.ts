@@ -1,5 +1,5 @@
 import { InstancedMesh, Material, Object3D } from "three"
-import Counter from "../world/Counter"
+import Counter from "../Counter"
 import { Store, store } from "."
 import { MaterialName } from "../types"
 

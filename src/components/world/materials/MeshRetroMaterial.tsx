@@ -8,7 +8,7 @@ import { glsl } from "../../../data/utils"
 import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef, useEffect, useMemo } from "react"
 import { useStore } from "../../../data/store"
-import Counter from "../../../data/world/Counter"
+import Counter from "../../../data/Counter"
 
 const lightSourceCount = 4
 

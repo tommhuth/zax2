@@ -10,7 +10,7 @@ import BlastHandler from "./BlastHandler"
 import FireballHandler from "./FireballHandler"
 import ShockwaveHandler from "./ShockwaveHandler"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
-import Counter from "../../../data/world/Counter"
+import Counter from "../../../data/Counter"
 import { damp } from "three/src/math/MathUtils.js"
 
 export default function ExplosionsHandler() {

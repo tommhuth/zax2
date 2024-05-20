@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber"
 import random from "@huth/random"
 import { useStore } from "../../../data/store"
 import { ndelta } from "../../../data/utils"
-import Counter from "../../../data/world/Counter"
+import Counter from "../../../data/Counter"
 
 import TrafficElement, { TrafficElementObject, createTrafficElement } from "./TrafficElement"
 

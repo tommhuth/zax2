@@ -14,7 +14,7 @@ import { createExplosion, createImpactDecal, createParticles, createScrap } from
 import { planeColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { damp } from "three/src/math/MathUtils.js"
-import Counter from "../../../data/world/Counter"
+import Counter from "../../../data/Counter"
 import { easeInOutCubic } from "../../../data/shaping"
 import Exhaust from "../../Exhaust"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"

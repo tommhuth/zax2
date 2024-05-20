@@ -9,7 +9,7 @@ import { useFrame } from "@react-three/fiber"
 import { store } from "../../../data/store"
 import { Tuple3 } from "../../../types"
 import { useShader } from "../../../data/hooks"
-import Counter from "../../../data/world/Counter"
+import Counter from "../../../data/Counter"
 import { easeInOutCubic } from "../../../data/shaping"
  
 interface Smoke {

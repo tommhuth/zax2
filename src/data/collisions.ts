@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber"
 import { startTransition, useEffect, useRef } from "react"
 import { Box3, Ray, Vector3 } from "three"
-import { SpatialHashGrid3D, Client, ClientData } from "./world/SpatialHashGrid3D"
+import { SpatialHashGrid3D, Client, ClientData } from "./SpatialHashGrid3D"
 import { useStore } from "./store"
 import { Tuple3 } from "../types"
 import { Bullet, CollisionObjectType } from "./types"
