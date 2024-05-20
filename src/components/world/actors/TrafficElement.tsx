@@ -14,7 +14,7 @@ import { Tuple3 } from "../../../types"
 import { Client } from "../../../data/SpatialHashGrid3D"
 import Counter from "../../../data/Counter"
 import random from "@huth/random"
-import Cycler from "../../../data/Cyclerx"
+import Cycler from "../../../data/Cycler"
 import { WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "../../../data/const"
 
 

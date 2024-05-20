@@ -1,4 +1,4 @@
-import Cycler from "../Cyclerx"
+import Cycler from "../Cycler"
 import { WorldPart, WorldPartType } from "../types"
 import * as generators from "./generators"
 import { validator } from "./validator"
