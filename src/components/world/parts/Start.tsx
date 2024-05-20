@@ -6,8 +6,7 @@ import Dirt from "../decoration/Dirt"
 import { useGLTF } from "@react-three/drei"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { useStore } from "../../../data/store"
-import Cable from "../decoration/Cable"
-import Traffic from "../actors/Traffic"
+import Cable from "../decoration/Cable" 
  
 export default function Start({
     id,

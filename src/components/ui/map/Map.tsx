@@ -1,4 +1,5 @@
 import { useStore } from "../../../data/store"
+import { BossState } from "../../../data/types"
 import Grid from "./Grid" 
 import Marker from "./Marker"
 import { height, width } from "./utils"
@@ -9,6 +10,7 @@ export default function Map() {
     let rockets = useStore(i => i.world.rockets)
     let turrets = useStore(i => i.world.turrets)
     let ready = useStore(i => i.ready)
+    let bossState = useStore(i => i.boss.state)
 
     return (
         <div
@@ -16,7 +18,7 @@ export default function Map() {
                 position: "absolute",
                 height: 200,
                 zIndex: 100000000,
-                display: ready ? "flex" : "none",
+                display: ready && bossState === BossState.UNKNOWN ? "flex" : "none",
                 placeItems: "center",
                 placeContent: "center",
                 pointerEvents: "none"

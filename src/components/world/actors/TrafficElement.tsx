@@ -11,10 +11,10 @@ import { useGravity } from "./Boss"
 import { useGLTF } from "@react-three/drei"
 import { useStore } from "../../../data/store"
 import { Tuple3 } from "../../../types"
-import { Client } from "../../../data/world/SpatialHashGrid3D"
-import Counter from "../../../data/world/Counter"
+import { Client } from "../../../data/SpatialHashGrid3D"
+import Counter from "../../../data/Counter"
 import random from "@huth/random"
-import cycler from "../../../data/world/cycler"
+import Cycler from "../../../data/Cyclerx"
 import { WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "../../../data/const"
 
 
@@ -171,7 +171,7 @@ const SPAWN_LEFT = WORLD_LEFT_EDGE * 3
 const SPAWN_RIGHT = WORLD_RIGHT_EDGE * 4
 const speeds = [1.1, .8, 1, 1.4]
 
-let typeCycler = cycler([1, 2], .5)
+let typeCycler = new Cycler([1, 2], .5)
 
 export function createTrafficElement(z: number, level: Counter, depth: number, forceX?: number, forceType?: number): TrafficElementObject {
     let type = forceType || typeCycler.next()

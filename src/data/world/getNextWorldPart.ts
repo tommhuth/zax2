@@ -1,4 +1,4 @@
-import cycler from "./cycler"
+import Cycler from "../Cyclerx"
 import { WorldPart, WorldPartType } from "../types"
 import * as generators from "./generators"
 import { validator } from "./validator"
@@ -7,7 +7,7 @@ const specialParts = [WorldPartType.START] as const
 
 type DynamicWorldPartType = Exclude<WorldPartType, typeof specialParts[number]>
 
-const types = cycler<DynamicWorldPartType>(
+const types = new Cycler<DynamicWorldPartType>(
     Object.values(WorldPartType).filter((i): i is DynamicWorldPartType => {
         return !specialParts.includes(i as any)
     }),
