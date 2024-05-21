@@ -2,6 +2,8 @@
 
 ## Todo   
 - actual level design    
+- add missing 3d: rockfaces + boss part
+- improve oldest 3d models
 - ui
 - intro  
 - hit detection edge case fix  

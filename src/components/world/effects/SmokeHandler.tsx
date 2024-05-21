@@ -66,6 +66,7 @@ export default function SmokeHandler() {
     })
 
     useFrame(() => {
+        // delta base this
         let smokeInterval = random.integer(16, 20)
         let { rockets } = store.getState().world
 
