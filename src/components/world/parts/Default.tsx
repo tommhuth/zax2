@@ -8,7 +8,6 @@ import Rocket from "../spawner/Rocket"
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
 import Plane from "../spawner/Plane"
-import Traffic from "../actors/Traffic"
 
 export default function Default({
     id,
@@ -21,6 +20,31 @@ export default function Default({
             position={position}
             id={id}
         >
+            <EdgeBuilding
+                z={7}
+                x={10}
+                type="wall2"
+            />
+            <EdgeBuilding
+                z={14}
+                x={8.5}
+                type="wall3"
+            />
+            <EdgeBuilding
+                z={24}
+                x={10}
+                type="wall3"
+            />
+            <EdgeBuilding
+                z={24}
+                x={8}
+                type="tower1"
+            />
+            <EdgeBuilding
+                z={28}
+                x={8}
+                type="tower1"
+            />
             <Building
                 position={[3, 0, 10]}
                 size={[5, 2, 5]}
@@ -56,7 +80,7 @@ export default function Default({
             <Barrel
                 position={[5, 0, 2]}
             />
- 
+
             <Plane
                 position={[0, .5, 1]}
                 speed={0}
@@ -73,7 +97,6 @@ export default function Default({
                 scale={[random.pick(-1, 1), 1, random.pick(-1, 1)]}
                 position={[position.x, 0, size[1] / 2]}
             />
-            <EdgeBuilding z={size[1] / 2} />
         </WorldPartWrapper>
     )
 }

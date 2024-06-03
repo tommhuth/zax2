@@ -1,51 +1,51 @@
-import { BossFloor } from "../parts/Boss"
 import RepeaterMesh from "./RepeaterMesh"
-import Building1 from "./repeaters/Building1"
-import Building2 from "./repeaters/Building2"
-import Building3 from "./repeaters/Building3"
-import Building4 from "./repeaters/Building4"
-import Building5 from "./repeaters/Building5"
+import Hangar from "./repeaters/Hangar"
+import Tanks from "./repeaters/Tanks"
+import Wall1 from "./repeaters/Wall1"
+
 import Floor1 from "./repeaters/Floor1"
 import Floor2 from "./repeaters/Floor2"
 import Floor3 from "./repeaters/Floor3"
 import Floor4 from "./repeaters/Floor4"
-import Hangar from "./repeaters/Hangar"
-import Tanks from "./repeaters/Tanks"
-import Wall1 from "./repeaters/Wall1"
+import Tower2 from "./repeaters/Tower2"
+import Wall2 from "./repeaters/Wall2"
+import Tower1 from "./repeaters/Tower1"
+import Wall3 from "./repeaters/Wall3"
 
 export default function Repeaters() {
     return (
         <>
             <RepeaterMesh
-                name="building1"
+                name="tower1"
                 count={5}
             >
-                <Building1 />
-            </RepeaterMesh> 
+                <Tower1 />
+            </RepeaterMesh>
+            <RepeaterMesh
+                name="wall3"
+                count={5}
+            >
+                <Wall3 />
+            </RepeaterMesh>
+            <RepeaterMesh
+                name="tower2"
+                count={5}
+            >
+                <Tower2 />
+            </RepeaterMesh>
 
             <RepeaterMesh
-                name="building2"
+                name="wall1"
                 count={5}
             >
-                <Building2 />
+                <Wall1 />
             </RepeaterMesh>
+
             <RepeaterMesh
-                name="building3"
+                name="wall2"
                 count={5}
             >
-                <Building3 />
-            </RepeaterMesh>
-            <RepeaterMesh
-                name="building4"
-                count={5}
-            >
-                <Building4 />
-            </RepeaterMesh>
-            <RepeaterMesh
-                name="building5"
-                count={5}
-            >
-                <Building5 />
+                <Wall2 />
             </RepeaterMesh>
 
             <RepeaterMesh
@@ -55,12 +55,6 @@ export default function Repeaters() {
                 <Tanks />
             </RepeaterMesh>
 
-            <RepeaterMesh
-                name="wall1"
-                count={5}
-            >
-                <Wall1 />
-            </RepeaterMesh>
 
             <RepeaterMesh
                 name="hangar"

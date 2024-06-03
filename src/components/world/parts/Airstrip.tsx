@@ -20,7 +20,10 @@ export default function Airstrip({
             position={position}
             id={id}
         >
-            <EdgeBuilding type="hangar" z={17.85} x={-2} />
+            <EdgeBuilding type="hangar" z={16.5} x={8} />
+            <EdgeBuilding type="tower2" z={10} x={7} /> 
+            <EdgeBuilding type="wall1" z={11} x={9} />
+
             <Plane
                 position={[2.25, .5, 40]}
                 targetY={WORLD_TOP_EDGE}

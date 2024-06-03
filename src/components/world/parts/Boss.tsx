@@ -13,17 +13,29 @@ import Dirt from "../decoration/Dirt"
 import timeout from "../../../data/timeout"
 import { uiTunnel } from "../../ui/tunnels"
 
+import model from "../../../../assets/models/floor5.glb"
+import EdgeBuilding from "../decoration/EdgeBuilding"
+
+useGLTF.preload(model)
+
 export function BossFloor(props) {
-    const { nodes } = useGLTF("/models/floor5.glb") as any
+    const { nodes } = useGLTF(model) as any
     const materials = useStore(i => i.materials)
 
     return (
         <group {...props} dispose={null}>
+            <EdgeBuilding type="wall2" x={9} z={13} />
+            <EdgeBuilding type="wall3" x={7} z={33} />
+            <EdgeBuilding type="wall3" x={7} z={41} />
+            <EdgeBuilding type="tower1" x={6.5} z={18.5} />
+            <EdgeBuilding type="tower1" x={6.5} z={21.2} />
+            <EdgeBuilding type="tower1" x={6.5} z={24} />
+
             {/* cylinders */}
             <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.bossfloor_1.geometry}
+                geometry={nodes.floor5_1.geometry}
                 material={materials.floorBase}
             />
 
@@ -31,32 +43,18 @@ export function BossFloor(props) {
             <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.bossfloor_2.geometry}
-                material={materials.bossLightBlue}
+                geometry={nodes.floor5_2.geometry}
+                material={materials.floorHi}
             />
             <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.bossfloor_3.geometry}
-                material={materials.buildingHi}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.bossfloor_4.geometry}
-                material={materials.buildingBase}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.bossfloor_5.geometry}
+                geometry={nodes.floor5_3.geometry}
                 material={materials.floorBase}
-            />
+            /> 
         </group>
     )
 }
-
-useGLTF.preload("/models/floor5.glb")
 
 export default function BossPart({
     id,

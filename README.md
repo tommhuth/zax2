@@ -14,6 +14,7 @@
 - colocate more stuff  
 - rework loading to make sure no suspending mid game
 - collision hook improv
+- modularize deco 3d models
 
 53 mat + 22 instances
 

@@ -5,15 +5,15 @@ import { Client } from "./SpatialHashGrid3D"
 
 export type MaterialName = "plane" |  "rocket" | "platform" | "grass" | "exhaust" 
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
-    | "bossWhite" | "buildingHi" | "buildingHi" | "buildingBase" | "buildingHi" | "barrel"
+    | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel"
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi" | "turret"
 
 export type InstanceName = "leaf" | "scrap" |  "line" | "box" | "sphere" | "particle" | "device"
     | "fireball" | "cable" | "cylinder" | "shimmer" | "dirt"
     | "grass" | "plant" | "shockwave" | "blast" | "decal"  
 
-export type RepeaterName = "building1" | "building2" | "building3"
-    | "building4" | "building5" | "tanks" | "wall1"
+export type RepeaterName = "tower1" | "tower2"| "tower3"| "tower3"| "tower3"| "tower3"
+    | "tanks" | "wall1" | "wall2" | "wall3" | "wall4"
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
 
 export type CollisionObjectType = "plant" | "barrel" | "player" | "boss" | "heatseaker" 

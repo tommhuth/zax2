@@ -304,9 +304,9 @@ export default function Player({
 
                     <pointLight
                         ref={engineLightRef}
-                        distance={90}
+                        distance={140}
                         position={[0, .1, -1.75]}
-                        intensity={60}
+                        intensity={160}
                         color={"#ffffff"}
                     />
                 </group>

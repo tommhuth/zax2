@@ -95,6 +95,16 @@ function MaterialLoader() {
                     emissiveIntensity={.0}
                 />
             ),
+            buildingDark: (
+                <MeshRetroMaterial 
+                    backColorIntensity={.0}  
+                    color={"#005"} 
+                    rightColorIntensity={.1} 
+                    rightColor="#f00"
+                    emissive={"#000"}
+                    emissiveIntensity={.0}
+                />
+            ),
             buildingHi: (
                 <MeshRetroMaterial 
                     backColorIntensity={.0}  

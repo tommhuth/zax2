@@ -4,6 +4,7 @@ import { backColor as defaultBackColor, bcolor, fogColor, rightColor as defaultR
 import easings from "../../../shaders/easings.glsl"
 import dithering from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
+import utils from "../../../shaders/utils.glsl"
 import { glsl } from "../../../data/utils"
 import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef, useEffect, useMemo } from "react"
@@ -39,6 +40,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     shader = {},
     emissive,
     additionalShadowStrength = .15,
+    injectAt = "end",
     children,
     ...rest
 }, ref) => {
@@ -108,6 +110,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             ${easings} 
             ${dithering}
             ${noise}
+            ${utils}
             ${shader?.shared || ""}
         
         `,
@@ -160,6 +163,8 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 float heightScaler = 1. - clamp((vGlobalPosition.y) / 2., 0., 1.);  
                 float heightMin = easeInQuad(1. - clamp((vGlobalPosition.y ) / .5, 0., 1.)) * .3; 
 
+                ${injectAt === "start" ? shader?.fragment?.main || "" : ""}
+
                 // base fog
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
@@ -174,7 +179,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     easeInOutCubic(fogLightEffect)
                 );
   
-                ${shader?.fragment?.main || ""}
+                ${injectAt === "end" ? shader?.fragment?.main || "" : ""}
 
                 getDirectionalLightInfo(directionalLights[0], directLight);
 

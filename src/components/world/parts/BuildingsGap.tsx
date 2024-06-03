@@ -5,8 +5,7 @@ import Plane from "../spawner/Plane"
 import Turret from "../spawner/Turret"
 import Floor from "../decoration/Floor"
 import Building from "../spawner/Building"
-import { Only } from "../../../data/utils"
-import Traffic from "../actors/Traffic"
+import { Only } from "../../../data/utils" 
 
 export default function BuildingsGap({
     id,

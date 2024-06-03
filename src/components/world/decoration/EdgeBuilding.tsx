@@ -1,16 +1,16 @@
 import { useEffect } from "react"
 import { useRepeater } from "../models/RepeaterMesh" 
-import random from "@huth/random"
 import { RepeaterName } from "../../../data/types"
-import { useWorldPart } from "../WorldPartWrapper"
-import { WORLD_LEFT_EDGE } from "../../../data/const"
+import { useWorldPart } from "../WorldPartWrapper" 
+import { Tuple3 } from "../../../types"
 
 interface EdgeBuildingProps {
     x?: number
     y?: number
     z?: number
     rotation?: number
-    type?: RepeaterName
+    scale?: Tuple3
+    type: RepeaterName
 }
 
 export default function EdgeBuilding({
@@ -18,17 +18,22 @@ export default function EdgeBuilding({
     z = 0,
     y = 0,
     rotation = Math.PI,
-    type = random.pick("building1", "building2", "building3", "building4", "building5")
+    scale,
+    type
 }: EdgeBuildingProps) {
-    let building = useRepeater(type) 
+    let building = useRepeater(type)
     let partPosition = useWorldPart()
 
     useEffect(() => {
-        if (building?.mesh) { 
-            building.mesh.position.set(x + WORLD_LEFT_EDGE + 4, y, z + partPosition[2])
+        if (building?.mesh) {
+
+            building.mesh.position.set(x, y, z + partPosition[2])
             building.mesh.rotation.y = rotation
+
+            if (scale)
+                building.mesh.scale.set(...scale) 
         }
-    }, [building])
+    }, [building, rotation, x, y, z])
 
     return null
 }
