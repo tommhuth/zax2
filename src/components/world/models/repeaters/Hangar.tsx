@@ -1,7 +1,7 @@
 import { useGLTF } from "@react-three/drei" 
 import { useStore } from "../../../../data/store"
 
-import model from "../../../../../assets/models/hangar.glb"
+import model from "@assets/models/hangar.glb"
 
 export default function Hangar() {
     const { nodes } = useGLTF(model)

@@ -20,7 +20,7 @@ import Exhaust from "../../Exhaust"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
-import planeModel from "../../../../assets/models/plane.glb"
+import planeModel from "@assets/models/plane.glb"
  
 let _size = new Vector3()
 
@@ -41,9 +41,7 @@ function explode(position: Vector3) {
         radius: [.1, .45],
         color: planeColor,
     })
-}
-
-useLoader.preload(GLTFLoader, planeModel)
+} 
 
 function Plane({
     id,

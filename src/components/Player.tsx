@@ -20,6 +20,8 @@ import { damp } from "three/src/math/MathUtils.js"
 import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "../data/const"
 import { uiTunnel } from "../components/ui/tunnels"
 
+import playerModel from "@assets/models/player.glb"
+
 let depth = 2
 
 interface PlayerProps {
@@ -54,7 +56,7 @@ export default function Player({
     let controls = useStore(i => i.controls)
     let diagonal = useStore(i => i.world.diagonal)
     let engineLightRef = useRef<PointLight>(null)
-    let model = useLoader(GLTFLoader, "/models/player.glb")
+    let model = useLoader(GLTFLoader, playerModel)
     let text = useLoader(TextureLoader, "/textures/glow.png")
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {

@@ -15,9 +15,8 @@ import Exhaust from "../../Exhaust"
 import { WORLD_TOP_EDGE } from "../../../data/const"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
-
-import rocketModel from "../../../../assets/models/rocket.glb"
-import platformModel from "../../../../assets/models/platform.glb"
+import rocketModel from "@assets/models/rocket.glb"
+import platformModel from "@assets/models/platform.glb"
 
 let _size = new Vector3()
 
@@ -81,12 +80,7 @@ function explode(position: Vector3, size: Tuple3) {
             delay: 520
         })
     }
-}
-
-useLoader.preload(GLTFLoader, [
-    rocketModel,
-    platformModel,
-])
+} 
 
 export default function Rocket({
     position,

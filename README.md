@@ -2,8 +2,7 @@
 
 ## Todo   
 - actual level design    
-- add missing 3d: rockfaces + boss part
-- improve oldest 3d models
+- add missing 3d: rockfaces + boss part 
 - ui
 - intro  
 - hit detection edge case fix  
@@ -14,7 +13,7 @@
 - colocate more stuff  
 - rework loading to make sure no suspending mid game
 - collision hook improv
-- modularize deco 3d models
+- make it pretty: modularize deco 3d models
 
 53 mat + 22 instances
 

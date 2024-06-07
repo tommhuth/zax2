@@ -1,9 +1,7 @@
 import { useGLTF } from "@react-three/drei"
 import { useStore } from "../../../../data/store"
 
-import model from "../../../../../assets/models/wall1.glb"
-
-useGLTF.preload(model)
+import model from "@assets/models/wall1.glb" 
 
 export default function Wall1(props) {
     const { nodes } = useGLTF(model)

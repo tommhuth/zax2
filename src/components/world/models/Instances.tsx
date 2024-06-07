@@ -14,16 +14,21 @@ import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { memo } from "react" 
 import Plant from "./instances/Plant" 
 import { glsl } from "../../../data/utils"  
+import deviceModel from "@assets/models/device.glb"
+import scrapModel from "@assets/models/scrap.glb"
+import cableModel from "@assets/models/cable.glb"
+import dirtModel from "@assets/models/dirt.glb"
+import leafModel from "@assets/models/leaf.glb"
 
 function Instances() {
     let [
         device, scrap, cable, dirt, leaf
     ] = useLoader(GLTFLoader, [  
-        "/models/device.glb",
-        "/models/scrap.glb",
-        "/models/cable.glb",
-        "/models/dirt.glb", 
-        "/models/leaf.glb",
+        deviceModel,
+        scrapModel,
+        cableModel,
+        dirtModel, 
+        leafModel,
     ])  
 
     return (

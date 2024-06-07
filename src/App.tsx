@@ -1,3 +1,5 @@
+import "@components/world/preload"
+
 import Camera from "./components/Camera"
 import {
     Suspense,

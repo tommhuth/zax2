@@ -7,7 +7,6 @@ import { createExplosion, createParticles } from "../../../data/store/effects"
 import { barellColor } from "../../../data/theme"
 import { ndelta } from "../../../data/utils"
 import { useGravity } from "./Boss"
-
 import { useGLTF } from "@react-three/drei"
 import { useStore } from "../../../data/store"
 import { Tuple3 } from "../../../types"
@@ -17,13 +16,10 @@ import random from "@huth/random"
 import Cycler from "../../../data/Cycler"
 import { WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "../../../data/const"
 
-
-import cargoShip1 from "../../../../assets/models/cargoship1.glb"
-import cargoShip2 from "../../../../assets/models/cargoship2.glb"
-import cargoShip2Destroyed from "../../../../assets/models/cargoship2_destroyed.glb"
-import cargoShip1Destroyed from "../../../../assets/models/cargoship1_destroyed.glb"
-
-useGLTF.preload([cargoShip1, cargoShip2, cargoShip1Destroyed, cargoShip2Destroyed])
+import cargoShip1 from "@assets/models/cargoship1.glb"
+import cargoShip2 from "@assets/models/cargoship2.glb"
+import cargoShip2Destroyed from "@assets/models/cargoship2_destroyed.glb"
+import cargoShip1Destroyed from "@assets/models/cargoship1_destroyed.glb" 
 
 function CargoShip({ type = 1, destroyed }) {
     const ship1 = useGLTF(cargoShip1)

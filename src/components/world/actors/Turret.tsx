@@ -18,7 +18,7 @@ import { useGLTF } from "@react-three/drei"
 import { damp } from "three/src/math/MathUtils.js"
 import Config from "../../../data/Config"
 
-import turretModel from "../../../../assets/models/turret2.glb"
+import model from "@assets/models/turret2.glb"
 
 function explode(position: Vector3, size: Tuple3) {
     createExplosion({
@@ -42,19 +42,16 @@ function explode(position: Vector3, size: Tuple3) {
         color: turretParticleColor,
     })
 }
-
-
+ 
 type GLTFResult = GLTF & {
     nodes: {
         Cylinder: THREE.Mesh
         Cylinder_1: THREE.Mesh
     }
-}
-
-useGLTF.preload(turretModel)
+} 
 
 function Turret({ id, size, position, health, fireFrequency, rotation, floorLevel }: TurretType) {
-    let { nodes } = useGLTF(turretModel) as GLTFResult
+    let { nodes } = useGLTF(model) as GLTFResult
     let diagonal = useStore(i => i.world.diagonal)
     let materials = useStore(i => i.materials)
     let shootTimer = useRef(0)

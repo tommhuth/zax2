@@ -1,10 +1,10 @@
 import { useGLTF } from "@react-three/drei"
 
-import rockface from "../../../../assets/models/rockface.glb"
-import { useStore } from "../../../data/store"
+import model from "@assets/models/rockface.glb"
+import { useStore } from "../../../data/store" 
 
 export function Rockface() {
-    const { nodes } = useGLTF(rockface)
+    const { nodes } = useGLTF(model)
     const materials = useStore(i => i.materials)
 
     return (
@@ -17,5 +17,3 @@ export function Rockface() {
         />
     )
 }
-
-useGLTF.preload(rockface)

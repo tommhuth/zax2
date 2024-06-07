@@ -1,7 +1,7 @@
 import { WorldPartDefault } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import Turret from "../spawner/Turret"
-import EdgeBuilding from "../decoration/EdgeBuilding"
+import EdgeElement from "../decoration/EdgeElement"
 import Barrel from "../spawner/Barrel"
 import Building from "../spawner/Building"
 import Rocket from "../spawner/Rocket"
@@ -20,27 +20,27 @@ export default function Default({
             position={position}
             id={id}
         >
-            <EdgeBuilding
+            <EdgeElement
                 z={7}
                 x={10}
                 type="wall2"
             />
-            <EdgeBuilding
+            <EdgeElement
                 z={14}
                 x={8.5}
                 type="wall3"
             />
-            <EdgeBuilding
+            <EdgeElement
                 z={24}
                 x={10}
                 type="wall3"
             />
-            <EdgeBuilding
+            <EdgeElement
                 z={24}
                 x={8}
                 type="tower1"
             />
-            <EdgeBuilding
+            <EdgeElement
                 z={28}
                 x={8}
                 type="tower1"

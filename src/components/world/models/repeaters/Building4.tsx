@@ -1,8 +1,9 @@
 import { useGLTF } from "@react-three/drei"
 import { useStore } from "../../../../data/store"
+import model from "@assets/models/building4.glb"
 
 export default function Building4(props) {
-    const { nodes } = useGLTF("/models/building4.glb")
+    const { nodes } = useGLTF(model)
     const materials = useStore(i => i.materials)
 
     return (
@@ -15,6 +16,4 @@ export default function Building4(props) {
             />
         </group>
     )
-}
-
-useGLTF.preload("/models/building4.glb")
+} 

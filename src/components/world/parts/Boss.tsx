@@ -12,11 +12,9 @@ import Cable from "../decoration/Cable"
 import Dirt from "../decoration/Dirt"
 import timeout from "../../../data/timeout"
 import { uiTunnel } from "../../ui/tunnels"
+import EdgeElement from "../decoration/EdgeElement" 
 
-import model from "../../../../assets/models/floor5.glb"
-import EdgeBuilding from "../decoration/EdgeBuilding"
-
-useGLTF.preload(model)
+import model from "@assets/models/floor5.glb"
 
 export function BossFloor(props) {
     const { nodes } = useGLTF(model) as any
@@ -24,12 +22,12 @@ export function BossFloor(props) {
 
     return (
         <group {...props} dispose={null}>
-            <EdgeBuilding type="wall2" x={9} z={13} />
-            <EdgeBuilding type="wall3" x={7} z={33} />
-            <EdgeBuilding type="wall3" x={7} z={41} />
-            <EdgeBuilding type="tower1" x={6.5} z={18.5} />
-            <EdgeBuilding type="tower1" x={6.5} z={21.2} />
-            <EdgeBuilding type="tower1" x={6.5} z={24} />
+            <EdgeElement type="wall2" x={9} z={13} />
+            <EdgeElement type="wall3" x={7} z={33} />
+            <EdgeElement type="wall3" x={7} z={41} />
+            <EdgeElement type="tower1" x={6.5} z={18.5} />
+            <EdgeElement type="tower1" x={6.5} z={21.2} />
+            <EdgeElement type="tower1" x={6.5} z={24} />
 
             {/* cylinders */}
             <mesh

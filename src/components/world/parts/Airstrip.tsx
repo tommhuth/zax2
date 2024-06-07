@@ -1,6 +1,6 @@
 import { WorldPartAirstrip } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
-import EdgeBuilding from "../decoration/EdgeBuilding"
+import EdgeElement from "../decoration/EdgeElement"
 import Plane from "../spawner/Plane"
 import Floor from "../decoration/Floor"
 import Barrel from "../spawner/Barrel"
@@ -20,9 +20,9 @@ export default function Airstrip({
             position={position}
             id={id}
         >
-            <EdgeBuilding type="hangar" z={16.5} x={8} />
-            <EdgeBuilding type="tower2" z={10} x={7} /> 
-            <EdgeBuilding type="wall1" z={11} x={9} />
+            <EdgeElement type="hangar" z={16.5} x={8} />
+            <EdgeElement type="tower2" z={10} x={7} /> 
+            <EdgeElement type="wall1" z={11} x={9} />
 
             <Plane
                 position={[2.25, .5, 40]}

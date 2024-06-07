@@ -1,25 +1,22 @@
-import { Mesh } from "three"
 import { useStore } from "../../../data/store"
-import { useLoader } from "@react-three/fiber"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useWorldPart } from "../WorldPartWrapper" 
-
-useLoader.preload(GLTFLoader, "/models/grass.glb")
+import model from "@assets/models/grass.glb" 
+import { useGLTF } from "@react-three/drei"
 
 export default function Grass({ position, ...props }) { 
     let materials = useStore(i => i.materials) 
-    let [grass] = useLoader(GLTFLoader, ["/models/grass.glb"]) 
+    const { nodes } = useGLTF( model) 
     let partPosition = useWorldPart() 
  
     return ( 
-        <mesh 
+        <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.grass.geometry}
+            material={materials.grass} 
             dispose={null}
             position={[position[0], position[1], position[2] + partPosition[2]]}
             scale-y={1.75}
-            {...props}
-        >
-            <primitive object={(grass.nodes.grass as Mesh).geometry} attach="geometry" />
-            <primitive object={materials.grass} attach="material" />
-        </mesh>
+        /> 
     )
 } 

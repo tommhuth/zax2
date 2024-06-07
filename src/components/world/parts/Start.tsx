@@ -1,12 +1,13 @@
 import { WorldPartStart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
-import EdgeBuilding from "../decoration/EdgeBuilding"
+import EdgeElement from "../decoration/EdgeElement"
 import Barrel from "../spawner/Barrel"
 import Dirt from "../decoration/Dirt"
 import { useGLTF } from "@react-three/drei"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { useStore } from "../../../data/store"
 import Cable from "../decoration/Cable"
+import model from "@assets/models/logo.glb"
 
 export default function Start({
     id,
@@ -35,29 +36,29 @@ export default function Start({
                 rotation={2.985}
             />
 
-            <EdgeBuilding
+            <EdgeElement
                 type="tanks"
                 z={34}
                 x={6}
                 rotation={-Math.PI * .5}
             />
-            <EdgeBuilding
+            <EdgeElement
                 type="tanks"
                 z={20}
                 x={6}
             />
-            <EdgeBuilding
+            <EdgeElement
                 type="tanks"
                 z={6}
                 x={-6}
             />
-            <EdgeBuilding
+            <EdgeElement
                 type="tanks"
                 z={-12}
                 x={6}
                 rotation={Math.PI * .75}
             />
-            <EdgeBuilding
+            <EdgeElement
                 type="tanks"
                 z={-12}
                 x={-6}
@@ -79,12 +80,10 @@ export default function Start({
             </mesh>
         </WorldPartWrapper>
     )
-}
-
-useGLTF.preload("/models/logo.glb")
+} 
 
 function Logo(props) {
-    const { nodes } = useGLTF("/models/logo.glb") as any
+    const { nodes } = useGLTF(model) as any
 
     return (
         <group {...props} dispose={null}>

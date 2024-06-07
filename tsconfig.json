@@ -1,5 +1,11 @@
 {
-    "compilerOptions": {
+    "compilerOptions": { 
+        "baseUrl": ".",
+        "paths": {
+            "@assets/*": ["assets/*"],
+            "@data/*": ["src/data/*"],
+            "@components/*": ["src/components/*"]
+        },
         "types": [
             "vite-plugin-pwa/client"
         ],

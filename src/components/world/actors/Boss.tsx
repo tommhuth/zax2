@@ -15,6 +15,8 @@ import { createBullet } from "../../../data/store/actors"
 import { Owner } from "../../../data/types"
 import { useCollisionDetection } from "../../../data/collisions"
 import { useGLTF } from "@react-three/drei"
+import bossModel from "@assets/models/boss.glb"
+import bossdestroyedModel from "@assets/models/bossdestroyed.glb"
 
 let bossSize: Tuple3 = [4.5, 4.75, 2]
 
@@ -48,8 +50,8 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
     let materials = useStore((i) => i.materials) 
     let boss = useStore((i) => i.boss)
     let bossWrapper = useRef<Group>(null)
-    let { nodes: boss2 } = useGLTF("/models/bossdestroyed.glb") as any
-    let { nodes: boss1 } = useGLTF("/models/boss.glb") as any
+    let { nodes: boss2 } = useGLTF(bossdestroyedModel) as any
+    let { nodes: boss1 } = useGLTF(bossModel) as any
     let grid = useStore((i) => i.world.grid)
     let data = useMemo(() => {
         return {
@@ -301,7 +303,4 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
             </group>
         </>
     )
-}
-
-useGLTF.preload("/models/boss.glb")
-useGLTF.preload("/models/bossdestroyed.glb")
+} 

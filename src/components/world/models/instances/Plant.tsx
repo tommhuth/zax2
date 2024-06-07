@@ -8,12 +8,11 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useMemo } from "react"
 import easings from "../../../../shaders/easings.glsl"
 import noise from "../../../../shaders/noise.glsl"
-
-useLoader.preload(GLTFLoader, ["/models/plant.glb"])
+import model from "@assets/models/plant.glb" 
 
 export default function Plant() {
     let count = 10 
-    let [plant] = useLoader(GLTFLoader, ["/models/plant.glb"])
+    let [plant] = useLoader(GLTFLoader, [model])
     let traumaData = useMemo(() => new Float32Array(count).fill(0), [])
     let uniforms = useMemo(() => ({ uTime: { value: 0, needsUpdate: true }}), [])
     let getPlantTransform = glsl`

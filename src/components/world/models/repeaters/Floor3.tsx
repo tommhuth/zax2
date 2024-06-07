@@ -1,8 +1,9 @@
 import { useGLTF } from "@react-three/drei" 
 import { useStore } from "../../../../data/store"
+import model from "@assets/models/floor3.glb"
 
 export default function Floor3() {
-    const { nodes }: { nodes: any } = useGLTF("/models/floor3.glb")
+    const { nodes }: { nodes: any } = useGLTF(model)
     let materials = useStore(i => i.materials)
 
     return (

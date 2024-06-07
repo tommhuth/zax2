@@ -1,10 +1,8 @@
 import { useGLTF } from "@react-three/drei"
 import { useStore } from "../../../../data/store"
 
-import model from "../../../../../assets/models/tower1.glb"
-
-useGLTF.preload(model)
-
+import model from "@assets/models/tower1.glb"
+ 
 export default function Tower1() {
     const { nodes }: { nodes: any } = useGLTF(model)
     let materials = useStore(i => i.materials)

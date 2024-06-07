@@ -14,10 +14,10 @@ import { useLoader } from "@react-three/fiber"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useStore } from "../../../data/store"
 
-import barrel1Model from "../../../../assets/models/barrel1.glb"
-import barrel2Model from "../../../../assets/models/barrel2.glb"
-import barrel3Model from "../../../../assets/models/barrel3.glb"
-import barrel4Model from "../../../../assets/models/barrel4.glb"
+import barrel1Model from "@assets/models/barrel1.glb"
+import barrel2Model from "@assets/models/barrel2.glb"
+import barrel3Model from "@assets/models/barrel3.glb"
+import barrel4Model from "@assets/models/barrel4.glb"
 
 function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({
@@ -40,14 +40,7 @@ function explode(position: Vector3, size: Tuple3, color: string) {
     })
     createImpactDecal([position.x, 0, position.z])
     createScrap([position.x, position.y - size[1] * .65, position.z], 2, color)
-}
-
-useLoader.preload(GLTFLoader, [
-    barrel1Model,
-    barrel2Model,
-    barrel3Model,
-    barrel4Model
-])
+} 
 
 const rotations = new Array(8 * 2)
     .fill(null)

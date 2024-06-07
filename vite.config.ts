@@ -2,6 +2,7 @@ import { defineConfig } from "vite"
 import { VitePWA } from "vite-plugin-pwa"
 import glsl from "vite-plugin-glsl"
 import react from "@vitejs/plugin-react-swc"
+import path from "path"
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,6 +10,13 @@ export default defineConfig({
         port: 3000,
     },
     assetsInclude: ["**/*.glb"],
+    resolve: {
+        alias: {
+            "@components": path.resolve(__dirname, "src/components"),
+            "@data": path.resolve(__dirname, "src/data"),
+            "@assets": path.resolve(__dirname, "assets"),
+        },
+    },
     plugins: [
         react(),
         glsl(),
