@@ -8,6 +8,26 @@ import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { useStore } from "../../../data/store"
 import Cable from "../decoration/Cable"
 import model from "@assets/models/logo.glb"
+import { Rockface } from "../decoration/Rockface" 
+import Plant from "../decoration/Plant"
+import Grass from "../decoration/Grass"
+
+function Logo(props) {
+    const { nodes } = useGLTF(model) as any
+
+    return (
+        <group {...props} dispose={null}>
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Text.geometry}
+                material={nodes.Text.material}
+            >
+                <MeshRetroMaterial color="#fff" emissive={"#fff"} emissiveIntensity={.4} />
+            </mesh>
+        </group>
+    )
+}
 
 export default function Start({
     id,
@@ -22,6 +42,25 @@ export default function Start({
             position={position}
             id={id}
         >
+            <Rockface
+                position={[0, 1, position.z + 14]}
+                scale={[6, 2, 6]}
+                rotation-y={-.1}
+            />
+            <Rockface
+                position={[6, 2, position.z + 12]}
+                scale={[8, 4, 6]}
+                rotation-y={0}
+            />
+            <Rockface
+                position={[1, 2, position.z + 10]}
+                scale={[2, 8, 2]}
+                rotation-y={-.2}
+            /> 
+            <Plant
+                position={[-1, 2, 13]}
+                scale={1}
+            />
             <Cable
                 position={[-4, 0, 35]}
                 scale={1.25}
@@ -81,20 +120,3 @@ export default function Start({
         </WorldPartWrapper>
     )
 } 
-
-function Logo(props) {
-    const { nodes } = useGLTF(model) as any
-
-    return (
-        <group {...props} dispose={null}>
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Text.geometry}
-                material={nodes.Text.material}
-            >
-                <MeshRetroMaterial color="#fff" emissive={"#fff"} emissiveIntensity={.4} />
-            </mesh>
-        </group>
-    )
-}

@@ -5,7 +5,7 @@ import { Client } from "./SpatialHashGrid3D"
 
 export type MaterialName = "plane" |  "rocket" | "platform" | "grass" | "exhaust" 
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
-    | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel"
+    | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock"
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi" | "turret"
 
 export type InstanceName = "leaf" | "scrap" |  "line" | "box" | "sphere" | "particle" | "device"

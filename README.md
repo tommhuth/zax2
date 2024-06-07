@@ -14,6 +14,7 @@
 - rework loading to make sure no suspending mid game
 - collision hook improv
 - make it pretty: modularize deco 3d models
+- clean up blender file
 
 53 mat + 22 instances
 

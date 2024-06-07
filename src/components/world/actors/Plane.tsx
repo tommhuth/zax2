@@ -1,5 +1,5 @@
 import { memo, startTransition, useMemo, useRef } from "react"
-import { useFrame, useLoader } from "@react-three/fiber"
+import { useFrame } from "@react-three/fiber"
 import { useEffect } from "react"
 import { clamp, ndelta } from "../../../data/utils"
 import random from "@huth/random"
@@ -18,10 +18,10 @@ import Counter from "../../../data/Counter"
 import { easeInOutCubic } from "../../../data/shaping"
 import Exhaust from "../../Exhaust"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
 import planeModel from "@assets/models/plane.glb"
- 
+import { useGLTF } from "@react-three/drei"
+
 let _size = new Vector3()
 
 function explode(position: Vector3) {
@@ -41,7 +41,7 @@ function explode(position: Vector3) {
         radius: [.1, .45],
         color: planeColor,
     })
-} 
+}
 
 function Plane({
     id,
@@ -57,7 +57,7 @@ function Plane({
     speed,
     rotation = 0,
 }: PlaneType) {
-    let model = useLoader(GLTFLoader, planeModel)
+    let { nodes } = useGLTF(planeModel)
     let materials = useStore(i => i.materials)
     let planeRef = useRef<Mesh>(null)
     let data = useMemo(() => ({
@@ -80,7 +80,7 @@ function Plane({
     let remove = () => {
         startTransition(() => removePlane(id))
         data.removed = true
-    }   
+    }
 
     useCollisionDetection({
         client,
@@ -176,8 +176,8 @@ function Plane({
 
             if (
                 position.z - world.diagonal * .5 > playerZ
-                && player.object 
-            ) { 
+                && player.object
+            ) {
                 startTransition(remove)
             } else {
                 client.position = position.toArray()
@@ -250,7 +250,7 @@ function Plane({
                 dispose={null}
             >
                 <primitive
-                    object={(model.nodes.plane as Mesh).geometry} 
+                    object={nodes.plane.geometry}
                     attach="geometry"
                 />
             </mesh>
@@ -262,7 +262,7 @@ function Plane({
                     scale={[.4, .2, .9]}
                     rotation={[0, -Math.PI, 0]}
                     visible={health > 0}
-                /> 
+                />
             )}
         </>
     )
