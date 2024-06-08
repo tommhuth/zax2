@@ -1,5 +1,5 @@
 import { startTransition, useEffect, useMemo, useRef, useState } from "react"
-import { Owner, Rocket } from "../../../data/types"
+import type { Owner, Rocket } from "../../../data/types"
 import { useFrame } from "@react-three/fiber"
 import { ndelta } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
@@ -13,7 +13,7 @@ import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
 import Exhaust from "../../Exhaust"
 import { WORLD_TOP_EDGE } from "../../../data/const"
-import rocketStuff from "@assets/models/rocket2.glb"
+import models from "@assets/models/rocket.glb"
 import { useGLTF } from "@react-three/drei"
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
 
@@ -97,7 +97,7 @@ export default function Rocket({
     speed,
     health,
 }: Rocket) {
-    let { nodes } = useGLTF(rocketStuff) as GLTFResult
+    let { nodes } = useGLTF(models) as GLTFResult
     let rocketRef = useRef<Mesh>(null)
     let grid = useStore(i => i.world.grid)
     let [removed, setRemoved] = useState(false)

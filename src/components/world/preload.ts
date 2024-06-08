@@ -6,8 +6,7 @@ import cargoship2_destroyed from "@assets/models/cargoship2_destroyed.glb"
 import cargoship3 from "@assets/models/cargoship3.glb"
 import floor5 from "@assets/models/floor5.glb"
 import hangar from "@assets/models/hangar.glb"
-import plane from "@assets/models/plane.glb"
-import platform from "@assets/models/platform.glb"
+import plane from "@assets/models/plane.glb" 
 import rocket from "@assets/models/rocket.glb"
 import rockface from "@assets/models/rockface.glb"
 import tower1 from "@assets/models/tower1.glb"
@@ -40,7 +39,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 for (let model of [
     barrels, cargoship1, cargoship1_destroyed,
     cargoship2, cargoship2_destroyed, cargoship3, floor5, hangar, plane,
-    platform, rocket, rockface, tower1, tower2, turret2, wall1, wall2, wall3,
+    rocket, rockface, tower1, tower2, turret2, wall1, wall2, wall3,
     logo, tanks, boss, bossdestroyed,
     floor1, floor2, floor3, floor4, grass, plant, player,
 ]) {
