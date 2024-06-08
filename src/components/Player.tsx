@@ -2,7 +2,6 @@ import { useFrame, useLoader } from "@react-three/fiber"
 import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
 import { AdditiveBlending, Group, PointLight, TextureLoader } from "three"
 import { Tuple3 } from "../types"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { clamp, ndelta } from "../data/utils"
 import { BossState, Owner } from "../data/types"
 import animate from "@huth/animate"
@@ -21,6 +20,8 @@ import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_CENTER_X, WORLD_PLAYER_START_Z }
 import { uiTunnel } from "../components/ui/tunnels"
 
 import playerModel from "@assets/models/player.glb"
+import { useGLTF } from "@react-three/drei"
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
 
 let depth = 2
 
@@ -34,6 +35,12 @@ interface LocalData {
     lastShotAt: number
     isMovingUp: boolean
     bossDeadAt: number
+}
+
+type GLTFResult = GLTF & {
+    nodes: {
+        player: THREE.Mesh
+    } 
 }
 
 export default function Player({
@@ -56,7 +63,7 @@ export default function Player({
     let controls = useStore(i => i.controls)
     let diagonal = useStore(i => i.world.diagonal)
     let engineLightRef = useRef<PointLight>(null)
-    let model = useLoader(GLTFLoader, playerModel)
+    let { nodes } = useGLTF(playerModel) as GLTFResult
     let text = useLoader(TextureLoader, "/textures/glow.png")
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {
@@ -270,8 +277,7 @@ export default function Player({
                 ref={handleRef}
             >
                 <group ref={innerRef}>
-                    <primitive
-                        object={model.nodes.player}
+                    <mesh
                         receiveShadow
                         castShadow
                         position={[0, 0, 0]}
@@ -282,7 +288,8 @@ export default function Player({
                             color={playerColor}
                             colorCount={3}
                         />
-                    </primitive>
+                        <primitive object={nodes.player.geometry} attach="geometry" />
+                    </mesh>
 
                     <mesh
                         scale={[3.5, 6, 1]}

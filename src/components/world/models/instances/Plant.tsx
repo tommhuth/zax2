@@ -1,20 +1,27 @@
-import { DoubleSide, Mesh, RGBADepthPacking } from "three"
+import { DoubleSide, RGBADepthPacking } from "three"
 import { plantColor } from "../../../../data/theme"
 import { MeshRetroMaterial } from "../../materials/MeshRetroMaterial"
 import InstancedMesh from "../InstancedMesh"
 import { glsl } from "../../../../data/utils"
-import { useFrame, useLoader } from "@react-three/fiber"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
+import { useFrame } from "@react-three/fiber"
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useMemo } from "react"
 import easings from "../../../../shaders/easings.glsl"
 import noise from "../../../../shaders/noise.glsl"
-import model from "@assets/models/plant.glb" 
+import model from "@assets/models/plant.glb"
+import { useGLTF } from "@react-three/drei"
+
+type GLTFResult = GLTF & {
+    nodes: {
+        plant: THREE.Mesh
+    }
+}
 
 export default function Plant() {
-    let count = 10 
-    let [plant] = useLoader(GLTFLoader, [model])
+    let count = 10
+    let { nodes } = useGLTF(model) as GLTFResult
     let traumaData = useMemo(() => new Float32Array(count).fill(0), [])
-    let uniforms = useMemo(() => ({ uTime: { value: 0, needsUpdate: true }}), [])
+    let uniforms = useMemo(() => ({ uTime: { value: 0, needsUpdate: true } }), [])
     let getPlantTransform = glsl`
         vec3 getPlantTransform(vec3 localPosition, vec3 globalPosition) {
             vec3 result = vec3(0.);
@@ -40,38 +47,38 @@ export default function Plant() {
         }
     `
 
-    useFrame((state, delta)=> {
+    useFrame((state, delta) => {
         uniforms.uTime.value += delta * .2
         uniforms.uTime.needsUpdate = true
     })
 
-    return ( 
+    return (
         <InstancedMesh
             name="plant"
             count={count}
             receiveShadow
-            castShadow 
+            castShadow
         >
-            <primitive 
-                object={(plant.nodes.plant as Mesh).geometry} 
-                attach="geometry" 
+            <primitive
+                object={nodes.plant.geometry}
+                attach="geometry"
             >
-                <instancedBufferAttribute 
-                    attach={"attributes-aTrauma"} 
+                <instancedBufferAttribute
+                    attach={"attributes-aTrauma"}
                     args={[traumaData, 1, false, 1]}
                 />
-            </primitive>
+            </primitive> 
 
             <meshDepthMaterial
                 attach="customDepthMaterial"
                 depthPacking={RGBADepthPacking}
-                alphaTest={.5} 
-                onBeforeCompile={(shader) =>{
+                alphaTest={.5}
+                onBeforeCompile={(shader) => {
                     shader.uniforms = {
                         ...shader.uniforms,
                         ...uniforms
                     }
-  
+
                     shader.vertexShader = shader.vertexShader.replace("#include <common>", glsl`
                         #include <common>
                         
@@ -91,27 +98,27 @@ export default function Plant() {
                     `)
                 }}
             />
-            
-            <MeshRetroMaterial 
+
+            <MeshRetroMaterial
                 name="plant"
                 colorCount={7}
                 vertexColors
                 color={plantColor}
                 side={DoubleSide}
                 rightColorIntensity={.5}
-                rightColor="#ff0"  
+                rightColor="#ff0"
                 dither={.015}
                 shader={{
                     vertex: {
                         head: glsl` 
                             attribute float aTrauma;
                             ${getPlantTransform}
-                        `, 
+                        `,
                         main: glsl`
                             transformed += getPlantTransform(position, globalPosition.xyz);
                         `
                     }
-                }} 
+                }}
             />
         </InstancedMesh>
     )

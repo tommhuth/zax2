@@ -1,6 +1,6 @@
 import { startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { Owner, Rocket } from "../../../data/types"
-import { useFrame, useLoader } from "@react-three/fiber"
+import { useFrame } from "@react-three/fiber"
 import { ndelta } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
 import random from "@huth/random"
@@ -13,10 +13,9 @@ import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
 import Exhaust from "../../Exhaust"
 import { WORLD_TOP_EDGE } from "../../../data/const"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
-
-import rocketModel from "@assets/models/rocket.glb"
-import platformModel from "@assets/models/platform.glb"
+import rocketStuff from "@assets/models/rocket2.glb"
+import { useGLTF } from "@react-three/drei"
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
 
 let _size = new Vector3()
 
@@ -80,7 +79,14 @@ function explode(position: Vector3, size: Tuple3) {
             delay: 520
         })
     }
-} 
+}
+
+type GLTFResult = GLTF & {
+    nodes: {
+        rocket: THREE.Mesh
+        platform: THREE.Mesh
+    }
+}
 
 export default function Rocket({
     position,
@@ -91,12 +97,8 @@ export default function Rocket({
     speed,
     health,
 }: Rocket) {
-    let [rocket, platform] = useLoader(GLTFLoader, [
-        rocketModel,
-        platformModel,
-    ])
+    let { nodes } = useGLTF(rocketStuff) as GLTFResult
     let rocketRef = useRef<Mesh>(null)
-    let platformRef = useRef<Mesh>(null)
     let grid = useStore(i => i.world.grid)
     let [removed, setRemoved] = useState(false)
     let data = useMemo(() => {
@@ -124,8 +126,8 @@ export default function Rocket({
         actions: {
             bullet: ({ bullet, client, type }) => {
                 if (
-                    bullet.owner !== Owner.PLAYER 
-                    || client.data.id !== id 
+                    bullet.owner !== Owner.PLAYER
+                    || client.data.id !== id
                     || type !== "rocket"
                 ) {
                     return
@@ -150,7 +152,7 @@ export default function Rocket({
         let { player } = useStore.getState()
         let d = ndelta(delta)
 
-        if (rocketRef.current && platformRef.current && !data.removed && player.object) { 
+        if (rocketRef.current && !data.removed && player.object) {
             if (Math.abs(position.z - player.object.position.z) < data.triggerZ) {
                 position.y += data.speed * d
 
@@ -173,32 +175,25 @@ export default function Rocket({
 
     return (
         <>
-            <mesh
-                ref={rocketRef}
-                rotation-y={data.rotationY}
-                material={materials.rocket}
-                visible={!removed}
-                dispose={null}
-            >
-                <primitive
-                    object={(rocket.nodes.rocket as Mesh).geometry}
-                    attach="geometry"
-                />
-            </mesh>
 
             <mesh
-                receiveShadow
                 castShadow
-                ref={platformRef}
-                position={[position.x, 0, position.z]}
-                material={materials.platform}
+                receiveShadow
+                ref={rocketRef}
+                rotation-y={data.rotationY}
+                visible={!removed}
                 dispose={null}
-            >
-                <primitive
-                    object={(platform.nodes.platform as Mesh).geometry}
-                    attach="geometry"
-                />
-            </mesh>
+                geometry={nodes.rocket.geometry}
+                material={materials.rocket}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                dispose={null}
+                geometry={nodes.platform.geometry}
+                material={materials.platform}
+                position={[position.x, 0, position.z]}
+            />
 
             {!removed && (
                 <Exhaust

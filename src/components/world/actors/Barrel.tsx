@@ -1,5 +1,5 @@
 import { startTransition, useEffect, useMemo, useState } from "react"
-import { Mesh, Vector3 } from "three"
+import { Vector3 } from "three"
 import { Barrel as BarrelType, Owner } from "../../../data/types"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types"
@@ -10,14 +10,11 @@ import { increaseScore } from "../../../data/store/player"
 import { useCollisionDetection } from "../../../data/collisions"
 import Config from "../../../data/Config"
 import { useRemoveWhenBehindPlayer } from "../../../data/hooks"
-import { useLoader } from "@react-three/fiber"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useStore } from "../../../data/store"
 
-import barrel1Model from "@assets/models/barrel1.glb"
-import barrel2Model from "@assets/models/barrel2.glb"
-import barrel3Model from "@assets/models/barrel3.glb"
-import barrel4Model from "@assets/models/barrel4.glb"
+import barrelsModel from "@assets/models/barrels.glb"
+import { useGLTF } from "@react-three/drei"
 
 function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({
@@ -40,11 +37,20 @@ function explode(position: Vector3, size: Tuple3, color: string) {
     })
     createImpactDecal([position.x, 0, position.z])
     createScrap([position.x, position.y - size[1] * .65, position.z], 2, color)
-} 
+}
 
 const rotations = new Array(8 * 2)
     .fill(null)
     .map((i, index, list) => (index / list.length) * Math.PI * 2)
+
+type GLTFResult = GLTF & {
+    nodes: {
+        barrel4: THREE.Mesh
+        barrel2: THREE.Mesh
+        barrel3: THREE.Mesh
+        barrel1: THREE.Mesh
+    }
+}
 
 export default function Barrel({
     position,
@@ -53,25 +59,14 @@ export default function Barrel({
     health,
 }: BarrelType) {
     let type = useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), [])
-    let models = useLoader(GLTFLoader, [
-        barrel1Model,
-        barrel2Model,
-        barrel3Model,
-        barrel4Model,
-    ])
-    let model = {
-        barrel1: models[0],
-        barrel2: models[1],
-        barrel3: models[2],
-        barrel4: models[3],
-    }
+    let { nodes } = useGLTF(barrelsModel) as GLTFResult
     let [rotation] = useState(random.pick(...rotations))
     let materials = useStore(i => i.materials)
     let remove = () => {
         setTimeout(() => {
             startTransition(() => removeBarrel(id))
         }, 300)
-    } 
+    }
 
     useRemoveWhenBehindPlayer(position, remove)
 
@@ -95,26 +90,38 @@ export default function Barrel({
                 explode(position, size, barellParticleColor)
             })
         }
-    }, [health])
+    }, [health]) 
 
     return (
         <>
-            <mesh
+            <group
                 castShadow
                 receiveShadow
                 position={[position.x, position.y - size[1] / 2, position.z]}
                 rotation-y={rotation}
                 dispose={null}
             >
-                <primitive
-                    object={(model[type].nodes[type] as Mesh).geometry}
-                    attach="geometry"
+                <mesh
+                    geometry={nodes.barrel1.geometry}
+                    material={materials.barrel}
+                    visible={type === "barrel1"}
                 />
-                <primitive
-                    object={materials.barrel}
-                    attach="material"
+                <mesh
+                    geometry={nodes.barrel2.geometry}
+                    material={materials.barrel}
+                    visible={type === "barrel2"}
                 />
-            </mesh>
+                <mesh
+                    geometry={nodes.barrel3.geometry}
+                    material={materials.barrel}
+                    visible={type === "barrel3"}
+                />
+                <mesh
+                    geometry={nodes.barrel4.geometry}
+                    material={materials.barrel}
+                    visible={type === "barrel4"}
+                />
+            </group>
 
             {Config.DEBUG && (
                 <mesh position={position.toArray()}>
