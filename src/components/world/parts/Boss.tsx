@@ -15,9 +15,18 @@ import { uiTunnel } from "../../ui/tunnels"
 import EdgeElement from "../decoration/EdgeElement" 
 
 import model from "@assets/models/floor5.glb"
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
+
+type GLTFResult = GLTF & {
+    nodes: {
+      floor5_1: THREE.Mesh
+      floor5_2: THREE.Mesh
+      floor5_3: THREE.Mesh
+    } 
+  }
 
 export function BossFloor(props) {
-    const { nodes } = useGLTF(model) as any
+    const { nodes } = useGLTF(model) as GLTFResult
     const materials = useStore(i => i.materials)
 
     return (
