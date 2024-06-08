@@ -1,5 +1,6 @@
 import { startTransition, useEffect, useMemo, useRef, useState } from "react"
-import type { Owner, Rocket } from "../../../data/types"
+import type { Rocket } from "../../../data/types"
+import { Owner } from "../../../data/types"
 import { useFrame } from "@react-three/fiber"
 import { ndelta } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
