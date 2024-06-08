@@ -116,32 +116,31 @@ function MaterialLoader() {
             ),
             rock: (
                 <MeshRetroMaterial
-                    backColorIntensity={.0}
-                    backColor="yellow"
+                    backColorIntensity={.15}
+                    backColor="black"
                     color={floorBaseColor}
                     emissive={floorBaseColor}
                     emissiveIntensity={.1}
-                    rightColorIntensity={.0}
-                    rightColor="yellow"
+                    rightColorIntensity={.1}
+                    rightColor="white"
                     shader={{
                         fragment: {
-                            main: glsl`
-                                vec3 npos = vec3(vGlobalPosition.x * .6, vPosition.y * 2., vGlobalPosition.z * .5);
-                                float grassN = easeInOutQuad((noise(npos) + 1.) / 2.);
-                                float i = luma(gl_FragColor.rgb) * 4.;
-                                float ye = (clamp((vPosition.y + .5) / 1., 0., 1.));
-                                vec3 grassColor = vec3(0., 1., .4);
+                            main: glsl` 
+                                float heightDistance = 1.5;
+                                float intensity = luma(gl_FragColor.rgb) * 5.;
+                                float baseNoise1 = (noise(
+                                    vec3(vGlobalPosition.x * .7, vGlobalPosition.y * .7, vGlobalPosition.z * .7)
+                                ) + 1.) / 2.;
+                                float ye = clamp(vGlobalPosition.y / heightDistance, 0., 1.);
+                                vec3 grassColor = vec3(0., .8, .4) * .85;  
+
+                                float ye2 = 1. - clamp(abs(vGlobalPosition.y - 1.25) / 2.5, 0., 1.);
 
                                 gl_FragColor.rgb = mix(
                                     gl_FragColor.rgb,  
-                                    grassColor * i, 
-                                    ye - (1. - ye) * grassN
-                                ); 
-                                gl_FragColor.rgb = mix(
-                                    gl_FragColor.rgb,  
-                                    vec3(0., .9, .7), 
-                                    ye  * grassN * .75
-                                ); 
+                                    grassColor * intensity, 
+                                    ye - easeInOutQuad(ye2) * easeInOutQuad(baseNoise1)
+                                );  
                             `
                         }
                     }}

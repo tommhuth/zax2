@@ -43,23 +43,27 @@ export default function Start({
             id={id}
         >
             <Rockface
-                position={[0, 1, position.z + 14]}
-                scale={[6, 2, 6]}
+                position={[0, .5, position.z + 8]}
+                scale={[6, 3, 6]}
                 rotation-y={-.1}
             />
             <Rockface
-                position={[6, 2, position.z + 12]}
+                position={[6, 1.5, position.z + 6]}
                 scale={[8, 4, 6]}
                 rotation-y={0}
             />
             <Rockface
-                position={[1, 2, position.z + 10]}
+                position={[-1, 2, position.z + 8]}
                 scale={[2, 8, 2]}
                 rotation-y={-.2}
             /> 
             <Plant
-                position={[-1, 2, 13]}
+                position={[-1, 2, 6]}
                 scale={1}
+            />
+            <Plant
+                position={[5, 3, 6]}
+                scale={1.1} 
             />
             <Cable
                 position={[-4, 0, 35]}
