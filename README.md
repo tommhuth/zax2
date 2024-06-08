@@ -2,18 +2,13 @@
 
 ## Todo   
 - actual level design    
-- add missing 3d: rockfaces + boss part 
+- add missing 3d: boss part + tweak exit
 - ui
 - intro  
 - hit detection edge case fix  
-- rework boss ending   
-- blast + shockwave tweak/coord
-- abstract out fake physics to a single handler?
-- remove instancing for actors (building)
-- colocate more stuff  
-- rework loading to make sure no suspending mid game
-- collision hook improv
-- make it pretty: modularize deco 3d models
+- blast + shockwave tweak/coord   
+
+- colocate more stuff?
 - clean up blender file
 
 53 mat + 22 instances
