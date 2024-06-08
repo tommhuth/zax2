@@ -95,28 +95,34 @@ export default function Barrel({
     return (
         <>
             <group
-                castShadow
-                receiveShadow
                 position={[position.x, position.y - size[1] / 2, position.z]}
                 rotation-y={rotation}
                 dispose={null}
             >
                 <mesh
+                    castShadow
+                    receiveShadow
                     geometry={nodes.barrel1.geometry}
                     material={materials.barrel}
                     visible={type === "barrel1"}
                 />
                 <mesh
+                    castShadow
+                    receiveShadow
                     geometry={nodes.barrel2.geometry}
                     material={materials.barrel}
                     visible={type === "barrel2"}
                 />
                 <mesh
+                    castShadow
+                    receiveShadow
                     geometry={nodes.barrel3.geometry}
                     material={materials.barrel}
                     visible={type === "barrel3"}
                 />
                 <mesh
+                    castShadow
+                    receiveShadow
                     geometry={nodes.barrel4.geometry}
                     material={materials.barrel}
                     visible={type === "barrel4"}
