@@ -17,6 +17,10 @@ export function Rockface(props) {
     }, [grid])
 
     useEffect(() => {
+        if (!grid || !client) {
+            return 
+        }
+
         return () => {
             grid.remove(client)
         }

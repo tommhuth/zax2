@@ -25,13 +25,13 @@ export default function EdgeElement({
     let partPosition = useWorldPart()
 
     useEffect(() => {
-        if (building?.mesh) {
+        if (building) {
 
-            building.mesh.position.set(x, y, z + partPosition[2])
-            building.mesh.rotation.y = rotation
+            building.position.set(x, y, z + partPosition[2])
+            building.rotation.y = rotation
 
             if (scale)
-                building.mesh.scale.set(...scale) 
+                building.scale.set(...scale) 
         }
     }, [building, rotation, x, y, z])
 

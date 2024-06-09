@@ -2,6 +2,7 @@
 
 ## Todo   
 - actual level design    
+- gameplay loop
 - add missing 3d: boss part + tweak exit
 - ui
 - intro  

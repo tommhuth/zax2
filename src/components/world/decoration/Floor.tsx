@@ -20,10 +20,10 @@ export default function Floor({
 
     useEffect(() => {
         if (floor) {
-            floor.mesh.position.set(x, y, z + partPosition[2])
-            floor.mesh.scale.set(...scale)
+            floor.position.set(x, y, z + partPosition[2])
+            floor.scale.set(...scale)
         }
-    }, [floor?.mesh])
+    }, [floor])
 
     return null
 }

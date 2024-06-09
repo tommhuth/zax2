@@ -13,7 +13,7 @@ export type InstanceName = "leaf" | "scrap" |  "line" | "box" | "sphere" | "part
     | "grass" | "plant" | "shockwave" | "blast" | "decal"  
 
 export type RepeaterName = "tower1" | "tower2"| "tower3"| "tower3"| "tower3"| "tower3"
-    | "tanks" | "wall1" | "wall2" | "wall3" | "wall4"
+    | "tanks" | "wall1" | "wall2" | "wall3" | "wall4" | "floor6"
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
 
 export type CollisionObjectType = "plant" | "barrel" | "player" | "boss" | "heatseaker" 
