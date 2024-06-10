@@ -1,6 +1,8 @@
 # Zax
 
 ## Todo   
+- fix inaccurate boss spawning 
+- timescale everything (bullet spawning, particles)
 - actual level design    
 - gameplay loop
 - add missing 3d: boss part + tweak exit
