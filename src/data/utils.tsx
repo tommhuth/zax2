@@ -2,11 +2,12 @@ import React, { useRef } from "react"
 import { BufferAttribute, BufferGeometry, Color, ColorRepresentation, Euler, InstancedMesh, Matrix4, Quaternion, Vector3 } from "three"
 import { Tuple2, Tuple3, Tuple4 } from "../types"
 import { clamp, mapLinear as map } from "three/src/math/MathUtils.js"
+import { store } from "./store"
 
 export { clamp, map }
 
 export function ndelta(delta: number) {
-    let nDelta = clamp(delta, 0, 1 / 30)
+    let nDelta = clamp(delta, 0, 1 / 30) * store.getState().world.timeScale
 
     return nDelta
 }

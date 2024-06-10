@@ -5,7 +5,7 @@ import { Tuple2, Tuple3 } from "../../types"
 import { Only } from "../../data/utils"
 import random from "@huth/random" 
 import Config from "../../data/Config"
-import { store } from "../../data/store"
+import { store, useStore } from "../../data/store"
 import { removeWorldPart } from "../../data/store/world"
 import { WORLD_CENTER_X } from "../../data/const"
 
@@ -43,6 +43,7 @@ export default function WorldPartWrapper({
     let dead = useRef(false)
     let i = useRef(random.integer(0, 100))
     let p = useMemo(() => position.toArray(), [position])
+    let showColliders = useStore(i=> i.debug.showColliders)
 
     useFrame(() => {
         i.current++
@@ -70,7 +71,7 @@ export default function WorldPartWrapper({
             >
                 {children}
 
-                <Only if={Config.DEBUG}>
+                <Only if={showColliders}>
                     <mesh
                         position-y={-1}
                         position-z={position.z + depth / 2}

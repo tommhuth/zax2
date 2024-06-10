@@ -17,6 +17,7 @@ import { WORLD_TOP_EDGE } from "../../../data/const"
 import models from "@assets/models/rocket.glb"
 import { useGLTF } from "@react-three/drei"
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
+import DebugBox from "@components/DebugBox"
 
 let _size = new Vector3()
 
@@ -205,6 +206,12 @@ export default function Rocket({
                     turbulence={2}
                 />
             )}
+
+            <DebugBox
+                dynamic
+                size={size}
+                position={position}
+            />
         </>
     )
 }

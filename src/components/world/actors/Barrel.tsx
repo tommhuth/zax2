@@ -15,6 +15,7 @@ import { useStore } from "../../../data/store"
 
 import barrelsModel from "@assets/models/barrels.glb"
 import { useGLTF } from "@react-three/drei"
+import DebugBox from "@components/DebugBox"
 
 function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({
@@ -129,12 +130,7 @@ export default function Barrel({
                 />
             </group>
 
-            {Config.DEBUG && (
-                <mesh position={position.toArray()}>
-                    <boxGeometry args={[...size, 1, 1, 1]} />
-                    <meshBasicMaterial wireframe color="orange" name="debug" />
-                </mesh>
-            )}
+            <DebugBox size={size} position={position} />
         </>
     )
 }

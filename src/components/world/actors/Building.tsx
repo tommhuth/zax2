@@ -4,6 +4,7 @@ import random from "@huth/random"
 import { createParticles } from "../../../data/store/effects" 
 import { useCollisionDetection } from "../../../data/collisions"
 import { useMemo } from "react"
+import DebugBox from "@components/DebugBox"
 
 export default function Building({ size, id, position }: Building) {  
     let type = useMemo(() => random.pick<InstanceName>("box", "device"), [])
@@ -38,5 +39,5 @@ export default function Building({ size, id, position }: Building) {
         ]
     })
 
-    return null 
+    return <DebugBox size={size} position={position} /> 
 }

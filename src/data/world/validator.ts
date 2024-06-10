@@ -1,8 +1,8 @@
 import { store } from "../store"
 import { BossState, WorldPart, WorldPartType } from "../types"
 
-let lastBossAt = new Date()
-let bossInterval = 120_000
+export let lastBossAt = new Date()
+export let bossInterval = 120_000
 
 export const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
     [WorldPartType.DEFAULT]: () => true,
@@ -12,7 +12,10 @@ export const validator: Record<WorldPartType, (previous: WorldPart) => boolean> 
     [WorldPartType.BOSS]: () => {
         let { boss } = store.getState()  
 
-        if (Date.now() - lastBossAt.getTime() > bossInterval && boss.state === BossState.UNKNOWN) {
+        if (
+            Date.now() - lastBossAt.getTime() > bossInterval 
+            && boss.state === BossState.UNKNOWN
+        ) {
             lastBossAt = new Date()
 
             return true

@@ -3,7 +3,7 @@ import random from "@huth/random"
 export default class Cycler<T> {
     private i: number
     private lastWasRandom = false
-    private randomPickChance: number
+    public readonly randomPickChance: number
     private startAt: number
     private options: T[]
 
@@ -12,6 +12,9 @@ export default class Cycler<T> {
         this.randomPickChance = randomPickChance
         this.startAt = startAt
         this.i = startAt
+    }
+    peak() {
+        return this.options[this.i % this.options.length]
     }
     next() {
         if (!this.lastWasRandom) {

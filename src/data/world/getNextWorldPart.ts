@@ -1,17 +1,19 @@
+import { store } from "@data/store"
 import Cycler from "../Cycler"
 import { WorldPart, WorldPartType } from "../types"
 import * as generators from "./generators"
 import { validator } from "./validator"
+import { removeOldestForcedWorldPart } from "@data/store/debug"
 
 const specialParts = [WorldPartType.START] as const
 
 type DynamicWorldPartType = Exclude<WorldPartType, typeof specialParts[number]>
 
-const types = new Cycler<DynamicWorldPartType>(
+export const worlPartTypes = new Cycler<DynamicWorldPartType>(
     Object.values(WorldPartType).filter((i): i is DynamicWorldPartType => {
         return !specialParts.includes(i as any)
     }),
-    .25,
+    .15,
     1
 ) 
 
@@ -24,11 +26,16 @@ let partGenerator: Record<DynamicWorldPartType, (prev: WorldPart) => WorldPart> 
 }
 
 export function getNextWorldPart(previous: WorldPart): WorldPart {
-    let type = types.next()
+    let forced = store.getState().debug.forcedWorldParts[0]
+    let type = forced || worlPartTypes.next()
 
     while (!validator[type](previous)) {
-        type = types.next()
+        type = worlPartTypes.next()
     } 
+
+    if (forced && forced === type) {
+        removeOldestForcedWorldPart()
+    }
 
     return partGenerator[type](previous)
 }

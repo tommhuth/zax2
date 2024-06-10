@@ -11,6 +11,7 @@ import { useFrame } from "@react-three/fiber"
 import { createParticles } from "../../../data/store/effects"
 import { Owner } from "../../../data/types"
 import { damp } from "three/src/math/MathUtils.js"
+import DebugBox from "@components/DebugBox"
 
 interface PlantProps {
     position: Tuple3
@@ -205,5 +206,5 @@ export default function Plant({
         }
     })
 
-    return null
+    return <DebugBox size={size} position={position} />
 }

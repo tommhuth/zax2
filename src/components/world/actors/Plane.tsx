@@ -21,6 +21,7 @@ import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 
 import planeModel from "@assets/models/plane.glb"
 import { useGLTF } from "@react-three/drei"
+import DebugBox from "@components/DebugBox"
 
 let _size = new Vector3()
 
@@ -264,6 +265,12 @@ function Plane({
                     visible={health > 0}
                 />
             )}
+
+            <DebugBox 
+                size={size} 
+                position={position} 
+                dynamic
+            />
         </>
     )
 }

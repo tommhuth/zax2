@@ -8,6 +8,7 @@ import { createExplosion, createImpactDecal } from "../../../data/store/effects"
 import random from "@huth/random"
 import { HeatSeaker } from "../../../data/types"
 import { useCollisionDetection } from "../../../data/collisions"
+import DebugBox from "@components/DebugBox"
 
 let _dir = new Vector3()
 let _mat4 = new Matrix4()
@@ -105,5 +106,5 @@ export default function HeatSeaker({
         }
     }, [index, grid])
 
-    return null
+    return <DebugBox size={size} position={position} />
 }

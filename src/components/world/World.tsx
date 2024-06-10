@@ -32,7 +32,7 @@ export default function World() {
 
         if (forwardWorldPart) {
             let lastPartIsAtEdge = player 
-                && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
+                && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal * .85
  
             if ((lastPartIsAtEdge || !forwardWorldPart) && ready) { 
                 startTransition(addWorldPart)

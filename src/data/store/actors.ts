@@ -6,8 +6,8 @@ import { Tuple3 } from "../../types"
 import { updateWorld } from "./utils"
 import { BULLET_SIZE } from "../const"
 
-let _mat4 = new Matrix4() 
-let _yAxis = new Vector3(0,1,0)
+let _mat4 = new Matrix4()
+let _yAxis = new Vector3(0, 1, 0)
 let _obb = new Vector3()
 
 export function createBullet({
@@ -21,7 +21,7 @@ export function createBullet({
 }) {
     let id = random.id()
     let aabb = new Box3().setFromCenterAndSize(new Vector3(...position), new Vector3(0, 0, 0))
-    let { instances } = store.getState() 
+    let { instances } = store.getState()
 
     _obb.set(...size)
         .applyMatrix4(_mat4.makeRotationAxis(_yAxis, rotation))
@@ -187,15 +187,15 @@ export function createTurret({
     floorLevel,
 }: CreateTurretParam) {
     let id = random.id()
-    let size = [1.85, 4.4, 1.85] as Tuple3
-    let position = new Vector3(x, y , z) // + size[1] / 2
+    let size = [1.85, 4.5, 1.85] as Tuple3
+    let position = new Vector3(x, y, z)
     let aabb = new Box3().setFromCenterAndSize(position, new Vector3(...size))
     let { grid, turrets } = store.getState().world
     let client = grid.createClient(
         [x, y, z],
         [...size],
         { type: "turret", id }
-    ) 
+    )
 
     updateWorld({
         turrets: [
@@ -220,7 +220,7 @@ export function createTurret({
 interface CreatePlaneParams {
     position: Tuple3
     targetY?: number
-    speed?: number 
+    speed?: number
     fireFrequency?: number
     rotation?: number
 }
@@ -230,7 +230,7 @@ export function createPlane({
     targetY = y,
     rotation = 0,
     speed = random.float(4, 5),
-    fireFrequency = random.integer(150, 350), 
+    fireFrequency = random.integer(150, 350),
 }: CreatePlaneParams) {
     let id = random.id()
     let size = [1, 1.5, 2] as Tuple3

@@ -24,8 +24,16 @@ export function setDiagonal(diagonal: number) {
         },
     })
 
-}
+} 
+export function setTimeScale(timeScale: number) {
+    store.setState({
+        world: {
+            ...store.getState().world,
+            timeScale
+        },
+    })
 
+} 
 
 export function addWorldPart(part?: WorldPart) {
     let world = store.getState().world

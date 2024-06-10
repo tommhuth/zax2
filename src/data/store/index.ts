@@ -5,7 +5,8 @@ import { subscribeWithSelector } from "zustand/middleware"
 import { Tuple3 } from "../../types"
 import {
     Barrel, BossState, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, MaterialName, Particle,
-    Plane, RepeaterMesh, Rocket, Turret, WorldPart
+    Plane, RepeaterMesh, Rocket, Turret, WorldPart,
+    WorldPartType
 } from "../types"
 import { SpatialHashGrid3D } from "../SpatialHashGrid3D" 
 
@@ -19,6 +20,10 @@ interface ControlsMap {
 }
 
 export interface Store {
+    debug: {
+        showColliders: boolean
+        forcedWorldParts: WorldPartType[]
+    }
     loaded: boolean
     setup: boolean
     ready: boolean
@@ -28,6 +33,7 @@ export interface Store {
         parts: WorldPart[]
         frustum: Frustum
         level: number
+        timeScale: number
         grid: SpatialHashGrid3D
         bullets: Bullet[]
         turrets: Turret[]
@@ -78,12 +84,17 @@ export interface Store {
 
 const store = create(
     subscribeWithSelector<Store>(() => ({
+        debug: {
+            showColliders: false,
+            forcedWorldParts: [],
+        },
         loaded: false,
         setup: false,
         ready: false,
         state: "intro",
         world: {
             diagonal: 1,
+            timeScale: 1,
             grid: new SpatialHashGrid3D([4, 3, 4]),
             frustum: new Frustum(),
             level: 1,

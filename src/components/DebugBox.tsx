@@ -1,18 +1,39 @@
+import { useStore } from "@data/store"
 import { useFrame } from "@react-three/fiber"
 import { useRef } from "react"
-import { Mesh } from "three"
+import { Tuple3 } from "src/types"
+import { ColorRepresentation, Mesh, Vector3 } from "three"
 
-export default function DebugBox({ size, position, color = "pink" }) {
+interface DebugBoxProps {
+    size: Tuple3
+    position: Vector3
+    dynamic?: boolean
+    color?: ColorRepresentation
+    active?: boolean
+}
+
+export default function DebugBox({
+    size,
+    position,
+    color = "pink",
+    dynamic = false,
+    active = true
+}: DebugBoxProps) {
     let ref = useRef<Mesh>(null)
+    let showColliders = useStore(i => i.debug.showColliders)
 
     useFrame(() => {
-        if (ref.current) {
+        if (ref.current && dynamic) {
             ref.current.position.copy(position)
         }
     })
 
+    if (!showColliders || !active) {
+        return null
+    }
+
     return (
-        <mesh ref={ref} scale={size}>
+        <mesh ref={ref} scale={size} position={position.toArray()}>
             <boxGeometry />
             <meshBasicMaterial color={color} wireframe />
         </mesh>

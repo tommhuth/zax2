@@ -15,10 +15,10 @@ import { useCollisionDetection } from "../../../data/collisions"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 import { useRemoveWhenBehindPlayer } from "../../../data/hooks"
 import { useGLTF } from "@react-three/drei"
-import { damp } from "three/src/math/MathUtils.js"
-import Config from "../../../data/Config"
+import { damp } from "three/src/math/MathUtils.js" 
 
 import model from "@assets/models/turret2.glb"
+import DebugBox from "@components/DebugBox"
 
 function explode(position: Vector3, size: Tuple3) {
     createExplosion({
@@ -45,8 +45,8 @@ function explode(position: Vector3, size: Tuple3) {
  
 type GLTFResult = GLTF & {
     nodes: {
-        Cylinder: THREE.Mesh
-        Cylinder_1: THREE.Mesh
+        turret2_1: THREE.Mesh
+        turret2_2: THREE.Mesh
     }
 } 
 
@@ -56,10 +56,10 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
     let materials = useStore(i => i.materials)
     let shootTimer = useRef(0)
     let barrellRef = useRef<Mesh>(null)
-    let nextShotAt = useRef(fireFrequency)
+    let nextShotAt = useRef(fireFrequency) 
     let remove = () => {
         setTimeout(() => startTransition(() => removeTurret(id)), 350)
-    } 
+    }  
 
     useRemoveWhenBehindPlayer(position, remove)
 
@@ -160,7 +160,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
                     material={materials.turret}
                 >
                     <primitive
-                        object={nodes.Cylinder.geometry}
+                        object={nodes.turret2_1.geometry}
                         attach="geometry"
                     />
                 </mesh>
@@ -169,17 +169,12 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
                     castShadow
                     receiveShadow
                     ref={barrellRef}
-                    geometry={nodes.Cylinder_1.geometry}
+                    geometry={nodes.turret2_2.geometry}
                     material={materials.turret}
                 />
             </group>
 
-            {Config.DEBUG && (
-                <mesh>
-                    <boxGeometry args={[...size, 1, 1, 1]} />
-                    <meshBasicMaterial wireframe color="orange" name="debug" />
-                </mesh>
-            )}
+            <DebugBox size={size} position={position} />
         </group>
     )
 }

@@ -12,11 +12,12 @@ import { createExplosion, createImpactDecal, createParticles } from "../../../da
 import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
 import { createBullet } from "../../../data/store/actors"
-import { Owner } from "../../../data/types"
+import { BossState, Owner } from "../../../data/types"
 import { useCollisionDetection } from "../../../data/collisions"
 import { useGLTF } from "@react-three/drei"
 import bossModel from "@assets/models/boss.glb"
 import bossdestroyedModel from "@assets/models/bossdestroyed.glb"
+import DebugBox from "@components/DebugBox"
 
 let bossSize: Tuple3 = [4.5, 4.75, 2]
 
@@ -24,7 +25,7 @@ interface BossProps {
     startPosition: Tuple3
 }
 
-export function useGravity({ ref, active, force = -15, stopAt = 0, onGrounded = () => {} }) {
+export function useGravity({ ref, active, force = -15, stopAt = 0, onGrounded = () => { } }) {
     let velocity = useRef(0)
     let acceleration = useRef(0)
     let grounded = useRef(false)
@@ -39,7 +40,7 @@ export function useGravity({ ref, active, force = -15, stopAt = 0, onGrounded = 
             ref.current.rotation.x += force * delta * .001
             ref.current.rotation.y += force * delta * .0005
             ref.current.rotation.z += force * delta * -.008
-        }  else if (active && !grounded.current) {
+        } else if (active && !grounded.current) {
             startTransition(onGrounded)
             grounded.current = true
         }
@@ -47,7 +48,7 @@ export function useGravity({ ref, active, force = -15, stopAt = 0, onGrounded = 
 }
 
 export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
-    let materials = useStore((i) => i.materials) 
+    let materials = useStore((i) => i.materials)
     let boss = useStore((i) => i.boss)
     let bossWrapper = useRef<Group>(null)
     let { nodes: boss2 } = useGLTF(bossdestroyedModel) as any
@@ -84,8 +85,8 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                     type !== "boss"
                 ) {
                     return
-                } 
-                
+                }
+
                 damageBoss(10)
                 createParticles({
                     position: intersection,
@@ -96,7 +97,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                     count: [0, 3],
                     radius: [0.1, 0.3],
                     color: "#00f",
-                }) 
+                })
             },
         },
     })
@@ -106,7 +107,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
             data.dead = true
             grid.remove(client)
 
-            startTransition(() => { 
+            startTransition(() => {
                 for (let i = 0; i < 6; i++) {
                     let basePosition = position.toArray()
                     let delay = i * random.integer(200, 350)
@@ -229,6 +230,13 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
 
     return (
         <>
+            <DebugBox
+                dynamic
+                size={bossSize}
+                position={position}
+                active={boss.state !== BossState.DEAD}
+            />
+            
             {boss?.heatSeakers.map((i) => {
                 return (
                     <HeatSeaker
