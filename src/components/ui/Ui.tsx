@@ -3,10 +3,10 @@ import { useStore } from "../../data/store"
 import { setState } from "../../data/store/utils"
 import { useWindowEvent } from "../../data/hooks"
 import Map from "./map/Map"
+import Debug from "./Debug"
 import { uiTunnel } from "./tunnels"
 
 import "./Ui.scss"
-import Debug from "./Debug"
 
 export default function Ui() {
     let state = useStore(i => i.state)

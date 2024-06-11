@@ -2,7 +2,7 @@ import { Frustum, Matrix4, Vector3 } from "three"
 import { store, useStore } from "../../../data/store"
 import { useFrame } from "@react-three/fiber"
 import { removeHeatSeaker } from "../../../data/store/boss"
-import { setMatrixAt, setMatrixNullAt } from "../../../data/utils"
+import { ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { startTransition, useEffect, useMemo } from "react"
 import { createExplosion, createImpactDecal } from "../../../data/store/effects"
 import random from "@huth/random"
@@ -38,6 +38,7 @@ export default function HeatSeaker({
     useFrame((state, delta) => {
         let { player, world, instances } = store.getState()
         let speed = 10
+        let nd = ndelta(delta)
 
         if (!player.object) {
             return
@@ -69,15 +70,15 @@ export default function HeatSeaker({
             .normalize()
             .multiplyScalar(-accuracy)
 
-        velocity.x += _dir.x * delta * 4
-        velocity.y += _dir.y * delta * 4
-        velocity.z += _dir.z * delta * 4
+        velocity.x += _dir.x * nd * 4
+        velocity.y += _dir.y * nd * 4
+        velocity.z += _dir.z * nd * 4
 
         velocity.normalize()
 
-        position.x += speed * velocity.x * delta
-        position.y += speed * velocity.y * delta
-        position.z += speed * velocity.z * delta
+        position.x += speed * velocity.x * nd
+        position.y += speed * velocity.y * nd
+        position.z += speed * velocity.z * nd
 
         setMatrixAt({
             instance: instances.sphere.mesh,

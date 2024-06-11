@@ -12,6 +12,17 @@ export function setShowColliders(value: boolean) {
     })
 }
 
+export function setPauseWorldGeneration(value: boolean) {
+    let { debug } = store.getState()
+
+    store.setState({
+        debug: {
+            ...debug,
+            pauseWorldGeneration: value
+        }
+    })
+}
+
 export function addForcedWorldPart(part: WorldPartType) {
     let { debug } = store.getState()
 

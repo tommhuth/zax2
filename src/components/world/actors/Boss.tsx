@@ -5,7 +5,7 @@ import {
     defeatBoss,
 } from "../../../data/store/boss"
 import { Group, Vector3 } from "three"
-import { useStore } from "../../../data/store"
+import { store, useStore } from "../../../data/store"
 import { Tuple3 } from "../../../types"
 import HeatSeaker from "./HeatSeaker"
 import { createExplosion, createImpactDecal, createParticles } from "../../../data/store/effects"
@@ -18,6 +18,7 @@ import { useGLTF } from "@react-three/drei"
 import bossModel from "@assets/models/boss.glb"
 import bossdestroyedModel from "@assets/models/bossdestroyed.glb"
 import DebugBox from "@components/DebugBox"
+import { ndelta } from "@data/utils"
 
 let bossSize: Tuple3 = [4.5, 4.75, 2]
 
@@ -31,15 +32,17 @@ export function useGravity({ ref, active, force = -15, stopAt = 0, onGrounded = 
     let grounded = useRef(false)
 
     useFrame((state, delta) => {
+        let nd = ndelta(delta)
+
         if (active && ref.current.position.y > stopAt) {
-            velocity.current += acceleration.current * delta
-            acceleration.current += force * delta
+            velocity.current += acceleration.current * nd
+            acceleration.current += force * nd
 
-            ref.current.position.y += velocity.current * delta
+            ref.current.position.y += velocity.current * nd
 
-            ref.current.rotation.x += force * delta * .001
-            ref.current.rotation.y += force * delta * .0005
-            ref.current.rotation.z += force * delta * -.008
+            ref.current.rotation.x += force * nd * .001
+            ref.current.rotation.y += force * nd * .0005
+            ref.current.rotation.z += force * nd * -.008
         } else if (active && !grounded.current) {
             startTransition(onGrounded)
             grounded.current = true
@@ -175,10 +178,13 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
         return () => grid.remove(client)
     }, [client, grid])
 
+    // shooting
     useFrame((state, delta) => {
         if (boss.health === 0) {
             return
         }
+
+        let { world } = store.getState()
 
         data.time += delta * 1000
 
@@ -189,7 +195,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                     position.y + 0.65,
                     position.z - 0.5,
                 ])
-                data.nextHeatSeakerAt = data.time + random.pick(1500, 700, 5000, 2500)
+                data.nextHeatSeakerAt = data.time + random.pick(1500, 700, 5000, 2500) * (1 / world.timeScale)
             })
         }
 
@@ -207,7 +213,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                     rotation: -Math.PI * 0.5,
                     owner: Owner.ENEMY,
                 })
-                data.nextBulletAt = data.time + random.pick(1100, 500, 200, 2000)
+                data.nextBulletAt = data.time + random.pick(1100, 500, 200, 2000) * (1 / world.timeScale)
             })
         }
     })
@@ -236,7 +242,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                 position={position}
                 active={boss.state !== BossState.DEAD}
             />
-            
+
             {boss?.heatSeakers.map((i) => {
                 return (
                     <HeatSeaker

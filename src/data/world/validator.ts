@@ -1,23 +1,19 @@
 import { store } from "../store"
 import { BossState, WorldPart, WorldPartType } from "../types"
 
-export let lastBossAt = new Date()
-export let bossInterval = 120_000
-
 export const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
     [WorldPartType.DEFAULT]: () => true,
     [WorldPartType.BUILDINGS_GAP]: () => true,
     [WorldPartType.BUILDINGS_LOW]: () => true,
     [WorldPartType.AIRSTRIP]: () => true,
     [WorldPartType.BOSS]: () => {
-        let { boss } = store.getState()  
+        let { boss, world } = store.getState()
 
         if (
-            Date.now() - lastBossAt.getTime() > bossInterval 
+            Date.now() - boss.lastActiveAt.getTime() > boss.interval
             && boss.state === BossState.UNKNOWN
+            && !world.parts.some(i => i.type === WorldPartType.BOSS)
         ) {
-            lastBossAt = new Date()
-
             return true
         }
 

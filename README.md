@@ -4,12 +4,14 @@
 - fix inaccurate boss spawning 
 - timescale everything (bullet spawning, particles)
 - actual level design    
+- game over for player or just less score?
 - gameplay loop
 - add missing 3d: boss part + tweak exit
 - ui
 - intro  
 - hit detection edge case fix  
 - blast + shockwave tweak/coord   
+- accurate floor level for turret debris
 
 - colocate more stuff?
 - clean up blender file

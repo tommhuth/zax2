@@ -15,7 +15,7 @@ export const worlPartTypes = new Cycler<DynamicWorldPartType>(
     }),
     .15,
     1
-) 
+)
 
 let partGenerator: Record<DynamicWorldPartType, (prev: WorldPart) => WorldPart> = {
     [WorldPartType.DEFAULT]: generators.makeDefault,
@@ -26,12 +26,14 @@ let partGenerator: Record<DynamicWorldPartType, (prev: WorldPart) => WorldPart> 
 }
 
 export function getNextWorldPart(previous: WorldPart): WorldPart {
-    let forced = store.getState().debug.forcedWorldParts[0]
-    let type = forced || worlPartTypes.next()
+    let { debug, boss } = store.getState()
+    let forceBoss = Date.now() - boss.lastActiveAt.getTime() > boss.interval
+    let forced = debug.forcedWorldParts[0]
+    let type = forced || (forceBoss ? WorldPartType.BOSS : worlPartTypes.next())
 
     while (!validator[type](previous)) {
         type = worlPartTypes.next()
-    } 
+    }
 
     if (forced && forced === type) {
         removeOldestForcedWorldPart()

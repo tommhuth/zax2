@@ -10,6 +10,7 @@ export function registerBoss({
 }) {
     store.setState({
         boss: {
+            ...store.getState().boss,
             pauseAt,
             position,
             health: 100,
@@ -30,6 +31,7 @@ export function resetBoss() {
             pauseAt: Infinity,
             health: 1,
             state: BossState.UNKNOWN,
+            lastActiveAt: new Date(),
             heatSeakers: [],
             time: 0,
         }
@@ -63,7 +65,7 @@ export function removeHeatSeaker(id: string) {
 }
 
 export function createHeatSeaker([x, y, z]: Tuple3) {
-    let { world, boss, instances } = store.getState()  
+    let { world, boss, instances } = store.getState()
     let id = random.id()
     let position = new Vector3(x, y, z)
     let size = .35

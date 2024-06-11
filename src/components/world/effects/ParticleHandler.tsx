@@ -55,9 +55,9 @@ function ParticleHandler() {
             position[1] = Math.max(floorY + radius * .25, position[1] + velocity[1] * nd)
             position[2] += velocity[2] * nd
 
-            rotation[0] += -velocity[0] * .075
-            rotation[1] += -velocity[1] * .015
-            rotation[2] += -velocity[2] * .075
+            rotation[0] += -velocity[0] * nd * 6
+            rotation[1] += -velocity[1] * nd * 4
+            rotation[2] += -velocity[2] * nd * 5
 
             if (position[1] <= floorY + radius * .25) {
                 velocity[1] *= -restitution 

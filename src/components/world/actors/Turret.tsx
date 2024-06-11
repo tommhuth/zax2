@@ -127,9 +127,11 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
             })
 
             shootTimer.current = 0
-            nextShotAt.current = fireFrequency * random.float(.75, 1)
-                - fireFrequency * distanceFromPlayer * .5
-                + heightPenalty * fireFrequency * 2
+            nextShotAt.current = (
+                fireFrequency * random.float(.75, 1)
+                    - fireFrequency * distanceFromPlayer * .5
+                    + heightPenalty * fireFrequency * 2
+            ) * (1 / world.timeScale)
 
             if (barrellRef.current) {
                 barrellRef.current.position.z = -.5

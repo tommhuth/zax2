@@ -1,9 +1,9 @@
 import { useFrame } from "@react-three/fiber"
-import React, { createContext, startTransition, useContext, useEffect, useMemo, useRef } from "react"
+import React, { createContext, startTransition, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { Box3, Vector3 } from "three"
 import { Tuple2, Tuple3 } from "../../types"
 import { Only } from "../../data/utils"
-import random from "@huth/random" 
+import random from "@huth/random"
 import Config from "../../data/Config"
 import { store, useStore } from "../../data/store"
 import { removeWorldPart } from "../../data/store/world"
@@ -40,34 +40,31 @@ export default function WorldPartWrapper({
     size: [width, depth],
     id,
 }: WorldPartWrapperProps) {
-    let dead = useRef(false)
-    let i = useRef(random.integer(0, 100))
-    let p = useMemo(() => position.toArray(), [position])
-    let showColliders = useStore(i=> i.debug.showColliders)
+    let [removed, setRemoved] = useState(false)
+    let showColliders = useStore(i => i.debug.showColliders)
 
     useFrame(() => {
-        i.current++
+        let { player, world, ready } = store.getState()
 
-        if (dead.current || i.current % 20 > 0 || !store.getState().ready) {
+        if (removed || !ready || !player.object) {
             return
         }
 
-        let { player, world } = store.getState()
-        let height = 6
+        let height = 1
 
         _center.set(position.x, position.y + height / 2, position.z + depth / 2)
         _box.setFromCenterAndSize(_center, _size.set(width, height, depth))
 
-        if (!world.frustum.intersectsBox(_box) && player.object && position.z + depth < player.object.position.z) {
-            dead.current = true
+        if (!world.frustum.intersectsBox(_box) && position.z + depth < player.object.position.z) {
+            setRemoved(true)
             startTransition(() => removeWorldPart(id))
         }
-    }) 
+    })
 
     return (
         <>
             <context.Provider
-                value={p}
+                value={position.toArray()}
             >
                 {children}
 

@@ -1,12 +1,11 @@
 import { useStore } from "@data/store"
 import "./Debug.scss"
 import { setPlayerSpeed } from "@data/store/player"
-import { addForcedWorldPart, setShowColliders } from "@data/store/debug"
+import { addForcedWorldPart, setPauseWorldGeneration, setShowColliders } from "@data/store/debug"
 import { WorldPartType } from "@data/types"
 import { worlPartTypes } from "@data/world/getNextWorldPart"
-import { bossInterval, lastBossAt } from "@data/world/validator"
 import { useRef } from "react"
-import { removeWorldPart, setTimeScale } from "@data/store/world"
+import { setTimeScale } from "@data/store/world"
 
 export default function Debug() {
     const state = useStore()
@@ -16,6 +15,7 @@ export default function Debug() {
         <fieldset
             className="debug"
         >
+            <div>{state.state}</div>
             <label>
                 Speed: {state.player.speed}
                 <input
@@ -53,7 +53,7 @@ export default function Debug() {
             <div>
                 Boss: {state.boss.state}
                 <div>
-                    {((Date.now() - lastBossAt.getTime()) / 1000).toFixed(1)} / {(bossInterval / 1000).toLocaleString("en")}
+                    {((Date.now() - state.boss.lastActiveAt.getTime()) / 1000).toFixed(1)} / {(state.boss.interval / 1000).toLocaleString("en")}
                 </div>
             </div>
             <ul>
@@ -68,27 +68,61 @@ export default function Debug() {
             <fieldset>
                 <legend>World</legend>
 
-                <label style={{ margin: "5px 0 5px 10px", color: "black", background: "white" }}>
-                    <button
-                        onClick={() => {
-                            if (!selectRef.current?.selectedIndex) {
-                                return
-                            }
-
-                            let type = selectRef.current?.options[selectRef.current.selectedIndex].value as WorldPartType
-
-                            addForcedWorldPart(type)
-                        }}
-                    >
-                        Force
-                    </button>
+                <div
+                    style={{
+                        margin: "5px 0 5px 10px",
+                        display: "flex",
+                        flexDirection: "column",
+                        color: "black",
+                        background: "white",
+                        borderRadius: 5,
+                        padding: 5
+                    }}
+                >
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={state.debug.pauseWorldGeneration}
+                            onChange={(e) => setPauseWorldGeneration(e.currentTarget.checked)}
+                        />
+                        No world gen
+                    </label>
                     <select ref={selectRef}>
-                        <option value=""></option>
+                        <option value="">-</option>
                         {Object.values(WorldPartType).map(i => {
                             return <option key={i} value={i}>{i}</option>
                         })}
                     </select>
-                </label>
+                    <div style={{ width: "100%", display: "flex", textAlign: "center" }}>
+                        <button
+                            style={{ flex: "1 1" }}
+                            onClick={() => {
+                                if (!selectRef.current?.selectedIndex) {
+                                    return
+                                }
+
+                                let type = selectRef.current?.options[selectRef.current.selectedIndex].value as WorldPartType
+
+                                addForcedWorldPart(type)
+                            }}
+                        >
+                            Force
+                        </button>
+                        <button
+                            style={{ flex: "1 1" }}
+                            onClick={() => {
+                                if (!selectRef.current?.selectedIndex) {
+                                    return
+                                }
+
+                                window.localStorage.setItem("initPartType", selectRef.current?.options[selectRef.current.selectedIndex].value)
+                                window.location.reload()
+                            }}
+                        >
+                            Reload
+                        </button>
+                    </div>
+                </div>
 
                 <ul>
                     {state.world.parts.map(i => {
@@ -97,7 +131,8 @@ export default function Debug() {
                                 key={i.id}
                                 style={{
                                     marginLeft: 10,
-                                    opacity: i.position.z + i.size[1] < state.player.position.z ? .5 : 1
+                                    opacity: i.position.z + i.size[1] < state.player.position.z ? .5 : 1,
+                                    color: i.position.z < state.player.position.z && i.position.z + i.size[1] > state.player.position.z ? "orange" : undefined
                                 }}
                             >
                                 {i.type}
@@ -114,7 +149,7 @@ export default function Debug() {
                             </li>
                         )
                     })}
-                    <li 
+                    <li
                         style={{ marginLeft: 10 }}
                     >
                         [{(1 - worlPartTypes.randomPickChance) * 100}% {worlPartTypes.peak()}]

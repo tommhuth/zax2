@@ -154,7 +154,7 @@ function Plane({
                     owner: Owner.ENEMY
                 })
                 data.shootTimer = 0
-                data.nextShotAt = fireFrequency - fireFrequency * distanceFromPlayer * .5
+                data.nextShotAt = (fireFrequency - fireFrequency * distanceFromPlayer * .5) * (1 / world.timeScale)
             })
             weaponSide.next()
         }

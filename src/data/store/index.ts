@@ -8,8 +8,7 @@ import {
     Plane, RepeaterMesh, Rocket, Turret, WorldPart,
     WorldPartType
 } from "../types"
-import { SpatialHashGrid3D } from "../SpatialHashGrid3D" 
-
+import { SpatialHashGrid3D } from "../SpatialHashGrid3D"
 
 interface ControlsMap {
     d?: boolean
@@ -23,6 +22,7 @@ export interface Store {
     debug: {
         showColliders: boolean
         forcedWorldParts: WorldPartType[]
+        pauseWorldGeneration: boolean
     }
     loaded: boolean
     setup: boolean
@@ -44,7 +44,7 @@ export interface Store {
         lastImpactLocation: Tuple3
     }
     effects: {
-        particles: Particle[] 
+        particles: Particle[]
         explosions: Explosion[]
     }
     instances: Record<InstanceName, Instance>
@@ -58,6 +58,8 @@ export interface Store {
         heatSeakers: HeatSeaker[]
         state: BossState
         time: number
+        lastActiveAt: Date
+        interval: number
     },
     controls: {
         startPointerPosition: Vector3
@@ -87,6 +89,7 @@ const store = create(
         debug: {
             showColliders: false,
             forcedWorldParts: [],
+            pauseWorldGeneration: false,
         },
         loaded: false,
         setup: false,
@@ -109,7 +112,7 @@ const store = create(
         },
         effects: {
             explosions: [],
-            particles: [], 
+            particles: [],
         },
         instances: {} as Store["instances"],
         repeaters: {},
@@ -122,6 +125,8 @@ const store = create(
             heatSeakers: [],
             state: BossState.UNKNOWN,
             time: 0,
+            lastActiveAt: new Date(),
+            interval: 60_000 * 3,
         },
         controls: {
             startPointerPosition: new Vector3(),

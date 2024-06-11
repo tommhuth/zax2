@@ -32,7 +32,7 @@ interface PlayerProps {
 }
 
 interface LocalData {
-    lastShotAt: number
+    nextShotAt: number
     isMovingUp: boolean
     bossDeadAt: number
 }
@@ -40,7 +40,7 @@ interface LocalData {
 type GLTFResult = GLTF & {
     nodes: {
         player: THREE.Mesh
-    } 
+    }
 }
 
 export default function Player({
@@ -73,7 +73,7 @@ export default function Player({
     }, [grid])
     let data = useMemo<LocalData>(() => {
         return {
-            lastShotAt: 0,
+            nextShotAt: 0,
             isMovingUp: false,
             bossDeadAt: 0,
         }
@@ -183,7 +183,7 @@ export default function Player({
 
     // shoot
     useFrame(() => {
-        if (Date.now() - data.lastShotAt > weapon.fireFrequency && controls.keys.space && setup) {
+        if (Date.now() > data.nextShotAt && controls.keys.space && setup) {
             startTransition(() => {
                 createBullet({
                     position: [
@@ -197,7 +197,7 @@ export default function Player({
                     speed: weapon.speed,
                     color: "#fff",
                 })
-                data.lastShotAt = Date.now()
+                data.nextShotAt = Date.now() + weapon.fireFrequency * (1 / store.getState().world.timeScale)
             })
         }
     })
