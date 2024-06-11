@@ -68,6 +68,18 @@ export default function Debug() {
             <fieldset>
                 <legend>World</legend>
 
+                <label
+                    style={{
+                        margin: "5px 0 5px 10px",
+                    }}
+                >
+                    <input
+                        type="checkbox"
+                        checked={state.debug.pauseWorldGeneration}
+                        onChange={(e) => setPauseWorldGeneration(e.currentTarget.checked)}
+                    />
+                    No world gen
+                </label>
                 <div
                     style={{
                         margin: "5px 0 5px 10px",
@@ -79,14 +91,6 @@ export default function Debug() {
                         padding: 5
                     }}
                 >
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={state.debug.pauseWorldGeneration}
-                            onChange={(e) => setPauseWorldGeneration(e.currentTarget.checked)}
-                        />
-                        No world gen
-                    </label>
                     <select ref={selectRef}>
                         <option value="">-</option>
                         {Object.values(WorldPartType).map(i => {
