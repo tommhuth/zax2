@@ -4,9 +4,8 @@ import { useEffect } from "react"
 import { clamp, ndelta } from "../../../data/utils"
 import random from "@huth/random"
 import { Mesh, Vector3 } from "three"
-import { Owner, Turret as TurretType } from "../../../data/types"
-import { GLTF } from "three-stdlib"
-import { Tuple3 } from "../../../types"
+import { Owner, Turret as TurretType } from "../../../data/types" 
+import { GLTFModel, Tuple3 } from "../../../types"
 import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
@@ -41,17 +40,10 @@ function explode(position: Vector3, size: Tuple3) {
         stagger: [-150, 0],
         color: turretParticleColor,
     })
-}
- 
-type GLTFResult = GLTF & {
-    nodes: {
-        turret2_1: THREE.Mesh
-        turret2_2: THREE.Mesh
-    }
 } 
 
 function Turret({ id, size, position, health, fireFrequency, rotation, floorLevel }: TurretType) {
-    let { nodes } = useGLTF(model) as GLTFResult
+    let { nodes } = useGLTF(model) as GLTFModel<["turret2_1", "turret2_2"]>
     let diagonal = useStore(i => i.world.diagonal)
     let materials = useStore(i => i.materials)
     let shootTimer = useRef(0)

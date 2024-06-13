@@ -4,7 +4,6 @@ import { store, useStore } from "../../data/store"
 import Turret from "./actors/Turret"
 import Plane from "./actors/Plane"
 import Default from "./parts/Default"
-import Building from "./actors/Building"
 import Barrel from "./actors/Barrel"
 import ParticleHandler from "./effects/ParticleHandler"
 import BulletHandler from "../BulletHandler"
@@ -105,18 +104,14 @@ function WorldParts() {
     })
 }
 
-const Actors = memo(() => {
-    let buildings = useStore(i => i.world.buildings)
+const Actors = memo(() => { 
     let turrets = useStore(i => i.world.turrets)
     let planes = useStore(i => i.world.planes)
     let barrels = useStore(i => i.world.barrels)
     let rockets = useStore(i => i.world.rockets)
 
     return (
-        <>
-            {buildings.map(i => {
-                return <Building key={i.id} {...i} />
-            })}
+        <> 
             {turrets.map(i => {
                 return <Turret key={i.id} {...i} />
             })}

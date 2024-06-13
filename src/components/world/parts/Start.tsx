@@ -7,10 +7,8 @@ import { useGLTF } from "@react-three/drei"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { useStore } from "../../../data/store"
 import Cable from "../decoration/Cable"
-import model from "@assets/models/logo.glb"
-import { Rockface } from "../decoration/Rockface" 
-import Plant from "../decoration/Plant"
-import Grass from "../decoration/Grass"
+import model from "@assets/models/logo.glb" 
+import Plant from "../decoration/Plant" 
 
 function Logo(props) {
     const { nodes } = useGLTF(model) as any
@@ -41,22 +39,7 @@ export default function Start({
             size={size}
             position={position}
             id={id}
-        >
-            <Rockface
-                position={[0, .5, position.z + 8]}
-                scale={[6, 3, 6]}
-                rotation-y={-.1}
-            />
-            <Rockface
-                position={[6, 1.5, position.z + 6]}
-                scale={[8, 4, 6]}
-                rotation-y={0}
-            />
-            <Rockface
-                position={[-1, 2, position.z + 8]}
-                scale={[2, 8, 2]}
-                rotation-y={-.2}
-            /> 
+        > 
             <Plant
                 position={[-1, 2, 6]}
                 scale={1}

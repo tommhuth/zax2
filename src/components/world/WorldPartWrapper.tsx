@@ -1,10 +1,8 @@
 import { useFrame } from "@react-three/fiber"
-import React, { createContext, startTransition, useContext, useEffect, useMemo, useRef, useState } from "react"
+import React, { createContext, startTransition, useContext, useMemo, useState } from "react"
 import { Box3, Vector3 } from "three"
 import { Tuple2, Tuple3 } from "../../types"
 import { Only } from "../../data/utils"
-import random from "@huth/random"
-import Config from "../../data/Config"
 import { store, useStore } from "../../data/store"
 import { removeWorldPart } from "../../data/store/world"
 import { WORLD_CENTER_X } from "../../data/const"
@@ -42,11 +40,12 @@ export default function WorldPartWrapper({
 }: WorldPartWrapperProps) {
     let [removed, setRemoved] = useState(false)
     let showColliders = useStore(i => i.debug.showColliders)
+    let sharedPosition = useMemo(() => position.toArray(), [position])
 
     useFrame(() => {
         let { player, world, ready } = store.getState()
 
-        if (removed || !ready || !player.object) {
+        if (removed || !ready || !player.object || position.z + depth > player.object.position.z) {
             return
         }
 
@@ -55,7 +54,7 @@ export default function WorldPartWrapper({
         _center.set(position.x, position.y + height / 2, position.z + depth / 2)
         _box.setFromCenterAndSize(_center, _size.set(width, height, depth))
 
-        if (!world.frustum.intersectsBox(_box) && position.z + depth < player.object.position.z) {
+        if (!world.frustum.intersectsBox(_box)) {
             setRemoved(true)
             startTransition(() => removeWorldPart(id))
         }
@@ -64,7 +63,7 @@ export default function WorldPartWrapper({
     return (
         <>
             <context.Provider
-                value={position.toArray()}
+                value={sharedPosition}
             >
                 {children}
 

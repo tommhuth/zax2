@@ -2,15 +2,13 @@ import { startTransition, useEffect, useMemo, useState } from "react"
 import { Vector3 } from "three"
 import { Barrel as BarrelType, Owner } from "../../../data/types"
 import random from "@huth/random"
-import { Tuple3 } from "../../../types"
+import { GLTFModel, Tuple3 } from "../../../types"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { damageBarrel, removeBarrel } from "../../../data/store/world"
 import { barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
-import { useCollisionDetection } from "../../../data/collisions"
-import Config from "../../../data/Config"
-import { useRemoveWhenBehindPlayer } from "../../../data/hooks"
-import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
+import { useCollisionDetection } from "../../../data/collisions" 
+import { useRemoveWhenBehindPlayer } from "../../../data/hooks" 
 import { useStore } from "../../../data/store"
 
 import barrelsModel from "@assets/models/barrels.glb"
@@ -43,16 +41,7 @@ function explode(position: Vector3, size: Tuple3, color: string) {
 const rotations = new Array(8 * 2)
     .fill(null)
     .map((i, index, list) => (index / list.length) * Math.PI * 2)
-
-type GLTFResult = GLTF & {
-    nodes: {
-        barrel4: THREE.Mesh
-        barrel2: THREE.Mesh
-        barrel3: THREE.Mesh
-        barrel1: THREE.Mesh
-    }
-}
-
+ 
 export default function Barrel({
     position,
     size,
@@ -60,7 +49,7 @@ export default function Barrel({
     health,
 }: BarrelType) {
     let type = useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), [])
-    let { nodes } = useGLTF(barrelsModel) as GLTFResult
+    let { nodes } = useGLTF(barrelsModel) as GLTFModel<["barrel1", "barrel2", "barrel3", "barrel4"]>
     let [rotation] = useState(random.pick(...rotations))
     let materials = useStore(i => i.materials)
     let remove = () => {

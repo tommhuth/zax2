@@ -6,27 +6,18 @@ import Boss from "../actors/Boss"
 
 import { useGLTF } from "@react-three/drei"
 import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
-import Barrel from "../spawner/Barrel"
-import Building from "../spawner/Building"
+import Barrel from "../spawner/Barrel" 
 import Cable from "../decoration/Cable"
 import Dirt from "../decoration/Dirt"
 import timeout from "../../../data/timeout"
 import { uiTunnel } from "../../ui/tunnels"
 import EdgeElement from "../decoration/EdgeElement" 
 
-import model from "@assets/models/floor5.glb"
-import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
-
-type GLTFResult = GLTF & {
-    nodes: {
-      floor5_1: THREE.Mesh
-      floor5_2: THREE.Mesh
-      floor5_3: THREE.Mesh
-    } 
-  }
+import model from "@assets/models/floor5.glb" 
+import { GLTFModel } from "src/types"
 
 export function BossFloor(props) {
-    const { nodes } = useGLTF(model) as GLTFResult
+    const { nodes } = useGLTF(model) as GLTFModel<["floor5_1", "floor5_2", "floor5_3"]>
     const materials = useStore(i => i.materials)
 
     return (
@@ -110,11 +101,7 @@ export default function BossPart({
             />
             <Barrel
                 position={[5.5, 0, 29]}
-            />
-            <Building
-                position={[0, 0, 1]}
-                size={[4, 2, 4]}
-            />
+            /> 
             <Cable
                 position={[0, 0, 10]}
                 scale={1.25}

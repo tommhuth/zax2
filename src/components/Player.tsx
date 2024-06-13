@@ -1,7 +1,7 @@
 import { useFrame, useLoader } from "@react-three/fiber"
 import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
 import { AdditiveBlending, Group, PointLight, TextureLoader } from "three"
-import { Tuple3 } from "../types"
+import { GLTFModel, Tuple3 } from "../types"
 import { clamp, ndelta } from "../data/utils"
 import { BossState, Owner } from "../data/types"
 import animate from "@huth/animate"
@@ -20,8 +20,7 @@ import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_CENTER_X, WORLD_PLAYER_START_Z }
 import { uiTunnel } from "../components/ui/tunnels"
 
 import playerModel from "@assets/models/player.glb"
-import { useGLTF } from "@react-three/drei"
-import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
+import { useGLTF } from "@react-three/drei" 
 
 let depth = 2
 
@@ -36,13 +35,7 @@ interface LocalData {
     isMovingUp: boolean
     bossDeadAt: number
 }
-
-type GLTFResult = GLTF & {
-    nodes: {
-        player: THREE.Mesh
-    }
-}
-
+ 
 export default function Player({
     size = [1.5, .5, depth],
     z = 0,
@@ -63,7 +56,7 @@ export default function Player({
     let controls = useStore(i => i.controls)
     let diagonal = useStore(i => i.world.diagonal)
     let engineLightRef = useRef<PointLight>(null)
-    let { nodes } = useGLTF(playerModel) as GLTFResult
+    let { nodes } = useGLTF(playerModel) as GLTFModel<["player"]>
     let text = useLoader(TextureLoader, "/textures/glow.png")
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {

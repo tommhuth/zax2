@@ -5,7 +5,7 @@ import { useFrame } from "@react-three/fiber"
 import { ndelta } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
 import random from "@huth/random"
-import { Tuple3 } from "../../../types"
+import { GLTFModel, Tuple3 } from "../../../types"
 import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
 import { damageRocket, removeRocket } from "../../../data/store/actors"
@@ -15,8 +15,7 @@ import { rocketColor } from "../../../data/theme"
 import Exhaust from "../../Exhaust"
 import { WORLD_TOP_EDGE } from "../../../data/const"
 import models from "@assets/models/rocket.glb"
-import { useGLTF } from "@react-three/drei"
-import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
+import { useGLTF } from "@react-three/drei" 
 import DebugBox from "@components/DebugBox"
 
 let _size = new Vector3()
@@ -83,13 +82,6 @@ function explode(position: Vector3, size: Tuple3) {
     }
 }
 
-type GLTFResult = GLTF & {
-    nodes: {
-        rocket: THREE.Mesh
-        platform: THREE.Mesh
-    }
-}
-
 export default function Rocket({
     position,
     aabb,
@@ -99,7 +91,7 @@ export default function Rocket({
     speed,
     health,
 }: Rocket) {
-    let { nodes } = useGLTF(models) as GLTFResult
+    let { nodes } = useGLTF(models) as GLTFModel<["rocket", "platform"]>
     let rocketRef = useRef<Mesh>(null)
     let grid = useStore(i => i.world.grid)
     let [removed, setRemoved] = useState(false)

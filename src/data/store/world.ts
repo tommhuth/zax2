@@ -127,47 +127,4 @@ export function removeBarrel(id: string) {
     })
 
     barrel && grid.remove(barrel.client)
-}
-
-export function createBuilding(
-    size: Tuple3 = [1, 1, 1],
-    [x = 0, y = 0, z = 0] = [],
-) {
-    let id = random.id()
-    let position = new Vector3(x, y + size[1] / 2, z)
-    let box = new Box3().setFromCenterAndSize(new Vector3(x, y, z), new Vector3(...size))
-    let { grid, buildings } = store.getState().world
-    let client = grid.createClient(
-        [position.x, position.y, position.z],
-        [...size],
-        { type: "building", id }
-    )
-
-    updateWorld({
-        buildings: [
-            {
-                position,
-                id,
-                size: size as Tuple3,
-                aabb: box,
-                client,
-                color: Math.random() * 0xffffff,
-            },
-            ...buildings,
-        ]
-    })
-
-    return id
-}
-
-export function removeBuilding(id: string) {
-    let { world: { grid, buildings } } = store.getState()
-    let building = buildings.find(i => i.id === id)
-
-    if (building) {
-        updateWorld({
-            buildings: buildings.filter(i => i.id !== id)
-        })
-        grid.remove(building.client)
-    }
-}
+} 

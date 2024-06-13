@@ -4,9 +4,9 @@ import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { Tuple3 } from "../../types"
 import {
-    Barrel, BossState, Building, Bullet, Explosion, HeatSeaker, Instance, InstanceName, MaterialName, Particle,
+    Barrel, BossState, Bullet, Explosion, HeatSeaker, Instance, 
+    InstanceName, MaterialName, Particle,  WorldPartType,
     Plane, RepeaterMesh, Rocket, Turret, WorldPart,
-    WorldPartType
 } from "../types"
 import { SpatialHashGrid3D } from "../SpatialHashGrid3D"
 
@@ -39,8 +39,7 @@ export interface Store {
         turrets: Turret[]
         barrels: Barrel[]
         rockets: Rocket[]
-        planes: Plane[]
-        buildings: Building[]
+        planes: Plane[] 
         lastImpactLocation: Tuple3
     }
     effects: {
@@ -101,8 +100,7 @@ const store = create(
             grid: new SpatialHashGrid3D([4, 3, 4]),
             frustum: new Frustum(),
             level: 1,
-            parts: [],
-            buildings: [],
+            parts: [], 
             planes: [],
             turrets: [],
             barrels: [],

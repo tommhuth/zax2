@@ -4,22 +4,16 @@ import { MeshRetroMaterial } from "../../materials/MeshRetroMaterial"
 import InstancedMesh from "../InstancedMesh"
 import { glsl } from "../../../../data/utils"
 import { useFrame } from "@react-three/fiber"
-import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { useMemo } from "react"
 import easings from "../../../../shaders/easings.glsl"
 import noise from "../../../../shaders/noise.glsl"
 import model from "@assets/models/plant.glb"
 import { useGLTF } from "@react-three/drei"
-
-type GLTFResult = GLTF & {
-    nodes: {
-        plant: THREE.Mesh
-    }
-}
-
+import { GLTFModel } from "src/types"
+ 
 export default function Plant() {
     let count = 10
-    let { nodes } = useGLTF(model) as GLTFResult
+    let { nodes } = useGLTF(model) as GLTFModel<["plant"]>
     let traumaData = useMemo(() => new Float32Array(count).fill(0), [])
     let uniforms = useMemo(() => ({ uTime: { value: 0, needsUpdate: true } }), [])
     let getPlantTransform = glsl`

@@ -6,9 +6,8 @@ import { ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { startTransition, useEffect, useMemo } from "react"
 import { createExplosion, createImpactDecal } from "../../../data/store/effects"
 import random from "@huth/random"
-import { HeatSeaker } from "../../../data/types"
-import { useCollisionDetection } from "../../../data/collisions"
-import DebugBox from "@components/DebugBox"
+import type { HeatSeaker } from "../../../data/types"
+import { useCollisionDetection } from "../../../data/collisions" 
 
 let _dir = new Vector3()
 let _mat4 = new Matrix4()
@@ -29,7 +28,7 @@ export default function HeatSeaker({
         actions: {
             bullet: ({ bullet, type }) => {
                 if (bullet.owner === "player" || type !== "heatseaker") {
-                    removeHeatSeaker(id) 
+                    removeHeatSeaker(id)
                 }
             }
         }
@@ -107,5 +106,5 @@ export default function HeatSeaker({
         }
     }, [index, grid])
 
-    return <DebugBox size={size} position={position} />
+    return null
 }

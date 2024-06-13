@@ -1,5 +1,5 @@
 import { ReactElement, ReactNode, cloneElement, memo, startTransition, useCallback, useMemo } from "react"
-import { barellColor, buildingBaseColor, buildingHiColor, floorBaseColor, floorHiColor, floorMarkColor, planeColor, platformColor, rocketColor, turretColor } from "../../../data/theme"
+import { barellColor, buildingBaseColor, buildingHiColor, deviceColor, floorBaseColor, floorHiColor, floorMarkColor, planeColor, platformColor, rocketColor, turretColor } from "../../../data/theme"
 import { MeshRetroMaterial } from "./MeshRetroMaterial"
 import { BoxGeometry, BufferGeometry, Material, Mesh } from "three"
 import { setMaterial } from "../../../data/store/utils"
@@ -114,6 +114,7 @@ function MaterialLoader() {
                     rightColorIntensity={0}
                 />
             ),
+            device: <MeshRetroMaterial color={deviceColor} name="device" />,
             rock: (
                 <MeshRetroMaterial
                     backColorIntensity={.15}

@@ -3,7 +3,7 @@ import { Tuple2, Tuple3 } from "../types"
 import Counter from "./Counter"
 import { Client } from "./SpatialHashGrid3D"
 
-export type MaterialName = "plane" |  "rocket" | "platform" | "grass" | "exhaust" 
+export type MaterialName = "device" |  "plane" |  "rocket" | "platform" | "grass" | "exhaust" 
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
     | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock"
     | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi" | "turret"
@@ -17,7 +17,7 @@ export type RepeaterName = "tower1" | "tower2"| "tower3"| "tower3"| "tower3"| "t
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
 
 export type CollisionObjectType = "plant" | "barrel" | "player" | "boss" | "heatseaker" 
-    | "plane" | "turret" | "building" | "rocket" | "vehicle"
+    | "plane" | "turret" | "building" | "rocket" | "vehicle" | "obstacle"
 
 export enum BossState {
     IDLE = "idle",
@@ -74,16 +74,7 @@ export interface Instance {
     mesh: InstancedMesh;
     maxCount: number;
     index: Counter;
-}
-
-export interface Building {
-    id: string
-    size: Tuple3
-    position: Vector3
-    client: Client
-    color: number
-    aabb: Box3
-}
+} 
 
 export interface HeatSeaker {
     position: Vector3

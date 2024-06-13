@@ -59,7 +59,7 @@ function Plane({
     rotation = 0,
 }: PlaneType) {
     let { nodes } = useGLTF(planeModel)
-    let materials = useStore(i => i.materials)
+    let materials = useStore(i => i.materials) 
     let planeRef = useRef<Mesh>(null)
     let data = useMemo(() => ({
         removed: false,
@@ -110,6 +110,12 @@ function Plane({
             },
         }
     })
+
+    useEffect(()=> {
+        return () => {
+            console.log("Gone")
+        }
+    }, [])
 
     useEffect(() => {
         if (health === 0) {
@@ -176,9 +182,9 @@ function Plane({
             planeRef.current.rotation.set(...data.rotation)
 
             if (
-                position.z - world.diagonal * .5 > playerZ
-                && player.object
+                position.z + world.diagonal * .5 < playerZ 
             ) {
+                console.log("REM")
                 startTransition(remove)
             } else {
                 client.position = position.toArray()

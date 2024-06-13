@@ -59,8 +59,7 @@ export default function Debug() {
             <ul>
                 <li>Turrets: {state.world.turrets.length}</li>
                 <li>Planes: {state.world.planes.length}</li>
-                <li>Barells: {state.world.barrels.length}</li>
-                <li>Buildings: {state.world.buildings.length}</li>
+                <li>Barells: {state.world.barrels.length}</li> 
                 <li>Rockets: {state.world.rockets.length}</li>
                 <li>Bullets: {state.world.bullets.length}</li>
                 <li>Heat seakers: {state.boss.heatSeakers.length}</li>

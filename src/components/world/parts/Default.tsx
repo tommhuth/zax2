@@ -2,8 +2,7 @@ import { WorldPartDefault } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import Turret from "../spawner/Turret"
 import EdgeElement from "../decoration/EdgeElement"
-import Barrel from "../spawner/Barrel"
-import Building from "../spawner/Building"
+import Barrel from "../spawner/Barrel" 
 import Rocket from "../spawner/Rocket"
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
@@ -44,25 +43,12 @@ export default function Default({
                 z={28}
                 x={8}
                 type="tower1"
-            />
-            <Building
-                position={[3, 0, 10]}
-                size={[5, 2, 5]}
-            />
+            /> 
             <Turret
                 position={[3, 1, 10]}
                 rotation={-Math.PI / 2}
                 floorLevel={2}
-            />
-
-            <Building
-                position={[-.5, 0, 9]}
-                size={[4, 1, 3]}
-            />
-            <Building
-                position={[3, 0, 6]}
-                size={[3, 1, 3]}
-            />
+            /> 
             <Turret
                 position={[3, 0, 6]}
                 rotation={-Math.PI / 2}

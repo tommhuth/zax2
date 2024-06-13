@@ -1,5 +1,5 @@
-import { Tuple3 } from "../../types"
-import { CollisionObjectType } from "../types"
+import { Tuple3 } from "src/types"
+import { CollisionObjectType } from "./types"
 
 export interface Client {
     position: Tuple3

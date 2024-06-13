@@ -1,14 +1,11 @@
 import { WorldPartBuildingsLow } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import Turret from "../spawner/Turret"
-import Barrel from "../spawner/Barrel"
-import Building from "../spawner/Building"
+import Barrel from "../spawner/Barrel" 
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
 import Grass from "../decoration/Grass"
-import Plant from "../decoration/Plant"
-import Traffic from "../actors/Traffic"
-import { Rockface } from "../decoration/Rockface"
+import Plant from "../decoration/Plant" 
 
 export default function BuildingsLow({
     id,
@@ -42,23 +39,7 @@ export default function BuildingsLow({
 
             <Grass
                 position={[-8, 0, size[1] / 2 - 2]}
-            />
-            <Rockface
-                position={[8, 1, position.z + 12]}
-                scale={[4, 3, 5]}
-            />
-
-            <Rockface
-                position={[10, 0, position.z + 9]}
-                scale={[5, 3, 4]}
-                rotation={[0, .1, 0]}
-            />
-
-            <Rockface
-                position={[0, 0,  position.z + size[1] - 2]}
-                scale={[4, 5, 6]}
-                rotation={[0, -.2, 0]}
-            />
+            /> 
             <Turret
                 position={[0, 2, size[1] - 2]}
                 rotation={-Math.PI / 2}

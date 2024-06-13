@@ -252,7 +252,7 @@ export function createPlane({
                 fireFrequency,
                 id,
                 rotation,
-                takeoffAt: position.z - random.float(1, 4),
+                takeoffAt: position.z - random.float(4, 6),
                 targetY,
                 startY: y,
                 speed,

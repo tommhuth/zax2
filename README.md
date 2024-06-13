@@ -4,11 +4,15 @@
 - fix inaccurate boss spawning 
 - timescale everything (bullet spawning, particles)
 - actual level design    
+- generalize building, does not need state, Obstacle?
 - game over for player or just less score?
 - gameplay loop
+- proper collision detection and handling for player
 - add missing 3d: boss part + tweak exit
 - ui
+- landmark parts that arent randomized + more generic stuff randomized inbetween?
 - intro  
+- move everything over to  GLTFModel<>
 - hit detection edge case fix  
 - blast + shockwave tweak/coord   
 - accurate floor level for turret debris

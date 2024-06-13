@@ -6,7 +6,7 @@ import { useStore } from "../../../data/store"
 import easings from "../../../shaders/easings.glsl"
 import dither from "../../../shaders/dither.glsl"
 import utils from "../../../shaders/utils.glsl" 
-import { easeInBack, easeOutBack } from "../../../data/shaping"
+import { easeOutBack } from "../../../data/shaping"
 
 export default function BlastHandler() {
     let count = 20 
