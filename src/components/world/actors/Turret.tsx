@@ -1,23 +1,23 @@
 import { memo, startTransition, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-import { useEffect } from "react"
 import { clamp, ndelta } from "../../../data/utils"
 import random from "@huth/random"
 import { Mesh, Vector3 } from "three"
-import { Owner, Turret as TurretType } from "../../../data/types" 
-import { GLTFModel, Tuple3 } from "../../../types"
-import { createBullet, damageTurret, removeTurret } from "../../../data/store/actors"
+import { Owner, Turret as TurretType } from "../../../data/types"
+import { GLTFModel, Tuple3 } from "../../../types.global"
 import { store, useStore } from "../../../data/store"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
-import { useRemoveWhenBehindPlayer } from "../../../data/hooks"
+import { useBaseActorHandler } from "../../../data/hooks"
 import { useGLTF } from "@react-three/drei"
-import { damp } from "three/src/math/MathUtils.js" 
+import { damp } from "three/src/math/MathUtils.js"
 
 import model from "@assets/models/turret2.glb"
 import DebugBox from "@components/DebugBox"
+import { createBullet } from "@data/store/actors/bullet.actions"
+import { removeTurret, damageTurret } from "@data/store/actors/turret.actions"
 
 function explode(position: Vector3, size: Tuple3) {
     createExplosion({
@@ -40,54 +40,59 @@ function explode(position: Vector3, size: Tuple3) {
         stagger: [-150, 0],
         color: turretParticleColor,
     })
-} 
+}
 
-function Turret({ id, size, position, health, fireFrequency, rotation, floorLevel }: TurretType) {
+function Turret({
+    id,
+    client,
+    size,
+    position,
+    health,
+    fireFrequency,
+    rotation,
+    floorLevel
+}: TurretType) {
     let { nodes } = useGLTF(model) as GLTFModel<["turret2_1", "turret2_2"]>
     let diagonal = useStore(i => i.world.diagonal)
     let materials = useStore(i => i.materials)
     let shootTimer = useRef(0)
     let barrellRef = useRef<Mesh>(null)
-    let nextShotAt = useRef(fireFrequency) 
-    let remove = () => {
-        setTimeout(() => startTransition(() => removeTurret(id)), 350)
-    }  
+    let nextShotAt = useRef(fireFrequency)
 
-    useRemoveWhenBehindPlayer(position, remove)
-
-    useCollisionDetection({
-        actions: {
-            bullet: ({ bullet, client, type }) => {
-                if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "turret") {
-                    return
-                }
-
-                createParticles({
-                    position: position.toArray(),
-                    offset: [[-.5, .5], [0, .5], [-.5, .5]],
-                    speed: [5, 25],
-                    spread: [[0, .5], [.5, 2]],
-                    normal: [0, 1, -1],
-                    count: [3, 5],
-                    radius: [.05, .2],
-                    stagger: [0, 0],
-                    color: turretParticleColor,
-                })
-                damageTurret(id, bullet.damage)
-            }
+    useBaseActorHandler({
+        client,
+        health,
+        position,
+        removeDelay: 350,
+        remove: () => removeTurret(id),
+        destroy: () => {
+            explode(position, size)
+            createImpactDecal([position.x, .1, position.z])
+            createScrap([position.x, floorLevel, position.z], 2, turretColor)
         }
     })
 
-    useEffect(() => {
-        if (health === 0) {
-            startTransition(() => {
-                remove()
-                explode(position, size)
-                createImpactDecal([position.x, .1, position.z])
-                createScrap([position.x, floorLevel, position.z], 2, turretColor)
+    useCollisionDetection({
+        client,
+        bullet: ({ bullet }) => {
+            if (bullet.owner !== Owner.PLAYER) {
+                return
+            }
+
+            createParticles({
+                position: position.toArray(),
+                offset: [[-.5, .5], [0, .5], [-.5, .5]],
+                speed: [5, 25],
+                spread: [[0, .5], [.5, 2]],
+                normal: [0, 1, -1],
+                count: [3, 5],
+                radius: [.05, .2],
+                stagger: [0, 0],
+                color: turretParticleColor,
             })
+            damageTurret(id, bullet.damage)
         }
-    }, [health])
+    })
 
     // shooting
     useFrame((state, delta) => {
@@ -121,8 +126,8 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
             shootTimer.current = 0
             nextShotAt.current = (
                 fireFrequency * random.float(.75, 1)
-                    - fireFrequency * distanceFromPlayer * .5
-                    + heightPenalty * fireFrequency * 2
+                - fireFrequency * distanceFromPlayer * .5
+                + heightPenalty * fireFrequency * 2
             ) * (1 / world.timeScale)
 
             if (barrellRef.current) {
@@ -133,6 +138,7 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
         shootTimer.current += ndelta(delta) * 1000
     })
 
+    // barrell anim
     useFrame((state, delta) => {
         if (!barrellRef.current) {
             return
@@ -142,34 +148,36 @@ function Turret({ id, size, position, health, fireFrequency, rotation, floorLeve
     })
 
     return (
-        <group
-            dispose={null}
-            position={position.toArray()}
-            rotation={[0, -rotation + Math.PI * .5, 0]}
-        >
-            <group>
-                <mesh
-                    castShadow
-                    receiveShadow
-                    material={materials.turret}
-                >
-                    <primitive
-                        object={nodes.turret2_1.geometry}
-                        attach="geometry"
+        <>
+            <group
+                dispose={null}
+                position={position.toArray()}
+                rotation={[0, -rotation + Math.PI * .5, 0]}
+            >
+                <group>
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        material={materials.turret}
+                    >
+                        <primitive
+                            object={nodes.turret2_1.geometry}
+                            attach="geometry"
+                        />
+                    </mesh>
+                    {/* barrell */}
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        ref={barrellRef}
+                        geometry={nodes.turret2_2.geometry}
+                        material={materials.turret}
                     />
-                </mesh>
-                {/* barrell */}
-                <mesh
-                    castShadow
-                    receiveShadow
-                    ref={barrellRef}
-                    geometry={nodes.turret2_2.geometry}
-                    material={materials.turret}
-                />
+                </group>
             </group>
 
             <DebugBox size={size} position={position} />
-        </group>
+        </>
     )
 }
 

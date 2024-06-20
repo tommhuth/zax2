@@ -1,6 +1,6 @@
 import React, { useRef } from "react"
 import { BufferAttribute, BufferGeometry, Color, ColorRepresentation, Euler, InstancedMesh, Matrix4, Quaternion, Vector3 } from "three"
-import { Tuple2, Tuple3, Tuple4 } from "../types"
+import { Tuple2, Tuple3, Tuple4 } from "../types.global"
 import { clamp, mapLinear as map } from "three/src/math/MathUtils.js"
 import { store } from "./store"
 
@@ -61,7 +61,7 @@ export function setMatrixAt({
         rotation.length === 3 ? _quaternion.setFromEuler(_euler.set(...rotation, "XYZ")) : _quaternion.set(...rotation),
         Array.isArray(scale) ? _scale.set(...scale) : _scale.set(scale, scale, scale),
     ))
-    instance.instanceMatrix.needsUpdate = true 
+    instance.instanceMatrix.needsUpdate = true
 }
 
 export function setMatrixNullAt(instance: InstancedMesh, index: number) {

@@ -3,11 +3,11 @@ import { startTransition, useEffect, useRef } from "react"
 import { Box3, Ray, Vector3 } from "three"
 import { SpatialHashGrid3D, Client, ClientData } from "./SpatialHashGrid3D"
 import { useStore } from "./store"
-import { Tuple3 } from "../types"
+import { Tuple3 } from "../types.global"
 import { Bullet, CollisionObjectType } from "./types"
 import { BULLET_SIZE } from "./const"
 
-interface BulletActions extends Partial<Record<CollisionObjectType, (data: ClientData) => void>> {
+interface BulletActions extends Partial<Record<CollisionObjectType, (data: ClientData, otherClient: Client, delta: number) => void>> {
     bullet?: (e: CollisionEventDetails) => void
 }
 
@@ -46,18 +46,17 @@ export function getCollisions({
     return result
 }
 
-interface UseCollisionDetectionParams {
+interface UseCollisionDetectionParams extends BulletActions {
     interval?: number
     client?: Client // test collisions against this
     active?: () => boolean
-    actions: BulletActions
 }
 
 export function useCollisionDetection({
     interval = 1,
     client,
-    actions,
     active = () => true,
+    ...actions
 }: UseCollisionDetectionParams) {
     let grid = useStore(i => i.world.grid)
     let tick = useRef(0)
@@ -69,7 +68,9 @@ export function useCollisionDetection({
         }
 
         let onBulletCollision = ({ detail }: CustomEvent<CollisionEventDetails>) => {
-            startTransition(() => actions.bullet?.(detail))
+            if (detail.client === client) {
+                startTransition(() => actions.bullet?.(detail))
+            }
         }
 
         window.addEventListener("bulletcollision", onBulletCollision as EventListener)
@@ -79,7 +80,7 @@ export function useCollisionDetection({
         }
     }, [actions.bullet, active])
 
-    useFrame(() => {
+    useFrame((state, delta) => {
         if (active() && tick.current % interval === 0 && client) {
             let collisions = getCollisions({
                 grid,
@@ -95,7 +96,7 @@ export function useCollisionDetection({
                     continue
                 }
 
-                startTransition(() => action?.(otherClient.data))
+                startTransition(() => action?.(otherClient.data, otherClient, delta))
             }
         }
 

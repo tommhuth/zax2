@@ -1,12 +1,12 @@
 import { useEffect } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { setMatrixAt } from "../../../data/utils" 
-import { Tuple3 } from "../../../types"
+import { setMatrixAt } from "../../../data/utils"
+import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
 
 interface CableProps {
     position: Tuple3
-    scale?:number
+    scale?: number
     rotation?: number
 }
 

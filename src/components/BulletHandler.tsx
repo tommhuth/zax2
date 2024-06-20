@@ -3,22 +3,19 @@ import { memo, startTransition, useEffect, useRef } from "react"
 import { Bullet } from "../data/types"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../data/utils"
 import { store, useStore } from "../data/store"
-import { removeBullet } from "../data/store/actors"
 import { getIntersection, getCollisions, CollisionEventDetails } from "../data/collisions"
-import { Tuple3 } from "../types"
-import { Mesh } from "three" 
+import { Tuple3 } from "../types.global"
+import { Mesh, Vector3 } from "three"
 import { setLastImpactLocation } from "../data/store/world"
+import { removeBullet } from "@data/store/actors/bullet.actions"
 
-function createCollisionEvent( 
-    detail: CollisionEventDetails
-) {
+function createCollisionEvent(detail: CollisionEventDetails) {
     return new CustomEvent<CollisionEventDetails>("bulletcollision", {
         bubbles: false,
         cancelable: false,
         detail,
     })
 }
-
 
 function BulletHandler() {
     let lastImpactLocation = useStore(i => i.world.lastImpactLocation)
@@ -28,21 +25,21 @@ function BulletHandler() {
         let { instances, world: { bullets, grid, frustum }, player } = store.getState()
         let removedBullets: Bullet[] = []
 
-        if (!instances.line || !player.object || !instances.device) {
+        if (!instances.line || !player.object) {
             return
         }
 
         for (let bullet of bullets) {
             let collisions = getCollisions({
-                grid, 
+                grid,
                 position: bullet.position.toArray(),
-                size: bullet.obb, 
+                size: bullet.aabb.getSize(new Vector3()).toArray(),
             })
 
             for (let client of collisions) {
                 let intersection = getIntersection(client, bullet)
 
-                setLastImpactLocation(...intersection) 
+                startTransition(() => setLastImpactLocation(...intersection))
 
                 window.dispatchEvent(
                     createCollisionEvent({
@@ -65,7 +62,7 @@ function BulletHandler() {
                 index: bullet.index,
                 position: bullet.position.toArray(),
                 rotation: [0, bullet.rotation + Math.PI * .5, 0],
-                scale: [bullet.size[0], .1, bullet.size[2]]
+                scale: bullet.size
             })
 
             if (!frustum.containsPoint(bullet.position) || collisions.length) {
@@ -94,14 +91,14 @@ function BulletHandler() {
             impactRef.current.scale.y += (0 - impactRef.current.scale.y) * .15
             impactRef.current.scale.z += (0 - impactRef.current.scale.z) * .15
         }
-    }) 
+    })
 
     useEffect(() => {
         impactRef.current?.scale.set(1, 1, 1)
         impactRef.current?.position.set(...lastImpactLocation)
     }, [lastImpactLocation])
 
-    return ( 
+    return (
         <mesh ref={impactRef}>
             <sphereGeometry args={[.5, 16, 16]} />
             <meshBasicMaterial name="solidWhite" color={"white"} />

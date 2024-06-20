@@ -1,8 +1,8 @@
 import { useEffect } from "react"
-import { useRepeater } from "../models/RepeaterMesh" 
+import { useRepeater } from "../models/RepeaterMesh"
 import { RepeaterName } from "../../../data/types"
-import { useWorldPart } from "../WorldPartWrapper" 
-import { Tuple3 } from "../../../types"
+import { useWorldPart } from "../WorldPartWrapper"
+import { Tuple3 } from "../../../types.global"
 
 interface EdgeElementProps {
     x?: number
@@ -31,7 +31,7 @@ export default function EdgeElement({
             building.rotation.y = rotation
 
             if (scale)
-                building.scale.set(...scale) 
+                building.scale.set(...scale)
         }
     }, [building, rotation, x, y, z])
 

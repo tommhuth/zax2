@@ -1,14 +1,14 @@
-import { startTransition, useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { Vector3 } from "three"
 import { Barrel as BarrelType, Owner } from "../../../data/types"
 import random from "@huth/random"
-import { GLTFModel, Tuple3 } from "../../../types"
+import { GLTFModel, Tuple3 } from "../../../types.global"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { damageBarrel, removeBarrel } from "../../../data/store/world"
 import { barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
-import { useCollisionDetection } from "../../../data/collisions" 
-import { useRemoveWhenBehindPlayer } from "../../../data/hooks" 
+import { useCollisionDetection } from "../../../data/collisions"
+import { useBaseActorHandler } from "../../../data/hooks"
 import { useStore } from "../../../data/store"
 
 import barrelsModel from "@assets/models/barrels.glb"
@@ -41,46 +41,39 @@ function explode(position: Vector3, size: Tuple3, color: string) {
 const rotations = new Array(8 * 2)
     .fill(null)
     .map((i, index, list) => (index / list.length) * Math.PI * 2)
- 
+
 export default function Barrel({
     position,
     size,
     id,
+    client,
     health,
 }: BarrelType) {
     let type = useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), [])
     let { nodes } = useGLTF(barrelsModel) as GLTFModel<["barrel1", "barrel2", "barrel3", "barrel4"]>
     let [rotation] = useState(random.pick(...rotations))
     let materials = useStore(i => i.materials)
-    let remove = () => {
-        setTimeout(() => {
-            startTransition(() => removeBarrel(id))
-        }, 300)
-    }
 
-    useRemoveWhenBehindPlayer(position, remove)
-
-    useCollisionDetection({
-        actions: {
-            bullet: ({ bullet, client, type }) => {
-                if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "barrel") {
-                    return
-                }
-
-                damageBarrel(id, 100)
-                increaseScore(1000)
-            }
-        }
+    useBaseActorHandler({
+        health,
+        client,
+        position,
+        removeDelay: 300,
+        destroy: () => explode(position, size, barellParticleColor),
+        remove: () => removeBarrel(id)
     })
 
-    useEffect(() => {
-        if (health === 0) {
-            startTransition(() => {
-                remove()
-                explode(position, size, barellParticleColor)
-            })
+    useCollisionDetection({
+        client,
+        bullet: ({ bullet }) => {
+            if (bullet.owner !== Owner.PLAYER) {
+                return
+            }
+
+            damageBarrel(id, 100)
+            increaseScore(1000)
         }
-    }, [health]) 
+    })
 
     return (
         <>

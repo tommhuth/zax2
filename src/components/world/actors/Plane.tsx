@@ -1,12 +1,10 @@
 import { memo, startTransition, useMemo, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-import { useEffect } from "react"
 import { clamp, ndelta } from "../../../data/utils"
 import random from "@huth/random"
-import { Tuple3 } from "../../../types"
+import { GLTFModel, Tuple3 } from "../../../types.global"
 import { Mesh, Vector3 } from "three"
 import { Owner, Plane as PlaneType } from "../../../data/types"
-import { createBullet, damagePlane, damageTurret, removePlane } from "../../../data/store/actors"
 import { store, useStore } from "../../../data/store"
 import { damageBarrel } from "../../../data/store/world"
 import { increaseScore } from "../../../data/store/player"
@@ -22,8 +20,10 @@ import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 import planeModel from "@assets/models/plane.glb"
 import { useGLTF } from "@react-three/drei"
 import DebugBox from "@components/DebugBox"
-
-let _size = new Vector3()
+import { useBaseActorHandler } from "@data/hooks"
+import { createBullet } from "@data/store/actors/bullet.actions"
+import { removePlane, damagePlane } from "@data/store/actors/plane.actions"
+import { damageTurret } from "@data/store/actors/turret.actions"
 
 function explode(position: Vector3) {
     createExplosion({
@@ -58,8 +58,8 @@ function Plane({
     speed,
     rotation = 0,
 }: PlaneType) {
-    let { nodes } = useGLTF(planeModel)
-    let materials = useStore(i => i.materials) 
+    let { nodes } = useGLTF(planeModel) as GLTFModel<["plane"]>
+    let materials = useStore(i => i.materials)
     let planeRef = useRef<Mesh>(null)
     let data = useMemo(() => ({
         removed: false,
@@ -74,62 +74,54 @@ function Plane({
         liftoffTimer: 0,
     }), [])
     let bottomY = 0
-    let grid = useStore(i => i.world.grid)
     let weaponSide = useMemo(() => new Counter(2), [])
     let isStatic = speed === 0
     let diagonal = useStore(i => i.world.diagonal)
-    let remove = () => {
-        startTransition(() => removePlane(id))
-        data.removed = true
-    }
 
-    useCollisionDetection({
+    useBaseActorHandler({
         client,
-        actions: {
-            bullet: ({ bullet, client, intersection, normal, type }) => {
-                if (bullet.owner !== Owner.PLAYER || client.data.id !== id || type !== "plane") {
-                    return
-                }
+        position,
+        size,
+        aabb,
+        health,
+        keepAround: !isStatic,
+        remove: () => removePlane(id),
+        removeDelay: 240,
+        destroy: (position) => {
+            explode(position)
+            increaseScore(500)
 
-                damagePlane(id, bullet.damage)
-                createParticles({
-                    position: intersection,
-                    count: [1, 3],
-                    speed: [8, 12],
-                    offset: [[0, 0], [0, 0], [0, 0]],
-                    spread: [[0, 0], [0, 0]],
-                    normal,
-                    color: "yellow",
-                })
-            },
-            turret: (data) => {
-                damageTurret(data.id, 100)
-            },
-            barrel: (data) => {
-                damageBarrel(data.id, 100)
-            },
+            if (isStatic) {
+                createImpactDecal([position.x, .1, position.z], 2.25)
+            }
         }
     })
 
-    useEffect(()=> {
-        return () => {
-            console.log("Gone")
-        }
-    }, [])
+    useCollisionDetection({
+        client,
+        bullet: ({ bullet, intersection, normal }) => {
+            if (bullet.owner !== Owner.PLAYER) {
+                return
+            }
 
-    useEffect(() => {
-        if (health === 0) {
-            startTransition(() => {
-                increaseScore(500)
-                explode(position)
-
-                if (isStatic) {
-                    createImpactDecal([position.x, .1, position.z], 2.25)
-                    setTimeout(remove, 240)
-                }
+            damagePlane(id, bullet.damage)
+            createParticles({
+                position: intersection,
+                count: [1, 3],
+                speed: [8, 12],
+                offset: [[0, 0], [0, 0], [0, 0]],
+                spread: [[0, 0], [0, 0]],
+                normal,
+                color: "yellow",
             })
-        }
-    }, [health, isStatic])
+        },
+        turret: (data) => {
+            damageTurret(data.id, 100)
+        },
+        barrel: (data) => {
+            damageBarrel(data.id, 100)
+        },
+    })
 
     // shoot
     useFrame((state, delta) => {
@@ -171,25 +163,14 @@ function Plane({
     // move
     useFrame((state, delta) => {
         if (planeRef.current && !data.removed && !isStatic) {
-            let { world, player } = useStore.getState()
+            let { player } = useStore.getState()
             let playerZ = player.object?.position.z || Infinity
             let shouldMoveForward = targetY === startY || position.z - diagonal * 1.5 < playerZ
 
             position.z -= shouldMoveForward ? data.actualSpeed * ndelta(delta) : 0
-            aabb.setFromCenterAndSize(position, _size.set(...size))
 
             planeRef.current.position.copy(position)
             planeRef.current.rotation.set(...data.rotation)
-
-            if (
-                position.z + world.diagonal * .5 < playerZ 
-            ) {
-                console.log("REM")
-                startTransition(remove)
-            } else {
-                client.position = position.toArray()
-                grid.updateClient(client)
-            }
         }
     })
 
@@ -272,9 +253,9 @@ function Plane({
                 />
             )}
 
-            <DebugBox 
-                size={size} 
-                position={position} 
+            <DebugBox
+                size={size}
+                position={position}
                 dynamic
             />
         </>

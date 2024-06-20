@@ -1,5 +1,5 @@
 import { Vector3 } from "three"
-import { Tuple3 } from "../../../types"
+import { Tuple3 } from "../../../types.global"
 
 export const width = 1300
 export const height = 700

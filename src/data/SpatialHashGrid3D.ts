@@ -1,4 +1,4 @@
-import { Tuple3 } from "src/types"
+import { Tuple3 } from "src/types.global"
 import { CollisionObjectType } from "./types"
 
 export interface Client {

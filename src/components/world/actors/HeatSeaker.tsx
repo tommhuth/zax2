@@ -1,4 +1,4 @@
-import { Frustum, Matrix4, Vector3 } from "three"
+import { Vector3 } from "three"
 import { store, useStore } from "../../../data/store"
 import { useFrame } from "@react-three/fiber"
 import { removeHeatSeaker } from "../../../data/store/boss"
@@ -7,11 +7,9 @@ import { startTransition, useEffect, useMemo } from "react"
 import { createExplosion, createImpactDecal } from "../../../data/store/effects"
 import random from "@huth/random"
 import type { HeatSeaker } from "../../../data/types"
-import { useCollisionDetection } from "../../../data/collisions" 
+import { useCollisionDetection } from "../../../data/collisions"
 
 let _dir = new Vector3()
-let _mat4 = new Matrix4()
-let _frustum = new Frustum()
 
 export default function HeatSeaker({
     position,
@@ -25,31 +23,19 @@ export default function HeatSeaker({
     let accuracy = useMemo(() => random.float(.25, .4), [])
 
     useCollisionDetection({
-        actions: {
-            bullet: ({ bullet, type }) => {
-                if (bullet.owner === "player" || type !== "heatseaker") {
-                    removeHeatSeaker(id)
-                }
+        client,
+        bullet: ({ bullet }) => {
+            if (bullet.owner === "player") {
+                removeHeatSeaker(id)
             }
         }
     })
 
-    useFrame((state, delta) => {
-        let { player, world, instances } = store.getState()
-        let speed = 10
-        let nd = ndelta(delta)
-
-        if (!player.object) {
-            return
-        }
-
-        _frustum.setFromProjectionMatrix(_mat4.multiplyMatrices(
-            state.camera.projectionMatrix,
-            state.camera.matrixWorldInverse
-        ))
+    useFrame(() => {
+        let { frustum } = store.getState().world
 
         if (
-            !_frustum.containsPoint(position)
+            !frustum.containsPoint(position)
             || position.x > 10
             || position.x < -10
             || position.y > 100
@@ -62,6 +48,16 @@ export default function HeatSeaker({
                     createImpactDecal([position.x, .05, position.z], random.float(1.5, 2))
                 }
             })
+        }
+    })
+
+    useFrame((state, delta) => {
+        let { player, world, instances } = store.getState()
+        let speed = 10
+        let nd = ndelta(delta)
+
+        if (!player.object) {
+            return
         }
 
         _dir.copy(position)

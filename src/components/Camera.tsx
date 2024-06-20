@@ -2,7 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber"
 import { useLayoutEffect } from "react"
 import { Matrix4 } from "three"
 import { store, useStore } from "../data/store"
-import { setCameraShake } from "../data/store/player"
+import { setCameraShake } from "../data/store/effects"
 import random from "@huth/random"
 import { damp } from "three/src/math/MathUtils.js"
 import { CAMERA_OFFSET, CAMERA_POSITION, WORLD_PLAYER_START_Z } from "../data/const"
@@ -33,14 +33,15 @@ export default function Camera() {
     })
 
     useFrame((state, delta) => {
-        let { player } = store.getState()
+        let { player, effects } = store.getState()
 
         if (player.object && setup) {
             let targetZ = player.object.position.z + CAMERA_POSITION.z + CAMERA_OFFSET.z
 
             camera.position.z = damp(camera.position.z, targetZ, 5, delta)
-            camera.position.x = CAMERA_POSITION.x + CAMERA_OFFSET.x + player.cameraShake * random.float(-1, 1)
-            setCameraShake(damp(player.cameraShake, 0, 7, delta))
+            camera.position.x = CAMERA_POSITION.x + CAMERA_OFFSET.x + effects.cameraShake.x * random.float(-1, 1)
+            
+            setCameraShake(damp(effects.cameraShake.x, 0, 4, delta))
         }
     })
 

@@ -1,7 +1,7 @@
 import { useStore } from "@data/store"
 import { useFrame } from "@react-three/fiber"
 import { useRef } from "react"
-import { Tuple3 } from "src/types"
+import { Tuple3 } from "src/types.global"
 import { ColorRepresentation, Mesh, Vector3 } from "three"
 
 interface DebugBoxProps {

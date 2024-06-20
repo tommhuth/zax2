@@ -1,27 +1,26 @@
 import { Box3, InstancedMesh, Object3D, Vector3 } from "three"
-import { Tuple2, Tuple3 } from "../types"
+import { Tuple2, Tuple3 } from "../types.global"
 import Counter from "./Counter"
 import { Client } from "./SpatialHashGrid3D"
 
-export type MaterialName = "device" |  "plane" |  "rocket" | "platform" | "grass" | "exhaust" 
+export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" | "exhaust"
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
     | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock"
-    | "floorBase" | "floorHi" | "floorMark" | "floorSolid"  | "bossFloorHi" | "turret"
+    | "floorBase" | "floorHi" | "floorMark" | "floorSolid" | "bossFloorHi" | "turret"
 
-export type InstanceName = "leaf" | "scrap" |  "line" | "box" | "sphere" | "particle" | "device"
-    | "fireball" | "cable" | "cylinder" | "shimmer" | "dirt"
-    | "grass" | "plant" | "shockwave" | "blast" | "decal"  
+export type InstanceName = "leaf" | "scrap" | "line" | "sphere" | "particle"
+    | "fireball" | "cable" | "shimmer" | "dirt" | "plant" | "shockwave" | "blast" | "decal"
 
-export type RepeaterName = "tower1" | "tower2"| "tower3"| "tower3"| "tower3"| "tower3"
+export type RepeaterName = "tower1" | "tower2" | "tower3" | "tower3" | "tower3" | "tower3"
     | "tanks" | "wall1" | "wall2" | "wall3" | "wall4" | "floor6"
     | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
 
-export type CollisionObjectType = "plant" | "barrel" | "player" | "boss" | "heatseaker" 
+export type CollisionObjectType = "plant" | "barrel" | "player" | "boss" | "heatSeaker"
     | "plane" | "turret" | "building" | "rocket" | "vehicle" | "obstacle"
 
 export enum BossState {
     IDLE = "idle",
-    ACTIVE = "active",  
+    ACTIVE = "active",
     DEAD = "dead",
     OUTRO = "outro",
     UNKNOWN = "unknown"
@@ -33,7 +32,7 @@ export interface Fireball {
     index: number
     startRadius: number
     maxRadius: number
-    lifetime: number 
+    lifetime: number
     time: number
     id: string
     type?: "primary" | "secondary"
@@ -68,13 +67,13 @@ export interface Rocket {
     id: string
     speed: number
     health: number
-} 
+}
 
 export interface Instance {
     mesh: InstancedMesh;
     maxCount: number;
     index: Counter;
-} 
+}
 
 export interface HeatSeaker {
     position: Vector3
@@ -138,7 +137,7 @@ export interface WorldPart {
     position: Vector3
     color: number
     type: WorldPartType
-}  
+}
 
 export interface WorldPartBuildingsGap extends WorldPart {
     type: WorldPartType.BUILDINGS_GAP
@@ -153,7 +152,7 @@ export interface WorldPartStart extends WorldPart {
 }
 
 export interface WorldPartBoss extends WorldPart {
-    type: WorldPartType.BOSS 
+    type: WorldPartType.BOSS
 }
 
 export interface WorldPartBuildingsLow extends WorldPart {
@@ -176,7 +175,6 @@ export interface Bullet {
     index: number
     rotation: number
     direction: Tuple3
-    obb: Tuple3
     mounted: boolean
     size: Tuple3
     aabb: Box3
@@ -192,7 +190,7 @@ export interface Particle {
     friction: number
     mounted: boolean
     restitution: number
-    time: number 
+    time: number
     instance: Instance
     radius: number
     rotation: Tuple3

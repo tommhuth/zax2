@@ -1,4 +1,4 @@
-import { Tuple3 } from "../../types"
+import { Tuple3 } from "../../types.global"
 import { store } from "."
 import { Barrel, WorldPart } from "../types"
 import { Box3, Vector3 } from "three"
@@ -24,7 +24,7 @@ export function setDiagonal(diagonal: number) {
         },
     })
 
-} 
+}
 export function setTimeScale(timeScale: number) {
     store.setState({
         world: {
@@ -33,7 +33,7 @@ export function setTimeScale(timeScale: number) {
         },
     })
 
-} 
+}
 
 export function addWorldPart(part?: WorldPart) {
     let world = store.getState().world
@@ -119,12 +119,9 @@ export function damageBarrel(id: string, damage: number) {
 }
 
 export function removeBarrel(id: string) {
-    let { world: { barrels, grid } } = store.getState()
-    let barrel = barrels.find(i => i.id === id) as Barrel
+    let { world: { barrels } } = store.getState()
 
     updateWorld({
         barrels: barrels.filter(i => i.id !== id)
     })
-
-    barrel && grid.remove(barrel.client)
 } 

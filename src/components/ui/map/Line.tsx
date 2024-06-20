@@ -1,7 +1,6 @@
 import { useMemo, useRef } from "react"
-import { Vector3 } from "three" 
+import { Vector3 } from "three"
 import { useAnimationFrame } from "../../../data/hooks"
-import { ndelta } from "../../../data/utils"
 import { useStore } from "../../../data/store"
 import { toIsometric } from "./utils"
 
@@ -12,14 +11,16 @@ export default function Line({ index }: { index: number }) {
     let width = 1000
     let lineRef = useRef<SVGLineElement>(null)
     let distanceTravelled = useRef(0)
+    let lastPosition = useRef(0)
 
-    useAnimationFrame((delta) => {
+    useAnimationFrame(() => {
         let player = useStore.getState().player
-        let nd = ndelta(delta / 1000)
         let mapPosition = toIsometric(position, [0, 0, 0])
+        let speed = player.position.z - lastPosition.current
 
-        position.z -= player.speed * nd
-        distanceTravelled.current += player.speed * nd
+        position.z -= speed
+        distanceTravelled.current += speed
+        lastPosition.current = player.position.z
 
         if (distanceTravelled.current >= gap) {
             position.z = z

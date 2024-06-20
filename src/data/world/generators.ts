@@ -1,8 +1,8 @@
 import random from "@huth/random"
 import { Vector3 } from "three"
-import { Tuple2 } from "../../types" 
+import { Tuple2 } from "../../types.global"
 import { WorldPartDefault, WorldPartBuildingsLow, WorldPartBuildingsGap, WorldPartType, WorldPartAirstrip, WorldPartStart, WorldPartBoss } from "../types"
- 
+
 export type BaseWorldPart = { size: Tuple2, position: Vector3 }
 
 function baseProps(previous: BaseWorldPart) {
@@ -46,7 +46,7 @@ export function makeStart(previous: BaseWorldPart): WorldPartStart {
         color: Math.random() * 0xffffff,
         type: WorldPartType.START,
     }
-} 
+}
 
 export function makeBoss(previous: BaseWorldPart): WorldPartBoss {
     let depth = 50
@@ -55,7 +55,7 @@ export function makeBoss(previous: BaseWorldPart): WorldPartBoss {
         ...baseProps(previous),
         size: [10, depth] as Tuple2,
         color: Math.random() * 0xffffff,
-        type: WorldPartType.BOSS, 
+        type: WorldPartType.BOSS,
     }
 }
 

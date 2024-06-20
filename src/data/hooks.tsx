@@ -1,25 +1,120 @@
-import { startTransition, useCallback, useEffect, useMemo, useRef } from "react"
-import { IUniform, Shader, Vector3 } from "three"
-import { glsl } from "./utils"
+import { RefObject, startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { Box3, IUniform, Object3D, Shader, Vector3 } from "three"
+import { glsl, ndelta } from "./utils"
 import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
-import { useStore } from "./store"
+import { store, useStore } from "./store"
+import { Client } from "./SpatialHashGrid3D"
+import { Tuple3 } from "src/types.global"
 
-export function useRemoveWhenBehindPlayer(position: Vector3, removeFunc: () => void) {
-    let removed = useRef(false)
-    let diagonal = useStore(i => i.world.diagonal)
+interface UseGravityOptions {
+    ref: RefObject<Object3D>
+    active: boolean
+    force?: number
+    stopAt?: number
+    onGrounded?: () => void
+}
+
+export function useGravity({
+    ref,
+    active,
+    force = -15,
+    stopAt = 0,
+    onGrounded = () => { }
+}: UseGravityOptions) {
+    let velocity = useRef(0)
+    let acceleration = useRef(0)
+    let grounded = useRef(false)
+
+    useFrame((state, delta) => {
+        let nd = ndelta(delta)
+
+        if (active && ref.current && ref.current.position.y > stopAt) {
+            velocity.current += acceleration.current * nd
+            acceleration.current += force * nd
+
+            ref.current.position.y += velocity.current * nd
+
+            ref.current.rotation.x += force * nd * .001
+            ref.current.rotation.y += force * nd * .0005
+            ref.current.rotation.z += force * nd * -.008
+        } else if (active && !grounded.current) {
+            startTransition(onGrounded)
+            grounded.current = true
+        }
+    })
+}
+
+interface UseBaseActorHandlerOptions {
+    health?: number
+    client: Client
+    position: Vector3
+    keepAround?: boolean
+    removeDelay?: number
+    aabb?: Box3
+    size?: Tuple3
+    remove: () => void
+    destroy: (position: Vector3) => void
+}
+
+let _size = new Vector3()
+
+export function useBaseActorHandler({
+    health = Infinity,
+    client,
+    position,
+    removeDelay = 0,
+    keepAround = false,
+    aabb,
+    size,
+    remove,
+    destroy,
+}: UseBaseActorHandlerOptions) {
+    let [shouldExit, setShouldExit] = useState(false)
 
     useFrame(() => {
-        let { player } = useStore.getState()
-        let outsideFrustum = player.object && position.z < player.object.position.z - diagonal * .5
+        let { player, world } = useStore.getState()
+        let outsideFrustum = player.object && position.z < player.object.position.z - world.diagonal * .5
 
-        if (!removed.current && outsideFrustum) {
-            removed.current = true
-            startTransition(removeFunc)
+        if (!shouldExit && outsideFrustum) {
+            setShouldExit(true)
         }
     })
 
-    return removed
+    useFrame(() => {
+        let { world } = store.getState()
+
+        client.position = position.toArray()
+        world.grid.updateClient(client)
+
+        if (aabb && size) {
+            aabb.setFromCenterAndSize(position, _size.set(...size))
+        }
+    })
+
+    useEffect(() => {
+        if (shouldExit) {
+            setTimeout(() => startTransition(remove), removeDelay)
+        }
+    }, [shouldExit])
+
+    useEffect(() => {
+        return () => {
+            remove()
+        }
+    }, [])
+
+    useLayoutEffect(() => {
+        if (health === 0) {
+            let { world } = store.getState()
+
+            world.grid.remove(client)
+            startTransition(() => {
+                destroy(position)
+                setShouldExit(!keepAround)
+            })
+        }
+    }, [health, keepAround])
 }
 
 export const useAnimationFrame = (callback: (delta: number) => void) => {
@@ -53,7 +148,7 @@ interface ShaderPart {
 export interface UseShaderParams<T = Record<string, IUniform<any>>> {
     uniforms?: T
     shared?: string
-    vertex?: ShaderPart 
+    vertex?: ShaderPart
     fragment?: ShaderPart
 }
 
@@ -75,7 +170,7 @@ export function useWindowEvent(name: string | string[], func: (e: any) => void, 
     }, deps)
 }
 
-export function useShader({ 
+export function useShader({
     uniforms: incomingUniforms = {},
     shared = "",
     vertex = {
@@ -86,7 +181,7 @@ export function useShader({
         head: "",
         main: "",
     }
-}: UseShaderParams) { 
+}: UseShaderParams) {
     let uniforms = useMemo(() => {
         return Object.entries(incomingUniforms)
             .map(([key, value]) => ({ [key]: { needsUpdate: true, ...value } }))
@@ -122,7 +217,7 @@ export function useShader({
 
             ${fragment?.main}  
         `)
-    }, [vertex?.head, vertex?.main, fragment?.head, fragment?.main]) 
+    }, [vertex?.head, vertex?.main, fragment?.head, fragment?.main])
 
     return {
         uniforms,

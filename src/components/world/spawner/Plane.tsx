@@ -1,7 +1,7 @@
 import { startTransition, useEffect } from "react"
-import { Tuple3 } from "../../../types"
-import { createPlane, removePlane } from "../../../data/store/actors"
+import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
+import { createPlane } from "@data/store/actors/plane.actions"
 
 interface PlaneProps {
     position: Tuple3
@@ -21,10 +21,8 @@ export default function Plane({
     let partPosition = useWorldPart()
 
     useEffect(() => {
-        let id: string
-
-        startTransition(() => { 
-            id = createPlane({
+        startTransition(() => {
+            createPlane({
                 position: [position[0], position[1], partPosition[2] + position[2]],
                 targetY,
                 rotation,
@@ -32,12 +30,6 @@ export default function Plane({
                 fireFrequency
             })
         })
-
-        return () => {
-            startTransition(() => {
-                removePlane(id)
-            })
-        }
     }, [...position])
 
     return null

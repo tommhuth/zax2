@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber"
 import React, { createContext, startTransition, useContext, useMemo, useState } from "react"
 import { Box3, Vector3 } from "three"
-import { Tuple2, Tuple3 } from "../../types"
+import { Tuple2, Tuple3 } from "../../types.global"
 import { Only } from "../../data/utils"
 import { store, useStore } from "../../data/store"
 import { removeWorldPart } from "../../data/store/world"

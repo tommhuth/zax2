@@ -1,28 +1,34 @@
 import { useFrame, useLoader } from "@react-three/fiber"
-import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
-import { AdditiveBlending, Group, PointLight, TextureLoader } from "three"
-import { GLTFModel, Tuple3 } from "../types"
+import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { AdditiveBlending, Group, PointLight, TextureLoader, Vector3 } from "three"
+import { GLTFModel, Tuple3 } from "../types.global"
 import { clamp, ndelta } from "../data/utils"
 import { BossState, Owner } from "../data/types"
 import animate from "@huth/animate"
 import { store, useStore } from "../data/store"
-import { damagePlayer, increaseScore, setPlayerObject } from "../data/store/player"
-import { createBullet, damagePlane, damageRocket, damageTurret } from "../data/store/actors"
-import { damageBarrel } from "../data/store/world"
+import { damagePlayer, setPlayerObject } from "../data/store/player"
+import { damageBarrel, setTimeScale } from "../data/store/world"
 import { playerColor } from "../data/theme"
 import { MeshRetroMaterial } from "./world/materials/MeshRetroMaterial"
 import { removeHeatSeaker, setBossProp } from "../data/store/boss"
 import { useCollisionDetection } from "../data/collisions"
-import { easeInQuad, easeOutExpo } from "../data/shaping"
+import { easeInOutCubic, easeInQuad, easeOutExpo } from "../data/shaping"
 import Exhaust from "./Exhaust"
 import { damp } from "three/src/math/MathUtils.js"
 import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "../data/const"
 import { uiTunnel } from "../components/ui/tunnels"
 
 import playerModel from "@assets/models/player.glb"
-import { useGLTF } from "@react-three/drei" 
+import { useGLTF } from "@react-three/drei"
+import DebugBox from "./DebugBox"
+import { createExplosion, createParticles } from "@data/store/effects"
+import random from "@huth/random"
+import { createBullet } from "@data/store/actors/bullet.actions"
+import { damagePlane } from "@data/store/actors/plane.actions"
+import { damageRocket } from "@data/store/actors/rocket.actions"
+import { damageTurret } from "@data/store/actors/turret.actions"
 
-let depth = 2
+let depth = 3
 
 interface PlayerProps {
     size?: Tuple3
@@ -35,9 +41,9 @@ interface LocalData {
     isMovingUp: boolean
     bossDeadAt: number
 }
- 
+
 export default function Player({
-    size = [1.5, .5, depth],
+    size = [1.5, 1, depth],
     z = 0,
     y = 1.5
 }: PlayerProps) {
@@ -49,15 +55,14 @@ export default function Player({
     let setup = useStore(i => i.setup)
     let innerRef = useRef<Group>(null)
     let bossState = useStore(i => i.boss.state)
-    let position = useStore(i => i.player.position)
-    let player = useStore(i => i.player)
-    let speed = useStore(i => i.player.speed)
-    let targetPosition = useStore(i => i.player.targetPosition)
+    let [position, targetPosition] = useStore(i => [i.player.position, i.player.targetPosition])
+    let [health, speed] = useStore(i => [i.player.health, i.player.speed])
+    let [dead, setDead] = useState(false)
     let controls = useStore(i => i.controls)
     let diagonal = useStore(i => i.world.diagonal)
     let engineLightRef = useRef<PointLight>(null)
     let { nodes } = useGLTF(playerModel) as GLTFModel<["player"]>
-    let text = useLoader(TextureLoader, "/textures/glow.png")
+    let glow = useLoader(TextureLoader, "/textures/glow.png")
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {
             type: "player",
@@ -81,6 +86,49 @@ export default function Player({
     }, [])
 
     useEffect(() => {
+        if (health === 0) {
+            setDead(true)
+            animate({
+                from: 1,
+                to: .2,
+                duration: 1500,
+                easing: easeInOutCubic,
+                render(timeScale) {
+                    setTimeScale(timeScale)
+                }
+            })
+
+            let colors = ["#88F", "#00f", "#007", "#249", "#09F"]
+
+            for (let i = 0; i < 9; i++) {
+                createExplosion({
+                    position: position.toArray(),
+                    count: random.integer(6, 8),
+                    delay: i * 400,
+                    shockwave: i === 7,
+                    blastRadius: i % 3 === 0 ? random.float(3, 5) : 0
+                })
+                createParticles({
+                    position: position.toArray(),
+                    offset: [
+                        [-size[0] / 2, size[0] / 2],
+                        [-size[1] / 2, size[1] / 2],
+                        [-size[2] / 2, size[2] / 2]
+                    ],
+                    count: random.integer(8, 16),
+                    radius: [.05, .3],
+                    stagger: [0, 100],
+                    restitution: [.4, .85],
+                    normal: [random.float(-1, 1), 1, -1],
+                    delay: i * 650,
+                    color: random.pick(...colors)
+                })
+            }
+
+        }
+    }, [health])
+
+    useEffect(() => {
         if (playerGroupRef.current) {
             playerGroupRef.current.position.x = WORLD_CENTER_X
             playerGroupRef.current.position.y = y
@@ -95,43 +143,36 @@ export default function Player({
     }, [bossState])
 
     useCollisionDetection({
-        interval: 1,
         client,
-        actions: {
-            bullet: ({ bullet, type }) => {
-                if (bullet.owner !== Owner.PLAYER || type !== "player") {
-                    return
-                }
-
-                damagePlayer(bullet.damage)
-                increaseScore(-10)
-            },
-            building: () => {
-                damagePlayer(100)
-            },
-            turret: (data) => {
-                damagePlayer(100)
-                damageTurret(data.id, 100)
-            },
-            barrel: (data) => {
-                damageBarrel(data.id, 100)
-            },
-            plane: (data) => {
-                damagePlayer(100)
-                damagePlane(data.id, 100)
-            },
-            rocket: (data) => {
-                damagePlayer(100)
-                damageRocket(data.id, 100)
-            },
-            heatseaker: (data) => {
-                damagePlayer(30)
-                removeHeatSeaker(data.id)
-            },
-            boss: () => {
-                damagePlayer(100)
+        active: () => !dead,
+        bullet: ({ bullet }) => {
+            if (bullet.owner === Owner.ENEMY) {
+                damagePlayer(5)
             }
-        }
+        },
+        obstacle: () => {
+            damagePlayer(100)
+        },
+        turret: (data) => {
+            damageTurret(data.id, 100)
+            damagePlayer(100)
+        },
+        barrel: (data) => {
+            damageBarrel(data.id, 100)
+            damagePlayer(20)
+        },
+        plane: (data) => {
+            damagePlane(data.id, 100)
+            damagePlayer(50)
+        },
+        rocket: (data) => {
+            damageRocket(data.id, 100)
+            damagePlayer(50)
+        },
+        heatSeaker: (data) => {
+            removeHeatSeaker(data.id)
+            damagePlayer(25)
+        },
     })
 
     useEffect(() => {
@@ -197,14 +238,17 @@ export default function Player({
 
     // movement
     useFrame((state, delta) => {
-        let { ready } = useStore.getState()
+        let { ready, boss, player } = useStore.getState()
 
         if (playerGroupRef.current && ready) {
             let nd = ndelta(delta)
             let group = playerGroupRef.current
             let y = clamp(targetPosition.y, EDGE_MIN.y, EDGE_MAX.y)
-            let { boss, player } = store.getState()
             let move = (speed: number) => {
+                if (dead) {
+                    return
+                }
+
                 group.position.x = damp(group.position.x, targetPosition.x, 4, nd)
                 group.position.y = damp(group.position.y, y, 5, nd)
                 group.position.z += speed * nd
@@ -269,11 +313,15 @@ export default function Player({
             <group
                 ref={handleRef}
             >
-                <group ref={innerRef}>
+                <DebugBox active size={size} position={new Vector3()} />
+                <group
+                    ref={innerRef}
+                >
                     <mesh
                         receiveShadow
                         castShadow
                         position={[0, 0, 0]}
+                        visible={!dead}
                     >
                         <MeshRetroMaterial
                             name="player"
@@ -288,10 +336,11 @@ export default function Player({
                         scale={[3.5, 6, 1]}
                         rotation-x={-Math.PI * .5}
                         position={[0, -.25, -.7]}
+                        visible={!dead}
                     >
                         <planeGeometry args={[1, 1, 1, 1]} />
                         <meshBasicMaterial
-                            map={text}
+                            map={glow}
                             transparent
                             depthWrite={false}
                             opacity={.35}
@@ -302,13 +351,14 @@ export default function Player({
                     <Exhaust
                         offset={[0, -.15, -3.35]}
                         scale={[.5, .3, 1.6]}
+                        visible={!dead}
                     />
 
                     <pointLight
                         ref={engineLightRef}
                         distance={80}
                         position={[0, .1, -1.75]}
-                        intensity={80}
+                        intensity={dead ? 0 : 80}
                         color={"#ffffff"}
                     />
                 </group>
@@ -323,7 +373,7 @@ export default function Player({
                         marginBottom: ready ? 0 : "-1em",
                     }}
                 >
-                    {player.health.toFixed(0)}%
+                    {health.toFixed(0)}%
 
                     <div ref={scoreRef} />
                 </div>

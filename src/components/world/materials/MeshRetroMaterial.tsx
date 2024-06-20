@@ -5,7 +5,7 @@ import easings from "../../../shaders/easings.glsl"
 import dithering from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
 import utils from "../../../shaders/utils.glsl"
-import { glsl } from "../../../data/utils"
+import { glsl, ndelta } from "../../../data/utils"
 import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef, useEffect, useMemo } from "react"
 import { useStore } from "../../../data/store"
@@ -39,7 +39,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     backColorIntensity = 0,
     shader = {},
     emissive,
-    additionalShadowStrength = .15, 
+    additionalShadowStrength = .15,
     children,
     ...rest
 }, ref) => {
@@ -219,7 +219,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             uniforms.uPlayerPosition.needsUpdate = true
         }
 
-        uniforms.uTime.value += delta * .2
+        uniforms.uTime.value += ndelta(delta) * .2
         uniforms.uTime.needsUpdate = true
 
         for (let i = 0; i < uniforms.uLightSources.value.length; i++) {

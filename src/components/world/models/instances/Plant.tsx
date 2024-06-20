@@ -9,8 +9,8 @@ import easings from "../../../../shaders/easings.glsl"
 import noise from "../../../../shaders/noise.glsl"
 import model from "@assets/models/plant.glb"
 import { useGLTF } from "@react-three/drei"
-import { GLTFModel } from "src/types"
- 
+import { GLTFModel } from "src/types.global"
+
 export default function Plant() {
     let count = 10
     let { nodes } = useGLTF(model) as GLTFModel<["plant"]>
@@ -61,7 +61,7 @@ export default function Plant() {
                     attach={"attributes-aTrauma"}
                     args={[traumaData, 1, false, 1]}
                 />
-            </primitive> 
+            </primitive>
 
             <meshDepthMaterial
                 attach="customDepthMaterial"

@@ -29,7 +29,7 @@ function MaterialLoader() {
                     name="plane"
                     colorCount={5}
                     emissive={planeColor}
-                    emissiveIntensity={.2}
+                    emissiveIntensity={.05}
                     rightColorIntensity={.5}
                     rightColor="#f00"
                     backColor="#f00"

@@ -2,7 +2,7 @@ import { startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { useInstance } from "../models/InstancedMesh"
 import { clamp, ndelta, setBufferAttribute, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import random from "@huth/random"
-import { Tuple3 } from "../../../types"
+import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
 import { store, useStore } from "../../../data/store"
 import { useCollisionDetection } from "../../../data/collisions"
@@ -86,33 +86,31 @@ export default function Plant({
         interval: 2,
         client,
         active: () => health > 0,
-        actions: {
-            bullet: ({ client, type, bullet }) => {
-                if (client.data.id === id && type === "plant" && bullet.owner === Owner.PLAYER) { 
-                    setHealth(Math.max(health - 10, 0))
-                    createParticles({
-                        position: position.toArray(),
-                        count: [5, 10],
-                        radius: [.01 * scale, .3],
-                        normal: [0, 1, 0],
-                        spread: [[-.85, .85], [0, 1]],
-                        speed: [10, 27],
-                        color: "#00ff9d",
-                        stagger: [0, 0],
-                        gravity: [0, -random.integer(35, 50), 0]
-                    }) 
-                }
-            },
-            player: () => { 
-                setHealth(Math.max(health - 5, 0)) 
+        bullet: ({ client, type, bullet }) => {
+            if (client.data.id === id && type === "plant" && bullet.owner === Owner.PLAYER) {
+                setHealth(Math.max(health - 10, 0))
+                createParticles({
+                    position: position.toArray(),
+                    count: [5, 10],
+                    radius: [.01 * scale, .3],
+                    normal: [0, 1, 0],
+                    spread: [[-.85, .85], [0, 1]],
+                    speed: [10, 27],
+                    color: "#00ff9d",
+                    stagger: [0, 0],
+                    gravity: [0, -random.integer(35, 50), 0]
+                })
             }
+        },
+        player: () => {
+            setHealth(Math.max(health - 5, 0))
         }
     })
 
     // health change
     useEffect(() => {
         if (health === 0 && typeof index === "number") {
-            startTransition(()=> {
+            startTransition(() => {
                 grid.remove(client)
                 setMatrixNullAt(instance, index as number)
                 createLeaves()
@@ -127,7 +125,7 @@ export default function Plant({
                     stagger: [0, 0],
                     gravity: [0, -random.integer(35, 50), 0]
                 })
-            }) 
+            })
         }
 
         trauma.current += .3

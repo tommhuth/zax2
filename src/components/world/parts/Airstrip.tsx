@@ -43,7 +43,7 @@ export default function Airstrip({
             <Obstacle
                 type="device"
                 position={[-1, 0, 14.5]}
-                size={[2, 1, 3]}
+                size={[2, 1.5, 3]}
             />
             <Turret
                 position={[-1, .5, 16]}

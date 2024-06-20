@@ -1,11 +1,11 @@
-import { startTransition, useEffect } from "react" 
-import { Tuple3 } from "../../../types"
-import { createBarrel, removeBarrel } from "../../../data/store/world"
+import { startTransition, useEffect } from "react"
+import { Tuple3 } from "../../../types.global"
+import { createBarrel } from "../../../data/store/world"
 import { useWorldPart } from "../WorldPartWrapper"
 
 interface BarrelProps {
     position: Tuple3
-    rotation?: number 
+    rotation?: number
     health?: number
 }
 
@@ -16,22 +16,14 @@ export default function Barrel({
 }: BarrelProps) {
     let partPosition = useWorldPart()
 
-    useEffect(() => { 
-        let id: string  
-
-        startTransition(() => { 
-            id = createBarrel({ 
+    useEffect(() => {
+        startTransition(() => {
+            createBarrel({
                 position: [position[0], position[1], partPosition[2] + position[2]],
-                rotation, 
-                health 
+                rotation,
+                health
             })
         })
-
-        return () => {
-            startTransition(() => {
-                removeBarrel(id)
-            })
-        }
     }, [...position])
 
     return null

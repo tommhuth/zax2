@@ -2,9 +2,10 @@ import { useGLTF } from "@react-three/drei"
 import { useStore } from "../../../../data/store"
 
 import model from "@assets/models/tanks.glb"
+import { GLTFModel } from "src/types.global"
 
 export default function Tanks(props) {
-    const { nodes } = useGLTF(model)
+    const { nodes } = useGLTF(model) as GLTFModel<["Cylinder001", "Cylinder001_1", "Cylinder001_2"]>
     const materials = useStore(i => i.materials)
 
     return (

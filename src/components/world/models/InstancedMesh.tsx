@@ -1,7 +1,7 @@
 import React, { startTransition, useEffect, useMemo, useState } from "react"
 import { setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
-import { Tuple3, Tuple4 } from "../../../types"
+import { Tuple3, Tuple4 } from "../../../types.global"
 import { store, useStore } from "../../../data/store"
 import { setInstance } from "../../../data/store/utils"
 import { InstanceName } from "../../../data/types"
@@ -86,8 +86,8 @@ export default function InstancedMesh({
             return
         }
 
-        setInstance(name, instance, count)  
-    }, [instance]) 
+        setInstance(name, instance, count)
+    }, [instance])
 
     return (
         <instancedMesh

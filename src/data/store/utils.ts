@@ -1,7 +1,8 @@
 import { InstancedMesh, Material, Object3D } from "three"
 import Counter from "../Counter"
-import { Store, store } from "."
+import { store } from "."
 import { MaterialName } from "../types"
+import { Store } from "./types.store"
 
 export function updateWorld(data: Partial<Store["world"]>) {
     store.setState({
@@ -32,7 +33,7 @@ export function setRepeater(name: string, meshes: Object3D[], count: number) {
 
 export function requestRepeater(name: string) {
     let nextIndex = store.getState().repeaters[name].index.next()
-    let mesh = store.getState().repeaters[name].meshes[nextIndex] 
+    let mesh = store.getState().repeaters[name].meshes[nextIndex]
 
     return mesh
 }

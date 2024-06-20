@@ -1,87 +1,10 @@
-import { Frustum, Object3D, Vector3 } from "three"
-import type { Material } from "three"
+import { Frustum, Vector3 } from "three"
+import { Vector2 } from "three"
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
-import { Tuple3 } from "../../types"
-import {
-    Barrel, BossState, Bullet, Explosion, HeatSeaker, Instance, 
-    InstanceName, MaterialName, Particle,  WorldPartType,
-    Plane, RepeaterMesh, Rocket, Turret, WorldPart,
-} from "../types"
+import { BossState } from "../types"
 import { SpatialHashGrid3D } from "../SpatialHashGrid3D"
-
-interface ControlsMap {
-    d?: boolean
-    a?: boolean
-    w?: boolean
-    s?: boolean
-    space?: boolean
-}
-
-export interface Store {
-    debug: {
-        showColliders: boolean
-        forcedWorldParts: WorldPartType[]
-        pauseWorldGeneration: boolean
-    }
-    loaded: boolean
-    setup: boolean
-    ready: boolean
-    state: "intro" | "running" | "gameover"
-    world: {
-        diagonal: number
-        parts: WorldPart[]
-        frustum: Frustum
-        level: number
-        timeScale: number
-        grid: SpatialHashGrid3D
-        bullets: Bullet[]
-        turrets: Turret[]
-        barrels: Barrel[]
-        rockets: Rocket[]
-        planes: Plane[] 
-        lastImpactLocation: Tuple3
-    }
-    effects: {
-        particles: Particle[]
-        explosions: Explosion[]
-    }
-    instances: Record<InstanceName, Instance>
-    repeaters: Record<string, RepeaterMesh>
-    materials: Record<MaterialName, Material>
-    boss: {
-        pauseAt: number
-        health: number
-        position: Vector3
-        maxHealth: number
-        heatSeakers: HeatSeaker[]
-        state: BossState
-        time: number
-        lastActiveAt: Date
-        interval: number
-    },
-    controls: {
-        startPointerPosition: Vector3
-        pointerPosition: Vector3
-        keys: ControlsMap
-    },
-    player: {
-        speed: number
-        velocity: Vector3
-        cameraShake: number
-        health: number
-        score: number
-        position: Vector3
-        targetPosition: Vector3
-        weapon: {
-            fireFrequency: number,
-            color: string,
-            speed: number
-            damage: number
-        }
-        object: Object3D | null
-    }
-}
+import { Store } from "./types.store"
 
 const store = create(
     subscribeWithSelector<Store>(() => ({
@@ -100,7 +23,7 @@ const store = create(
             grid: new SpatialHashGrid3D([4, 3, 4]),
             frustum: new Frustum(),
             level: 1,
-            parts: [], 
+            parts: [],
             planes: [],
             turrets: [],
             barrels: [],
@@ -111,6 +34,7 @@ const store = create(
         effects: {
             explosions: [],
             particles: [],
+            cameraShake: new Vector2(),
         },
         instances: {} as Store["instances"],
         repeaters: {},
@@ -136,7 +60,6 @@ const store = create(
             targetPosition: new Vector3(),
             velocity: new Vector3(),
             speed: 4,
-            cameraShake: 0,
             health: 100,
             score: 0,
             object: null,

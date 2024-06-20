@@ -1,5 +1,6 @@
-import { useStore } from "@data/store"
 import "./Debug.scss"
+
+import { useStore } from "@data/store"
 import { setPlayerSpeed } from "@data/store/player"
 import { addForcedWorldPart, setPauseWorldGeneration, setShowColliders } from "@data/store/debug"
 import { WorldPartType } from "@data/types"
@@ -8,21 +9,27 @@ import { useRef } from "react"
 import { setTimeScale } from "@data/store/world"
 
 export default function Debug() {
-    const state = useStore()
+    const [
+        state, 
+        boss,
+        world,
+        debug,
+        player,  
+    ] = useStore(i => [i.state, i.boss, i.world, i.debug, i.player])
     const selectRef = useRef<HTMLSelectElement>(null)
 
     return (
         <fieldset
             className="debug"
         >
-            <div>{state.state}</div>
+            <div>{state}</div>
             <label>
-                Speed: {state.player.speed}
+                Speed: {player.speed}
                 <input
                     type="range"
                     min={0}
                     max={15}
-                    value={state.player.speed}
+                    value={player.speed}
                     step={.1}
                     onChange={(e) => {
                         setPlayerSpeed(e.target.valueAsNumber)
@@ -30,12 +37,12 @@ export default function Debug() {
                 />
             </label>
             <label>
-                Timescale: {state.world.timeScale}
+                Timescale: {world.timeScale.toFixed(4)}
                 <input
                     type="range"
                     min={0}
-                    max={1}
-                    value={state.world.timeScale}
+                    max={2}
+                    value={world.timeScale}
                     step={.001}
                     onChange={(e) => {
                         setTimeScale(e.target.valueAsNumber)
@@ -44,25 +51,25 @@ export default function Debug() {
             </label>
             <label>
                 <input
-                    checked={state.debug.showColliders}
+                    checked={debug.showColliders}
                     type="checkbox"
                     onChange={e => setShowColliders(e.target.checked)}
                 />
                 Show colliders
             </label>
             <div>
-                Boss: {state.boss.state}
+                Boss: {boss.state}
                 <div>
-                    {((Date.now() - state.boss.lastActiveAt.getTime()) / 1000).toFixed(1)} / {(state.boss.interval / 1000).toLocaleString("en")}
+                    {((Date.now() - boss.lastActiveAt.getTime()) / 1000).toFixed(1)} / {(boss.interval / 1000).toLocaleString("en")}
                 </div>
             </div>
             <ul>
-                <li>Turrets: {state.world.turrets.length}</li>
-                <li>Planes: {state.world.planes.length}</li>
-                <li>Barells: {state.world.barrels.length}</li> 
-                <li>Rockets: {state.world.rockets.length}</li>
-                <li>Bullets: {state.world.bullets.length}</li>
-                <li>Heat seakers: {state.boss.heatSeakers.length}</li>
+                <li>Turrets: {world.turrets.length}</li>
+                <li>Planes: {world.planes.length}</li>
+                <li>Barells: {world.barrels.length}</li> 
+                <li>Rockets: {world.rockets.length}</li>
+                <li>Bullets: {world.bullets.length}</li>
+                <li>Heat seakers: {boss.heatSeakers.length}</li>
             </ul>
             <fieldset>
                 <legend>World</legend>
@@ -74,10 +81,10 @@ export default function Debug() {
                 >
                     <input
                         type="checkbox"
-                        checked={state.debug.pauseWorldGeneration}
+                        checked={debug.pauseWorldGeneration}
                         onChange={(e) => setPauseWorldGeneration(e.currentTarget.checked)}
                     />
-                    No world gen
+                    Pause worldgen
                 </label>
                 <div
                     style={{
@@ -128,21 +135,21 @@ export default function Debug() {
                 </div>
 
                 <ul>
-                    {state.world.parts.map(i => {
+                    {world.parts.map(i => {
                         return (
                             <li
                                 key={i.id}
                                 style={{
                                     marginLeft: 10,
-                                    opacity: i.position.z + i.size[1] < state.player.position.z ? .5 : 1,
-                                    color: i.position.z < state.player.position.z && i.position.z + i.size[1] > state.player.position.z ? "orange" : undefined
+                                    opacity: i.position.z + i.size[1] < player.position.z ? .5 : 1,
+                                    color: i.position.z < player.position.z && i.position.z + i.size[1] > player.position.z ? "orange" : undefined
                                 }}
                             >
                                 {i.type}
                             </li>
                         )
                     })}
-                    {state.debug.forcedWorldParts.map((i, index) => {
+                    {debug.forcedWorldParts.map((i, index) => {
                         return (
                             <li
                                 style={{ marginLeft: 10 }}

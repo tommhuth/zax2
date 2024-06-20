@@ -10,7 +10,7 @@ import { useFrame } from "@react-three/fiber"
 import { blend, easeInOutCubic, easeOutCubic, easeOutQuart } from "../../../data/shaping"
 import { useStore } from "../../../data/store"
 import { Fireball } from "../../../data/types"
-import { Tuple3 } from "../../../types"
+import { Tuple3 } from "../../../types.global"
 
 type TransformReturn = { scale: number, position: Tuple3 }
 type FireballTransformer = (fireball: Fireball, delta: number, instance: InstancedMeshThree) => TransformReturn

@@ -1,24 +1,23 @@
-import { startTransition, useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import type { Rocket } from "../../../data/types"
 import { Owner } from "../../../data/types"
 import { useFrame } from "@react-three/fiber"
 import { ndelta } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
 import random from "@huth/random"
-import { GLTFModel, Tuple3 } from "../../../types"
+import { GLTFModel, Tuple3 } from "../../../types.global"
 import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
-import { damageRocket, removeRocket } from "../../../data/store/actors"
 import { createExplosion, createParticles } from "../../../data/store/effects"
 import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
 import Exhaust from "../../Exhaust"
 import { WORLD_TOP_EDGE } from "../../../data/const"
 import models from "@assets/models/rocket.glb"
-import { useGLTF } from "@react-three/drei" 
+import { useGLTF } from "@react-three/drei"
 import DebugBox from "@components/DebugBox"
-
-let _size = new Vector3()
+import { useBaseActorHandler } from "@data/hooks"
+import { removeRocket, damageRocket } from "@data/store/actors/rocket.actions"
 
 function explode(position: Vector3, size: Tuple3) {
     let shouldDoFireball = position.y < 2
@@ -92,9 +91,9 @@ export default function Rocket({
     health,
 }: Rocket) {
     let { nodes } = useGLTF(models) as GLTFModel<["rocket", "platform"]>
-    let rocketRef = useRef<Mesh>(null)
-    let grid = useStore(i => i.world.grid)
     let [removed, setRemoved] = useState(false)
+    let rocketRef = useRef<Mesh>(null)
+    let materials = useStore(i => i.materials)
     let data = useMemo(() => {
         return {
             removed: false,
@@ -103,43 +102,32 @@ export default function Rocket({
             rotationY: random.float(0, Math.PI * 2)
         }
     }, [speed])
-    let materials = useStore(i => i.materials)
-    let remove = () => {
-        data.removed = true
-        increaseScore(500)
-        setRemoved(true)
-    }
 
-    useEffect(() => {
-        return () => {
-            removeRocket(id)
-        }
-    }, [id])
-
-    useCollisionDetection({
-        actions: {
-            bullet: ({ bullet, client, type }) => {
-                if (
-                    bullet.owner !== Owner.PLAYER
-                    || client.data.id !== id
-                    || type !== "rocket"
-                ) {
-                    return
-                }
-
-                damageRocket(id, bullet.damage)
-            }
+    useBaseActorHandler({
+        position,
+        client,
+        health,
+        keepAround: true,
+        size,
+        aabb,
+        remove: () => removeRocket(id),
+        destroy: () => {
+            explode(position, size)
+            increaseScore(500)
+            setRemoved(true)
         }
     })
 
-    useEffect(() => {
-        if (health === 0) {
-            startTransition(() => {
-                setTimeout(() => startTransition(remove), 450)
-                explode(position, size)
-            })
+    useCollisionDetection({
+        client,
+        bullet: ({ bullet }) => {
+            if (bullet.owner !== Owner.PLAYER) {
+                return
+            }
+
+            damageRocket(id, bullet.damage)
         }
-    }, [health])
+    })
 
     // movement
     useFrame((state, delta) => {
@@ -160,10 +148,6 @@ export default function Rocket({
             }
 
             rocketRef.current.position.copy(position)
-
-            aabb.setFromCenterAndSize(position, _size.set(...size))
-            client.position = position.toArray()
-            grid.updateClient(client)
         }
     })
 

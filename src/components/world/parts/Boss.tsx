@@ -6,15 +6,15 @@ import Boss from "../actors/Boss"
 
 import { useGLTF } from "@react-three/drei"
 import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
-import Barrel from "../spawner/Barrel" 
+import Barrel from "../spawner/Barrel"
 import Cable from "../decoration/Cable"
 import Dirt from "../decoration/Dirt"
 import timeout from "../../../data/timeout"
 import { uiTunnel } from "../../ui/tunnels"
-import EdgeElement from "../decoration/EdgeElement" 
+import EdgeElement from "../decoration/EdgeElement"
 
-import model from "@assets/models/floor5.glb" 
-import { GLTFModel } from "src/types"
+import model from "@assets/models/floor5.glb"
+import { GLTFModel } from "src/types.global"
 
 export function BossFloor(props) {
     const { nodes } = useGLTF(model) as GLTFModel<["floor5_1", "floor5_2", "floor5_3"]>
@@ -49,7 +49,7 @@ export function BossFloor(props) {
                 receiveShadow
                 geometry={nodes.floor5_3.geometry}
                 material={materials.floorBase}
-            /> 
+            />
         </group>
     )
 }
@@ -101,7 +101,7 @@ export default function BossPart({
             />
             <Barrel
                 position={[5.5, 0, 29]}
-            /> 
+            />
             <Cable
                 position={[0, 0, 10]}
                 scale={1.25}
@@ -122,7 +122,7 @@ export default function BossPart({
                     className="boss-health"
                     style={{
                         display: boss.state === BossState.ACTIVE ? "block" : "none"
-                    }} 
+                    }}
                     key="bosshealth"
                 >
                     <div

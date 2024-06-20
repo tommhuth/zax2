@@ -6,48 +6,24 @@ import {
 } from "../../../data/store/boss"
 import { Group, Vector3 } from "three"
 import { store, useStore } from "../../../data/store"
-import { Tuple3 } from "../../../types"
+import { Tuple3 } from "../../../types.global"
 import HeatSeaker from "./HeatSeaker"
 import { createExplosion, createImpactDecal, createParticles } from "../../../data/store/effects"
 import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
-import { createBullet } from "../../../data/store/actors"
 import { BossState, Owner } from "../../../data/types"
 import { useCollisionDetection } from "../../../data/collisions"
 import { useGLTF } from "@react-three/drei"
 import bossModel from "@assets/models/boss.glb"
 import bossdestroyedModel from "@assets/models/bossdestroyed.glb"
 import DebugBox from "@components/DebugBox"
-import { ndelta } from "@data/utils"
+import { createBullet } from "@data/store/actors/bullet.actions"
+import { useGravity } from "@data/hooks"
 
 let bossSize: Tuple3 = [4.5, 4.75, 2]
 
 interface BossProps {
     startPosition: Tuple3
-}
-
-export function useGravity({ ref, active, force = -15, stopAt = 0, onGrounded = () => { } }) {
-    let velocity = useRef(0)
-    let acceleration = useRef(0)
-    let grounded = useRef(false)
-
-    useFrame((state, delta) => {
-        let nd = ndelta(delta)
-
-        if (active && ref.current.position.y > stopAt) {
-            velocity.current += acceleration.current * nd
-            acceleration.current += force * nd
-
-            ref.current.position.y += velocity.current * nd
-
-            ref.current.rotation.x += force * nd * .001
-            ref.current.rotation.y += force * nd * .0005
-            ref.current.rotation.z += force * nd * -.008
-        } else if (active && !grounded.current) {
-            startTransition(onGrounded)
-            grounded.current = true
-        }
-    })
 }
 
 export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
@@ -80,28 +56,23 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
     })
 
     useCollisionDetection({
-        actions: {
-            bullet: ({ bullet, intersection, normal, type }) => {
-                if (
-                    data.dead ||
-                    bullet.owner !== Owner.PLAYER ||
-                    type !== "boss"
-                ) {
-                    return
-                }
+        client,
+        bullet: ({ bullet, intersection, normal }) => {
+            if (data.dead || bullet.owner !== Owner.PLAYER) {
+                return
+            }
 
-                damageBoss(10)
-                createParticles({
-                    position: intersection,
-                    offset: [[0, 0], [0, 0], [0, 0]],
-                    speed: [3, 29],
-                    spread: [[0, 0], [0, 0]],
-                    normal,
-                    count: [0, 3],
-                    radius: [0.1, 0.3],
-                    color: "#00f",
-                })
-            },
+            damageBoss(10)
+            createParticles({
+                position: intersection,
+                offset: [[0, 0], [0, 0], [0, 0]],
+                speed: [3, 29],
+                spread: [[0, 0], [0, 0]],
+                normal,
+                count: [0, 3],
+                radius: [0.1, 0.3],
+                color: "#00f",
+            })
         },
     })
 

@@ -1,20 +1,17 @@
 import { useLoader } from "@react-three/fiber"
 import InstancedMesh from "./InstancedMesh"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
-import { 
+import {
     cableColor,
-    deviceColor,
-    dirtColor, 
+    dirtColor,
     plantColor,
-    rightColor,
-    scrapColor, 
+    scrapColor,
 } from "../../../data/theme"
 import { DoubleSide, FrontSide, Mesh } from "three"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
-import { memo } from "react" 
-import Plant from "./instances/Plant" 
-import { glsl } from "../../../data/utils"  
-import deviceModel from "@assets/models/device.glb"
+import { memo } from "react"
+import Plant from "./instances/Plant"
+import { glsl } from "../../../data/utils"
 import scrapModel from "@assets/models/scrap.glb"
 import cableModel from "@assets/models/cable.glb"
 import dirtModel from "@assets/models/dirt.glb"
@@ -22,23 +19,22 @@ import leafModel from "@assets/models/leaf.glb"
 
 function Instances() {
     let [
-        device, scrap, cable, dirt, leaf
-    ] = useLoader(GLTFLoader, [  
-        deviceModel,
+        scrap, cable, dirt, leaf
+    ] = useLoader(GLTFLoader, [
         scrapModel,
         cableModel,
-        dirtModel, 
+        dirtModel,
         leafModel,
-    ])  
+    ])
 
     return (
-        <>  
-            <Plant />  
-            
+        <>
+            <Plant />
+
             <InstancedMesh
                 name="leaf"
                 count={40}
-                castShadow 
+                castShadow
             >
                 <primitive
                     object={(leaf.nodes.leaf as Mesh).geometry}
@@ -50,7 +46,7 @@ function Instances() {
                     name="leaf"
                     vertexColors
                     side={DoubleSide}
-                    colorCount={6}  
+                    colorCount={6}
                     rightColorIntensity={.5}
                     rightColor="#ff0"
                 />
@@ -107,19 +103,6 @@ function Instances() {
             </InstancedMesh>
 
             <InstancedMesh
-                name="box"
-                count={100}
-                castShadow
-                receiveShadow
-            >
-                <boxGeometry
-                    args={[1, 1, 1, 1, 1, 1]}
-                    attach="geometry"
-                />
-                <MeshRetroMaterial color={deviceColor} name="box" />
-            </InstancedMesh>
-
-            <InstancedMesh
                 castShadow
                 name="line"
                 count={50}
@@ -139,7 +122,7 @@ function Instances() {
                 name="scrap"
                 count={50}
                 receiveShadow
-                colors={true} 
+                colors={true}
             >
                 <primitive
                     object={(scrap.nodes.scrap as Mesh).geometry}
@@ -157,26 +140,6 @@ function Instances() {
                             `
                         }
                     }}
-                />
-            </InstancedMesh> 
-
-            <InstancedMesh
-                name="device"
-                count={30}
-                receiveShadow
-            >
-                <primitive
-                    object={(device.nodes.device as Mesh).geometry}
-                    attach="geometry"
-                />
-                <MeshRetroMaterial
-                    name="device"
-                    vertexColors
-                    color={deviceColor}
-                    backColorIntensity={.0}
-                    rightColorIntensity={.97}
-                    rightColor={rightColor}
-
                 />
             </InstancedMesh>
         </>

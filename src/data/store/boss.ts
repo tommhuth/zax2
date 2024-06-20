@@ -1,6 +1,6 @@
 import random from "@huth/random"
 import { store } from "."
-import { Tuple3 } from "../../types"
+import { Tuple3 } from "../../types.global"
 import { Vector3 } from "three"
 import { BossState } from "../types"
 
@@ -70,7 +70,7 @@ export function createHeatSeaker([x, y, z]: Tuple3) {
     let position = new Vector3(x, y, z)
     let size = .35
     let client = world.grid.createClient(position.toArray(), [size, size, size], {
-        type: "heatseaker",
+        type: "heatSeaker",
         id,
     })
 

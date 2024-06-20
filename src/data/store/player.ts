@@ -38,12 +38,3 @@ export function damagePlayer(damage: number) {
         }
     })
 }
-
-export function setCameraShake(cameraShake: number) {
-    store.setState({
-        player: {
-            ...store.getState().player,
-            cameraShake,
-        }
-    })
-}

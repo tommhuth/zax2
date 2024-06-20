@@ -1,12 +1,7 @@
 import barrels from "@assets/models/barrels.glb"
-import cargoship1 from "@assets/models/cargoship1.glb"
-import cargoship1_destroyed from "@assets/models/cargoship1_destroyed.glb"
-import cargoship2 from "@assets/models/cargoship2.glb"
-import cargoship2_destroyed from "@assets/models/cargoship2_destroyed.glb"
-import cargoship3 from "@assets/models/cargoship3.glb"
 import floor5 from "@assets/models/floor5.glb"
 import hangar from "@assets/models/hangar.glb"
-import plane from "@assets/models/plane.glb" 
+import plane from "@assets/models/plane.glb"
 import rocket from "@assets/models/rocket.glb"
 import rockface from "@assets/models/rockface.glb"
 import tower1 from "@assets/models/tower1.glb"
@@ -37,15 +32,14 @@ import { useLoader } from "@react-three/fiber"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
 for (let model of [
-    barrels, cargoship1, cargoship1_destroyed,
-    cargoship2, cargoship2_destroyed, cargoship3, floor5, hangar, plane,
+    barrels, floor5, hangar, plane,
     rocket, rockface, tower1, tower2, turret2, wall1, wall2, wall3,
-    logo, tanks, boss, bossdestroyed,
+    logo, tanks, boss, bossdestroyed, device,
     floor1, floor2, floor3, floor4, grass, plant, player,
 ]) {
     useGLTF.preload(model)
 }
 
-for (let model of [device, scrap, cable, dirt, leaf]) {
+for (let model of [scrap, cable, dirt, leaf]) {
     useLoader.preload(GLTFLoader, model)
 }

@@ -7,11 +7,12 @@ import { useGLTF } from "@react-three/drei"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { useStore } from "../../../data/store"
 import Cable from "../decoration/Cable"
-import model from "@assets/models/logo.glb" 
-import Plant from "../decoration/Plant" 
+import model from "@assets/models/logo.glb"
+import Plant from "../decoration/Plant"
+import { GLTFModel } from "src/types.global"
 
 function Logo(props) {
-    const { nodes } = useGLTF(model) as any
+    const { nodes } = useGLTF(model) as GLTFModel<["Text"]>
 
     return (
         <group {...props} dispose={null}>
@@ -19,7 +20,6 @@ function Logo(props) {
                 castShadow
                 receiveShadow
                 geometry={nodes.Text.geometry}
-                material={nodes.Text.material}
             >
                 <MeshRetroMaterial color="#fff" emissive={"#fff"} emissiveIntensity={.4} />
             </mesh>
@@ -39,14 +39,14 @@ export default function Start({
             size={size}
             position={position}
             id={id}
-        > 
+        >
             <Plant
                 position={[-1, 2, 6]}
                 scale={1}
             />
             <Plant
                 position={[5, 3, 6]}
-                scale={1.1} 
+                scale={1.1}
             />
             <Cable
                 position={[-4, 0, 35]}

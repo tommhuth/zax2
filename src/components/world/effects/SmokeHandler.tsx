@@ -7,11 +7,11 @@ import { useMemo, useRef } from "react"
 import { clamp, glsl, ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { useFrame } from "@react-three/fiber"
 import { store } from "../../../data/store"
-import { Tuple3 } from "../../../types"
+import { Tuple3 } from "../../../types.global"
 import { useShader } from "../../../data/hooks"
 import Counter from "../../../data/Counter"
 import { easeInOutCubic } from "../../../data/shaping"
- 
+
 interface Smoke {
     id: string
     position: Tuple3
@@ -21,9 +21,9 @@ interface Smoke {
     radius: number
     maxRadius: number
     grow: number
-    groundAnimationDuration: number 
+    groundAnimationDuration: number
 }
- 
+
 let _vec3 = new Vector3()
 
 function randomDirection() {
@@ -33,24 +33,24 @@ function randomDirection() {
 export default function SmokeHandler() {
     let instanceRef = useRef<InstancedMesh>(null)
     let count = 150
-    let index = useMemo(()=> new Counter(count), [count])
+    let index = useMemo(() => new Counter(count), [count])
     let smokes = useRef<Smoke[]>([])
     let lastEmitted = useMemo<Record<string, number>>(() => ({}), [])
-    let shader = useShader({ 
+    let shader = useShader({
         shared: glsl`
             varying vec3 vGlobalPosition; 
             ${dither}
             ${easings} 
             ${utils}  
         `,
-        vertex: { 
+        vertex: {
             main: glsl` 
                 vec4 globalPosition = instanceMatrix * vec4(position, 1.);
 
                 vGlobalPosition = globalPosition.xyz;  
             `
         },
-        fragment: { 
+        fragment: {
             main: glsl`   
                 gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * .9 + .095, 1., .0125);
                 gl_FragColor.rgb -= (1. - getShadow( 
@@ -82,7 +82,7 @@ export default function SmokeHandler() {
                         id: random.id(),
                         time: 0,
                         index: index.next(),
-                        radius: random.float(.15, .35), 
+                        radius: random.float(.15, .35),
                         maxRadius: random.float(.35, 2),
                         grow: random.float(.25, .5),
                         groundAnimationDuration: random.integer(600, 1500),
@@ -120,22 +120,22 @@ export default function SmokeHandler() {
             }
 
             let heightMovementEffect = 1 - easeInOutCubic(clamp(position[1] / 3, 0, 1))
-            let groundMovementEffect = 1 - easeInOutCubic(clamp(smoke.time / smoke.groundAnimationDuration, 0, 1)) 
+            let groundMovementEffect = 1 - easeInOutCubic(clamp(smoke.time / smoke.groundAnimationDuration, 0, 1))
             let shrinkEffect = 1 - clamp((smoke.time - 2000) / (smoke.groundAnimationDuration * 2.5), 0, 1)
 
             position[0] += velocity[0] * d * groundMovementEffect * heightMovementEffect
-            position[1] = Math.max(position[1] + velocity[1] * d, 0) 
-            position[2] += velocity[2] * d * groundMovementEffect * heightMovementEffect 
+            position[1] = Math.max(position[1] + velocity[1] * d, 0)
+            position[2] += velocity[2] * d * groundMovementEffect * heightMovementEffect
 
             velocity[0] += .8 * d
             velocity[1] += .4 * d
             velocity[2] += .8 * d
 
-            smoke.radius += .3 * d + d * smoke.grow * (1 - groundMovementEffect) +  d * .35 * (1 - heightMovementEffect)
+            smoke.radius += .3 * d + d * smoke.grow * (1 - groundMovementEffect) + d * .35 * (1 - heightMovementEffect)
             smoke.radius *= shrinkEffect
             smoke.radius = Math.min(smoke.radius, smoke.maxRadius)
 
-            if (position[1] === 0) { 
+            if (position[1] === 0) {
                 smoke.time += d * 1000
             }
 
@@ -149,9 +149,9 @@ export default function SmokeHandler() {
     })
 
     return (
-        <instancedMesh 
-            ref={instanceRef} 
-            receiveShadow 
+        <instancedMesh
+            ref={instanceRef}
+            receiveShadow
             args={[undefined, undefined, count]}
             frustumCulled={false}
         >
@@ -159,8 +159,8 @@ export default function SmokeHandler() {
             <meshLambertMaterial
                 transparent
                 color="#cbecff"
-                emissive={"#fff"} 
-                emissiveIntensity={.7}  
+                emissive={"#fff"}
+                emissiveIntensity={.7}
                 name="smoke"
                 customProgramCacheKey={shader.customProgramCacheKey}
                 onBeforeCompile={shader.onBeforeCompile}
