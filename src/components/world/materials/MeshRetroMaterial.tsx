@@ -10,6 +10,7 @@ import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef, useEffect, useMemo } from "react"
 import { store, useStore } from "../../../data/store"
 import Counter from "../../../data/Counter"
+import { damp } from "three/src/math/MathUtils.js"
 
 const lightSourceCount = 4
 
@@ -274,7 +275,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         uniforms.uTime.needsUpdate = true
 
         for (let i = 0; i < uniforms.uLightSources.value.length; i++) {
-            uniforms.uLightSources.value[i].strength *= .97
+            uniforms.uLightSources.value[i].strength = damp(uniforms.uLightSources.value[i].strength, 0, 1.25, ndelta(delta))
         }
 
         uniforms.uLightSources.needsUpdate = true
