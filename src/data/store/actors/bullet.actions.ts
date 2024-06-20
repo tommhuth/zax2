@@ -1,13 +1,16 @@
 import random from "@huth/random"
-import { store } from "../index" 
-import { Box3, Matrix4, Quaternion, Vector3 } from "three" 
+import { store } from "../index"
+import { Box3, Matrix4, Quaternion, Vector3 } from "three"
 import { updateWorld } from "../utils"
 import { BULLET_SIZE } from "../../const"
+import Counter from "@data/Counter"
 
 let _mat4 = new Matrix4()
 let _translation = new Vector3()
 let _scale = new Vector3(1, 1, 1)
 let _yAxis = new Vector3(0, 1, 0)
+
+let lightIndex = new Counter(20)
 
 export function createBullet({
     position = [0, 0, 0],
@@ -44,6 +47,7 @@ export function createBullet({
                 speed,
                 owner,
                 rotation,
+                lightIndex: lightIndex.next(),
             },
             ...world.bullets,
         ]

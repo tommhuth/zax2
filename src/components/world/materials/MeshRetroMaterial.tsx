@@ -8,7 +8,7 @@ import utils from "../../../shaders/utils.glsl"
 import { glsl, ndelta } from "../../../data/utils"
 import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef, useEffect, useMemo } from "react"
-import { useStore } from "../../../data/store"
+import { store, useStore } from "../../../data/store"
 import Counter from "../../../data/Counter"
 
 const lightSourceCount = 4
@@ -60,6 +60,14 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     }
                 })
             },
+            uBulletLights: {
+                value: new Array(20).fill(null).map(() => {
+                    return {
+                        position: new Vector3(),
+                        radius: 0,
+                    }
+                })
+            },
             uAdditionalShadowStrength: {
                 value: additionalShadowStrength,
             },
@@ -106,6 +114,13 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             };
             uniform LightSource uLightSources[${lightSourceCount}];
 
+
+            struct BulletLight {
+                vec3 position;  
+                float radius;
+            };
+            uniform BulletLight uBulletLights[20];
+
             ${easings} 
             ${dithering}
             ${noise}
@@ -148,7 +163,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 vec3 baseFogColor = vec3(0.0, 0.0, 0.3);
                 vec3 highlightColor = vec3(1., 0.75, 0.01) * 1.3;
                 float fogLightEffect = 0.;
-
+ 
                 for (int i = 0; i < uLightSources.length(); i++) { 
                     LightSource light = uLightSources[i];
 
@@ -156,6 +171,16 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                         * light.strength;
 
                     fogLightEffect = max(fogLightEffect, currentLightEffect);
+                }  
+
+                float bulletLightEffect = 0.;
+
+                for (int i = 0; i < uBulletLights.length(); i++) { 
+                    BulletLight light = uBulletLights[i];
+
+                    float currentLightEffect = (1. - clamp(length(light.position - vGlobalPosition) / light.radius, 0., 1.));
+
+                    bulletLightEffect = max(bulletLightEffect, currentLightEffect);
                 } 
 
                 float noiseEffect = easeInOutSine((noise(vGlobalPosition * .1 + uTime * 1.4) + 1.) / 2.) * .8;
@@ -167,6 +192,13 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     gl_FragColor.rgb, 
                     baseFogColor, 
                     min(1., noiseEffect * heightScaler + heightMin) 
+                );  
+
+                // bullet light
+                gl_FragColor.rgb = mix(
+                    gl_FragColor.rgb, 
+                    mix(gl_FragColor.rgb, vec3(.6, 1., 1.), .5),
+                    easeInSine(bulletLightEffect)
                 );  
 
                 // light highlights
@@ -194,6 +226,25 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 }  
             `
         }
+    })
+
+    useFrame(() => {
+        let bullets = store.getState().world.bullets
+
+        for (let i = 0; i < 20; i++) {
+            uniforms.uBulletLights.value[i].radius = 0
+        }
+
+        for (let i = 0; i < 20; i++) {
+            let bullet = bullets[i]
+
+            if (bullet) {
+                uniforms.uBulletLights.value[bullet.lightIndex].position.copy(bullet.position)
+                uniforms.uBulletLights.value[bullet.lightIndex].radius = 5
+            }
+        }
+
+        uniforms.uBulletLights.needsUpdate = true
     })
 
     useEffect(() => {

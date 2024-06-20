@@ -181,6 +181,7 @@ export interface Bullet {
     color: string
     damage: number
     owner: Owner
+    lightIndex: number
 }
 
 export interface Particle {
