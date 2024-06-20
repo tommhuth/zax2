@@ -69,7 +69,7 @@ export default function Marker({
             <line
                 ref={lineRef}
                 stroke={color}
-                strokeWidth={5}
+                strokeWidth={6}
                 strokeDasharray={"12 10"}
             />
         </>
