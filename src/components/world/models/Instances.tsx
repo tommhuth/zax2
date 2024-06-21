@@ -103,22 +103,6 @@ function Instances() {
             </InstancedMesh>
 
             <InstancedMesh
-                castShadow
-                name="line"
-                count={50}
-                colors={false}
-            >
-                <boxGeometry
-                    args={[1, 1, 1, 1, 1, 1]}
-                    attach="geometry"
-                />
-                <meshBasicMaterial
-                    name="line"
-                    color={"white"}
-                />
-            </InstancedMesh>
-
-            <InstancedMesh
                 name="scrap"
                 count={50}
                 receiveShadow

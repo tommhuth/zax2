@@ -2,7 +2,6 @@
 
 ## Todo
 
--   extend dynamic lights to bullets too??!
 -   actual level design
 -   clean up how scoring is done (solo func not with damage)
 -   gameplay loop with game over

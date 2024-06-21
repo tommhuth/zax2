@@ -2,7 +2,7 @@ import { DoubleSide, RGBADepthPacking } from "three"
 import { plantColor } from "../../../../data/theme"
 import { MeshRetroMaterial } from "../../materials/MeshRetroMaterial"
 import InstancedMesh from "../InstancedMesh"
-import { glsl } from "../../../../data/utils"
+import { glsl, ndelta } from "../../../../data/utils"
 import { useFrame } from "@react-three/fiber"
 import { useMemo } from "react"
 import easings from "../../../../shaders/easings.glsl"
@@ -42,7 +42,7 @@ export default function Plant() {
     `
 
     useFrame((state, delta) => {
-        uniforms.uTime.value += delta * .2
+        uniforms.uTime.value += ndelta(delta * .2)
         uniforms.uTime.needsUpdate = true
     })
 

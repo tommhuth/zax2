@@ -197,7 +197,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 // bullet light
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
-                    mix(gl_FragColor.rgb, vec3(.6, 1., 1.), .5),
+                    mix(gl_FragColor.rgb, vec3(.6, 1., 1.), .65),
                     easeInSine(bulletLightEffect)
                 );  
 

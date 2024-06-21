@@ -2,12 +2,14 @@ import { useFrame } from "@react-three/fiber"
 import { memo, startTransition, useEffect, useRef } from "react"
 import { Bullet } from "../data/types"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../data/utils"
-import { store, useStore } from "../data/store"
+import { store } from "../data/store"
 import { getIntersection, getCollisions, CollisionEventDetails } from "../data/collisions"
 import { Tuple3 } from "../types.global"
 import { Mesh, Vector3 } from "three"
 import { setLastImpactLocation } from "../data/store/world"
 import { removeBullet } from "@data/store/actors/bullet.actions"
+import InstancedMesh from "./world/models/InstancedMesh"
+import { damp } from "three/src/math/MathUtils.js"
 
 function createCollisionEvent(detail: CollisionEventDetails) {
     return new CustomEvent<CollisionEventDetails>("bulletcollision", {
@@ -18,7 +20,6 @@ function createCollisionEvent(detail: CollisionEventDetails) {
 }
 
 function BulletHandler() {
-    let lastImpactLocation = useStore(i => i.world.lastImpactLocation)
     let impactRef = useRef<Mesh>(null)
 
     useFrame((state, delta) => {
@@ -85,24 +86,50 @@ function BulletHandler() {
     })
 
     // impact animation
-    useFrame(() => {
+    useEffect(() => {
+        return store.subscribe(
+            state => state.world.lastImpactLocation,
+            lastImpactLocation => {
+                impactRef.current?.scale.set(1, 1, 1)
+                impactRef.current?.position.set(...lastImpactLocation)
+            }
+        )
+    }, [])
+
+    useFrame((state, delta) => {
         if (impactRef.current) {
-            impactRef.current.scale.x += (0 - impactRef.current.scale.x) * .15
-            impactRef.current.scale.y += (0 - impactRef.current.scale.y) * .15
-            impactRef.current.scale.z += (0 - impactRef.current.scale.z) * .15
+            for (let prop of ["x", "y", "z"] as const) {
+                impactRef.current.scale[prop] = damp(impactRef.current.scale[prop], 0, 6, ndelta(delta))
+            }
         }
     })
 
-    useEffect(() => {
-        impactRef.current?.scale.set(1, 1, 1)
-        impactRef.current?.position.set(...lastImpactLocation)
-    }, [lastImpactLocation])
-
     return (
-        <mesh ref={impactRef}>
-            <sphereGeometry args={[.5, 16, 16]} />
-            <meshBasicMaterial name="solidWhite" color={"white"} />
-        </mesh>
+        <>
+            <mesh ref={impactRef}>
+                <sphereGeometry args={[.5, 16, 16]} />
+                <meshBasicMaterial name="solidWhite" color={"white"} />
+            </mesh>
+
+            <InstancedMesh
+                castShadow
+                name="line"
+                count={40}
+                colors={false}
+            >
+                <cylinderGeometry
+                    args={[1, 1, 1, 8, 1]}
+                    attach="geometry"
+                    onUpdate={(e) => {
+                        e.rotateX(Math.PI * .5)
+                    }}
+                />
+                <meshBasicMaterial
+                    name="line"
+                    color={"white"}
+                />
+            </InstancedMesh>
+        </>
     )
 }
 

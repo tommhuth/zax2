@@ -1,11 +1,11 @@
 import { WorldPartBuildingsLow } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import Turret from "../spawner/Turret"
-import Barrel from "../spawner/Barrel" 
+import Barrel from "../spawner/Barrel"
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
 import Grass from "../decoration/Grass"
-import Plant from "../decoration/Plant" 
+import Plant from "../decoration/Plant"
 
 export default function BuildingsLow({
     id,
@@ -32,19 +32,19 @@ export default function BuildingsLow({
                 rotation={-Math.PI / 2}
                 floorLevel={0}
             />
- 
+
             <Barrel
                 position={[4, .3, 16]}
             />
 
             <Grass
                 position={[-8, 0, size[1] / 2 - 2]}
-            /> 
+            />
             <Turret
                 position={[0, 2, size[1] - 2]}
                 rotation={-Math.PI / 2}
-                floorLevel={1}
-            /> 
+                floorLevel={0}
+            />
 
             <Plant
                 position={[-1, 1, 6]}
@@ -61,7 +61,7 @@ export default function BuildingsLow({
                 type="floor6"
             />
             <Floor
-                position={[position.x, 0, size[1] / 2]} 
+                position={[position.x, 0, size[1] / 2]}
                 type="floor2"
             />
         </WorldPartWrapper>

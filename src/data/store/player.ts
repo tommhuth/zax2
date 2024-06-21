@@ -38,3 +38,14 @@ export function damagePlayer(damage: number) {
         }
     })
 }
+
+export function setPlayerHealth(health: number) {
+    let player = store.getState().player
+
+    store.setState({
+        player: {
+            ...player,
+            health,
+        }
+    })
+}

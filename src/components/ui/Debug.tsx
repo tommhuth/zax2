@@ -1,7 +1,7 @@
 import "./Debug.scss"
 
 import { useStore } from "@data/store"
-import { setPlayerSpeed } from "@data/store/player"
+import { setPlayerHealth, setPlayerSpeed } from "@data/store/player"
 import { addForcedWorldPart, setPauseWorldGeneration, setShowColliders } from "@data/store/debug"
 import { WorldPartType } from "@data/types"
 import { worlPartTypes } from "@data/world/getNextWorldPart"
@@ -10,11 +10,11 @@ import { setTimeScale } from "@data/store/world"
 
 export default function Debug() {
     const [
-        state, 
+        state,
         boss,
         world,
         debug,
-        player,  
+        player,
     ] = useStore(i => [i.state, i.boss, i.world, i.debug, i.player])
     const selectRef = useRef<HTMLSelectElement>(null)
 
@@ -57,6 +57,14 @@ export default function Debug() {
                 />
                 Show colliders
             </label>
+            <label>
+                <input
+                    checked={debug.showColliders}
+                    type="checkbox"
+                    onChange={e => setPlayerHealth(e.target.checked ? Infinity : 100)}
+                />
+                God mode
+            </label>
             <div>
                 Boss: {boss.state}
                 <div>
@@ -66,7 +74,7 @@ export default function Debug() {
             <ul>
                 <li>Turrets: {world.turrets.length}</li>
                 <li>Planes: {world.planes.length}</li>
-                <li>Barells: {world.barrels.length}</li> 
+                <li>Barells: {world.barrels.length}</li>
                 <li>Rockets: {world.rockets.length}</li>
                 <li>Bullets: {world.bullets.length}</li>
                 <li>Heat seakers: {boss.heatSeakers.length}</li>
