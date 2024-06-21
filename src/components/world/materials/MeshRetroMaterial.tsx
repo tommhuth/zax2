@@ -11,6 +11,7 @@ import { forwardRef, useEffect, useMemo } from "react"
 import { store, useStore } from "../../../data/store"
 import Counter from "../../../data/Counter"
 import { damp } from "three/src/math/MathUtils.js"
+import { BULLET_LIGHT_COUNT } from "@data/const"
 
 const lightSourceCount = 4
 
@@ -62,7 +63,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 })
             },
             uBulletLights: {
-                value: new Array(20).fill(null).map(() => {
+                value: new Array(BULLET_LIGHT_COUNT).fill(null).map(() => {
                     return {
                         position: new Vector3(),
                         radius: 0,
@@ -115,19 +116,17 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             };
             uniform LightSource uLightSources[${lightSourceCount}];
 
-
             struct BulletLight {
                 vec3 position;  
                 float radius;
             };
-            uniform BulletLight uBulletLights[20];
+            uniform BulletLight uBulletLights[${BULLET_LIGHT_COUNT}];
 
             ${easings} 
             ${dithering}
             ${noise}
             ${utils}
             ${shader?.shared || ""}
-        
         `,
         vertex: {
             head: shader?.vertex?.head,
@@ -232,11 +231,11 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     useFrame(() => {
         let bullets = store.getState().world.bullets
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < BULLET_LIGHT_COUNT; i++) {
             uniforms.uBulletLights.value[i].radius = 0
         }
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < BULLET_LIGHT_COUNT; i++) {
             let bullet = bullets[i]
 
             if (bullet) {
