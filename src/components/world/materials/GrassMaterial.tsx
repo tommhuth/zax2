@@ -1,15 +1,15 @@
-import { Color, DoubleSide, Vector3 } from "three"  
-import { useFrame } from "@react-three/fiber" 
+import { Color, DoubleSide, Vector3 } from "three"
+import { useFrame } from "@react-three/fiber"
 import dither from "../../../shaders/dither.glsl"
 import easings from "../../../shaders/easings.glsl"
 import noise from "../../../shaders/noise.glsl"
 import { useShader } from "../../../data/hooks"
 import { grassColorEnd, grassColorStart } from "../../../data/theme"
-import { glsl } from "../../../data/utils"
+import { glsl, ndelta } from "../../../data/utils"
 import { store } from "../../../data/store"
 
-export default function GrassMaterial() {  
-    let { onBeforeCompile, uniforms } = useShader({ 
+export default function GrassMaterial() {
+    let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
             uTime: {
                 value: 0,
@@ -22,7 +22,7 @@ export default function GrassMaterial() {
             },
             uPlayerPosition: {
                 value: new Vector3(),
-            }, 
+            },
         },
         shared: glsl`
             uniform vec3 uPlayerPosition;
@@ -36,7 +36,7 @@ export default function GrassMaterial() {
             ${easings}
             ${noise}
         `,
-        vertex: { 
+        vertex: {
             main: glsl`
                 vGlobalPosition = (modelMatrix * vec4(position, 1.)).xyz;
                 vPosition = position;
@@ -103,21 +103,20 @@ export default function GrassMaterial() {
         }
     })
 
-    useFrame((state, delta)=> {
-        uniforms.uTime.value +=  delta 
+    useFrame((state, delta) => {
+        uniforms.uTime.value += ndelta(delta)
         uniforms.uTime.needsUpdate = true
         uniforms.uPlayerPosition.value.set(...store.getState().player.position.toArray())
-        uniforms.uPlayerPosition.needsUpdate = true 
+        uniforms.uPlayerPosition.needsUpdate = true
     })
 
-    return (  
-        <meshLambertMaterial  
-            side={DoubleSide}  
-            name="grass" 
-            transparent 
+    return (
+        <meshLambertMaterial
+            side={DoubleSide}
+            name="grass"
+            transparent
             depthWrite={true}
             onBeforeCompile={onBeforeCompile}
-        /> 
+        />
     )
-} 
- 
+}

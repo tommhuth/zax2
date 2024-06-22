@@ -214,7 +214,7 @@ interface CreateParticlesParams {
     stagger?: Tuple2 // individual delay in ms
     friction?: Tuple2 | number
     radius?: Tuple2 | number
-    color?: string
+    color?: ColorRepresentation
     name?: string
     delay?: number // base delay
     gravity?: Tuple3

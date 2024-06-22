@@ -11,7 +11,6 @@
 -   intro
 -   hit detection edge case fix
 -   blast + shockwave tweak/coord
--   accurate floor level for turret debris
 
 -   colocate more stuff?
 -   clean up blender file

@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { memo, startTransition } from "react" 
+import { memo, startTransition } from "react"
 import { Particle } from "../../../data/types"
 import { ndelta, setColorAt, setMatrixAt } from "../../../data/utils"
 import { store } from "../../../data/store"
@@ -8,7 +8,7 @@ import { damp } from "three/src/math/MathUtils.js"
 import InstancedMesh from "../models/InstancedMesh"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 
-function ParticleHandler() { 
+function ParticleHandler() {
     let floorY = 0
 
     useFrame((state, delta) => {
@@ -22,10 +22,10 @@ function ParticleHandler() {
                 position, velocity, radius, acceleration,
                 friction, restitution, index, instance,
                 mounted, color, rotation, time
-            } = particle 
+            } = particle
             let grounded = position[1] <= radius + .15
             // haha
-            let magnitude = Math.abs(velocity[0]) + Math.abs(velocity[2]) 
+            let magnitude = Math.abs(velocity[0]) + Math.abs(velocity[2])
 
             if (!mounted) {
                 setColorAt(instance.mesh, index, color)
@@ -39,7 +39,7 @@ function ParticleHandler() {
             }
 
             // after 15 seconds, kill anyway
-            if ((magnitude < .1 && grounded) || time > 10_000) { 
+            if ((magnitude < .05 && grounded) || time > 15_000) {
                 dead.push(particle)
                 continue
             }
@@ -48,8 +48,8 @@ function ParticleHandler() {
             velocity[1] += acceleration[1] * nd
             velocity[2] += acceleration[2] * nd
 
-            velocity[0] = damp(velocity[0], 0, grounded ? 3 : friction , nd)
-            velocity[2] = damp(velocity[2], 0, grounded ? 3 : friction , nd)
+            velocity[0] = damp(velocity[0], 0, grounded ? 3 : friction, nd)
+            velocity[2] = damp(velocity[2], 0, grounded ? 3 : friction, nd)
 
             position[0] += velocity[0] * nd
             position[1] = Math.max(floorY + radius * .25, position[1] + velocity[1] * nd)
@@ -60,7 +60,7 @@ function ParticleHandler() {
             rotation[2] += -velocity[2] * nd * 5
 
             if (position[1] <= floorY + radius * .25) {
-                velocity[1] *= -restitution 
+                velocity[1] *= -restitution
             }
 
             setMatrixAt({
@@ -69,15 +69,15 @@ function ParticleHandler() {
                 position,
                 scale: radius,
                 rotation,
-            }) 
+            })
         }
 
         if (dead.length) {
             startTransition(() => removeParticle(dead.map(i => i.id)))
-        } 
+        }
     })
 
-    return ( 
+    return (
         <InstancedMesh
             name="particle"
             count={100}

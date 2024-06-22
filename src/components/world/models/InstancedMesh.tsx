@@ -98,7 +98,12 @@ export default function InstancedMesh({
             visible={visible}
             frustumCulled={false}
         >
-            {colors ? <instancedBufferAttribute attach="instanceColor" args={[colorData, 3, true]} /> : null}
+            {colors && (
+                <instancedBufferAttribute
+                    attach="instanceColor"
+                    args={[colorData, 3, false]}
+                />
+            )}
             {children}
         </instancedMesh>
     )
