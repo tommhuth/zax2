@@ -25,20 +25,20 @@ export interface Store {
         diagonal: number
         parts: WorldPart[]
         frustum: Frustum
-        level: number
-        timeScale: number
         grid: SpatialHashGrid3D
         bullets: Bullet[]
         turrets: Turret[]
         barrels: Barrel[]
         rockets: Rocket[]
         planes: Plane[]
-        lastImpactLocation: Tuple3
     }
     effects: {
         particles: Particle[]
         explosions: Explosion[]
-        cameraShake: Vector2
+        trauma: Vector2
+        lastImpactLocation: Tuple3
+        timeScale: number
+        time: number
     }
     instances: Record<InstanceName, Instance>
     repeaters: Record<string, RepeaterMesh>
@@ -64,6 +64,7 @@ export interface Store {
         velocity: Vector3
         health: number
         score: number
+        level: number
         position: Vector3
         targetPosition: Vector3
         weapon: {

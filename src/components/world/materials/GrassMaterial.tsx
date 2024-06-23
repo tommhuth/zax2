@@ -5,7 +5,7 @@ import easings from "../../../shaders/easings.glsl"
 import noise from "../../../shaders/noise.glsl"
 import { useShader } from "../../../data/hooks"
 import { grassColorEnd, grassColorStart } from "../../../data/theme"
-import { glsl, ndelta } from "../../../data/utils"
+import { glsl } from "../../../data/utils"
 import { store } from "../../../data/store"
 
 export default function GrassMaterial() {
@@ -103,9 +103,10 @@ export default function GrassMaterial() {
         }
     })
 
-    useFrame((state, delta) => {
-        uniforms.uTime.value += ndelta(delta)
+    useFrame(() => {
+        uniforms.uTime.value = store.getState().effects.time
         uniforms.uTime.needsUpdate = true
+
         uniforms.uPlayerPosition.value.set(...store.getState().player.position.toArray())
         uniforms.uPlayerPosition.needsUpdate = true
     })

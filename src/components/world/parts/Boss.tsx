@@ -62,7 +62,7 @@ export default function BossPart({
     let bossZ = position.z + 23
     let pauseAt = position.z + 5
     let boss = useStore(i => i.boss)
-    let level = useStore(i => i.world.level)
+    let level = useStore(i => i.player.level)
 
     useEffect(() => {
         if (boss.state === BossState.DEAD) {

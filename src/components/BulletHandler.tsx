@@ -6,10 +6,11 @@ import { store } from "../data/store"
 import { getIntersection, getCollisions, CollisionEventDetails } from "../data/collisions"
 import { Tuple3 } from "../types.global"
 import { Mesh, Vector3 } from "three"
-import { setLastImpactLocation } from "../data/store/world"
 import { removeBullet } from "@data/store/actors/bullet.actions"
 import InstancedMesh from "./world/models/InstancedMesh"
 import { damp } from "three/src/math/MathUtils.js"
+import { WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "@data/const"
+import { setLastImpactLocation } from "@data/store/effects"
 
 function createCollisionEvent(detail: CollisionEventDetails) {
     return new CustomEvent<CollisionEventDetails>("bulletcollision", {
@@ -23,7 +24,7 @@ function BulletHandler() {
     let impactRef = useRef<Mesh>(null)
 
     useFrame((state, delta) => {
-        let { instances, world: { bullets, grid, frustum }, player } = store.getState()
+        let { instances, world: { bullets, grid, diagonal }, player } = store.getState()
         let removedBullets: Bullet[] = []
 
         if (!instances.line || !player.object) {
@@ -66,7 +67,13 @@ function BulletHandler() {
                 scale: bullet.size
             })
 
-            if (!frustum.containsPoint(bullet.position) || collisions.length) {
+            if (
+                collisions.length
+                || bullet.position.z > player.object.position.z + diagonal
+                || bullet.position.z < player.object.position.z - diagonal * .75
+                || bullet.position.x > WORLD_LEFT_EDGE * 3
+                || bullet.position.x < WORLD_RIGHT_EDGE * 2
+            ) {
                 removedBullets.push(bullet)
             }
 
@@ -88,7 +95,7 @@ function BulletHandler() {
     // impact animation
     useEffect(() => {
         return store.subscribe(
-            state => state.world.lastImpactLocation,
+            state => state.effects.lastImpactLocation,
             lastImpactLocation => {
                 impactRef.current?.scale.set(1, 1, 1)
                 impactRef.current?.position.set(...lastImpactLocation)

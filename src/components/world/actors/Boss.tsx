@@ -155,7 +155,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
             return
         }
 
-        let { world } = store.getState()
+        let { effects } = store.getState()
 
         data.time += delta * 1000
 
@@ -166,7 +166,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                     position.y + 0.65,
                     position.z - 0.5,
                 ])
-                data.nextHeatSeakerAt = data.time + random.pick(1500, 700, 5000, 2500) * (1 / world.timeScale)
+                data.nextHeatSeakerAt = data.time + random.pick(1500, 700, 5000, 2500) * (1 / effects.timeScale)
             })
         }
 
@@ -184,7 +184,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                     rotation: -Math.PI * 0.5,
                     owner: Owner.ENEMY,
                 })
-                data.nextBulletAt = data.time + random.pick(1100, 500, 200, 2000) * (1 / world.timeScale)
+                data.nextBulletAt = data.time + random.pick(1100, 500, 200, 2000) * (1 / effects.timeScale)
             })
         }
     })

@@ -6,7 +6,7 @@ import { addForcedWorldPart, setPauseWorldGeneration, setShowColliders } from "@
 import { WorldPartType } from "@data/types"
 import { worlPartTypes } from "@data/world/getNextWorldPart"
 import { useRef } from "react"
-import { setTimeScale } from "@data/store/world"
+import { setTimeScale } from "@data/store/effects"
 
 export default function Debug() {
     const [
@@ -15,7 +15,8 @@ export default function Debug() {
         world,
         debug,
         player,
-    ] = useStore(i => [i.state, i.boss, i.world, i.debug, i.player])
+        effects,
+    ] = useStore(i => [i.state, i.boss, i.world, i.debug, i.player, i.effects])
     const selectRef = useRef<HTMLSelectElement>(null)
 
     return (
@@ -37,12 +38,12 @@ export default function Debug() {
                 />
             </label>
             <label>
-                Timescale: {world.timeScale.toFixed(4)}
+                Timescale: {effects.timeScale.toFixed(4)}
                 <input
                     type="range"
                     min={0}
                     max={2}
-                    value={world.timeScale}
+                    value={effects.timeScale}
                     step={.001}
                     onChange={(e) => {
                         setTimeScale(e.target.valueAsNumber)

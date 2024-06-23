@@ -4,7 +4,6 @@ import { Barrel as BarrelType, Owner } from "../../../data/types"
 import random from "@huth/random"
 import { GLTFModel, Tuple3 } from "../../../types.global"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
-import { damageBarrel, removeBarrel } from "../../../data/store/world"
 import { barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
 import { useCollisionDetection } from "../../../data/collisions"
@@ -14,6 +13,7 @@ import { useStore } from "../../../data/store"
 import barrelsModel from "@assets/models/barrels.glb"
 import { useGLTF } from "@react-three/drei"
 import DebugBox from "@components/DebugBox"
+import { removeBarrel, damageBarrel } from "@data/store/actors/barrel.actions"
 
 function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({

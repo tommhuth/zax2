@@ -7,7 +7,6 @@ import { BossState, Owner } from "../data/types"
 import animate from "@huth/animate"
 import { store, useStore } from "../data/store"
 import { damagePlayer, setPlayerObject } from "../data/store/player"
-import { damageBarrel, setTimeScale } from "../data/store/world"
 import { playerColor } from "../data/theme"
 import { MeshRetroMaterial } from "./world/materials/MeshRetroMaterial"
 import { removeHeatSeaker, setBossProp } from "../data/store/boss"
@@ -21,12 +20,13 @@ import { uiTunnel } from "../components/ui/tunnels"
 import playerModel from "@assets/models/player.glb"
 import { useGLTF } from "@react-three/drei"
 import DebugBox from "./DebugBox"
-import { createExplosion, createParticles } from "@data/store/effects"
+import { createExplosion, createParticles, setTimeScale } from "@data/store/effects"
 import random from "@huth/random"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { damagePlane } from "@data/store/actors/plane.actions"
 import { damageRocket } from "@data/store/actors/rocket.actions"
 import { damageTurret } from "@data/store/actors/turret.actions"
+import { damageBarrel } from "@data/store/actors/barrel.actions"
 
 let depth = 3
 
@@ -231,7 +231,7 @@ export default function Player({
                     speed: weapon.speed,
                     color: "#fff",
                 })
-                data.nextShotAt = Date.now() + weapon.fireFrequency * (1 / store.getState().world.timeScale)
+                data.nextShotAt = Date.now() + weapon.fireFrequency * (1 / store.getState().effects.timeScale)
             })
         }
     })

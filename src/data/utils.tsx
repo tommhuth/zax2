@@ -7,7 +7,7 @@ import { store } from "./store"
 export { clamp, map }
 
 export function ndelta(delta: number) {
-    let nDelta = clamp(delta, 0, 1 / 30) * store.getState().world.timeScale
+    let nDelta = clamp(delta, 0, 1 / 30) * store.getState().effects.timeScale
 
     return nDelta
 }

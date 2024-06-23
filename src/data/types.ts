@@ -1,4 +1,4 @@
-import { Box3, InstancedMesh, Object3D, Vector3 } from "three"
+import { Box3, ColorRepresentation, InstancedMesh, Object3D, Vector3 } from "three"
 import { Tuple2, Tuple3 } from "../types.global"
 import Counter from "./Counter"
 import { Client } from "./SpatialHashGrid3D"
@@ -196,7 +196,7 @@ export interface Particle {
     radius: number
     rotation: Tuple3
     index: number
-    color: string
+    color: ColorRepresentation
     id: string
 }
 

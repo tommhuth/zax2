@@ -20,10 +20,17 @@ import { makeAirstrip, makeBoss, makeBuildingsGap, makeBuildingsLow, makeDefault
 import { Vector3 } from "three"
 import SmokeHandler from "./effects/SmokeHandler"
 import { WORLD_START_Z } from "../../data/const"
+import { setTime } from "@data/store/effects"
+import { ndelta } from "@data/utils"
 
 export default function World() {
     let diagonal = useStore(i => i.world.diagonal)
     let loaded = useStore(i => i.loaded)
+
+    useFrame((state, delta) => {
+        setTime(store.getState().effects.time + ndelta(delta))
+        console.log(store.getState().effects.time)
+    })
 
     useFrame(() => {
         let {
@@ -104,14 +111,14 @@ function WorldParts() {
     })
 }
 
-const Actors = memo(() => { 
+const Actors = memo(() => {
     let turrets = useStore(i => i.world.turrets)
     let planes = useStore(i => i.world.planes)
     let barrels = useStore(i => i.world.barrels)
     let rockets = useStore(i => i.world.rockets)
 
     return (
-        <> 
+        <>
             {turrets.map(i => {
                 return <Turret key={i.id} {...i} />
             })}

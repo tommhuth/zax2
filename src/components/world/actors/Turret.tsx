@@ -96,7 +96,7 @@ function Turret({
 
     // shooting
     useFrame((state, delta) => {
-        let { player: { object: playerObject }, world } = store.getState()
+        let { effects, player: { object: playerObject }, world } = store.getState()
         let canShoot = world.frustum.containsPoint(position) && health > 0
 
         if (shootTimer.current > nextShotAt.current && canShoot && playerObject) {
@@ -128,7 +128,7 @@ function Turret({
                 fireFrequency * random.float(.75, 1)
                 - fireFrequency * distanceFromPlayer * .5
                 + heightPenalty * fireFrequency * 2
-            ) * (1 / world.timeScale)
+            ) * (1 / effects.timeScale)
 
             if (barrellRef.current) {
                 barrellRef.current.position.z = -.5

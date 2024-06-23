@@ -43,7 +43,7 @@ export function createExplosion({
         let baseLifetime = random.integer(1600, 1800)
         let {
             instances,
-            effects: { cameraShake },
+            effects: { trauma: cameraShake },
             player: { object }
         } = store.getState()
         let playerZ = object?.position.z || 0
@@ -147,8 +147,35 @@ export function createExplosion({
 }
 
 
-export function setCameraShake(cameraShake: number) {
-    store.getState().effects.cameraShake.set(cameraShake, cameraShake)
+export function setLastImpactLocation(x: number, y: number, z: number) {
+    store.setState({
+        effects: {
+            ...store.getState().effects,
+            lastImpactLocation: [x, y, z]
+        },
+    })
+}
+export function setTime(time: number) {
+    store.setState({
+        effects: {
+            ...store.getState().effects,
+            time
+        },
+    })
+}
+
+export function setTimeScale(timeScale: number) {
+    store.setState({
+        effects: {
+            ...store.getState().effects,
+            timeScale
+        },
+    })
+}
+
+
+export function setTrauma(amount: number) {
+    store.getState().effects.trauma.set(amount, amount)
 }
 
 export function createImpactDecal(

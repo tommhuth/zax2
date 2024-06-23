@@ -6,7 +6,6 @@ import { GLTFModel, Tuple3 } from "../../../types.global"
 import { Mesh, Vector3 } from "three"
 import { Owner, Plane as PlaneType } from "../../../data/types"
 import { store, useStore } from "../../../data/store"
-import { damageBarrel } from "../../../data/store/world"
 import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { planeColor } from "../../../data/theme"
@@ -24,6 +23,7 @@ import { useBaseActorHandler } from "@data/hooks"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { removePlane, damagePlane } from "@data/store/actors/plane.actions"
 import { damageTurret } from "@data/store/actors/turret.actions"
+import { damageBarrel } from "@data/store/actors/barrel.actions"
 
 function explode(position: Vector3) {
     createExplosion({
@@ -126,7 +126,7 @@ function Plane({
     // shoot
     useFrame((state, delta) => {
         let playerPosition = store.getState().player.object?.position
-        let world = store.getState().world
+        let { world, effects } = store.getState()
 
         if (!playerPosition || isStatic) {
             return
@@ -152,7 +152,7 @@ function Plane({
                     owner: Owner.ENEMY
                 })
                 data.shootTimer = 0
-                data.nextShotAt = (fireFrequency - fireFrequency * distanceFromPlayer * .5) * (1 / world.timeScale)
+                data.nextShotAt = (fireFrequency - fireFrequency * distanceFromPlayer * .5) * (1 / effects.timeScale)
             })
             weaponSide.next()
         }

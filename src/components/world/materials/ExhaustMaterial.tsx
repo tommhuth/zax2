@@ -8,10 +8,11 @@ import dither from "../../../shaders/dither.glsl"
 import easings from "../../../shaders/easings.glsl"
 import noise from "../../../shaders/noise.glsl"
 import utils from "../../../shaders/utils.glsl"
+import { store } from "@data/store"
 
 export default function ExhaustMaterial() {
     let ref = useRef<MeshBasicMaterial>(null)
-    let { onBeforeCompile, uniforms } = useShader({ 
+    let { onBeforeCompile, uniforms } = useShader({
         shared: glsl`
             varying vec3 vPosition;
             varying vec3 vGlobalPosition;
@@ -25,13 +26,13 @@ export default function ExhaustMaterial() {
         uniforms: {
             uTime: { value: 0 }
         },
-        vertex: { 
+        vertex: {
             main: glsl`
                 vPosition = position;
                 vGlobalPosition = (modelMatrix * vec4(position, 1.)).xyz;
             `
         },
-        fragment: { 
+        fragment: {
             main: glsl`
                 float grad = clamp((vPosition.z + .5 ) / 1., 0., 1.);
  
@@ -52,12 +53,12 @@ export default function ExhaustMaterial() {
         }
     })
 
-    useFrame((state, delta) => {
+    useFrame(() => {
         if (ref.current) {
             ref.current.opacity = random.float(.85, 1)
         }
 
-        uniforms.uTime.value += delta
+        uniforms.uTime.value = store.getState().effects.time
         uniforms.uTime.needsUpdate = true
     })
 
@@ -65,7 +66,7 @@ export default function ExhaustMaterial() {
         <meshBasicMaterial
             onBeforeCompile={onBeforeCompile}
             color="white"
-            transparent 
+            transparent
             name="exhaust"
             ref={ref}
             depthWrite={false}

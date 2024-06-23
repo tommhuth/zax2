@@ -2,7 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber"
 import { useLayoutEffect } from "react"
 import { Matrix4 } from "three"
 import { store, useStore } from "../data/store"
-import { setCameraShake } from "../data/store/effects"
+import { setTrauma } from "../data/store/effects"
 import random from "@huth/random"
 import { damp } from "three/src/math/MathUtils.js"
 import { CAMERA_OFFSET, CAMERA_POSITION, WORLD_PLAYER_START_Z } from "../data/const"
@@ -10,17 +10,17 @@ import { CAMERA_OFFSET, CAMERA_POSITION, WORLD_PLAYER_START_Z } from "../data/co
 let _matrix = new Matrix4()
 
 export default function Camera() {
-    let { camera } = useThree() 
+    let { camera } = useThree()
     let setup = useStore(i => i.setup)
 
     useLayoutEffect(() => {
         camera.position.copy(CAMERA_POSITION)
-        camera.lookAt(0, 0, 0) 
+        camera.lookAt(0, 0, 0)
         camera.position.add(CAMERA_OFFSET)
     }, [camera])
 
     useLayoutEffect(() => {
-        if (setup) { 
+        if (setup) {
             camera.position.z = WORLD_PLAYER_START_Z + CAMERA_POSITION.z + CAMERA_OFFSET.z
         }
     }, [setup])
@@ -39,9 +39,9 @@ export default function Camera() {
             let targetZ = player.object.position.z + CAMERA_POSITION.z + CAMERA_OFFSET.z
 
             camera.position.z = damp(camera.position.z, targetZ, 5, delta)
-            camera.position.x = CAMERA_POSITION.x + CAMERA_OFFSET.x + effects.cameraShake.x * random.float(-1, 1)
-            
-            setCameraShake(damp(effects.cameraShake.x, 0, 4, delta))
+            camera.position.x = CAMERA_POSITION.x + CAMERA_OFFSET.x + effects.trauma.x * random.float(-1, 1)
+
+            setTrauma(damp(effects.trauma.x, 0, 4, delta))
         }
     })
 

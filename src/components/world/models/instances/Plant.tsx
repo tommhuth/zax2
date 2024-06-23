@@ -2,7 +2,7 @@ import { DoubleSide, RGBADepthPacking } from "three"
 import { plantColor } from "../../../../data/theme"
 import { MeshRetroMaterial } from "../../materials/MeshRetroMaterial"
 import InstancedMesh from "../InstancedMesh"
-import { glsl, ndelta } from "../../../../data/utils"
+import { glsl } from "../../../../data/utils"
 import { useFrame } from "@react-three/fiber"
 import { useMemo } from "react"
 import easings from "../../../../shaders/easings.glsl"
@@ -10,6 +10,7 @@ import noise from "../../../../shaders/noise.glsl"
 import model from "@assets/models/plant.glb"
 import { useGLTF } from "@react-three/drei"
 import { GLTFModel } from "src/types.global"
+import { store } from "@data/store"
 
 export default function Plant() {
     let count = 10
@@ -41,8 +42,8 @@ export default function Plant() {
         }
     `
 
-    useFrame((state, delta) => {
-        uniforms.uTime.value += ndelta(delta * .2)
+    useFrame(() => {
+        uniforms.uTime.value = store.getState().effects.time * .2
         uniforms.uTime.needsUpdate = true
     })
 

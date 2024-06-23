@@ -270,7 +270,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             uniforms.uPlayerPosition.needsUpdate = true
         }
 
-        uniforms.uTime.value += ndelta(delta) * .2
+        uniforms.uTime.value = store.getState().effects.time * .2
         uniforms.uTime.needsUpdate = true
 
         for (let i = 0; i < uniforms.uLightSources.value.length; i++) {

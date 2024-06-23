@@ -39,12 +39,12 @@ export function resetBoss() {
 }
 
 export function defeatBoss() {
-    let { boss, world } = store.getState()
+    let { boss, player } = store.getState()
 
     store.setState({
-        world: {
-            ...world,
-            level: world.level + 1,
+        player: {
+            ...player,
+            level: player.level + 1,
         },
         boss: {
             ...boss,

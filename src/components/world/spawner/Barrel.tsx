@@ -1,7 +1,7 @@
 import { startTransition, useEffect } from "react"
 import { Tuple3 } from "../../../types.global"
-import { createBarrel } from "../../../data/store/world"
 import { useWorldPart } from "../WorldPartWrapper"
+import { createBarrel } from "@data/store/actors/barrel.actions"
 
 interface BarrelProps {
     position: Tuple3
