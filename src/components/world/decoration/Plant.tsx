@@ -111,7 +111,7 @@ export default function Plant({
     useEffect(() => {
         if (health === 0 && typeof index === "number") {
             startTransition(() => {
-                grid.remove(client)
+                grid.removeClient(client)
                 setMatrixNullAt(instance, index as number)
                 createLeaves()
                 createParticles({
@@ -133,7 +133,7 @@ export default function Plant({
 
     // unmount
     useEffect(() => {
-        return () => grid.remove(client)
+        return () => grid.removeClient(client)
     }, [client, grid])
 
     // set instance

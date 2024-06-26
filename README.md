@@ -3,16 +3,12 @@
 ## Todo
 
 -   actual level design
--   clean up how scoring is done (solo func not with damage)
--   gameplay loop with game over
--   add missing 3d: boss part + tweak exit
--   ui
--   landmark parts that arent randomized + more generic stuff randomized inbetween?
 -   intro
--   hit detection edge case fix
--   blast + shockwave tweak/coord
-
--   colocate more stuff?
+-   gameplay loop with game over
+-   ui
+-   shockwave tweak/thicker
+-   landmark parts that arent randomized + more generic stuff randomized inbetween?
+-   muuuuch smaller parts???
 -   clean up blender file
 
 53 mat + 22 instances

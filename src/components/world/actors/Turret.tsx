@@ -6,7 +6,7 @@ import { Mesh, Vector3 } from "three"
 import { Owner, Turret as TurretType } from "../../../data/types"
 import { GLTFModel, Tuple3 } from "../../../types.global"
 import { store, useStore } from "../../../data/store"
-import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, createScrap, increaseTrauma } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
@@ -18,6 +18,7 @@ import model from "@assets/models/turret2.glb"
 import DebugBox from "@components/DebugBox"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { removeTurret, damageTurret } from "@data/store/actors/turret.actions"
+import { increaseScore } from "@data/store/player"
 
 function explode(position: Vector3, size: Tuple3) {
     createExplosion({
@@ -50,7 +51,7 @@ function Turret({
     health,
     fireFrequency,
     rotation,
-    floorLevel
+    floorAt: floorLevel
 }: TurretType) {
     let { nodes } = useGLTF(model) as GLTFModel<["turret2_1", "turret2_2"]>
     let diagonal = useStore(i => i.world.diagonal)
@@ -74,23 +75,30 @@ function Turret({
 
     useCollisionDetection({
         client,
-        bullet: ({ bullet }) => {
+        bullet: ({ bullet, normal, intersection }) => {
             if (bullet.owner !== Owner.PLAYER) {
                 return
             }
 
+            if (damageTurret(id, 25)) {
+                increaseScore(2_000)
+                increaseTrauma(.75)
+            } else {
+                increaseScore(50)
+                increaseTrauma(.05)
+            }
+
             createParticles({
-                position: position.toArray(),
-                offset: [[-.5, .5], [0, .5], [-.5, .5]],
-                speed: [5, 25],
-                spread: [[0, .5], [.5, 2]],
-                normal: [0, 1, -1],
-                count: [3, 5],
+                position: intersection,
+                offset: [[-.25, .25], [0, .25], [-.25, .25]],
+                speed: [1, 10],
+                spread: [[-.1, .1], [-.1, .1]],
+                normal,
+                count: [5, 8],
                 radius: [.05, .2],
                 stagger: [0, 0],
                 color: turretParticleColor,
             })
-            damageTurret(id, bullet.damage)
         }
     })
 
@@ -116,7 +124,6 @@ function Turret({
                         position.y + 1.8,
                         position.z + offsetz
                     ],
-                    damage: 5,
                     speed: bulletSpeed,
                     rotation: rotation,
                     owner: Owner.ENEMY

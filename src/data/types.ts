@@ -65,7 +65,6 @@ export interface Rocket {
     client: Client
     aabb: Box3
     id: string
-    speed: number
     health: number
 }
 
@@ -91,7 +90,7 @@ export interface Turret {
     rotation: number
     client: Client
     aabb: Box3
-    floorLevel: number
+    floorAt: number
     health: number
     fireFrequency: number
 }
@@ -178,8 +177,7 @@ export interface Bullet {
     mounted: boolean
     size: Tuple3
     aabb: Box3
-    color: string
-    damage: number
+    color: ColorRepresentation
     owner: Owner
     lightIndex: number
 }

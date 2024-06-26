@@ -19,6 +19,7 @@ import bossdestroyedModel from "@assets/models/bossdestroyed.glb"
 import DebugBox from "@components/DebugBox"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { useGravity } from "@data/hooks"
+import { increaseScore } from "@data/store/player"
 
 let bossSize: Tuple3 = [4.5, 4.75, 2]
 
@@ -38,7 +39,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
             dead: false,
             time: 0,
             nextHeatSeakerAt: 2000,
-            nextBulletAt: 2000,
+            nextBulletAt: 1500,
         }
     }, [])
     let position = useMemo(() => new Vector3(...startPosition), startPosition)
@@ -62,7 +63,12 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                 return
             }
 
-            damageBoss(10)
+            if (damageBoss(5)) {
+                increaseScore(50_000)
+            } else {
+                increaseScore(50)
+            }
+
             createParticles({
                 position: intersection,
                 offset: [[0, 0], [0, 0], [0, 0]],
@@ -79,7 +85,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
     useEffect(() => {
         if (boss?.health === 0 && !data.dead) {
             data.dead = true
-            grid.remove(client)
+            grid.removeClient(client)
 
             startTransition(() => {
                 for (let i = 0; i < 6; i++) {
@@ -146,7 +152,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
     }, [boss?.health])
 
     useEffect(() => {
-        return () => grid.remove(client)
+        return () => grid.removeClient(client)
     }, [client, grid])
 
     // shooting
@@ -166,7 +172,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                     position.y + 0.65,
                     position.z - 0.5,
                 ])
-                data.nextHeatSeakerAt = data.time + random.pick(1500, 700, 5000, 2500) * (1 / effects.timeScale)
+                data.nextHeatSeakerAt = data.time + random.pick(1500, 700, 250, 400) * (1 / effects.timeScale)
             })
         }
 
@@ -178,13 +184,12 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                         position.y + 0.65,
                         position.z - 2,
                     ],
-                    damage: 10,
                     color: "red",
-                    speed: 30,
+                    speed: 25,
                     rotation: -Math.PI * 0.5,
                     owner: Owner.ENEMY,
                 })
-                data.nextBulletAt = data.time + random.pick(1100, 500, 200, 2000) * (1 / effects.timeScale)
+                data.nextBulletAt = data.time + random.pick(1100, 500, 250) * (1 / effects.timeScale)
             })
         }
     })

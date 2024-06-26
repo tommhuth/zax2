@@ -7,7 +7,7 @@ import { Mesh, Vector3 } from "three"
 import { Owner, Plane as PlaneType } from "../../../data/types"
 import { store, useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
-import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, createScrap, increaseTrauma } from "../../../data/store/effects"
 import { planeColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { damp } from "three/src/math/MathUtils.js"
@@ -86,10 +86,8 @@ function Plane({
         health,
         keepAround: !isStatic,
         remove: () => removePlane(id),
-        removeDelay: 240,
         destroy: (position) => {
             explode(position)
-            increaseScore(500)
 
             if (isStatic) {
                 createImpactDecal([position.x, .1, position.z], 2.25)
@@ -104,15 +102,22 @@ function Plane({
                 return
             }
 
-            damagePlane(id, bullet.damage)
+            if (damagePlane(id, 50)) {
+                increaseScore(1_000)
+                increaseTrauma(1)
+            } else {
+                increaseScore(100)
+                increaseTrauma(.05)
+            }
+
             createParticles({
                 position: intersection,
-                count: [1, 3],
+                count: [4, 7],
                 speed: [8, 12],
                 offset: [[0, 0], [0, 0], [0, 0]],
                 spread: [[0, 0], [0, 0]],
                 normal,
-                color: "yellow",
+                color: planeColor,
             })
         },
         turret: (data) => {
@@ -145,8 +150,6 @@ function Plane({
                         position.y,
                         position.z - 2
                     ],
-                    damage: 10,
-                    color: "#fff",
                     speed: 30,
                     rotation: -Math.PI * .5,
                     owner: Owner.ENEMY

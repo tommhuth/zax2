@@ -28,6 +28,8 @@ export function damageTurret(id: string, damage: number) {
             }
         ]
     })
+
+    return health === 0
 }
 
 interface CreateTurretParam {
@@ -60,9 +62,9 @@ export function createTurret({
                 position,
                 fireFrequency,
                 size,
-                health: 70,
+                health: 100,
                 rotation,
-                floorLevel,
+                floorAt: floorLevel,
                 id,
                 aabb,
                 client,

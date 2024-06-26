@@ -101,7 +101,7 @@ export class SpatialHashGrid3D {
         return client
     }
 
-    public remove(client: Client) {
+    public removeClient(client: Client) {
         for (let x = client.min[0]; x <= client.max[0]; x++) {
             for (let y = client.min[1]; y <= client.max[1]; y++) {
                 for (let z = client.min[2]; z <= client.max[2]; z++) {
@@ -129,7 +129,7 @@ export class SpatialHashGrid3D {
             || client.min[1] !== min[1]
             || client.min[2] !== min[2]
         ) {
-            this.remove(client)
+            this.removeClient(client)
             this.insert(client)
         }
     }

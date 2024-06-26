@@ -29,7 +29,6 @@ export default function World() {
 
     useFrame((state, delta) => {
         setTime(store.getState().effects.time + ndelta(delta))
-        console.log(store.getState().effects.time)
     })
 
     useFrame(() => {

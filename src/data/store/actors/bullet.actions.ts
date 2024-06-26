@@ -1,35 +1,48 @@
 import random from "@huth/random"
 import { store } from "../index"
-import { Box3, Matrix4, Quaternion, Vector3 } from "three"
+import { Box3, ColorRepresentation, Matrix4, Quaternion, Vector3 } from "three"
 import { updateWorld } from "../utils"
 import { BULLET_LIGHT_COUNT, BULLET_SIZE } from "../../const"
 import Counter from "@data/Counter"
+import { Tuple3 } from "src/types.global"
+import { Owner } from "@data/types"
 
-let _mat4 = new Matrix4()
+let _matrix4 = new Matrix4()
 let _translation = new Vector3()
+let _position = new Vector3()
+let _size = new Vector3()
 let _scale = new Vector3(1, 1, 1)
 let _yAxis = new Vector3(0, 1, 0)
+let _quaternion = new Quaternion()
 
 let lightIndex = new Counter(BULLET_LIGHT_COUNT)
 
+interface CreateBulletParams {
+    position: Tuple3
+    rotation?: number
+    owner: Owner
+    size?: Tuple3
+    speed: number
+    color?: ColorRepresentation
+}
+
 export function createBullet({
-    position = [0, 0, 0],
+    position,
     rotation = 0,
     owner,
     size = BULLET_SIZE,
-    speed = 10,
-    damage,
+    speed,
     color = "#fff",
-}) {
+}: CreateBulletParams) {
     let id = random.id()
     let { instances, world } = store.getState()
     // since rotation is always incremenets of 90deg, 
     // this still works with aabb
     let aabb = new Box3()
-        .setFromCenterAndSize(new Vector3(...position), new Vector3(...size))
-        .applyMatrix4(_mat4.compose(
+        .setFromCenterAndSize(_position.set(...position), _size.set(...size))
+        .applyMatrix4(_matrix4.compose(
             _translation,
-            new Quaternion().setFromAxisAngle(_yAxis, rotation),
+            _quaternion.setFromAxisAngle(_yAxis, rotation),
             _scale,
         ))
 
@@ -38,7 +51,6 @@ export function createBullet({
             {
                 position: new Vector3(...position),
                 id,
-                damage,
                 mounted: false,
                 index: instances.line.index.next(),
                 aabb,

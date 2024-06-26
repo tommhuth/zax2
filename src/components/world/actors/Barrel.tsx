@@ -3,7 +3,7 @@ import { Vector3 } from "three"
 import { Barrel as BarrelType, Owner } from "../../../data/types"
 import random from "@huth/random"
 import { GLTFModel, Tuple3 } from "../../../types.global"
-import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, createScrap, increaseTrauma } from "../../../data/store/effects"
 import { barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
 import { useCollisionDetection } from "../../../data/collisions"
@@ -70,8 +70,10 @@ export default function Barrel({
                 return
             }
 
-            damageBarrel(id, 100)
-            increaseScore(1000)
+            if (damageBarrel(id, 100)) {
+                increaseScore(150)
+                increaseTrauma(.35)
+            }
         }
     })
 

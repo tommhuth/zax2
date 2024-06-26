@@ -226,7 +226,6 @@ export default function Player({
                         position.z + (depth / 2 + BULLET_SIZE[2] / 2) * 1.5
                     ],
                     owner: Owner.PLAYER,
-                    damage: weapon.damage,
                     rotation: Math.PI * .5,
                     speed: weapon.speed,
                     color: "#fff",

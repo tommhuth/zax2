@@ -146,7 +146,6 @@ export function createExplosion({
     }, delay)
 }
 
-
 export function setLastImpactLocation(x: number, y: number, z: number) {
     store.setState({
         effects: {
@@ -173,9 +172,16 @@ export function setTimeScale(timeScale: number) {
     })
 }
 
+const MAX_TRAUMA = 2
 
 export function setTrauma(amount: number) {
     store.getState().effects.trauma.set(amount, amount)
+        .clampScalar(0, MAX_TRAUMA)
+}
+
+export function increaseTrauma(amount: number) {
+    store.getState().effects.trauma.addScalar(amount)
+        .clampScalar(0, MAX_TRAUMA)
 }
 
 export function createImpactDecal(

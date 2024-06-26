@@ -60,7 +60,7 @@ export default function Debug() {
             </label>
             <label>
                 <input
-                    checked={debug.showColliders}
+                    checked={player.health === Infinity}
                     type="checkbox"
                     onChange={e => setPlayerHealth(e.target.checked ? Infinity : 100)}
                 />

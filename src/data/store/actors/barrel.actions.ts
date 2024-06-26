@@ -15,7 +15,6 @@ interface CreateBarrelParams {
 export function createBarrel({
     position: [x = 0, y = 0, z = 0] = [0, 0, 0],
     rotation = 0,
-    health = 25,
 }: CreateBarrelParams) {
     let id = random.id()
     let size = [2, 1.85, 2] as Tuple3
@@ -30,7 +29,7 @@ export function createBarrel({
                 position,
                 id,
                 client,
-                health,
+                health: 100,
                 index: instances.line.index.next(),
                 aabb,
                 size,
@@ -46,20 +45,19 @@ export function createBarrel({
 export function damageBarrel(id: string, damage: number) {
     let barrels = store.getState().world.barrels
     let barrel = barrels.find(i => i.id === id) as Barrel
-
-    if (!barrel) {
-        return
-    }
+    let health = Math.max(barrel.health - damage, 0)
 
     updateWorld({
         barrels: [
             ...barrels.filter(i => i.id !== id),
             {
                 ...barrel,
-                health: Math.max(barrel.health - damage, 0)
+                health
             }
         ]
     })
+
+    return health === 0
 }
 
 export function removeBarrel(id: string) {

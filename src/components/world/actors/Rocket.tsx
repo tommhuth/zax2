@@ -8,7 +8,7 @@ import random from "@huth/random"
 import { GLTFModel, Tuple3 } from "../../../types.global"
 import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
-import { createExplosion, createParticles } from "../../../data/store/effects"
+import { createExplosion, createParticles, increaseTrauma } from "../../../data/store/effects"
 import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
 import Exhaust from "../../Exhaust"
@@ -87,7 +87,6 @@ export default function Rocket({
     size = [1, 2, 1],
     id,
     client,
-    speed,
     health,
 }: Rocket) {
     let { nodes } = useGLTF(models) as GLTFModel<["rocket", "platform"]>
@@ -96,12 +95,11 @@ export default function Rocket({
     let materials = useStore(i => i.materials)
     let data = useMemo(() => {
         return {
-            removed: false,
-            speed,
-            triggerZ: 20,
+            speed: random.float(1, 2),
+            takeoffAt: 20,
             rotationY: random.float(0, Math.PI * 2)
         }
-    }, [speed])
+    }, [])
 
     useBaseActorHandler({
         position,
@@ -111,21 +109,39 @@ export default function Rocket({
         size,
         aabb,
         remove: () => removeRocket(id),
+        removeDelay: 400,
         destroy: () => {
             explode(position, size)
-            increaseScore(500)
             setRemoved(true)
         }
     })
 
     useCollisionDetection({
         client,
-        bullet: ({ bullet }) => {
+        bullet: ({ bullet, normal, intersection }) => {
             if (bullet.owner !== Owner.PLAYER) {
                 return
             }
 
-            damageRocket(id, bullet.damage)
+            if (damageRocket(id, 35)) {
+                increaseScore(1_000)
+                increaseTrauma(1.5)
+            } else {
+                increaseScore(250)
+                increaseTrauma(.05)
+            }
+
+            createParticles({
+                position: intersection,
+                offset: [[-.5, .5], [0, .5], [-.5, .5]],
+                speed: [5, 25],
+                spread: [[0, .5], [.5, 2]],
+                normal,
+                count: [5, 8],
+                radius: [.05, .2],
+                stagger: [0, 0],
+                color: rocketColor,
+            })
         }
     })
 
@@ -134,8 +150,8 @@ export default function Rocket({
         let { player } = useStore.getState()
         let d = ndelta(delta)
 
-        if (rocketRef.current && !data.removed && player.object) {
-            if (Math.abs(position.z - player.object.position.z) < data.triggerZ) {
+        if (rocketRef.current && player.object) {
+            if (Math.abs(position.z - player.object.position.z) < data.takeoffAt) {
                 position.y += data.speed * d
 
                 if (health === 0) {
@@ -169,7 +185,7 @@ export default function Rocket({
                 receiveShadow
                 dispose={null}
                 geometry={nodes.platform.geometry}
-                material={materials.platform}
+                material={materials.device}
                 position={[position.x, 0, position.z]}
             />
 

@@ -84,8 +84,10 @@ export function useBaseActorHandler({
     useFrame(() => {
         let { world } = store.getState()
 
-        client.position = position.toArray()
-        world.grid.updateClient(client)
+        if (health > 0) {
+            client.position = position.toArray()
+            world.grid.updateClient(client)
+        }
 
         if (aabb && size) {
             aabb.setFromCenterAndSize(position, _size.set(...size))
@@ -105,16 +107,16 @@ export function useBaseActorHandler({
     }, [])
 
     useLayoutEffect(() => {
-        if (health === 0) {
+        if (health <= 0) {
             let { world } = store.getState()
 
-            world.grid.remove(client)
+            world.grid.removeClient(client)
             startTransition(() => {
                 destroy(position)
                 setShouldExit(!keepAround)
             })
         }
-    }, [health, keepAround])
+    }, [health, client, keepAround])
 }
 
 export const useAnimationFrame = (callback: (delta: number) => void) => {

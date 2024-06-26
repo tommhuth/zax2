@@ -28,12 +28,11 @@ export function damageRocket(id: string, damage: number) {
         ]
     })
 
+    return health === 0
 }
 
 export function createRocket(
-    [x = 0, y = 0, z = 0] = [],
-    speed = random.float(1.5, 3),
-    health = 35,
+    [x = 0, y = 0, z = 0]: Tuple3,
 ) {
     let id = random.id()
     let size = [.75, 3, .75] as Tuple3
@@ -55,8 +54,7 @@ export function createRocket(
                 aabb,
                 client,
                 size,
-                health,
-                speed,
+                health: 100
             }
         ]
     })

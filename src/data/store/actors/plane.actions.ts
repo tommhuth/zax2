@@ -19,6 +19,8 @@ export function damagePlane(id: string, damage: number) {
             }
         ]
     })
+
+    return health === 0
 }
 
 export function removePlane(id: string) {
@@ -60,7 +62,7 @@ export function createPlane({
             {
                 position,
                 size,
-                health: 20,
+                health: 100,
                 fireFrequency,
                 id,
                 rotation,

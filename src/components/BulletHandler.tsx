@@ -9,7 +9,6 @@ import { Mesh, Vector3 } from "three"
 import { removeBullet } from "@data/store/actors/bullet.actions"
 import InstancedMesh from "./world/models/InstancedMesh"
 import { damp } from "three/src/math/MathUtils.js"
-import { WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE } from "@data/const"
 import { setLastImpactLocation } from "@data/store/effects"
 
 function createCollisionEvent(detail: CollisionEventDetails) {
@@ -24,7 +23,7 @@ function BulletHandler() {
     let impactRef = useRef<Mesh>(null)
 
     useFrame((state, delta) => {
-        let { instances, world: { bullets, grid, diagonal }, player } = store.getState()
+        let { instances, world: { bullets, grid, frustum }, player } = store.getState()
         let removedBullets: Bullet[] = []
 
         if (!instances.line || !player.object) {
@@ -67,13 +66,7 @@ function BulletHandler() {
                 scale: bullet.size
             })
 
-            if (
-                collisions.length
-                || bullet.position.z > player.object.position.z + diagonal
-                || bullet.position.z < player.object.position.z - diagonal * .75
-                || bullet.position.x > WORLD_LEFT_EDGE * 3
-                || bullet.position.x < WORLD_RIGHT_EDGE * 2
-            ) {
+            if (collisions.length || !frustum.containsPoint(bullet.position)) {
                 removedBullets.push(bullet)
             }
 

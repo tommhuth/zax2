@@ -41,7 +41,7 @@ export default function Camera() {
             camera.position.z = damp(camera.position.z, targetZ, 5, delta)
             camera.position.x = CAMERA_POSITION.x + CAMERA_OFFSET.x + effects.trauma.x * random.float(-1, 1)
 
-            setTrauma(damp(effects.trauma.x, 0, 4, delta))
+            setTrauma(damp(effects.trauma.x, 0, 3, delta))
         }
     })
 

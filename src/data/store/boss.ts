@@ -108,11 +108,14 @@ export function setBossProp(key: string, value: any) {
 
 export function damageBoss(amount: number) {
     let boss = store.getState().boss
+    let health = Math.max(boss.health - amount, 0)
 
     store.setState({
         boss: {
             ...boss,
-            health: Math.max(boss.health - amount, 0)
+            health,
         }
     })
+
+    return health === 0
 }

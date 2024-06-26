@@ -90,7 +90,7 @@ export default function HeatSeaker({
         return () => {
             let { instances } = store.getState()
 
-            grid.remove(client)
+            grid.removeClient(client)
             setMatrixNullAt(instances.sphere.mesh, index)
             startTransition(() => {
                 createExplosion({

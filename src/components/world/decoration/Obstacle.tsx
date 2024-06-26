@@ -61,7 +61,7 @@ export default function Obstacle({
         }
 
         return () => {
-            grid.remove(client)
+            grid.removeClient(client)
         }
     }, [client, grid])
 

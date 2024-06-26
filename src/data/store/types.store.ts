@@ -71,7 +71,6 @@ export interface Store {
             fireFrequency: number,
             color: string,
             speed: number
-            damage: number
         }
         object: Object3D | null
     }
