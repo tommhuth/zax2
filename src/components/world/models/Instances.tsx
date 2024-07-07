@@ -45,10 +45,12 @@ function Instances() {
                     color={plantColor}
                     name="leaf"
                     vertexColors
-                    side={DoubleSide}
-                    colorCount={6}
                     rightColorIntensity={.5}
-                    rightColor="#ff0"
+                    rightColor="#ffbb00"
+                    backColor="#ff0000"
+                    backColorIntensity={.4}
+                    side={DoubleSide}
+                    colorCount={6} 
                 />
             </InstancedMesh>
 

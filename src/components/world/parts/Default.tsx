@@ -58,7 +58,7 @@ export default function Default({
                 position={[-3, 0, 4]}
             />
             <Barrel
-                position={[-1, 1, 9]}
+                position={[-1, 0, 9]}
             />
             <Barrel
                 position={[-4, 0, 16]}

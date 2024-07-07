@@ -41,11 +41,11 @@ export default function Start({
             id={id}
         >
             <Plant
-                position={[-1, 2, 6]}
+                position={[-1, 0, 6]}
                 scale={1}
             />
             <Plant
-                position={[5, 3, 6]}
+                position={[5, 0, 6]}
                 scale={1.1}
             />
             <Cable

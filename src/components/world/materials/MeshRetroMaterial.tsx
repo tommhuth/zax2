@@ -150,6 +150,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         fragment: {
             head: shader?.fragment?.head,
             main: glsl`   
+                 
                 for (int i = 0; i < uBasicDirectionLights.length(); i++) { 
                     BasicDirectionLight light = uBasicDirectionLights[i];
 
@@ -158,9 +159,9 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                         mix(gl_FragColor.rgb, light.color, light.strength),
                         clamp(dot((vGlobalNormal), light.direction), 0., 1.)
                     );
-                } 
+                }  
 
-                vec3 baseFogColor = vec3(0.0, 0.0, 0.3);
+                vec3 baseFogColor = uFogColor;
                 vec3 highlightColor = vec3(1., 0.75, 0.01) * 1.3;
                 float fogLightEffect = 0.;
  
@@ -197,7 +198,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 // bullet light
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
-                    mix(gl_FragColor.rgb, vec3(.6, 1., 1.), .65),
+                    mix(gl_FragColor.rgb, vec3(1., 1., 1.), .95),
                     easeInSine(bulletLightEffect)
                 );  
 

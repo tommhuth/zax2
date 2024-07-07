@@ -68,7 +68,7 @@ export default function World() {
         if (loaded) {
             startTransition(() => {
                 addWorldPart(type[startType]({
-                    position: new Vector3(0, 0, WORLD_START_Z + 5),
+                    position: new Vector3(0, 0, WORLD_START_Z - 20),
                     size: [0, 0]
                 }))
             })

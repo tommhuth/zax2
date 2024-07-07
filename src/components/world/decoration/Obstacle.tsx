@@ -36,7 +36,7 @@ export default function Obstacle({
     const [material, geometry, color] = {
         box: [materials.device, box, deviceColor] as const,
         rockface: [materials.rock, rockface.nodes.rockface.geometry, "#0F5"] as const,
-        device: [materials.device, device.nodes.device.geometry, deviceColor] as const,
+        device: [materials.buildingBase, device.nodes.device.geometry, deviceColor] as const,
     }[type]
 
     useCollisionDetection({
@@ -74,7 +74,7 @@ export default function Obstacle({
                 position={resolvedPosition}
                 scale={size}
                 castShadow
-                receiveShadow
+                receiveShadow 
             />
 
             <DebugBox size={size} position={debugPosition} />

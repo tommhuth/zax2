@@ -34,7 +34,7 @@ export default function BuildingsLow({
             />
 
             <Barrel
-                position={[4, .3, 16]}
+                position={[4, 0, 16]}
             />
 
             <Grass
@@ -47,18 +47,18 @@ export default function BuildingsLow({
             />
 
             <Plant
-                position={[-1, 1, 6]}
+                position={[-1, 0, 6]}
                 scale={1}
             />
 
             <Plant
-                position={[7, 3, 11]}
+                position={[7, 0, 11]}
                 scale={1}
             />
             <Floor
                 position={[position.x, 0, size[1] / 2]}
                 scale={[random.pick(-1, 1), 1, random.pick(-1, 1)]}
-                type="floor6"
+                type="floor2"
             />
             <Floor
                 position={[position.x, 0, size[1] / 2]}

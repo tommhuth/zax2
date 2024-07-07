@@ -15,10 +15,10 @@ export default function Lights() {
 
         if (!player.object || !shadowLightRef.current) {
             return
-        } 
+        }
 
-        shadowLightRef.current.position.z = player.object.position.z + CAMERA_OFFSET.z  
-        shadowLightRef.current.target.position.z = player.object.position.z + CAMERA_OFFSET.z 
+        shadowLightRef.current.position.z = player.object.position.z + CAMERA_OFFSET.z
+        shadowLightRef.current.target.position.z = player.object.position.z + CAMERA_OFFSET.z
     }, [])
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export default function Lights() {
         let { ready } = useStore.getState()
 
         // update camera shadow position every 1s
-        if (shadowLightRef.current && ready && time.current >= 1000) { 
+        if (shadowLightRef.current && ready && time.current >= 1000) {
             updateShadowCamera()
             time.current = 0
         } else {
@@ -53,13 +53,17 @@ export default function Lights() {
             <directionalLight
                 position={[-6, 15, -6]}
                 intensity={.8}
+                color={"#aaeaff"}
             />
+            <ambientLight
+                color={"#ffffff"}
+                intensity={.4} />
 
             <directionalLight
                 ref={shadowLightRef}
-                color={"#ffffff"}
+                color={"#eef"}
                 position={[0, 10, 0]}
-                intensity={.8}
+                intensity={.65}
                 castShadow
                 shadow-camera-near={0} // y
                 shadow-camera-far={20}

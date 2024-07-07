@@ -42,10 +42,10 @@ function MaterialLoader() {
                     color={turretColor}
                     name="turret"
                     emissive={turretColor}
-                    emissiveIntensity={0.3}
-                    rightColorIntensity={.5}
-                    backColor="#f00"
-                    backColorIntensity={.1}
+                    emissiveIntensity={0.55}
+                    rightColor="#f00"
+                    rightColorIntensity={.45} 
+                    backColorIntensity={0}
                     colorCount={8}
                     dither={.005}
                     shader={{
@@ -87,31 +87,31 @@ function MaterialLoader() {
             ),
             buildingBase: (
                 <MeshRetroMaterial
-                    backColorIntensity={.4}
+                    backColorIntensity={.5} 
+                    //rightColor="009"
                     color={buildingBaseColor}
-                    rightColorIntensity={.9}
-                    rightColor="#f00"
+                    //rightColor="#f00"
                     emissive={buildingBaseColor}
-                    emissiveIntensity={.0}
+                    emissiveIntensity={.1}
+                    rightColorIntensity={.4} 
                 />
             ),
             buildingDark: (
-                <MeshRetroMaterial
-                    backColorIntensity={.0}
+                <MeshRetroMaterial 
                     color={"#005"}
-                    rightColorIntensity={.1}
-                    rightColor="#f00"
+                    backColorIntensity={0}
+                    rightColorIntensity={0} 
                     emissive={"#000"}
                     emissiveIntensity={.0}
                 />
             ),
             buildingHi: (
-                <MeshRetroMaterial
-                    backColorIntensity={.0}
+                <MeshRetroMaterial 
                     color={buildingHiColor}
                     emissive={buildingHiColor}
                     emissiveIntensity={.5}
-                    rightColorIntensity={0}
+                    backColorIntensity={0} 
+                    rightColorIntensity={0} 
                 />
             ),
             device: <MeshRetroMaterial color={deviceColor} name="device" />,
