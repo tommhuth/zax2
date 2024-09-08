@@ -7,9 +7,8 @@ import { easeInOutQuart } from "../data/shaping"
 
 let material = new MeshBasicMaterial({ color: "#000", name: "edge" })
 
-export default function EdgeOverlay() {
+export default function EdgeOverlay({ ready = false }) {
     let groupRef = useRef<Group>(null)
-    let ready = useStore(i => i.ready)
     let diagonal = useStore(i => i.world.diagonal)
 
     useFrame(() => {
@@ -32,8 +31,7 @@ export default function EdgeOverlay() {
         groupRef.current.children[0].position.x = xRight + offset
         groupRef.current.children[1].position.x = xLeft - offset
  
-        if (ready) {
-
+        if (ready) { 
             return animate({
                 from: {
                     xRight: xRight + offset,

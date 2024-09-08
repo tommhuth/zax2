@@ -9,7 +9,7 @@ import { CAMERA_OFFSET, CAMERA_POSITION, WORLD_PLAYER_START_Z } from "../data/co
 
 let _matrix = new Matrix4()
 
-export default function Camera() {
+export default function Camera({ editorMode = false }) {
     let { camera } = useThree()
     let setup = useStore(i => i.setup)
 
@@ -23,7 +23,7 @@ export default function Camera() {
         if (setup) {
             camera.position.z = WORLD_PLAYER_START_Z + CAMERA_POSITION.z + CAMERA_OFFSET.z
         }
-    }, [setup])
+    }, [setup, editorMode])
 
     useFrame(() => {
         let { world } = store.getState()
@@ -35,7 +35,7 @@ export default function Camera() {
     useFrame((state, delta) => {
         let { player, effects } = store.getState()
 
-        if (player.object && setup) {
+        if (player.object && setup && !editorMode) {
             let targetZ = player.object.position.z + CAMERA_POSITION.z + CAMERA_OFFSET.z
 
             camera.position.z = damp(camera.position.z, targetZ, 5, delta)

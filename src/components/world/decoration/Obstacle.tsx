@@ -24,7 +24,11 @@ export default function Obstacle({
     const device = useGLTF(deviceModel) as GLTFModel<["device"]>
     const materials = useStore(i => i.materials)
     const grid = useStore(i => i.world.grid)
-    const resolvedPosition: Tuple3 = [position[0], position[1] + size[1] / 2, position[2] + partPosition[2]]
+    const resolvedPosition: Tuple3 = [
+        position[0],
+        position[1] + size[1] / 2,
+        position[2] + partPosition[2]
+    ]
     const debugPosition = useMemo(() => new Vector3(...resolvedPosition), [])
     const id = useMemo(() => random.id(), [])
     const client = useMemo(() => {
@@ -74,7 +78,7 @@ export default function Obstacle({
                 position={resolvedPosition}
                 scale={size}
                 castShadow
-                receiveShadow 
+                receiveShadow
             />
 
             <DebugBox size={size} position={debugPosition} />

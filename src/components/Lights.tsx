@@ -51,7 +51,7 @@ export default function Lights() {
     return (
         <>
             <directionalLight
-                position={[-6, 15, -6]}
+                position={[-6, 15, -15]}
                 intensity={.8}
                 color={"#aaeaff"}
             />

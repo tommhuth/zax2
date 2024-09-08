@@ -1,13 +1,16 @@
-import "requestidlecallback-polyfill"
-
 import { createRoot } from "react-dom/client"
 import { registerSW } from "virtual:pwa-register" 
 import { lazy } from "react"
 
-const App = lazy(() => import("./App"))
+const Zaxx = lazy(() => import("./Zaxx"))
+const Editor = lazy(() => import("./Editor"))
 const root = createRoot(document.getElementById("canvas") as Element)
 
-root.render(<App />)
+if (window.location.hash.includes("editor")) {
+    root.render(<Editor />)
+} else {
+    root.render(<Zaxx />)
+}
 
 let updateSW = registerSW({ 
     onNeedRefresh() {

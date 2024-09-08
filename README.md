@@ -1,7 +1,8 @@
 # Zax
 
 ## Todo
-
+-   make level editor
+-   bring back space stuff??? as intro?
 -   actual level design
 -   intro
 -   gameplay loop with game over
