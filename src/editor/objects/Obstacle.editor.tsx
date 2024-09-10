@@ -1,15 +1,15 @@
 import { useGLTF } from "@react-three/drei"
 import { GLTFModel } from "src/types.global"
 import { BoxGeometry } from "three"
-import { useEditorObject } from "../data/hooks"
 import { useStore } from "@data/store"
 import rockfaceModel from "@assets/models/rockface.glb"
-import deviceModel from "@assets/models/device.glb"
+import deviceModel from "@assets/models/device.glb" 
+import { useEditorObject } from "../data/hooks"
 
 let box = new BoxGeometry(1, 1, 1, 1, 1, 1)
 
-export default function ObstacleEditor() {
-    const s = useEditorObject()
+export default function ObstacleEditor({ id }) {
+    const object = useEditorObject(id)
     const type = "device"
     const rockface = useGLTF(rockfaceModel) as GLTFModel<["rockface"]>
     const device = useGLTF(deviceModel) as GLTFModel<["device"]>
@@ -25,8 +25,8 @@ export default function ObstacleEditor() {
             dispose={null}
             material={material}
             geometry={geometry}
-            position={s.position}
-            scale={[s.width, s.height, s.depth]}
+            position={object?.position}
+            scale={[object.width, object.height, object.depth]}
             castShadow
             receiveShadow
         />

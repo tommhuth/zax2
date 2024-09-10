@@ -1,21 +1,20 @@
-
 import barrelsModel from "@assets/models/barrels.glb"
 import { useStore } from "@data/store"
 import random from "@huth/random"
 import { useGLTF } from "@react-three/drei"
 import { useMemo } from "react"
 import { GLTFModel } from "src/types.global"
-import { useEditorObject } from "../data/hooks"
+import { useEditorObject } from "../data/hooks" 
 
-export default function BarellEditor() {
+export default function BarellEditor({ id }) {
     let materials = useStore(i => i.materials)
     let type = useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), [])
     let { nodes } = useGLTF(barrelsModel) as GLTFModel<["barrel1", "barrel2", "barrel3", "barrel4"]>
-    let s = useEditorObject()
+    let object = useEditorObject(id)
 
     return (
         <group
-            position={s.position}
+            position={object.position}
             dispose={null}
         >
             <mesh

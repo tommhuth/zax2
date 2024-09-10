@@ -184,7 +184,9 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     bulletLightEffect = max(bulletLightEffect, currentLightEffect);
                 } 
 
-                float noiseEffect = easeInOutSine((noise(vGlobalPosition * .1 + uTime * 1.4) + 1.) / 2.) * .8;
+                vec3 n1 = vGlobalPosition * .1 + uTime * 1.4;
+              
+                float noiseEffect = easeInOutSine((noise(n1) + 1.) / 2.) * .8;
                 float heightScaler = 1. - clamp((vGlobalPosition.y) / 2., 0., 1.);  
                 float heightMin = easeInQuad(1. - clamp((vGlobalPosition.y ) / .5, 0., 1.)) * .3; 
 

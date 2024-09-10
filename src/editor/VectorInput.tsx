@@ -9,7 +9,12 @@ interface VectorInputProps {
     onUpdate: (x: number, y: number, z: number) => void
 }
 
-export default function VectorInput({ legend, value, onUpdate, readOnly = false }: VectorInputProps) {
+export default function VectorInput({ 
+    legend, 
+    value, 
+    onUpdate, 
+    readOnly = false 
+}: VectorInputProps) {
     let width = "4.5em"
 
     return (
@@ -28,28 +33,41 @@ export default function VectorInput({ legend, value, onUpdate, readOnly = false 
                     return (
                         <Fragment key={index}>
                             <input
-                                style={{ width, textAlign: "right", flex: "1 1", cursor: "ns-resize" }}
+                                style={{
+                                    width,
+                                    textAlign: "right",
+                                    flex: "1 1",
+                                    cursor: readOnly ? "default" : "ns-resize"
+                                }}
                                 type="number"
                                 value={v.toFixed(1)}
                                 readOnly
                                 aria-label={["x", "y", "z"][index]}
                                 step={precision * .5}
                                 onPointerUp={() => {
+                                    if (readOnly) {
+                                        return
+                                    }
+
                                     document.exitPointerLock()
                                     onUpdate(...value.map(i => roundToNearest(i, precision)) as Tuple3)
                                 }}
                                 onPointerMove={({ movementY }) => {
-                                    if (!document.pointerLockElement) {
+                                    if (!document.pointerLockElement || readOnly) {
                                         return
                                     }
 
-                                    let updatedValue: Tuple3 = [...value] 
+                                    let updatedValue: Tuple3 = [...value]
 
                                     updatedValue[index] += movementY * .025
 
                                     onUpdate(...updatedValue)
                                 }}
                                 onPointerDown={({ currentTarget }) => {
+                                    if (readOnly) {
+                                        return
+                                    }
+
                                     currentTarget.requestPointerLock()
                                 }}
                             />
@@ -62,7 +80,7 @@ export default function VectorInput({ legend, value, onUpdate, readOnly = false 
                     aria-label="Click and move to update x and z values"
                     style={{
                         margin: "-.75em -1em -.75em .5em",
-                        border: "1em solid transparent", 
+                        border: "1em solid transparent",
                         borderTopWidth: ".75em",
                         borderBottomWidth: ".75em",
                         cursor: "move",

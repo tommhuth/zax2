@@ -1,11 +1,18 @@
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect } from "react";
-import { setActiveObject, addObject } from "./editor/data/actions"; 
-import { from2dTo3d, roundToNearest, precision } from "./editor/data/utils";
-import { EditorObjectInit } from "./Editor";
+import { setActiveObject, addObject } from "./data/actions";
+import { from2dTo3d, roundToNearest, precision } from "./data/utils"; 
+import { setTime } from "@data/store/effects";
+import { ndelta } from "@data/utils";
+import { store } from "@data/store";
+import { EditorObjectInit } from "./data/store";
 
 export default function Dropzone() {
     let { camera, gl } = useThree()
+
+    useFrame((state, delta) => {
+        setTime(store.getState().effects.time + ndelta(delta))
+    })
 
     useEffect(() => {
         let onDragOver = (e: DragEvent) => {
@@ -14,7 +21,7 @@ export default function Dropzone() {
         let onDrop = (e: DragEvent) => {
             e.preventDefault();
             let point = from2dTo3d(e.clientX, e.clientY, camera)
-            let data = e.dataTransfer ? JSON.parse(e.dataTransfer?.getData("application/json")) as EditorObjectInit : null
+            let data = JSON.parse(e.dataTransfer!.getData("application/json")) as EditorObjectInit
 
             if (!point) {
                 return
@@ -24,7 +31,7 @@ export default function Dropzone() {
             addObject({
                 position: [
                     roundToNearest(point.x, precision),
-                    roundToNearest(data?.offset?.[1] ? (data.offset[1] / 2) : 0, precision),
+                    0,
                     roundToNearest(point.z, precision),
                 ],
                 ...data
