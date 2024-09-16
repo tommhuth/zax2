@@ -1,13 +1,13 @@
-import random from "@huth/random";
-import { editorStore } from "./store";
-import { EditorObject } from "./hooks";
-import { Tuple3 } from "src/types.global";
+import random from "@huth/random"
+import { EditorObject, EditorStore, editorStore } from "./store"
+import { Tuple3 } from "src/types.global"
 
-export function addObject(data: { position: Tuple3; type: string }) {
+export function addObject(data: { position: Tuple3; type: EditorObject["type"] }) {
     editorStore.setState({
         objects: [
             ...editorStore.getState().objects,
             {
+                data: null,
                 id: random.id(),
                 rotation: 0,
                 offset: [0, 0, 0],
@@ -16,6 +16,7 @@ export function addObject(data: { position: Tuple3; type: string }) {
                 ridgid: true,
                 mode: "complete",
                 anchor: [0, 0, 0],
+                scale: [1, 1, 1],
                 ...data
             }
         ]
@@ -31,6 +32,24 @@ export function removeObject(id: string) {
 export function setActiveObject(id: string | null) {
     editorStore.setState({
         activeObject: id
+    })
+}
+
+export function setCameraPosition(...args: Tuple3) {
+    editorStore.setState({
+        cameraPosition: args
+    })
+}
+
+export function setFloorType(type: EditorStore["floorType"]) {
+    editorStore.setState({
+        floorType: type
+    })
+}
+
+export function toggleGrid(visible: boolean) {
+    editorStore.setState({
+        gridVisible: visible
     })
 }
 

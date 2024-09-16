@@ -7,7 +7,7 @@ import { DPR, PIXEL_SIZE, ZOOM } from "@data/const"
 import { Suspense, useEffect, useState } from "react"
 import { NoToneMapping, VSMShadowMap } from "three"
 import { useStore } from "@data/store"
-import ShaderLoader from "./ShaderLoader"
+import ShaderLoader from "./components/ShaderLoader"
 
 // round up to full pixel
 export let getSize = () => [

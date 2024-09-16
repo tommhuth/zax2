@@ -1,9 +1,6 @@
 import "@components/world/preload"
 
-import Camera from "./components/Camera"
-import {
-    Suspense,
-} from "react" 
+import Camera from "./components/Camera" 
 import Player from "./components/Player"
 import World from "./components/world/World"
 import Ui from "./components/ui/Ui"

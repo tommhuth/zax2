@@ -11,9 +11,10 @@ export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" 
 export type InstanceName = "leaf" | "scrap" | "line" | "sphere" | "particle"
     | "fireball" | "cable" | "shimmer" | "dirt" | "plant" | "shockwave" | "blast" | "decal"
 
-export type RepeaterName = "tower1" | "tower2" | "tower3" | "tower3" | "tower3" | "tower3"
-    | "tanks" | "wall1" | "wall2" | "wall3" | "wall4" | "floor6"
-    | "hangar" | "floor1" | "floor2" | "floor3" | "floor4"
+export type RepeaterName = "tower1" | "tower2" | "tower3"
+    | "tanks" | "hangar"
+    | "wall1" | "wall2" | "wall3" | "wall4"
+    | "floor1" | "floor2" | "floor3" | "floor4" | "floor6"
 
 export type CollisionObjectType = "plant" | "barrel" | "player" | "boss" | "heatSeaker"
     | "plane" | "turret" | "building" | "rocket" | "vehicle" | "obstacle"

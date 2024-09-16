@@ -1,11 +1,11 @@
-import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect } from "react";
-import { setActiveObject, addObject } from "./data/actions";
-import { from2dTo3d, roundToNearest, precision } from "./data/utils"; 
-import { setTime } from "@data/store/effects";
-import { ndelta } from "@data/utils";
-import { store } from "@data/store";
-import { EditorObjectInit } from "./data/store";
+import { useFrame, useThree } from "@react-three/fiber"
+import { useEffect } from "react"
+import { setActiveObject, addObject } from "./data/actions"
+import { from2dTo3d, roundToNearest, precision } from "./data/utils" 
+import { setTime } from "@data/store/effects"
+import { ndelta } from "@data/utils"
+import { store } from "@data/store"
+import { EditorObjectInit } from "./data/store"
 
 export default function Dropzone() {
     let { camera, gl } = useThree()
@@ -16,10 +16,10 @@ export default function Dropzone() {
 
     useEffect(() => {
         let onDragOver = (e: DragEvent) => {
-            e.preventDefault();
+            e.preventDefault()
         }
         let onDrop = (e: DragEvent) => {
-            e.preventDefault();
+            e.preventDefault()
             let point = from2dTo3d(e.clientX, e.clientY, camera)
             let data = JSON.parse(e.dataTransfer!.getData("application/json")) as EditorObjectInit
 

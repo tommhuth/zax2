@@ -24,7 +24,7 @@ export default function Floor({
             floor.scale.set(...scale)
 
             return () => {
-                floor.position.set(0, 0, -1000)
+                floor?.position.set(0, 0, -1000)
             }
         }
     }, [floor])

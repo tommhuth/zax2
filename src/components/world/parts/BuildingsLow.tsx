@@ -5,7 +5,7 @@ import Barrel from "../spawner/Barrel"
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
 import Grass from "../decoration/Grass"
-import Plant from "../decoration/Plant"
+import Plant from "../actors/Plant"
 
 export default function BuildingsLow({
     id,

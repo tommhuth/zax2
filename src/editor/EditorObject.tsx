@@ -7,11 +7,13 @@ import { EditorObject as EditorObjectType, useEditorStore } from "./data/store"
 interface EditorObjectProps {
     children?: ReactNode
     id: string
+    name: string
 }
 
 export default function EditorObject({
     children,
     id,
+    name,
 }: EditorObjectProps) {
     let activeObject = useEditorStore(i => i.activeObject)
     let object = useEditorStore(i => i.objects.find(i => i.id === id)) as EditorObjectType
@@ -31,7 +33,7 @@ export default function EditorObject({
     }, [activeObject])
 
     return (
-        < >
+        <>
             <Suspense>
                 {children}
             </Suspense>
@@ -42,10 +44,17 @@ export default function EditorObject({
                     setActiveObject(activeObject === id ? null : id)
                 }}
             >
-                <mesh position={object.anchor} visible={activeObject === id || object.invisible}>
-                    <boxGeometry args={[...object.size, 1, 1, 1]} />
-                    <meshPhongMaterial color="yellow" wireframe />
-                </mesh>
+                <group
+                    rotation-y={object.rotation}
+                >
+                    <mesh
+                        visible={activeObject === id || object.invisible}
+                        position={object.anchor}
+                    >
+                        <boxGeometry args={[...object.size, 1, 1, 1]} />
+                        <meshPhongMaterial color="yellow" wireframe />
+                    </mesh>
+                </group>
 
                 {object.mode === "complete" && (
                     <Html
@@ -61,49 +70,62 @@ export default function EditorObject({
                             backdropFilter: "blur(.45em)"
                         }}
                     >
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: ".75em",
-                            }}
-                        >
-                            <label
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <span style={{ opacity: .5, }}>
-                                    Rotation
-                                </span>
-                                {(object.rotation * (180 / Math.PI)).toFixed(1)}&deg;
-                            </label>
-                            <input
-                                onChange={(e) => {
-                                    updateObject(id, { 
-                                        rotation: e.currentTarget.valueAsNumber * (Math.PI / 180) 
-                                    })
+                        <fieldset>
+                            <legend
+                                style={{
+                                    position: "absolute",
+                                    left: 0,
+                                    bottom: "100%",
+                                    margin: "0 0 .5em .75em"
                                 }}
-                                value={object.rotation * (180 / Math.PI)}
-                                type="range"
-                                min={0}
-                                max={360}
-                                step={360 * .125 * .5}
+                            >
+                                {name.toUpperCase()}
+                            </legend>
+
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: ".75em",
+                                }}
+                            >
+                                <label
+                                    style={{ display: "flex", justifyContent: "space-between" }}
+                                >
+                                    <span style={{ opacity: .5, }}>
+                                        Rotation
+                                    </span>
+                                    {(object.rotation * (180 / Math.PI)).toFixed(1)}&deg;
+                                </label>
+                                <input
+                                    onChange={(e) => {
+                                        updateObject(id, {
+                                            rotation: e.currentTarget.valueAsNumber * (Math.PI / 180)
+                                        })
+                                    }}
+                                    value={object.rotation * (180 / Math.PI)}
+                                    type="range"
+                                    min={0}
+                                    max={360}
+                                    step={360 * .125 * .5}
+                                />
+                            </div>
+                            <VectorInput
+                                legend="Position"
+                                value={object.position}
+                                onUpdate={(...params) => {
+                                    updateObject(id, { position: params })
+                                }}
                             />
-                        </div>
-                        <VectorInput
-                            legend="Position"
-                            value={object.position}
-                            onUpdate={(...params) => {
-                                updateObject(id, { position: params })
-                            }}
-                        />
-                        <VectorInput
-                            legend="Size"
-                            readOnly={object.ridgid}
-                            value={object.size}
-                            onUpdate={(...params) => {
-                                updateObject(id, { size: params })
-                            }}
-                        />
+                            <VectorInput
+                                legend="Size"
+                                readOnly={object.ridgid}
+                                value={object.size}
+                                onUpdate={(...params) => {
+                                    updateObject(id, { size: params })
+                                }}
+                            />
+                        </fieldset>
                     </Html>
                 )}
             </group>

@@ -8,7 +8,7 @@ import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
 import { useStore } from "../../../data/store"
 import Cable from "../decoration/Cable"
 import model from "@assets/models/logo.glb"
-import Plant from "../decoration/Plant"
+import Plant from "../actors/Plant"
 import { GLTFModel } from "src/types.global"
 
 function Logo(props) {

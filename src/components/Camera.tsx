@@ -34,7 +34,7 @@ export default function Camera({ editorMode = false, z = 0 }) {
 
     useEffect(()=> {
         if (editorMode && z) {
-            camera.position.z = WORLD_PLAYER_START_Z + CAMERA_POSITION.z + z
+            camera.position.z = WORLD_PLAYER_START_Z + CAMERA_POSITION.z + CAMERA_OFFSET.z + z
         }
     }, [z, editorMode])
 

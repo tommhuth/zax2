@@ -40,7 +40,7 @@ export function useInstance(name: InstanceName, {
                 rotation,
             })
         }
-    }, [index, instance])
+    }, [index, rotation, instance, ...(position instanceof Vector3 ? position.toArray() : position || [])])
 
     useEffect(() => {
         if (typeof index === "number" && instance && reset) {
