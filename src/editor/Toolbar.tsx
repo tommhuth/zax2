@@ -5,6 +5,7 @@ import { instanceEditors, repeaterEditors } from "./data/utils"
 
 const props: Record<string, { size: Tuple3; anchor: Tuple3; rotation?: number }> = {
     wall1: {
+        rotation: Math.PI,
         size: [6, 3, 7.1],
         anchor: [-3, 1.5, 0]
     },
