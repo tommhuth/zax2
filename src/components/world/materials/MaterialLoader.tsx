@@ -15,6 +15,17 @@ function MaterialLoader() {
                 <MeshRetroMaterial
                     color={rocketColor}
                     name="rocket"
+                    emissive={rocketColor}
+                    emissiveIntensity={.05}
+                    shader={{
+                        fragment: {
+                            main: glsl`
+                                if (vGlobalPosition.y > 8. && vGlobalPosition.x > 5.) {
+                                    discard;
+                                }
+                            `
+                        }
+                    }}
                 />
             ),
             platform: (
@@ -29,7 +40,7 @@ function MaterialLoader() {
                     name="plane"
                     colorCount={5}
                     emissive={planeColor}
-                    emissiveIntensity={.05}
+                    emissiveIntensity={.25}
                     rightColorIntensity={.5}
                     rightColor="#f00"
                     backColor="#f00"

@@ -74,13 +74,10 @@ export default function GrassMaterial() {
                 float noiseEffect = easeInOutSine((noise(vGlobalPosition * .15 + uTime * .4) + 1.) / 2.) ;
 
                 // base color
-                gl_FragColor.rgb = mix(uColorStart, uColorEnd, easeInQuad(clamp(vGlobalPosition.y / height, 0., 1.)));
-             
-                // tip highlight
                 gl_FragColor.rgb = mix(
-                    gl_FragColor.rgb,
-                    mix(vec3(0., 1., 0.9), vec3(0., 1., 0.4), easeInOutCubic((noise(vGlobalPosition * .3 + uTime * .5) + 1.) / 2.)), // vec3(0.5, 1., 0.9),
-                    clamp((vGlobalPosition.y - 1.75) / .5, 0., 1.)
+                    uColorStart, 
+                    uColorEnd, 
+                    easeInQuad(clamp(vGlobalPosition.y / height, 0., 1.))
                 );
                 
                 // player highlight color

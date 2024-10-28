@@ -1,16 +1,13 @@
 # Zax
 
 ## Todo
--   make level editor
--   bring back space stuff??? as intro?
--   actual level design
--   intro
+
+-   intro: bring back space stuff intro???
+-   clean actual level design, min. current parts + 5 ish?
 -   gameplay loop with game over
 -   ui
--   shockwave tweak/thicker
 -   landmark parts that arent randomized + more generic stuff randomized inbetween?
--   muuuuch smaller parts???
--   clean up blender file
+-   shockwave tweak/thicker
 
 53 mat + 22 instances
 

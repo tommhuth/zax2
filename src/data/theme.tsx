@@ -4,7 +4,7 @@ import { Color } from "three"
 export const bcolor = "#ffe0f3"
 export const dark = "#fff"
 
-export const floorBaseColor = "#abedff" // "#d7dde8"
+export const floorBaseColor = "#3a1c84" // "#d7dde8"
 export const floorHiColor = "#1460ff"
 export const floorMarkColor = "#fff"
 
@@ -16,7 +16,7 @@ export const deviceColor = buildingBaseColor // "#e2eef5" // "#6fbad8" // "#141E
 export const turretColor = "#ffee00" // "#529fbe" // "#141E46"
 export const turretParticleColor = "#fe0" // "#529fbe" // "#141E46"
 
-export const rocketColor = "#112277" // "#d9e7ed"
+export const rocketColor = "#ffffff" // "#d9e7ed"
 export const platformColor = buildingBaseColor // "#e1f6ff" // "#6fbad8" // "#141E46" 
 
 export const scrapColor = "white"
@@ -28,26 +28,28 @@ export const barellColor = "#0000bb"
 export const barrellEmissiveIntensity = .3
 export const barellParticleColor = "#1400ab"
 
-export const planeColor = "#5800db"
+export const planeColor = "#ffff00"
 
 export const playerColor = "#002277"
 
 
 
-export const fogColor = "#e8f4ff" 
+export const fogColor = "#18264b" 
 
 export const rightColor = "#00f" 
 export const backColor = "#00a" 
 
-export const groundFogIntensity = .6
-export const floorFogIntensity = .27
+export const groundFogIntensity = .86
+export const floorFogIntensity = .727
 
-export const explosionColor = "#ffffff"
+export const explosionColor = "#fffbd4"
 
 export const shimmerColor = "#ffffff"
 
-export const plantColor = "#a134eb" 
+export const plantColor = "#aa00ff" 
 
  
-export const grassColorStart = new Color("#005229")
-export const grassColorEnd = new Color("#15ebce") 
+export const grassColorStart = new Color("#c300ff")
+export const grassColorEnd = new Color("#eb1579") 
+
+export const bulletColor = "#c3f1ff" 

@@ -1,6 +1,6 @@
 import { Color, MeshLambertMaterial, Vector3 } from "three"
 import { UseShaderParams, useShader } from "../../../data/hooks"
-import { backColor as defaultBackColor, bcolor, fogColor, rightColor as defaultRightColor } from "../../../data/theme"
+import { backColor as defaultBackColor, bcolor, fogColor, rightColor as defaultRightColor, bulletColor, explosionColor } from "../../../data/theme"
 import easings from "../../../shaders/easings.glsl"
 import dithering from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
@@ -89,10 +89,14 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             },
             uPlayerPosition: { value: new Vector3() },
             uFogColor: { value: new Color(fogColor) },
+            uBulletColor: { value: new Color(bulletColor) },
+            uExplosionColor: { value: new Color(explosionColor) },
         },
         shared: glsl`  
             uniform float uTime; 
             uniform vec3 uFogColor;  
+            uniform vec3 uBulletColor;  
+            uniform vec3 uExplosionColor;  
             uniform vec3 uPlayerPosition; 
             uniform float uDither;    
             uniform float uColorCount;   
@@ -161,8 +165,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     );
                 }  
 
-                vec3 baseFogColor = uFogColor;
-                vec3 highlightColor = vec3(1., 0.75, 0.01) * 1.3;
+                vec3 baseFogColor = uFogColor; 
                 float fogLightEffect = 0.;
  
                 for (int i = 0; i < uLightSources.length(); i++) { 
@@ -200,16 +203,16 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 // bullet light
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
-                    mix(gl_FragColor.rgb, vec3(1., 1., 1.), .95),
+                    mix(gl_FragColor.rgb, uBulletColor, .95),
                     easeInSine(bulletLightEffect)
                 );  
 
-                // light highlights
+                // light highlights 
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
-                    highlightColor,
+                    uExplosionColor * 1.6,
                     easeInOutCubic(fogLightEffect)
-                );
+                ); 
   
                 ${shader?.fragment?.main || ""}
 
