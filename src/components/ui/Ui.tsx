@@ -21,9 +21,11 @@ export default function Ui() {
 
     return (
         <>
-            <Map />
+            <Map />  
             <uiTunnel.Out />
+            
             {qs.has("debug") ? <Debug /> : null}
+            {!qs.has("editor") ?  <div id="shoot" /> : null}
         </>
     )
 }

@@ -2,7 +2,7 @@ import Camera from "@components/Camera"
 import Canvas from "./Canvas"
 import Models from "@components/world/models/Models"
 import EdgeOverlay from "@components/EdgeOverlay"
-import { WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "@data/const"
+import { FLOOR_SIZE, WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "@data/const"
 import EditorObjects from "./editor/EditorObjects"
 import Dropzone from "./editor/Dropzone"
 import Floor from "@components/world/decoration/Floor"
@@ -11,12 +11,6 @@ import { setActiveObject } from "./editor/data/actions"
 import { useEditorStore } from "./editor/data/store"
 import Toolbar from "./editor/Toolbar"
 
-const floorSize = {
-    floor1: 20,
-    floor2: 20,
-    floor3: 20,
-    floor4: 48,
-}
 
 export default function Editor() {
     let floorType = useEditorStore(i => i.floorType)
@@ -40,7 +34,7 @@ export default function Editor() {
                 <Suspense>
                     <Floor
                         key={floorType}
-                        position={[WORLD_CENTER_X, 0, WORLD_PLAYER_START_Z + floorSize[floorType] / 2]}
+                        position={[WORLD_CENTER_X, 0, WORLD_PLAYER_START_Z + FLOOR_SIZE[floorType] / 2]}
                         type={floorType}
                     />
                 </Suspense>

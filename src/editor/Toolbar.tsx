@@ -2,6 +2,7 @@ import { Tuple3 } from "src/types.global"
 import { setCameraPosition, setFloorType, toggleGrid } from "./data/actions"
 import { EditorObjectInit, EditorStore, useEditorStore } from "./data/store"
 import { instanceEditors, repeaterEditors } from "./data/utils"
+import generateMap from "./data/generateMap"
 
 const props: Record<string, { size: Tuple3; anchor: Tuple3; rotation?: number }> = {
     wall1: {
@@ -86,12 +87,11 @@ const objs: EditorObjectInit[] = [
 ]
 
 export default function Toolbar() {
-    let floorType = useEditorStore(i => i.floorType)
-    let gridVisible = useEditorStore(i => i.gridVisible)
-    let [, , z] = useEditorStore(i => i.cameraPosition)
+    let store = useEditorStore()
+    let { gridVisible, cameraPosition: [, , z], floorType } = store
 
     return (
-        <> 
+        <>
             <menu
                 style={{
                     zIndex: 10000,
@@ -139,6 +139,28 @@ export default function Toolbar() {
                     gap: 16
                 }}
             >
+                <button
+                    style={{
+                        marginRight: "2em"
+                    }}
+                    onClick={() => {
+                        let name = prompt("Name") || "Test"
+                        let file = generateMap(store, name)
+
+                        let downloadLink = document.createElement("a")
+                        let type = "text/plain"
+                        let blob = new Blob([file], { type })
+
+                        downloadLink.href = URL.createObjectURL(blob)
+                        downloadLink.download = name + ".tsx"
+                        document.body.appendChild(downloadLink)
+                        downloadLink.click()
+                        downloadLink.remove()
+                        navigator.clipboard.write([new ClipboardItem({ [type]: blob })])
+                    }}
+                >
+                    Export
+                </button>
                 <label
                     style={{
                         display: "flex",
