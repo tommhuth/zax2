@@ -1,7 +1,7 @@
 import React, { cloneElement, useEffect, useRef, useState } from "react"
 import { Group, Object3D } from "three"
 import { useStore } from "../../../data/store"
-import { requestRepeater, setRepeater } from "../../../data/store/utils"
+import { requestRepeater, createRepeater } from "../../../data/store/utils"
 import { RepeaterName } from "../../../data/types"
 
 export function useRepeater(name: RepeaterName) {
@@ -33,8 +33,8 @@ export default function RepeaterMesh({ name, count, children }: RepeaterMeshProp
             return
         }
 
-        setRepeater(name, ref.children, count)
-    }, [ref])
+        createRepeater(name, ref.children, count)
+    }, [ref, count, name])
 
     return (
         <group ref={setRef}>

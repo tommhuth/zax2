@@ -1,4 +1,4 @@
-import { WorldPartStart } from "../../../data/types"
+import { WorldPart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import EdgeElement from "../decoration/EdgeElement"
 import Barrel from "../spawner/Barrel"
@@ -31,7 +31,7 @@ export default function Start({
     id,
     position,
     size,
-}: WorldPartStart) {
+}: WorldPart) {
     const materials = useStore(i => i.materials)
 
     return (
@@ -64,30 +64,25 @@ export default function Start({
 
             <EdgeElement
                 type="tanks"
-                z={34}
-                x={6}
+                position={[6, 0, 24]}
                 rotation={-Math.PI * .5}
             />
             <EdgeElement
                 type="tanks"
-                z={20}
-                x={6}
+                position={[6, 0, 20]}
             />
             <EdgeElement
                 type="tanks"
-                z={6}
-                x={-6}
+                position={[-6, 0, 6]}
             />
             <EdgeElement
                 type="tanks"
-                z={-12}
-                x={6}
+                position={[6, 0, -12]}
                 rotation={Math.PI * .75}
             />
             <EdgeElement
                 type="tanks"
-                z={-12}
-                x={-6}
+                position={[-6, 0, -12]}
                 rotation={Math.PI * -.75}
             />
 

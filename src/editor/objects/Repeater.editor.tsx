@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { useEditorObject } from "../data/hooks"
 import { RepeaterName } from "@data/types"
 
-export default function RepaterEditor({ type, id }: { id: string; type: RepeaterName }) {
+export default function RepeaterEditor({ type, id }: { id: string; type: RepeaterName }) {
     let building = useRepeater(type)
     let {
         rotation,

@@ -10,11 +10,19 @@ import Tower2 from "./repeaters/Tower2"
 import Wall2 from "./repeaters/Wall2"
 import Tower1 from "./repeaters/Tower1"
 import Wall3 from "./repeaters/Wall3"
-import Floor6 from "./repeaters/Floor6"
+import Floor6 from "./repeaters/Floor6" 
+import Floor5 from "./repeaters/Floor5"
 
 export default function Repeaters() {
     return (
         <>
+            <RepeaterMesh
+                name="floor5"
+                count={1}
+            >
+                <Floor5 />
+            </RepeaterMesh>
+
             <RepeaterMesh
                 name="tower1"
                 count={5}
@@ -59,8 +67,7 @@ export default function Repeaters() {
                 count={5}
             >
                 <Tanks />
-            </RepeaterMesh>
-
+            </RepeaterMesh> 
 
             <RepeaterMesh
                 name="hangar"

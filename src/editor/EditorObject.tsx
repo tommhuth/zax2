@@ -2,25 +2,28 @@ import { Html } from "@react-three/drei"
 import { ReactNode, useEffect, Suspense } from "react"
 import VectorInput from "./VectorInput"
 import { removeObject, setActiveObject, updateObject } from "./data/actions"
-import { EditorObject as EditorObjectType, useEditorStore } from "./data/store"
+import { EditorObject as EditorObjectType } from "./data/types"
+import { useEditorStore } from "./data/store"
 
 interface EditorObjectProps {
     children?: ReactNode
     id: string
     name: string
+    controls: string[]
 }
 
 export default function EditorObject({
     children,
+    controls = [],
     id,
     name,
 }: EditorObjectProps) {
-    let activeObject = useEditorStore(i => i.activeObject)
+    let activeObjectId = useEditorStore(i => i.activeObjectId)
     let object = useEditorStore(i => i.objects.find(i => i.id === id)) as EditorObjectType
 
     useEffect(() => {
         let onKeyDown = (e: KeyboardEvent) => {
-            if (activeObject === id && ["Backspace", "Delete"].includes(e.code)) {
+            if (activeObjectId === id && ["Backspace", "Delete"].includes(e.code)) {
                 removeObject(id)
             }
         }
@@ -30,7 +33,7 @@ export default function EditorObject({
         return () => {
             window.removeEventListener("keydown", onKeyDown)
         }
-    }, [activeObject])
+    }, [activeObjectId, id])
 
     return (
         <>
@@ -40,16 +43,19 @@ export default function EditorObject({
 
             <group
                 position={object.position}
-                onPointerDown={() => {
-                    setActiveObject(activeObject === id ? null : id)
+                onPointerDown={(e) => {
+                    e.stopPropagation()
+                    setActiveObject(activeObjectId === id ? null : id)
                 }}
             >
                 <group
                     rotation-y={object.rotation}
                 >
                     <mesh
-                        visible={activeObject === id || object.invisible}
-                        position={object.anchor}
+                        visible={activeObjectId === id || object.invisible || ["height", "shape"].includes(object.mode)}
+                        position-x={object.anchor[0] + (object.mode === "shape" ? object.size[0] / 2 : 0)}
+                        position-y={object.anchor[1] + (object.mode === "height" ? object.size[1] / 2 : 0)}
+                        position-z={object.anchor[2] + (object.mode === "shape" ? object.size[2] / 2 : 0)}
                     >
                         <boxGeometry args={[...object.size, 1, 1, 1]} />
                         <meshPhongMaterial color="yellow" wireframe />
@@ -61,32 +67,39 @@ export default function EditorObject({
                         center
                         style={{
                             fontFamily: "monospace",
-                            display: activeObject === id ? "flex" : "none",
+                            display: activeObjectId === id ? "flex" : "none",
                             flexDirection: "column",
                             gap: "1em",
                             padding: "1em .75em",
                             borderRadius: 4,
-                            backgroundColor: "rgba(0 0 0 / .2)",
-                            backdropFilter: "blur(.45em)"
+                            backgroundColor: "rgba(0 0 0 / .25)",
+                            backdropFilter: "blur(.125em)"
                         }}
                     >
-                        <fieldset>
+                        <fieldset
+                            style={{
+                                flexDirection: "column",
+                                display: "flex",
+                                gap: ".75em",
+                            }}
+                        >
                             <legend
                                 style={{
                                     position: "absolute",
                                     left: 0,
                                     bottom: "100%",
-                                    margin: "0 0 .5em .75em"
+                                    margin: "0 0 .5em .75em",
+                                    textTransform: "uppercase"
                                 }}
                             >
-                                {name.toUpperCase()}
+                                {name}
                             </legend>
 
                             <div
                                 style={{
-                                    display: "flex",
+                                    display: controls.includes("rotation") ? "flex" : "none",
                                     flexDirection: "column",
-                                    gap: ".75em",
+                                    gap: ".5em",
                                 }}
                             >
                                 <label
@@ -107,7 +120,7 @@ export default function EditorObject({
                                     type="range"
                                     min={0}
                                     max={360}
-                                    step={360 * .125 * .5}
+                                    step={1}
                                 />
                             </div>
                             <VectorInput
@@ -117,14 +130,45 @@ export default function EditorObject({
                                     updateObject(id, { position: params })
                                 }}
                             />
-                            <VectorInput
-                                legend="Size"
-                                readOnly={object.ridgid}
-                                value={object.size}
-                                onUpdate={(...params) => {
-                                    updateObject(id, { size: params })
-                                }}
-                            />
+                            {controls.includes("size") && (
+                                <VectorInput
+                                    legend="Size"
+                                    value={object.size}
+                                    onUpdate={(...params) => {
+                                        updateObject(id, { size: params })
+                                    }}
+                                />
+                            )}
+                            {controls.includes("scale") && (
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: ".5em",
+                                    }}
+                                >
+                                    <label
+                                        style={{ display: "flex", justifyContent: "space-between" }}
+                                    >
+                                        <span style={{ opacity: .5, }}>
+                                            Scale
+                                        </span>
+                                        {Math.floor(object.uniformScaler * 100)}%
+                                    </label>
+                                    <input
+                                        onChange={(e) => {
+                                            updateObject(id, {
+                                                uniformScaler: e.currentTarget.valueAsNumber
+                                            })
+                                        }}
+                                        value={object.uniformScaler || 1}
+                                        type="range"
+                                        min={.2}
+                                        max={3}
+                                        step={.1}
+                                    />
+                                </div>
+                            )}
                         </fieldset>
                     </Html>
                 )}

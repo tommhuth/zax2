@@ -1,15 +1,15 @@
-import random from "@huth/random"
-import { WorldPartBuildingsGap } from "../../../data/types"
+import random from "@huth/random" 
 import WorldPartWrapper from "../WorldPartWrapper"
 import Plane from "../spawner/Plane"
 import Turret from "../spawner/Turret"
 import Floor from "../decoration/Floor" 
+import { WorldPart } from "@data/types"
 
 export default function BuildingsGap({
     id,
     position,
     size,
-}: WorldPartBuildingsGap) {
+}: WorldPart) {
     return (
         <WorldPartWrapper
             position={position}

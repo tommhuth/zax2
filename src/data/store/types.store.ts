@@ -45,8 +45,7 @@ export interface Store {
     materials: Record<MaterialName, Material>
     boss: {
         pauseAt: number
-        health: number
-        position: Vector3
+        health: number 
         maxHealth: number
         heatSeakers: HeatSeaker[]
         state: BossState

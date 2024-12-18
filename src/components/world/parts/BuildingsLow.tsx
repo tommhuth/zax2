@@ -1,4 +1,4 @@
-import { WorldPartBuildingsLow } from "../../../data/types"
+import { WorldPart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import Turret from "../spawner/Turret"
 import Barrel from "../spawner/Barrel"
@@ -11,7 +11,7 @@ export default function BuildingsLow({
     id,
     position,
     size,
-}: WorldPartBuildingsLow) {
+}: WorldPart) {
     return (
         <WorldPartWrapper
             size={size}

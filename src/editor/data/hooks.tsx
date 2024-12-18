@@ -3,7 +3,8 @@ import { useEffect, useState } from "react"
 import { Tuple3 } from "src/types.global"
 import { from2dTo3d, precision, roundToNearest } from "./utils"
 import { updateObject } from "./actions"
-import { EditorObject, useEditorStore } from "./store"
+import { useEditorStore } from "./store"
+import { EditorObject } from "./types"
 
 export function useEditorObject(id: string) {
     let {
@@ -56,6 +57,7 @@ export function useEditorObject(id: string) {
                     updateObject(id, {
                         position: position.map((i, index) => i + offset[index]) as Tuple3,
                         offset: [0, 0, 0],
+                        size: [Math.abs(width), Math.abs(height), Math.abs(depth)],
                         mode: "complete"
                     })
                     break

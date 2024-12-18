@@ -4,15 +4,11 @@ import { Tuple3 } from "../../types.global"
 import { Vector3 } from "three"
 import { BossState } from "../types"
 
-export function registerBoss({
-    pauseAt,
-    position,
-}) {
+export function registerBoss(pauseAt: number) {
     store.setState({
         boss: {
             ...store.getState().boss,
             pauseAt,
-            position,
             health: 100,
             maxHealth: 100,
             state: BossState.IDLE,

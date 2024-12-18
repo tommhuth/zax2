@@ -22,7 +22,7 @@ export default function VectorInput({
             style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: ".75em",
+                gap: ".5em",
                 position: "relative"
             }}
         >

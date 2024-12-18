@@ -14,8 +14,7 @@ export default function Floor6(props: JSX.IntrinsicElements["group"]) {
                 castShadow
                 receiveShadow
                 geometry={nodes.floor6.geometry}
-                material={materials.rock}
-                position={[0, 0, 0]}
+                material={materials.rock} 
             />
         </group>
     )

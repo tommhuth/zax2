@@ -1,4 +1,3 @@
-import { WorldPartAirstrip } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import EdgeElement from "../decoration/EdgeElement"
 import Plane from "../spawner/Plane"
@@ -6,16 +5,17 @@ import Floor from "../decoration/Floor"
 import Barrel from "../spawner/Barrel"
 import Turret from "../spawner/Turret"
 import Rocket from "../spawner/Rocket"
-import { WORLD_TOP_EDGE } from "../../../data/const" 
+import { WORLD_TOP_EDGE } from "../../../data/const"
 import Wall1 from "../models/repeaters/Wall1"
 import Cable from "../decoration/Cable"
 import Obstacle from "../decoration/Obstacle"
+import { WorldPart } from "@data/types"
 
 export default function Airstrip({
     id,
     position,
     size,
-}: WorldPartAirstrip) {
+}: WorldPart) {
     return (
         <WorldPartWrapper
             size={size}
@@ -26,14 +26,14 @@ export default function Airstrip({
                 type={"floor4"}
                 position={[position.x, 0, size[1] / 2]}
             />
-            <EdgeElement type="hangar" z={16.5} x={8} />
-            <EdgeElement type="tower2" z={7.5} x={7} />
-            <EdgeElement type="tower2" z={10} x={7} />
-            <EdgeElement type="wall1" z={9} x={9} scale={[1, 1, 1.25]} />
-            <EdgeElement type="hangar" z={25.25} x={8} />
-            <EdgeElement type="wall1" z={26} x={9} scale={[1, 1, 2.5]} />
+            <EdgeElement type="hangar" position={[8, 0, 16.5]} />
+            <EdgeElement type="tower2" position={[7, 0, 7.5]} />
+            <EdgeElement type="tower2" position={[7, 0, 10]} />
+            <EdgeElement type="wall1" position={[9, 0, 9]} scale={[1, 1, 1.25]} />
+            <EdgeElement type="hangar" position={[8, 0, 25.25]} />
+            <EdgeElement type="wall1" position={[9, 0, 26]} scale={[1, 1, 2.5]} />
 
-            <Barrel position={[6, 0, 3]} /> 
+            <Barrel position={[6, 0, 3]} />
 
             <Obstacle
                 type="device"

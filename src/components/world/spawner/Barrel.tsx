@@ -3,17 +3,17 @@ import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
 import { createBarrel } from "@data/store/actors/barrel.actions"
 
-interface BarrelProps {
+interface BarrelSpawnerProps {
     position: Tuple3
     rotation?: number
     health?: number
 }
 
-export default function Barrel({
+export default function BarrelSpawner({
     position = [0, 0, 0],
     rotation = 0,
     health,
-}: BarrelProps) {
+}: BarrelSpawnerProps) {
     let partPosition = useWorldPart()
 
     useEffect(() => {

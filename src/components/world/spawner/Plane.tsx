@@ -3,7 +3,7 @@ import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
 import { createPlane } from "@data/store/actors/plane.actions"
 
-interface PlaneProps {
+interface PlaneSpawnerProps {
     position: Tuple3
     fireFrequency?: number
     speed?: number
@@ -11,13 +11,13 @@ interface PlaneProps {
     rotation?: number
 }
 
-export default function Plane({
-    position = [0, 0, 0],
+export default function PlaneSpawner({
+    position,
     speed,
     fireFrequency,
     rotation,
     targetY,
-}: PlaneProps) {
+}: PlaneSpawnerProps) {
     let partPosition = useWorldPart()
 
     useEffect(() => {

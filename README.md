@@ -2,12 +2,12 @@
 
 ## Todo
 
--   intro: bring back space stuff intro???
+-   intro 
+-   boss cleanup
 -   clean actual level design, min. current parts + 5 ish?
 -   gameplay loop with game over
--   ui
--   landmark parts that arent randomized + more generic stuff randomized inbetween?
--   shockwave tweak/thicker
+-   ui 
+-   shockwave tweak/thicker 
 
 53 mat + 22 instances
 

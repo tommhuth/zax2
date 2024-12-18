@@ -1,19 +1,19 @@
 import random from "@huth/random"
-import { EditorObject, EditorStore, editorStore } from "./store"
+import { editorStore } from "./store"
 import { Tuple3 } from "src/types.global"
+import { EditorObject, EditorStore } from "./types"
 
 export function addObject(data: { position: Tuple3; type: EditorObject["type"] }) {
     editorStore.setState({
         objects: [
             ...editorStore.getState().objects,
-            {
-                data: null,
+            { 
                 id: random.id(),
                 rotation: 0,
                 offset: [0, 0, 0],
                 size: [0, 0, 0],
                 invisible: false,
-                ridgid: true,
+                uniformScaler: 1,
                 mode: "complete",
                 anchor: [0, 0, 0],
                 scale: [1, 1, 1],
@@ -31,7 +31,7 @@ export function removeObject(id: string) {
 
 export function setActiveObject(id: string | null) {
     editorStore.setState({
-        activeObject: id
+        activeObjectId: id
     })
 }
 
@@ -47,9 +47,27 @@ export function setFloorType(type: EditorStore["floorType"]) {
     })
 }
 
+export function setName(name: string) {
+    editorStore.setState({
+        name
+    })
+}
+
 export function toggleGrid(visible: boolean) {
     editorStore.setState({
         gridVisible: visible
+    })
+}
+
+export function toggleAxes(visible: boolean) {
+    editorStore.setState({
+        axesVisible: visible
+    })
+}
+
+export function toggleWorldCenter(visible: boolean) {
+    editorStore.setState({
+        worldCenterVisible: visible
     })
 }
 

@@ -8,24 +8,24 @@ export const floorBaseColor = "#3a1c84" // "#d7dde8"
 export const floorHiColor = "#1460ff"
 export const floorMarkColor = "#fff"
 
-export const buildingBaseColor = floorBaseColor
+export const buildingBaseColor = "#4913c8"
 export const buildingHiColor = "#fff" // windows??
 
 export const deviceColor = buildingBaseColor // "#e2eef5" // "#6fbad8" // "#141E46" 
 
-export const turretColor = "#ffee00" // "#529fbe" // "#141E46"
+export const turretColor = "#ffdd00" // "#529fbe" // "#141E46"
 export const turretParticleColor = "#fe0" // "#529fbe" // "#141E46"
 
 export const rocketColor = "#ffffff" // "#d9e7ed"
 export const platformColor = buildingBaseColor // "#e1f6ff" // "#6fbad8" // "#141E46" 
 
 export const scrapColor = "white"
-export const dirtColor = "yellow"
-export const cableColor = "red"
+export const dirtColor = "#6bc1ff"
+export const cableColor = "#c60052"
 
 
-export const barellColor = "#0000bb"
-export const barrellEmissiveIntensity = .3
+export const barellColor = "#ffc400"
+export const barrellEmissiveIntensity = .5
 export const barellParticleColor = "#1400ab"
 
 export const planeColor = "#ffff00"
@@ -49,7 +49,7 @@ export const shimmerColor = "#ffffff"
 export const plantColor = "#aa00ff" 
 
  
-export const grassColorStart = new Color("#c300ff")
-export const grassColorEnd = new Color("#eb1579") 
+export const grassColorStart = new Color("#aa00ff")
+export const grassColorEnd = new Color("#ff008c") 
 
 export const bulletColor = "#c3f1ff" 

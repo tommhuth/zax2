@@ -13,7 +13,6 @@ import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 import { useBaseActorHandler } from "../../../data/hooks"
 import { useGLTF } from "@react-three/drei"
 import { damp } from "three/src/math/MathUtils.js"
-
 import model from "@assets/models/turret2.glb"
 import DebugBox from "@components/DebugBox"
 import { createBullet } from "@data/store/actors/bullet.actions"

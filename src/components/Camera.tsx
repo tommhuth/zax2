@@ -13,6 +13,8 @@ export default function Camera({ editorMode = false, z = 0 }) {
     let { camera } = useThree()
     let setup = useStore(i => i.setup)
 
+    console.log(z)
+
     useLayoutEffect(() => {
         camera.position.copy(CAMERA_POSITION)
         camera.lookAt(0, 0, 0)
@@ -23,7 +25,7 @@ export default function Camera({ editorMode = false, z = 0 }) {
         if (setup) {
             camera.position.z = WORLD_PLAYER_START_Z + CAMERA_POSITION.z + CAMERA_OFFSET.z
         }
-    }, [setup, editorMode])
+    }, [setup, editorMode, camera])
 
     useFrame(() => {
         let { world } = store.getState()
@@ -33,10 +35,11 @@ export default function Camera({ editorMode = false, z = 0 }) {
     })
 
     useEffect(()=> {
-        if (editorMode && z) {
+        if (editorMode && typeof z === "number" && setup) {
+            // not sure whats going on here
             camera.position.z = WORLD_PLAYER_START_Z + CAMERA_POSITION.z + CAMERA_OFFSET.z + z
         }
-    }, [z, editorMode])
+    }, [z, editorMode, camera, setup])
 
     useFrame((state, delta) => {
         let { player, effects } = store.getState()

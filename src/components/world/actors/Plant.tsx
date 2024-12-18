@@ -15,7 +15,8 @@ import DebugBox from "@components/DebugBox"
 
 interface PlantProps {
     position: Tuple3
-    scale: number
+    scale?: number
+    rotation?: number
 }
 
 interface Leaf {
@@ -35,7 +36,8 @@ let depth = 4
 
 export default function Plant({
     position: [x, y, z] = [0, 0, 0],
-    scale = 1
+    scale = 1,
+    rotation = random.float(0, Math.PI * 2)
 }: PlantProps) {
     let [index, instance] = useInstance("plant")
     let partPosition = useWorldPart()
@@ -143,7 +145,7 @@ export default function Plant({
                 instance,
                 index,
                 scale,
-                rotation: [0, random.float(0, Math.PI * 2), 0],
+                rotation: [0, rotation, 0],
                 position: [x, y, partPosition[2] + z],
             })
         }

@@ -1,13 +1,13 @@
 import { store } from "@data/store"
 import Cycler from "../Cycler"
 import { WorldPart, WorldPartType } from "../types"
-import * as generators from "./generators"
-import { validator } from "./validator"
+import { partValidator } from "./validator"
 import { removeOldestForcedWorldPart } from "@data/store/debug"
+import { makeWorldPartGenerator } from "./generators"
 
 const specialParts = [WorldPartType.START] as const
 
-type DynamicWorldPartType = Exclude<WorldPartType, typeof specialParts[number]>
+export type DynamicWorldPartType = Exclude<WorldPartType, typeof specialParts[number]>
 
 export const worlPartTypes = new Cycler<DynamicWorldPartType>(
     Object.values(WorldPartType).filter((i): i is DynamicWorldPartType => {
@@ -17,25 +17,28 @@ export const worlPartTypes = new Cycler<DynamicWorldPartType>(
     1
 )
 
-let partGenerator: Record<DynamicWorldPartType, (prev: WorldPart) => WorldPart> = {
-    [WorldPartType.DEFAULT]: generators.makeDefault,
-    [WorldPartType.BUILDINGS_GAP]: generators.makeBuildingsGap,
-    [WorldPartType.BUILDINGS_LOW]: generators.makeBuildingsLow,
-    [WorldPartType.AIRSTRIP]: generators.makeAirstrip,
-    [WorldPartType.BOSS]: generators.makeBoss,
+export let partGenerator: Record<DynamicWorldPartType, (previous: Pick<WorldPart, "size" | "position">) => WorldPart> = {
+    [WorldPartType.DEFAULT]: makeWorldPartGenerator(WorldPartType.DEFAULT),
+    [WorldPartType.BUILDINGS_GAP]: makeWorldPartGenerator(WorldPartType.BUILDINGS_GAP),
+    [WorldPartType.BUILDINGS_LOW]: makeWorldPartGenerator(WorldPartType.BUILDINGS_LOW),
+    [WorldPartType.AIRSTRIP]: makeWorldPartGenerator(WorldPartType.AIRSTRIP),
+    [WorldPartType.BOSS]: makeWorldPartGenerator(WorldPartType.BOSS),
+    [WorldPartType.ROCK_VALLEY]: makeWorldPartGenerator(WorldPartType.ROCK_VALLEY),
 }
 
 export function getNextWorldPart(previous: WorldPart): WorldPart {
     let { debug, boss } = store.getState()
     let forceBoss = Date.now() - boss.lastActiveAt.getTime() > boss.interval
-    let forced = debug.forcedWorldParts[0]
-    let type = forced || (forceBoss ? WorldPartType.BOSS : worlPartTypes.next())
+    let forcedType = debug.forcedWorldParts[0]
+    let type = forcedType || (forceBoss ? WorldPartType.BOSS : worlPartTypes.next())
+    let validator = partValidator[type]
 
-    while (!validator[type](previous)) {
+    while (validator ? !validator(previous) : false) {
         type = worlPartTypes.next()
+        validator = partValidator[type]
     }
 
-    if (forced && forced === type) {
+    if (forcedType && forcedType === type) {
         removeOldestForcedWorldPart()
     }
 

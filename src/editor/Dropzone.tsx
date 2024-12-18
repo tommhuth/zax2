@@ -5,12 +5,13 @@ import { from2dTo3d, roundToNearest, precision } from "./data/utils"
 import { setTime } from "@data/store/effects"
 import { ndelta } from "@data/utils"
 import { store } from "@data/store"
-import { EditorObjectInit } from "./data/store"
+import { EditorObjectInit } from "./data/types"
 
 export default function Dropzone() {
     let { camera, gl } = useThree()
 
     useFrame((state, delta) => {
+        // this doesnt belong here
         setTime(store.getState().effects.time + ndelta(delta))
     })
 

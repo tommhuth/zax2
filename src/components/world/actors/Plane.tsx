@@ -57,7 +57,7 @@ function Plane({
     fireFrequency,
     speed,
     rotation = 0,
-}: PlaneType) {
+}: PlaneType) { 
     let { nodes } = useGLTF(planeModel) as GLTFModel<["plane"]>
     let materials = useStore(i => i.materials)
     let planeRef = useRef<Mesh>(null)

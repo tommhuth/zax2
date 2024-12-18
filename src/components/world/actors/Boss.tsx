@@ -27,6 +27,7 @@ interface BossProps {
     startPosition: Tuple3
 }
 
+// clean this up
 export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
     let materials = useStore((i) => i.materials)
     let boss = useStore((i) => i.boss)

@@ -1,11 +1,7 @@
 import { store } from "../store"
 import { BossState, WorldPart, WorldPartType } from "../types"
 
-export const validator: Record<WorldPartType, (previous: WorldPart) => boolean> = {
-    [WorldPartType.DEFAULT]: () => true,
-    [WorldPartType.BUILDINGS_GAP]: () => true,
-    [WorldPartType.BUILDINGS_LOW]: () => true,
-    [WorldPartType.AIRSTRIP]: () => true,
+export const partValidator: Partial<Record<WorldPartType, (previous: WorldPart) => boolean>> = {  
     [WorldPartType.BOSS]: () => {
         let { boss, world } = store.getState()
 
@@ -18,6 +14,5 @@ export const validator: Record<WorldPartType, (previous: WorldPart) => boolean> 
         }
 
         return false
-    },
-    [WorldPartType.START]: () => true,
+    }, 
 }

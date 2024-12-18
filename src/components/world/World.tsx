@@ -7,7 +7,6 @@ import Default from "./parts/Default"
 import Barrel from "./actors/Barrel"
 import ParticleHandler from "./effects/ParticleHandler"
 import BulletHandler from "../BulletHandler"
-import { WorldPartDefault, WorldPartBuildingsGap, WorldPartType, WorldPartBuildingsLow, WorldPartAirstrip, WorldPartStart, WorldPartBoss, WorldPart } from "../../data/types"
 import BuildingsGap from "./parts/BuildingsGap"
 import BuildingsLow from "./parts/BuildingsLow"
 import Rocket from "./actors/Rocket"
@@ -16,12 +15,14 @@ import ExplosionsHandler from "./effects/ExplosionsHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
-import { makeAirstrip, makeBoss, makeBuildingsGap, makeBuildingsLow, makeDefault, makeStart } from "../../data/world/generators"
 import { Vector3 } from "three"
 import SmokeHandler from "./effects/SmokeHandler"
 import { WORLD_START_Z } from "../../data/const"
 import { setTime } from "@data/store/effects"
 import { ndelta } from "@data/utils"
+import RockValley from "./parts/RockValley"
+import { DynamicWorldPartType, partGenerator } from "@data/world/getNextWorldPart"
+import { WorldPartType } from "@data/types"
 
 export default function World() {
     let diagonal = useStore(i => i.world.diagonal)
@@ -55,21 +56,13 @@ export default function World() {
     })
 
     useEffect(() => {
-        const startType = window.localStorage.getItem("initPartType") || WorldPartType.START
-        const type: Record<WorldPartType, (previous: WorldPart) => WorldPart> = {
-            [WorldPartType.AIRSTRIP]: makeAirstrip,
-            [WorldPartType.BOSS]: makeBoss,
-            [WorldPartType.BUILDINGS_GAP]: makeBuildingsGap,
-            [WorldPartType.BUILDINGS_LOW]: makeBuildingsLow,
-            [WorldPartType.DEFAULT]: makeDefault,
-            [WorldPartType.START]: makeStart,
-        }
+        const startType = window.localStorage.getItem("initPartType") as DynamicWorldPartType || WorldPartType.DEFAULT
 
         if (loaded) {
             startTransition(() => {
-                addWorldPart(type[startType]({
-                    position: new Vector3(0, 0, WORLD_START_Z - 20),
-                    size: [0, 0]
+                addWorldPart(partGenerator[startType]({
+                    position: new Vector3(0, 0, WORLD_START_Z),
+                    size: [0, 0],
                 }))
             })
         }
@@ -92,18 +85,20 @@ function WorldParts() {
 
     return parts.map(i => {
         switch (i.type) {
+            case WorldPartType.ROCK_VALLEY:
+                return <RockValley key={i.id} {...i} />
             case WorldPartType.DEFAULT:
-                return <Default key={i.id} {...i as WorldPartDefault} />
+                return <Default key={i.id} {...i} />
             case WorldPartType.START:
-                return <Start key={i.id} {...i as WorldPartStart} />
+                return <Start key={i.id} {...i} />
             case WorldPartType.BUILDINGS_GAP:
-                return <BuildingsGap key={i.id} {...i as WorldPartBuildingsGap} />
+                return <BuildingsGap key={i.id} {...i} />
             case WorldPartType.BUILDINGS_LOW:
-                return <BuildingsLow key={i.id} {...i as WorldPartBuildingsLow} />
+                return <BuildingsLow key={i.id} {...i} />
             case WorldPartType.AIRSTRIP:
-                return <Airstrip key={i.id} {...i as WorldPartAirstrip} />
+                return <Airstrip key={i.id} {...i} />
             case WorldPartType.BOSS:
-                return <BossPart key={i.id} {...i as WorldPartBoss} />
+                return <BossPart key={i.id} {...i} />
             default:
                 throw new Error(`Unknown type: ${i.type}`)
         }

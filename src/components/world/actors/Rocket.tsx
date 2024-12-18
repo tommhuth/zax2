@@ -84,11 +84,11 @@ function explode(position: Vector3, size: Tuple3) {
 export default function Rocket({
     position,
     aabb,
-    size = [1, 2, 1],
+    size,
     id,
     client,
     health,
-}: Rocket) {
+}: Rocket) { 
     let { nodes } = useGLTF(models) as GLTFModel<["rocket", "platform"]>
     let [removed, setRemoved] = useState(false)
     let rocketRef = useRef<Mesh>(null)

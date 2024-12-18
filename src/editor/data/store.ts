@@ -1,58 +1,44 @@
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
-import { Tuple3 } from "src/types.global"
+import random from "@huth/random"
+import { EditorStore } from "./types"
+import { getActiveMap, getStoreList, setActiveMap, setStoreList } from "./localStorage"
 
-export type EditorObjectInit = {
-    type: EditorObject["type"]
-    offset?: Tuple3
-    ridgid?: boolean
-} & Partial<EditorObject>
+const id = random.id()
+const activeMap = getActiveMap()
+const now = new Date()
+const initStore = getStoreList().find(i => i.data.id === activeMap)
 
-export interface EditorObject<T = null> {
-    data: T
-    id: string;
-    type: "box" | "device" | "rockface"
-    | "turret" | "barrel"
-    | "tanks" | "hangar" | "wall1" | "wall2" | "wall3" | "tower1" | "tower2"
-    | "plant" | "cable" | "dirt"
-    position: Tuple3
-    anchor: Tuple3
-    size: Tuple3
-    offset: Tuple3
-    scale: Tuple3
-    rotation: number
-    ridgid: boolean
-    invisible: boolean
-    mode: "idle" | "shape" | "height" | "complete"
+if (!getStoreList().some(i => i.data.id === getActiveMap())) {
+    setActiveMap(id)
 }
-
-export interface EditorStore {
-    activeObject: string | null
-    objects: EditorObject[]
-    cameraPosition: Tuple3
-    gridVisible: boolean
-    floorType: "floor1" | "floor2" | "floor3" | "floor4"
-}
-
-const initStore: EditorStore | undefined = JSON.parse(
-    window.localStorage.getItem("editorStore") || "{}"
-)
 
 const editorStore = create(
     subscribeWithSelector<EditorStore>(() => ({
-        activeObject: null,
+        id,
+        activeObjectId: null,
         cameraPosition: [0, 0, 0],
         gridVisible: false,
+        axesVisible: false,
+        worldCenterVisible: false,
         floorType: "floor1",
+        name: `Untitled (${now.toLocaleDateString("en")} ${now.toLocaleTimeString("en", { hour: "2-digit", minute: "2-digit", hour12: false })})`,
         objects: [],
-        ...initStore,
+        ...initStore?.data,
     }))
 )
-
 const useEditorStore = editorStore
 
 editorStore.subscribe(state => {
-    window.localStorage.setItem("editorStore", JSON.stringify(state))
-})
+    let list = getStoreList()
+
+    setStoreList([
+        {
+            data: state,
+            savedAt: Date.now()
+        },
+        ...list.filter(i => i.data.id !== getActiveMap())
+    ])
+}) 
 
 export { editorStore, useEditorStore }

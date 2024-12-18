@@ -1,150 +1,56 @@
-import { Tuple3 } from "src/types.global"
-import { setCameraPosition, setFloorType, toggleGrid } from "./data/actions"
-import { EditorObjectInit, EditorStore, useEditorStore } from "./data/store"
-import { instanceEditors, repeaterEditors } from "./data/utils"
+import { setActiveObject, setCameraPosition, setFloorType, toggleAxes, toggleGrid, toggleWorldCenter } from "./data/actions"
+import { useEditorStore } from "./data/store"
 import generateMap from "./data/generateMap"
-
-const props: Record<string, { size: Tuple3; anchor: Tuple3; rotation?: number }> = {
-    wall1: {
-        rotation: Math.PI,
-        size: [6, 3, 7.1],
-        anchor: [-3, 1.5, 0]
-    },
-    wall2: {
-        rotation: Math.PI,
-        size: [5, 3.5, 7.1],
-        anchor: [-1.5, 1.75, 0]
-    },
-    wall3: {
-        rotation: Math.PI,
-        size: [5, 3.5, 7.1],
-        anchor: [-2.5, 1.75, 0]
-    },
-    tower1: {
-        rotation: Math.PI,
-        size: [4, 4, 2],
-        anchor: [-2, 2, 0]
-    },
-    tower2: {
-        rotation: Math.PI,
-        size: [6, 4, 2],
-        anchor: [-2, 2, 0]
-    },
-    hangar: {
-        rotation: Math.PI,
-        size: [7, 2.5, 6],
-        anchor: [-3, 1.25, 0]
-    },
-    tanks: {
-        size: [8, 4, 8],
-        anchor: [1, 2, 0]
-    },
-    plant: {
-        size: [2, 2, 2],
-        anchor: [0, 1, 0]
-    },
-    dirt: {
-        size: [4, .5, 4],
-        anchor: [0, .25, 0]
-    },
-    cable: {
-        size: [6, 1, 6],
-        anchor: [0, .5, 0]
-    }
-}
-
-const objs: EditorObjectInit[] = [
-    {
-        type: "barrel",
-        size: [2, 1.85, 2],
-        anchor: [0, 1.85 / 2, 0],
-    },
-    {
-        type: "turret",
-        size: [1.85, 4.5, 1.85],
-    },
-    {
-        type: "box",
-        mode: "shape",
-        ridgid: false,
-    },
-    {
-        type: "device",
-        mode: "shape",
-        ridgid: false,
-    },
-    {
-        type: "rockface",
-        mode: "shape",
-        ridgid: false,
-    },
-    ...[...repeaterEditors, ...instanceEditors].map(i => {
-        return {
-            type: i,
-            ...props[i]
-        }
-    })
-]
+import { PointerEvent, useState } from "react"
+import { EditorStore } from "./data/types"
+import { clamp, map } from "@data/utils"
+import ObjectDropper from "./ObjectDropper"
+import MapPicker from "./MapPicker"
 
 export default function Toolbar() {
     let store = useEditorStore()
-    let { gridVisible, cameraPosition: [, , z], floorType } = store
+    let { floorType, name } = store
 
     return (
         <>
-            <menu
+            <div
                 style={{
                     zIndex: 10000,
                     position: "fixed",
-                    left: 16,
-                    top: 16,
-                    bottom: 16,
-                    width: 200,
+                    top: "1em",
                     display: "flex",
-                    flexDirection: "column",
-                    gap: 2
+                    gap: "1em",
+                    right: "2em",
+                    placeItems: "center"
                 }}
             >
-                {objs.map(i => {
-                    return (
-                        <li
-                            key={i.type}
-                            style={{
-                                padding: ".5em 1em",
-                                textAlign: "center",
-                                backgroundColor: "red"
-                            }}
-                            draggable
-                            onDragStart={(e) => {
-                                e.dataTransfer.dropEffect = "move"
-                                e.dataTransfer.setData("application/json", JSON.stringify(i))
-                            }}
-                        >
-                            {i.type}
-                        </li>
-                    )
-                })}
-            </menu>
+                <LayerSelect />
+                <MapPicker />
+            </div>
+
+            <ObjectDropper />
+
             <div
                 style={{
                     position: "fixed",
-                    bottom: 16,
-                    right: 16,
+                    bottom: 0,
+                    borderBottom: "2.5em transparent solid",
+                    right: "2em",
+                    left: "2em",
                     zIndex: 10000,
                     display: "flex",
-                    padding: ".5em",
                     borderRadius: 4,
-                    backgroundColor: "rgba(0 0 0 / .5)",
                     placeContent: "center",
-                    gap: 16
                 }}
             >
                 <button
                     style={{
-                        marginRight: "2em"
+                        marginRight: "2em",
+                        width: "min-content",
+                        whiteSpace: "nowrap",
+                        cursor: "pointer"
                     }}
                     onClick={() => {
-                        let name = prompt("Name") || "Test"
                         let file = generateMap(store, name)
 
                         let downloadLink = document.createElement("a")
@@ -153,57 +59,237 @@ export default function Toolbar() {
 
                         downloadLink.href = URL.createObjectURL(blob)
                         downloadLink.download = name + ".tsx"
-                        document.body.appendChild(downloadLink)
                         downloadLink.click()
-                        downloadLink.remove()
                         navigator.clipboard.write([new ClipboardItem({ [type]: blob })])
                     }}
                 >
-                    Export
+                    &uarr; Export
                 </button>
-                <label
-                    style={{
-                        display: "flex",
-                        placeContent: "center",
-                        gap: ".5em"
-                    }}
-                >
-                    <input
-                        type="checkbox"
-                        checked={gridVisible}
-                        onChange={(e) => toggleGrid(e.currentTarget.checked)}
-                    />
-                    Show grid
-                </label>
 
                 <select
                     onChange={e => setFloorType(e.currentTarget.value as EditorStore["floorType"])}
                     value={floorType}
+                    style={{
+                        marginRight: "2em",
+                        marginLeft: "auto",
+                        width: "min-content",
+                        cursor: "pointer"
+                    }}
                 >
-                    {Array.from({ length: 4 }).fill(null).map((i, index) => {
+                    {["floor1", "floor2", "floor3", "floor4", "floor5", "floor6"].map((value) => {
                         return (
-                            <option key={index} value={"floor" + (index + 1)}>
-                                floor{index + 1}
+                            <option key={value} value={value}>
+                                {value}
                             </option>
                         )
                     })}
                 </select>
 
-                <input
-                    type="range"
-                    style={{ width: 300 }}
-                    step={.5}
-                    min={-10}
-                    max={40}
-                    value={z}
-                    onChange={(e) => setCameraPosition(
-                        0,
-                        0,
-                        e.currentTarget.valueAsNumber
-                    )}
-                />
-
+                <Visualizers />
+                <Panner />
             </div>
         </>
+    )
+}
+
+function LayerSelect() {
+    let [layersVisible, setLayersVisible] = useState(false)
+    let activeObjectId = useEditorStore(i => i.activeObjectId)
+    let objects = useEditorStore(i => i.objects)
+
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: ".125em",
+                position: "relative",
+                zIndex: 10000
+            }}
+        >
+            <label>
+                <input
+                    checked={layersVisible}
+                    type="checkbox"
+                    onChange={e => setLayersVisible(e.currentTarget.checked)}
+                />  Show objects ({objects.length})
+            </label>
+
+            <ul
+                style={{
+                    maxHeight: "16.75em",
+                    overflow: "auto",
+                    position: "absolute",
+                    marginTop: "1em",
+                    border: "1px solid white",
+                    width: 300,
+                    top: "100%",
+                    right: 0,
+                    display: layersVisible && objects.length > 0 ? undefined : "none"
+                }}
+            >
+                {objects.sort((a, b) => a.id.localeCompare(b.id)).map(i => {
+                    return (
+                        <li
+                            key={i.id}
+                            style={{
+                                textAlign: "right",
+                                padding: ".35em .65em",
+                                borderBottom: "1px solid rgba(255, 255, 255, .31)",
+                                background: activeObjectId !== i.id ? undefined : "white",
+                                color: activeObjectId !== i.id ? "white" : "black"
+                            }}
+                        >
+                            <button
+                                style={{
+                                    fontSize: ".875em",
+                                    cursor: "pointer",
+                                    width: "100%",
+                                    textAlign: "right"
+                                }}
+                                onClick={() => setActiveObject(activeObjectId === i.id ? null : i.id)}
+                            >
+                                {i.type}
+                            </button>
+                        </li>
+                    )
+                })}
+            </ul>
+        </div>
+
+    )
+}
+
+function Visualizers() {
+    let gridVisible = useEditorStore(i => i.gridVisible)
+    let axesVisible = useEditorStore(i => i.axesVisible)
+    let worldCenterVisible = useEditorStore(i => i.worldCenterVisible)
+
+    return (
+        <>
+            <label
+                style={{
+                    display: "flex",
+                    placeContent: "center",
+                    marginRight: "2em",
+                    cursor: "pointer",
+                    gap: ".5em"
+                }}
+            >
+                <input
+                    type="checkbox"
+                    checked={gridVisible}
+                    onChange={(e) => toggleGrid(e.currentTarget.checked)}
+                />
+                Grid
+            </label>
+
+            <label
+                style={{
+                    display: "flex",
+                    placeContent: "center",
+                    marginRight: "2em",
+                    cursor: "pointer",
+                    gap: ".5em"
+                }}
+            >
+                <input
+                    type="checkbox"
+                    checked={axesVisible}
+                    onChange={(e) => toggleAxes(e.currentTarget.checked)}
+                />
+                Axes
+            </label>
+
+            <label
+                style={{
+                    display: "flex",
+                    placeContent: "center",
+                    marginRight: "2em",
+                    cursor: "pointer",
+                    gap: ".5em"
+                }}
+            >
+                <input
+                    type="checkbox"
+                    checked={worldCenterVisible}
+                    onChange={(e) => toggleWorldCenter(e.currentTarget.checked)}
+                />
+                Center
+            </label>
+        </>
+    )
+}
+
+function Panner() {
+    let [panning, setPanning] = useState(false)
+    let z = useEditorStore(i => i.cameraPosition[2])
+    let width = 350
+    let barCount = 50
+    let min = -10
+    let max = 40
+    let updateCamera = (e: PointerEvent<HTMLDivElement>) => {
+        let rect = e.currentTarget.getBoundingClientRect()
+        let x = clamp(e.clientX - rect.left, 0, width)
+
+        setCameraPosition(0, 0, Math.round(map(x / width, 0, 1, min, max)))
+    }
+
+    return (
+        <div
+            style={{
+                display: "flex",
+                height: "1em",
+                flex: "0 0",
+                flexBasis: width,
+                position: "relative",
+                cursor: panning ? "grabbing" : "grab"
+            }}
+            onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId)
+                setPanning(true)
+                updateCamera(e)
+            }}
+            onPointerMove={e => {
+                if (!panning) {
+                    return
+                }
+
+                updateCamera(e)
+            }}
+            onPointerUp={(e) => {
+                e.currentTarget.releasePointerCapture(e.pointerId)
+                setPanning(false)
+            }}
+        >
+            <div
+                style={{
+                    left: map(z, min, max, 0, width),
+                    bottom: "100%",
+                    marginBottom: ".25em",
+                    translate: "-50% 0",
+                    position: "absolute",
+                }}
+            >
+                {z}
+            </div>
+            {Array.from({ length: barCount + 1 }).fill(null).map((i, index) => {
+                return (
+                    <div
+                        key={index}
+                        style={{
+                            flex: "0 0 ",
+                            flexBasis: width / barCount,
+                            boxSizing: "border-box",
+                            borderLeftWidth: index === 10 ? 2 : 1,
+                            borderLeftColor: "white",
+                            borderLeftStyle: "solid",
+                            opacity: index === Math.round(map(z, min, max, 0, barCount)) ? 1 : .35,
+                            height: "100%",
+                        }}
+                    />
+                )
+            })}
+        </div>
     )
 }

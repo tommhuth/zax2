@@ -5,7 +5,7 @@ import { Perf } from "r3f-perf"
 import { CanvasProps, Canvas as FiberCanvas } from "@react-three/fiber"
 import { DPR, PIXEL_SIZE, ZOOM } from "@data/const"
 import { Suspense, useEffect, useState } from "react"
-import { NoToneMapping, VSMShadowMap } from "three"
+import { BasicShadowMap, NoToneMapping } from "three"
 import { useStore } from "@data/store"
 import ShaderLoader from "./components/ShaderLoader"
 
@@ -17,7 +17,7 @@ export let getSize = () => [
 
 export default function Canvas({ children, ...rest }: CanvasProps) {
     let [size, setSize] = useState(() => getSize())
-    let ready = useStore((i) => i.ready) 
+    let ready = useStore((i) => i.ready)
 
     useEffect(() => {
         let tid: ReturnType<typeof setTimeout>
@@ -51,10 +51,10 @@ export default function Canvas({ children, ...rest }: CanvasProps) {
                 left: 0,
                 top: 0,
                 position: "fixed",
-                opacity: ready ? 1 : 0,   
+                opacity: ready ? 1 : 0,
             }}
             shadows={{
-                type: VSMShadowMap,
+                type: BasicShadowMap,
             }}
             orthographic
             camera={{
@@ -69,7 +69,7 @@ export default function Canvas({ children, ...rest }: CanvasProps) {
             <MaterialLoader />
             <ShaderLoader />
 
-            <Suspense> 
+            <Suspense>
                 {children}
             </Suspense>
 

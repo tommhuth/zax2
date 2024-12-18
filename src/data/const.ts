@@ -1,7 +1,7 @@
 import { Vector3 } from "three"
 import { clamp } from "./utils"
-import { Tuple3 } from "../types.global"
-import { EditorStore } from "src/editor/data/store"
+import { Tuple3 } from "../types.global" 
+import { EditorStore } from "src/editor/data/types"
 
 export const WORLD_START_Z = 100
 export const WORLD_PLAYER_START_Z = WORLD_START_Z - 20
@@ -15,7 +15,7 @@ export const WORLD_BOTTOM_EDGE = 1
 export const EDGE_MIN = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -Infinity)
 export const EDGE_MAX = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, Infinity)
 
-export const CAMERA_Y = 100
+export const CAMERA_Y = 50
 export const CAMERA_OFFSET = new Vector3(4, 0, 6)
 export const CAMERA_POSITION = new Vector3().setFromSphericalCoords(
     CAMERA_Y,
@@ -29,10 +29,13 @@ export const PIXEL_SIZE = Math.min(window.innerWidth, window.innerHeight) < 800 
 export const DPR = 1 / PIXEL_SIZE
 export const BULLET_SIZE: Tuple3 = [.1, .1, 1.5]
 export const BULLET_LIGHT_COUNT = 14
+export const LIGHT_SOURCES_COUNT = 4
 
 export const FLOOR_SIZE: Record<EditorStore["floorType"], number> = {
     floor1: 20,
     floor2: 20,
     floor3: 20,
     floor4: 48,
+    floor5: 50.6,
+    floor6: 0,
 }

@@ -1,82 +1,27 @@
 import random from "@huth/random"
 import { Vector3 } from "three"
 import { Tuple2 } from "../../types.global"
-import { WorldPartDefault, WorldPartBuildingsLow, WorldPartBuildingsGap, WorldPartType, WorldPartAirstrip, WorldPartStart, WorldPartBoss } from "../types"
+import { WorldPart, WorldPartType } from "../types" 
 
-export type BaseWorldPart = { size: Tuple2, position: Vector3 }
+const depthMap: Record<WorldPartType, number> = { 
+    [WorldPartType.BUILDINGS_GAP]: 10,
+    [WorldPartType.DEFAULT]: 20,
+    [WorldPartType.START]: 40,
+    [WorldPartType.BOSS]: 50,
+    [WorldPartType.BUILDINGS_LOW]: 20,
+    [WorldPartType.ROCK_VALLEY]: 20,
+    [WorldPartType.AIRSTRIP]: 48,
+} 
 
-function baseProps(previous: BaseWorldPart) {
-    let startZ = previous.position.z + previous.size[1]
+export function makeWorldPartGenerator(type: WorldPartType) {
+    return (previous: Pick<WorldPart, "size" | "position">): WorldPart => {
+        let startZ = previous.position.z + previous.size[1]
 
-    return {
-        id: random.id(),
-        position: new Vector3(0, 0, startZ),
-    }
-}
-
-export function makeBuildingsGap(previous: BaseWorldPart): WorldPartBuildingsGap {
-    let depth = 10
-    let width = 10
-
-    return {
-        ...baseProps(previous),
-        size: [width, depth] as Tuple2,
-        color: Math.random() * 0xffffff,
-        type: WorldPartType.BUILDINGS_GAP,
-    }
-}
-
-export function makeDefault(previous: BaseWorldPart): WorldPartDefault {
-    let depth = 20
-
-    return {
-        ...baseProps(previous),
-        size: [10, depth] as Tuple2,
-        color: Math.random() * 0xffffff,
-        type: WorldPartType.DEFAULT,
-    }
-}
-
-export function makeStart(previous: BaseWorldPart): WorldPartStart {
-    let depth = 40
-
-    return {
-        ...baseProps(previous),
-        size: [10, depth] as Tuple2,
-        color: Math.random() * 0xffffff,
-        type: WorldPartType.START,
-    }
-}
-
-export function makeBoss(previous: BaseWorldPart): WorldPartBoss {
-    let depth = 50
-
-    return {
-        ...baseProps(previous),
-        size: [10, depth] as Tuple2,
-        color: Math.random() * 0xffffff,
-        type: WorldPartType.BOSS,
-    }
-}
-
-export function makeBuildingsLow(previous: BaseWorldPart): WorldPartBuildingsLow {
-    let depth = 20
-
-    return {
-        ...baseProps(previous),
-        size: [10, depth] as Tuple2,
-        color: Math.random() * 0xffffff,
-        type: WorldPartType.BUILDINGS_LOW,
-    }
-}
-
-export function makeAirstrip(previous: BaseWorldPart): WorldPartAirstrip {
-    let depth = 48
-
-    return {
-        ...baseProps(previous),
-        size: [10, depth] as Tuple2,
-        color: Math.random() * 0xffffff,
-        type: WorldPartType.AIRSTRIP,
+        return {
+            id: random.id(),
+            position: new Vector3(0, 0, startZ),
+            size: [10, depthMap[type]] as Tuple2, 
+            type
+        }
     }
 }

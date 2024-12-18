@@ -14,11 +14,19 @@ import { useWorldPart } from "../WorldPartWrapper"
 
 let box = new BoxGeometry(1, 1, 1, 1, 1, 1)
 
+interface ObstacleProps {
+    size: Tuple3
+    position: Tuple3
+    type: "box" | "device" | "rockface"
+    rotation?: number
+}
+
 export default function Obstacle({
     size,
+    rotation = 0,
     position,
     type = "box",
-}: { size: Tuple3, position: Tuple3, type: "box" | "device" | "rockface" }) {
+}: ObstacleProps) {
     const partPosition = useWorldPart()
     const rockface = useGLTF(rockfaceModel) as GLTFModel<["rockface"]>
     const device = useGLTF(deviceModel) as GLTFModel<["device"]>
@@ -26,7 +34,7 @@ export default function Obstacle({
     const grid = useStore(i => i.world.grid)
     const resolvedPosition: Tuple3 = [
         position[0],
-        position[1] + size[1] / 2,
+        position[1],
         position[2] + partPosition[2]
     ]
     const debugPosition = useMemo(() => new Vector3(...resolvedPosition), [])
@@ -77,6 +85,7 @@ export default function Obstacle({
                 geometry={geometry}
                 position={resolvedPosition}
                 scale={size}
+                rotation-y={rotation}
                 castShadow
                 receiveShadow
             />

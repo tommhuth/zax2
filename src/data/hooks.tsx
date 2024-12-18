@@ -1,5 +1,5 @@
 import { RefObject, startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
-import { Box3, IUniform, Object3D, Shader, Vector3 } from "three"
+import { Box3, IUniform, Object3D, Renderer, Shader, Vector3 } from "three"
 import { glsl, ndelta } from "./utils"
 import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
@@ -139,19 +139,7 @@ export const useAnimationFrame = (callback: (delta: number) => void) => {
         requestRef.current = requestAnimationFrame(animate)
 
         return () => cancelAnimationFrame(requestRef.current as number)
-    }, []) // Make sure the effect runs only once
-}
-
-interface ShaderPart {
-    head?: string
-    main?: string
-}
-
-export interface UseShaderParams<T = Record<string, IUniform<any>>> {
-    uniforms?: T
-    shared?: string
-    vertex?: ShaderPart
-    fragment?: ShaderPart
+    }, [])
 }
 
 export function useWindowEvent(name: string | string[], func: (e: any) => void, deps: any[] = []) {
@@ -172,8 +160,37 @@ export function useWindowEvent(name: string | string[], func: (e: any) => void, 
     }, deps)
 }
 
-export function useShader({
-    uniforms: incomingUniforms = {},
+export interface ShaderPart {
+    head?: string
+    main?: string
+}
+
+type UniformsRecord = Record<string, IUniform>
+
+type ReturnUniformsRecord<T extends Record<string, IUniform> | undefined> = T extends UniformsRecord
+    ? {
+        [K in keyof T]: {
+            value: T[K]["value"];
+            needsUpdate?: boolean;
+        };
+    }
+    : undefined;
+
+export interface UseShaderParams<T extends UniformsRecord> {
+    uniforms?: T | undefined
+    shared?: string
+    vertex?: ShaderPart
+    fragment?: ShaderPart
+}
+
+interface ReturnUseShader<T extends UniformsRecord | undefined> {
+    uniforms: ReturnUniformsRecord<T>
+    onBeforeCompile: (shader: Shader, renderer: Renderer) => void
+    customProgramCacheKey: () => string
+}
+
+export function useShader<T extends UniformsRecord>({
+    uniforms: incomingUniforms,
     shared = "",
     vertex = {
         head: "",
@@ -183,11 +200,9 @@ export function useShader({
         head: "",
         main: "",
     }
-}: UseShaderParams) {
+}: UseShaderParams<T>): ReturnUseShader<T> {
     let uniforms = useMemo(() => {
-        return Object.entries(incomingUniforms)
-            .map(([key, value]) => ({ [key]: { needsUpdate: true, ...value } }))
-            .reduce((previous, current) => ({ ...previous, ...current }), {})
+        return incomingUniforms || {}
     }, [])
     let id = useMemo(() => random.id(), [])
     let customProgramCacheKey = useCallback(() => id, [id])
@@ -222,7 +237,8 @@ export function useShader({
     }, [vertex?.head, vertex?.main, fragment?.head, fragment?.main])
 
     return {
-        uniforms,
+        // aaah why is this cast neccessary ts
+        uniforms: uniforms as ReturnUniformsRecord<T>,
         customProgramCacheKey,
         onBeforeCompile
     }

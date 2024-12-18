@@ -19,7 +19,7 @@ export function setState(state: Store["state"]) {
     })
 }
 
-export function setRepeater(name: string, meshes: Object3D[], count: number) {
+export function createRepeater(name: string, meshes: Object3D[], count: number) {
     store.setState({
         repeaters: {
             ...store.getState().repeaters,

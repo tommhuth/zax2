@@ -1,5 +1,5 @@
 import { ReactElement, ReactNode, cloneElement, memo, startTransition, useCallback, useMemo } from "react"
-import { barellColor, buildingBaseColor, buildingHiColor, deviceColor, floorBaseColor, floorHiColor, floorMarkColor, planeColor, platformColor, rocketColor, turretColor } from "../../../data/theme"
+import { barellColor, barrellEmissiveIntensity, buildingBaseColor, buildingHiColor, deviceColor, floorBaseColor, floorHiColor, floorMarkColor, planeColor, platformColor, rocketColor, turretColor } from "../../../data/theme"
 import { MeshRetroMaterial } from "./MeshRetroMaterial"
 import { BoxGeometry, BufferGeometry, Material, Mesh } from "three"
 import { setMaterial } from "../../../data/store/utils"
@@ -89,19 +89,17 @@ function MaterialLoader() {
                 <MeshRetroMaterial
                     backColorIntensity={.0}
                     color={barellColor}
-                    rightColorIntensity={.5}
+                    rightColorIntensity={.6}
                     rightColor="#f00"
                     emissive={barellColor}
-                    emissiveIntensity={.2}
+                    emissiveIntensity={barrellEmissiveIntensity}
                     additionalShadowStrength={0}
                 />
             ),
             buildingBase: (
                 <MeshRetroMaterial
-                    backColorIntensity={.5} 
-                    //rightColor="009"
-                    color={buildingBaseColor}
-                    //rightColor="#f00"
+                    backColorIntensity={.5}  
+                    color={buildingBaseColor} 
                     emissive={buildingBaseColor}
                     emissiveIntensity={.1}
                     rightColorIntensity={.4} 

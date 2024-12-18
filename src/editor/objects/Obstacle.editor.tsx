@@ -29,9 +29,10 @@ export default function ObstacleEditor({ id, type = "device" }: ObstacleEditorPr
             dispose={null}
             material={material}
             geometry={geometry}
-            position={object?.position}
+            position={object.position}
             scale={[object.width, object.height, object.depth]}
             castShadow
+            rotation-y={object.rotation}
             receiveShadow
         />
     )

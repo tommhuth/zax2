@@ -1,8 +1,8 @@
-import { WorldPartDefault } from "../../../data/types"
+import { WorldPart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import Turret from "../spawner/Turret"
 import EdgeElement from "../decoration/EdgeElement"
-import Barrel from "../spawner/Barrel" 
+import Barrel from "../spawner/Barrel"
 import Rocket from "../spawner/Rocket"
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
@@ -12,7 +12,7 @@ export default function Default({
     id,
     position,
     size,
-}: WorldPartDefault) {
+}: WorldPart) {
     return (
         <WorldPartWrapper
             size={size}
@@ -20,35 +20,30 @@ export default function Default({
             id={id}
         >
             <EdgeElement
-                z={7}
-                x={10}
+                position={[10, 0, 7]}
                 type="wall2"
             />
             <EdgeElement
-                z={14}
-                x={8.5}
+                position={[8.5, 0, 14]}
                 type="wall3"
             />
             <EdgeElement
-                z={24}
-                x={10}
+                position={[10, 0, 24]}
                 type="wall3"
             />
             <EdgeElement
-                z={24}
-                x={8}
+                position={[8, 0, 24]}
                 type="tower1"
             />
             <EdgeElement
-                z={28}
-                x={8}
+                position={[8, 0, 28]}
                 type="tower1"
-            /> 
+            />
             <Turret
                 position={[3, 1, 10]}
                 rotation={-Math.PI / 2}
                 floorLevel={2}
-            /> 
+            />
             <Turret
                 position={[3, 0, 6]}
                 rotation={-Math.PI / 2}

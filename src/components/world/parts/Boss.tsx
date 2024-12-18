@@ -1,64 +1,21 @@
 import { startTransition, useEffect } from "react"
 import { useStore } from "../../../data/store"
-import { BossState, WorldPartBoss } from "../../../data/types"
+import { BossState, WorldPart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
-import Boss from "../actors/Boss"
-
-import { useGLTF } from "@react-three/drei"
+import Boss from "../actors/Boss" 
 import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
 import Barrel from "../spawner/Barrel"
 import Cable from "../decoration/Cable"
 import Dirt from "../decoration/Dirt"
 import timeout from "../../../data/timeout"
-import { uiTunnel } from "../../ui/tunnels"
-import EdgeElement from "../decoration/EdgeElement"
-
-import model from "@assets/models/floor5.glb"
-import { GLTFModel } from "src/types.global"
-
-export function BossFloor(props) {
-    const { nodes } = useGLTF(model) as GLTFModel<["floor5_1", "floor5_2", "floor5_3"]>
-    const materials = useStore(i => i.materials)
-
-    return (
-        <group {...props} dispose={null}>
-            <EdgeElement type="wall2" x={9} z={13} />
-            <EdgeElement type="wall3" x={7} z={33} />
-            <EdgeElement type="wall3" x={7} z={41} />
-            <EdgeElement type="tower1" x={6.5} z={18.5} />
-            <EdgeElement type="tower1" x={6.5} z={21.2} />
-            <EdgeElement type="tower1" x={6.5} z={24} />
-
-            {/* cylinders */}
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.floor5_1.geometry}
-                material={materials.floorBase}
-            />
-
-            {/* cylinders hi */}
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.floor5_2.geometry}
-                material={materials.floorHi}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.floor5_3.geometry}
-                material={materials.floorBase}
-            />
-        </group>
-    )
-}
+import { uiTunnel } from "../../ui/tunnels" 
+import Floor from "../decoration/Floor"
 
 export default function BossPart({
     id,
     position,
     size,
-}: WorldPartBoss) {
+}: WorldPart) {
     let bossZ = position.z + 23
     let pauseAt = position.z + 5
     let boss = useStore(i => i.boss)
@@ -75,14 +32,11 @@ export default function BossPart({
 
     useEffect(() => {
         startTransition(() => {
-            registerBoss({
-                pauseAt,
-                position: [0, 0, position.z],
-            })
+            registerBoss(pauseAt)
         })
 
         return () => resetBoss()
-    }, [])
+    }, [pauseAt])
 
     return (
         <WorldPartWrapper
@@ -91,7 +45,8 @@ export default function BossPart({
             id={id}
         >
             <Boss startPosition={[0, 0, bossZ]} />
-            <BossFloor position={[9.5, 0, position.z]} />
+            
+            <Floor type="floor5" position={[9.5, 0, position.z]} />
 
             <Barrel
                 position={[6, 0, 15]}

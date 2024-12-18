@@ -5,18 +5,14 @@ import { useWorldPart } from "../WorldPartWrapper"
 import { Tuple3 } from "../../../types.global"
 
 interface EdgeElementProps {
-    x?: number
-    y?: number
-    z?: number
+    position: Tuple3
     rotation?: number
     scale?: Tuple3
     type: RepeaterName
 }
 
 export default function EdgeElement({
-    x = 0,
-    z = 0,
-    y = 0,
+    position,
     rotation = Math.PI,
     scale,
     type
@@ -26,14 +22,14 @@ export default function EdgeElement({
 
     useEffect(() => {
         if (building) {
-
-            building.position.set(x, y, z + partPosition[2])
+            building.position.set(position[0], position[1], position[2] + partPosition[2])
             building.rotation.y = rotation
 
-            if (scale)
+            if (scale) {
                 building.scale.set(...scale)
+            }
         }
-    }, [building, rotation, x, y, z])
+    }, [building, rotation, ...position])
 
     return null
 }

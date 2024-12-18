@@ -7,6 +7,7 @@ const Editor = lazy(() => import("./Editor"))
 const root = createRoot(document.getElementById("canvas") as Element)
 
 if (window.location.hash.includes("editor")) {
+    document.title = "ZaxEditor"
     root.render(<Editor />)
 } else {
     root.render(<Zaxx />)
