@@ -21,9 +21,9 @@ export default defineConfig({
         react(),
         glsl(),
         VitePWA({
-            registerType: "prompt", 
+            registerType: "prompt",
             workbox: {
-                globPatterns: ["**/*.{js,css,html,ico,png,svg,woff,woff2,glb}"]
+                globPatterns: ["**/*.{png,svg,woff,woff2,glb}"]
             },
             manifest: {
                 name: "Zax",

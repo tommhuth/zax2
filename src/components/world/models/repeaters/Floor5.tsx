@@ -1,9 +1,7 @@
 import model from "@assets/models/floor5.glb"
 import { useStore } from "@data/store"
 import { useGLTF } from "@react-three/drei"
-import { GLTFModel } from "src/types.global"
-
-useGLTF.preload(model)
+import { GLTFModel } from "src/types.global" 
 
 export default function Floor5() {
     const { nodes } = useGLTF(model) as GLTFModel<["floor5_1", "floor5_2", "floor5_3"]>

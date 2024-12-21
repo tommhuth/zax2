@@ -1,5 +1,4 @@
-import barrels from "@assets/models/barrels.glb"
-import floor5 from "@assets/models/floor5.glb"
+import barrels from "@assets/models/barrels.glb" 
 import hangar from "@assets/models/hangar.glb"
 import plane from "@assets/models/plane.glb"
 import rocket from "@assets/models/rocket.glb"
@@ -21,6 +20,8 @@ import floor1 from "@assets/models/floor1.glb"
 import floor2 from "@assets/models/floor2.glb"
 import floor3 from "@assets/models/floor3.glb"
 import floor4 from "@assets/models/floor4.glb"
+import floor5 from "@assets/models/floor5.glb"
+import floor6 from "@assets/models/floor6.glb"
 import grass from "@assets/models/grass.glb"
 import leaf from "@assets/models/leaf.glb"
 import plant from "@assets/models/plant.glb"
@@ -35,7 +36,7 @@ for (let model of [
     barrels, floor5, hangar, plane,
     rocket, rockface, tower1, tower2, turret2, wall1, wall2, wall3,
     logo, tanks, boss, bossdestroyed, device,
-    floor1, floor2, floor3, floor4, grass, plant, player,
+    floor1, floor2, floor3, floor4, floor5, floor6, grass, plant, player,
 ]) {
     useGLTF.preload(model)
 }

@@ -1,6 +1,5 @@
 import { useGLTF } from "@react-three/drei"
-import { useStore } from "@data/store"
-
+import { useStore } from "@data/store" 
 import model from "@assets/models/floor6.glb"
 import { GLTFModel } from "src/types.global"
 
