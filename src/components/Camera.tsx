@@ -11,9 +11,7 @@ let _matrix = new Matrix4()
 
 export default function Camera({ editorMode = false, z = 0 }) {
     let { camera } = useThree()
-    let setup = useStore(i => i.setup)
-
-    console.log(z)
+    let setup = useStore(i => i.setup) 
 
     useLayoutEffect(() => {
         camera.position.copy(CAMERA_POSITION)

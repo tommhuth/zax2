@@ -12,7 +12,7 @@ export default defineConfig({
     assetsInclude: ["**/*.glb"],
     resolve: {
         alias: {
-            "@components": path.resolve(__dirname, "src/components"), 
+            "@components": path.resolve(__dirname, "src/components"),
             "@data": path.resolve(__dirname, "src/data"),
             "@assets": path.resolve(__dirname, "assets"),
         },
@@ -22,7 +22,9 @@ export default defineConfig({
         glsl(),
         VitePWA({
             registerType: "prompt", 
-            includeAssets: ["fonts/*.woff", "**/*.glb", "textures/*.png"],
+            workbox: {
+                globPatterns: ["**/*.{js,css,html,ico,png,svg,woff,woff2,glb}"]
+            },
             manifest: {
                 name: "Zax",
                 short_name: "Zax",
