@@ -4,9 +4,7 @@ import { lazy } from "react"
 
 const Zaxx = lazy(() => import("./Zaxx"))
 const Editor = lazy(() => import("./Editor"))
-const root = createRoot(document.getElementById("canvas") as Element)
-
-alert("test")
+const root = createRoot(document.getElementById("canvas") as Element) 
 
 if (window.location.hash.includes("editor")) {
     document.title = "ZaxEditor"
