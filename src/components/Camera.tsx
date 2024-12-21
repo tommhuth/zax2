@@ -13,6 +13,8 @@ export default function Camera({ editorMode = false, z = 0 }) {
     let { camera } = useThree()
     let setup = useStore(i => i.setup) 
 
+    console.log("Test")
+
     useLayoutEffect(() => {
         camera.position.copy(CAMERA_POSITION)
         camera.lookAt(0, 0, 0)
