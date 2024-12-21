@@ -26,7 +26,7 @@ export default defineConfig({
         VitePWA({
             registerType: "prompt",
             workbox: {
-                globPatterns: ["**/*.{png,svg,woff,woff2,glb}"]
+                globPatterns: ["**/*.{html,png,svg,woff,woff2,glb}"]
             },
             manifest: {
                 name: "Zax",
