@@ -7,6 +7,7 @@ import { useShader } from "../../../data/hooks"
 import { fogColor, grassColorEnd, grassColorStart } from "../../../data/theme"
 import { glsl } from "../../../data/utils"
 import { store } from "../../../data/store"
+import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater } from "./helpers"
 
 export const getGrassTransform = glsl`
     vec3 getGrassTransform(vec3 localPosition, vec3 globalPosition, vec3 playerPosition, mat4 modelMatrix) {
@@ -15,17 +16,16 @@ export const getGrassTransform = glsl`
         float heightScale = easeInQuad(clamp(localPosition.y / height, 0., 1.));
         float offsetSize = .4;
         float timeScale = 2.;
-        vec3 pp = vec3(playerPosition.x, globalPosition.y, playerPosition.z); 
-        vec3 offsetNormal = inverse(mat3(modelMatrix)) * normalize(globalPosition - pp);
-        float playerRadius = 6.;
-        float offsetEffect = 1. - clamp(length(pp - globalPosition) / playerRadius, 0., 1.);
-        float offsetHeightEffect = 1. - clamp((pp.y - 1.) / (height * 2. - 1.), 0., 1.);
+        vec3 offsetPosition = vec3(playerPosition.x, globalPosition.y, playerPosition.z); 
+        vec3 offsetNormal = inverse(mat3(modelMatrix)) * normalize(globalPosition - offsetPosition);
+        float offsetRadius = 6.;
+        float offsetEffect = 1. - clamp(length(offsetPosition - globalPosition) / offsetRadius, 0., 1.); 
 
-        transform += offsetNormal 
-            * easeInCubic(offsetEffect * .75) 
-            * easeOutCubic(offsetHeightEffect) 
-            * clamp(localPosition.y / height, 0., 1.) 
-            * 2.; 
+        transform += (offsetNormal + vec3(0., -.5, 0.))
+            * offsetEffect   
+            * clamp((localPosition.y - .1) / height, 0., 1.) 
+            * easeInCubic(1. - clamp((playerPosition.y - height * .65) / 1.5, 0., 1.))
+            * .85; 
 
         transform.x += cos(globalPosition.x * .1 + uTime * timeScale) * heightScale * offsetSize;
         transform.x += sin(globalPosition.z * .6 + -uTime * timeScale) * heightScale * 1.5 * offsetSize; 
@@ -33,9 +33,7 @@ export const getGrassTransform = glsl`
 
         transform.z -= cos(globalPosition.z * .4 + uTime * timeScale * .3) * heightScale * .75 * offsetSize;
         transform.z += sin(globalPosition.x * .3 + -uTime * timeScale * .7) * heightScale * 1. * offsetSize; 
-        transform.z -= sin(globalPosition.x * .15 + -uTime * timeScale * .5) * heightScale * .35 * offsetSize; 
-
-        transform.y -= (sin((globalPosition.x + globalPosition.z) * .4) + 1.) / 2. * .85;
+        transform.z -= sin(globalPosition.x * .15 + -uTime * timeScale * .5) * heightScale * .35 * offsetSize;  
 
         return transform;
     }
@@ -44,12 +42,13 @@ export const getGrassTransform = glsl`
 export default function GrassMaterial() {
     let { onBeforeCompile, uniforms } = useShader({
         uniforms: {
+            ...makeLightUniforms("#fc03b1"),
             uTime: {
                 value: 0,
             },
             uColorStart: {
                 value: new Color(grassColorStart),
-            },  
+            },
             uFogColor: {
                 value: new Color(fogColor)
             },
@@ -68,6 +67,8 @@ export default function GrassMaterial() {
             varying vec3 vGlobalPosition;
             varying vec3 vPosition;
             uniform float uTime;
+ 
+            ${lightFragmentHead}
 
             ${dither}
             ${easings}
@@ -77,7 +78,7 @@ export default function GrassMaterial() {
         vertex: {
             main: glsl`
                 vGlobalPosition = (modelMatrix * vec4(position, 1.)).xyz;
-                vPosition = position;
+                vPosition = transformed;
 
                 transformed += getGrassTransform(position, vGlobalPosition, uPlayerPosition, modelMatrix);
 
@@ -106,17 +107,22 @@ export default function GrassMaterial() {
                 float noiseEffect = easeInOutSine((noise(n1) + 1.) / 2.) * .8;
                 float heightScaler = 1. - clamp((vGlobalPosition.y) / height * .6, 0., 1.);   
                 
+
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
                     uFogColor, 
                     clamp(heightScaler + noiseEffect * (1. - heightScaler), 0., 1.) 
-                );  
+                );
+
+                ${lightFragment}
 
                 gl_FragColor.a = clamp((vPosition.y) / .5, 0., 1.);
                 gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 11., .0071);  
             `
         }
     })
+
+    useLightsUpdater(uniforms)
 
     useFrame(() => {
         let { effects, player } = store.getState()

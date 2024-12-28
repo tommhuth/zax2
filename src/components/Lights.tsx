@@ -12,7 +12,7 @@ export default function Lights() {
     let diagonal = useStore(i => i.world.diagonal)
     let updateShadowCamera = useCallback(() => {
         let { player } = useStore.getState()
-        let z = player.object ? player.object.position.z + CAMERA_OFFSET.z : camera.position.z + 20 
+        let z = player.object ? player.object.position.z + CAMERA_OFFSET.z : camera.position.z + 20
 
         if (!shadowLightRef.current) {
             return
@@ -51,11 +51,6 @@ export default function Lights() {
 
     return (
         <>
-            <directionalLight
-                position={[-6, 15, -15]}
-                intensity={.8}
-                color={"#aaeaff"}
-            />
             <ambientLight
                 color={"#ffffff"}
                 intensity={.4} />
@@ -73,7 +68,12 @@ export default function Lights() {
                 shadow-camera-top={diagonal * .75} // z
                 shadow-camera-bottom={-diagonal * 1}
                 shadow-mapSize={[512, 512]}
-                shadow-bias={-0.01}
+                shadow-bias={-0.003}
+            />
+            <directionalLight
+                position={[-6, 15, -15]}
+                intensity={.8}
+                color={"#aaeaff"}
             />
         </>
     )

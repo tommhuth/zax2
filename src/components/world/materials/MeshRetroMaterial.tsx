@@ -8,9 +8,8 @@ import utils from "../../../shaders/utils.glsl"
 import { glsl } from "../../../data/utils"
 import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef } from "react"
-import { store, useStore } from "../../../data/store" 
-import { BULLET_LIGHT_COUNT, LIGHT_SOURCES_COUNT } from "@data/const"
-import { lightFragment, makeLightUniforms, useLightsUpdater } from "./helpers"
+import { store, useStore } from "../../../data/store"
+import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater } from "./helpers"
 
 
 type MeshRetroMaterialProps = {
@@ -51,7 +50,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             ...makeLightUniforms(),
             uTime: { value: 0 },
             uColorCount: { value: colorCount },
-            uDither: { value: dither }, 
+            uDither: { value: dither },
             uAdditionalShadowStrength: {
                 value: additionalShadowStrength,
             },
@@ -77,8 +76,6 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         shared: glsl`  
             uniform float uTime; 
             uniform vec3 uFogColor;  
-            uniform vec3 uBulletColor;  
-            uniform vec3 uExplosionColor;  
             uniform vec3 uPlayerPosition; 
             uniform float uDither;    
             uniform float uColorCount;   
@@ -95,18 +92,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             };
             uniform BasicDirectionLight uBasicDirectionLights[2];
 
-            struct LightSource {
-                vec3 position; 
-                float strength;
-                float radius;
-            };
-            uniform LightSource uLightSources[${LIGHT_SOURCES_COUNT}];
-
-            struct BulletLight {
-                vec3 position;  
-                float radius;
-            };
-            uniform BulletLight uBulletLights[${BULLET_LIGHT_COUNT}];
+            ${lightFragmentHead}
 
             ${easings} 
             ${dithering}
@@ -191,7 +177,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         }
 
         uniforms.uTime.value = store.getState().effects.time * .2
-        uniforms.uTime.needsUpdate = true 
+        uniforms.uTime.needsUpdate = true
     })
 
     useLightsUpdater(uniforms)

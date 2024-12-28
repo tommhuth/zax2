@@ -12,6 +12,7 @@ import { createParticles } from "../../../data/store/effects"
 import { Owner } from "../../../data/types"
 import { damp } from "three/src/math/MathUtils.js"
 import DebugBox from "@components/DebugBox"
+import { plantColor } from "@data/theme"
 
 interface PlantProps {
     position: Tuple3
@@ -98,7 +99,7 @@ export default function Plant({
                     normal: [0, 1, 0],
                     spread: [[-.85, .85], [0, 1]],
                     speed: [10, 27],
-                    color: "#00ff9d",
+                    color: plantColor,
                     stagger: [0, 0],
                     gravity: [0, -random.integer(35, 50), 0]
                 })
@@ -123,7 +124,7 @@ export default function Plant({
                     normal: [0, 1, 0],
                     spread: [[-.85, .85], [0, 1]],
                     speed: [10, 27],
-                    color: "#00ff9d",
+                    color: plantColor,
                     stagger: [0, 0],
                     gravity: [0, -random.integer(35, 50), 0]
                 })

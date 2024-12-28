@@ -8,8 +8,7 @@ import tower2 from "@assets/models/tower2.glb"
 import turret2 from "@assets/models/turret2.glb"
 import wall1 from "@assets/models/wall1.glb"
 import wall2 from "@assets/models/wall2.glb"
-import wall3 from "@assets/models/wall3.glb"
-import logo from "@assets/models/logo.glb"
+import wall3 from "@assets/models/wall3.glb" 
 import tanks from "@assets/models/tanks.glb"
 import boss from "@assets/models/boss.glb"
 import bossdestroyed from "@assets/models/bossdestroyed.glb"
@@ -35,7 +34,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 for (let model of [
     barrels, floor5, hangar, plane,
     rocket, rockface, tower1, tower2, turret2, wall1, wall2, wall3,
-    logo, tanks, boss, bossdestroyed, device,
+    tanks, boss, bossdestroyed, device,
     floor1, floor2, floor3, floor4, floor5, floor6, grass, plant, player,
 ]) {
     useGLTF.preload(model)

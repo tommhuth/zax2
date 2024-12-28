@@ -81,7 +81,7 @@ function Turret({
 
             if (damageTurret(id, 25)) {
                 increaseScore(2_000)
-                increaseTrauma(.75)
+                increaseTrauma(.5)
             } else {
                 increaseScore(50)
                 increaseTrauma(.05)

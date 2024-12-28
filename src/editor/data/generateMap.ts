@@ -11,8 +11,8 @@ function toFixed(value: number, precision: number): string {
     const fixed = value.toFixed(precision)
 
     return fixed.includes(".") ? fixed.replace(/\.?0+$/, "") : fixed
-} 
-  
+}
+
 function editorToLocal(position: Tuple3) {
     return [
         position[0],
@@ -53,10 +53,10 @@ function render(object: EditorObject) {
     switch (object.type) {
         case "barrel":
         case "rocket":
-            return renderObject(toTitleCase(object.type), object)
+            return renderObject(toTitleCase(object.type) + "Spawner", object)
         case "turret":
         case "plane":
-            return renderObject(toTitleCase(object.type), object, ["rotation"])
+            return renderObject(toTitleCase(object.type) + "Spawner", object, ["rotation"])
         case "box":
         case "rockface":
         case "device":
@@ -67,7 +67,8 @@ function render(object: EditorObject) {
         case "tower1":
         case "tower2":
         case "hangar":
-            return renderObject("EdgeElement", object, ["rotation", "scale"], [["type", object.type]])
+        case "tanks":
+            return renderObject("EdgeElement", object, ["rotation"], [["type", object.type], ["scale", [object.uniformScaler, object.uniformScaler, object.uniformScaler]]])
         case "grass":
             return renderObject(toTitleCase(object.type), object, ["rotation"])
         case "cable":
@@ -95,14 +96,13 @@ export default function generateMap(
     store: EditorStore,
     name: string
 ) {
-    const template = ` 
-import random from "@huth/random"
+    const template = `  
 import { WorldPart } from "@data/types"
 import WorldPartWrapper from "@components/world/WorldPartWrapper"
-import Plane from "@components/world/spawner/Plane"
-import Turret from "@components/world/spawner/Turret"
-import Barrel from "@components/world/spawner/Barrel" 
-import Rocket from "@components/world/spawner/Rocket" 
+import PlaneSpawner from "@components/world/spawner/Plane"
+import TurretSpawner from "@components/world/spawner/Turret"
+import BarrelSpawner from "@components/world/spawner/Barrel" 
+import RocketSpawner from "@components/world/spawner/Rocket" 
 import Floor from "@components/world/decoration/Floor" 
 import Plant from "@components/world/actors/Plant"
 import Cable from "@components/world/decoration/Cable"
@@ -131,8 +131,7 @@ export default function ${name}({
             id={id}
         >
             <Floor
-                position={[position.x, 0, size[1] / 2]}
-                scale={[random.pick(-1, 1), 1, random.pick(-1, 1)]}
+                position={[position.x, 0, size[1] / 2]} 
                 type="${store.floorType}"
             /> 
             ${store.objects.sort((a, b) => a.position[2] - b.position[2]).map(render).join("\n")} 

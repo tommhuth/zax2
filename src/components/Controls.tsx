@@ -40,7 +40,7 @@ export default function Controls() {
             shootDiv.removeEventListener("touchend", onTouchEndShoot)
             shootDiv.removeEventListener("touchcancel", onTouchEndShoot)
         }
-    }, [])
+    }, [keys])
 
     useFrame(() => { 
         if (previousZ.current !== null) { 
@@ -62,7 +62,7 @@ export default function Controls() {
     return ( 
         <mesh
             ref={hitboxRef}
-            position={[0, .1, 0]}
+            position-y={.1}
             visible={false}
             rotation-x={-Math.PI / 2}
             onPointerUp={() => {

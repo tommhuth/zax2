@@ -1,12 +1,13 @@
 import { WorldPart } from "../../../data/types"
-import WorldPartWrapper from "../WorldPartWrapper"
-import Turret from "../spawner/Turret"
-import EdgeElement from "../decoration/EdgeElement"
-import Barrel from "../spawner/Barrel"
-import Rocket from "../spawner/Rocket"
+import WorldPartWrapper from "../WorldPartWrapper" 
+import EdgeElement from "../decoration/EdgeElement" 
 import random from "@huth/random"
 import Floor from "../decoration/Floor"
-import Plane from "../spawner/Plane"
+import Dirt from "../decoration/Dirt"
+import Cable from "../decoration/Cable"
+import Obstacle from "../decoration/Obstacle"
+import TurretSpawner from "../spawner/Turret"
+import BarrelSpawner from "../spawner/Barrel"
 
 export default function Default({
     id,
@@ -19,64 +20,76 @@ export default function Default({
             position={position}
             id={id}
         >
-            <EdgeElement
-                position={[10, 0, 7]}
-                type="wall2"
+            <Floor
+                position={[position.x, 0, size[1] / 2]}
+                scale={[random.pick(-1, 1), 1, random.pick(-1, 1)]}
+                type="floor1"
             />
-            <EdgeElement
-                position={[8.5, 0, 14]}
-                type="wall3"
+
+            <TurretSpawner
+                position={[-3, -0.5, 2]}
+                rotation={0}
+                floorLevel={0}
             />
+
             <EdgeElement
-                position={[10, 0, 24]}
-                type="wall3"
+                position={[9, 0, 3.5]}
+                rotation={3.142}
+                scale={[1, 1, 1]}
+                type={"wall3"}
             />
+
+            <BarrelSpawner
+                position={[5.5, 0, 4]} 
+            />
+
+            <Dirt
+                position={[1, 0, 7.5]}
+                rotation={0}
+                scale={1.4}
+            />
+
+            <Cable
+                position={[-3.5, 0, 11]}
+                rotation={1.047}
+                scale={1}
+            />
+
+            <BarrelSpawner
+                position={[3, 0, 11.5]} 
+            />
+
             <EdgeElement
-                position={[8, 0, 24]}
-                type="tower1"
+                position={[10.5, 0, 13]}
+                rotation={3.142}
+                scale={[1, 1, 1]}
+                type={"wall2"}
             />
-            <EdgeElement
-                position={[8, 0, 28]}
-                type="tower1"
+
+            <Obstacle
+                position={[5, 1, 15.5]}
+                rotation={0}
+                size={[3.5, 2, 4]}
+                type={"device"}
             />
-            <Turret
-                position={[3, 1, 10]}
-                rotation={-Math.PI / 2}
+
+            <TurretSpawner
+                position={[5, 1.5, 15.5]}
+                rotation={4.712}
                 floorLevel={2}
             />
-            <Turret
-                position={[3, 0, 6]}
-                rotation={-Math.PI / 2}
-                floorLevel={1}
-            />
-            <Rocket
-                position={[-3, 0, 4]}
-            />
-            <Barrel
-                position={[-1, 0, 9]}
-            />
-            <Barrel
-                position={[-4, 0, 16]}
-            />
-            <Barrel
-                position={[5, 0, 2]}
+
+            <Obstacle
+                position={[1.5, 0.5, 15.5]}
+                rotation={0}
+                size={[3, 1.5, 4]}
+                type={"box"}
             />
 
-            <Plane
-                position={[0, .5, 1]}
-                speed={0}
-                rotation={.5}
-            />
-
-
-            <Rocket
-                position={[4, 0, 17]}
-            />
-
-            <Floor
-                type={"floor1"}
-                scale={[random.pick(-1, 1), 1, random.pick(-1, 1)]}
-                position={[position.x, 0, size[1] / 2]}
+            <TurretSpawner
+                position={[-2, 0, 17]}
+                rotation={4.712}
+                floorLevel={0}
             />
         </WorldPartWrapper>
     )

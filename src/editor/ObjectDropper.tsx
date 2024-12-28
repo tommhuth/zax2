@@ -90,7 +90,7 @@ const world: EditorObjectInit[] = [
 const decorations: EditorObjectInit[] = [
     {
         type: "grass",
-        size: [6, 2, 12],
+        size: [6, 1.75, 12],
     },
     ...[...repeaterEditors, ...instanceEditors].map(i => {
         return {

@@ -4,7 +4,7 @@ import { Tuple2 } from "../../types.global"
 import { WorldPart, WorldPartType } from "../types" 
 
 const depthMap: Record<WorldPartType, number> = { 
-    [WorldPartType.BUILDINGS_GAP]: 10,
+    [WorldPartType.BUILDINGS_GAP]: 20,
     [WorldPartType.DEFAULT]: 20,
     [WorldPartType.START]: 40,
     [WorldPartType.BOSS]: 50,

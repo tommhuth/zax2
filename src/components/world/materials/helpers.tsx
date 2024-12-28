@@ -1,12 +1,31 @@
 import { BULLET_LIGHT_COUNT, LIGHT_SOURCES_COUNT } from "@data/const"
 import Counter from "@data/Counter"
 import { store } from "@data/store"
+import { bulletColor, explosionColor } from "@data/theme"
 import { glsl, ndelta } from "@data/utils"
 import { useFrame } from "@react-three/fiber"
 import { useEffect, useMemo } from "react"
-import { Vector3 } from "three"
+import { Color, ColorRepresentation, Vector3 } from "three"
 import { damp } from "three/src/math/MathUtils.js"
- 
+
+export const lightFragmentHead = glsl` 
+    uniform vec3 uBulletColor;  
+    uniform vec3 uExplosionColor;  
+
+    struct LightSource {
+        vec3 position;
+        float strength;
+        float radius;
+    };
+    uniform LightSource uLightSources[${LIGHT_SOURCES_COUNT}];
+
+    struct BulletLight {
+        vec3 position;  
+        float radius;
+    };
+    uniform BulletLight uBulletLights[${BULLET_LIGHT_COUNT}];
+`
+
 export const lightFragment = glsl`
     float fogLightEffect = 0.;
 
@@ -95,8 +114,16 @@ export function useLightsUpdater(uniforms: { uLightSources: UniformLightSource; 
     })
 }
 
-export function makeLightUniforms() { 
+export function makeLightUniforms(
+    bulletColorOverride: ColorRepresentation = bulletColor
+) {
     return {
+        uBulletColor: {
+            value: new Color(bulletColorOverride),
+        },
+        uExplosionColor: {
+            value: new Color(explosionColor),
+        },
         uLightSources: {
             value: new Array(LIGHT_SOURCES_COUNT).fill(null).map(() => {
                 return {

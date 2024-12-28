@@ -13,7 +13,7 @@ export default function Scrap() {
     return (
         <InstancedMesh
             name="scrap"
-            count={50}
+            count={35}
             castShadow
             receiveShadow
             colors={true}

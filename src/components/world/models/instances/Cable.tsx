@@ -12,7 +12,7 @@ export default function Cable() {
     return (
         <InstancedMesh
             name="cable"
-            count={4}
+            count={8}
             castShadow
             receiveShadow
         >

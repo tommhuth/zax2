@@ -1,15 +1,14 @@
 import WorldPartWrapper from "../WorldPartWrapper"
 import EdgeElement from "../decoration/EdgeElement"
-import Plane from "../spawner/Plane"
+import PlaneSpawner from "../spawner/Plane"
 import Floor from "../decoration/Floor"
-import Barrel from "../spawner/Barrel"
-import Turret from "../spawner/Turret"
-import Rocket from "../spawner/Rocket"
-import { WORLD_TOP_EDGE } from "../../../data/const"
-import Wall1 from "../models/repeaters/Wall1"
-import Cable from "../decoration/Cable"
-import Obstacle from "../decoration/Obstacle"
+import BarrelSpawner from "../spawner/Barrel"
 import { WorldPart } from "@data/types"
+import Dirt from "../decoration/Dirt"
+import TurretSpawner from "../spawner/Turret"
+import Plant from "../actors/Plant"
+import Grass from "../decoration/Grass"
+import Obstacle from "../decoration/Obstacle"
 
 export default function Airstrip({
     id,
@@ -23,84 +22,135 @@ export default function Airstrip({
             id={id}
         >
             <Floor
-                type={"floor4"}
                 position={[position.x, 0, size[1] / 2]}
+                type="floor4"
             />
-            <EdgeElement type="hangar" position={[8, 0, 16.5]} />
-            <EdgeElement type="tower2" position={[7, 0, 7.5]} />
-            <EdgeElement type="tower2" position={[7, 0, 10]} />
-            <EdgeElement type="wall1" position={[9, 0, 9]} scale={[1, 1, 1.25]} />
-            <EdgeElement type="hangar" position={[8, 0, 25.25]} />
-            <EdgeElement type="wall1" position={[9, 0, 26]} scale={[1, 1, 2.5]} />
 
-            <Barrel position={[6, 0, 3]} />
+            <Dirt
+                position={[0.5, 0, 4]}
+                rotation={0.524}
+                scale={1.6}
+            />
+
+            <PlaneSpawner
+                position={[-3.5, 0.5, 7]}
+                rotation={2.409}
+            />
+
+            <Grass
+                position={[8, 1, 7.5]}
+                rotation={0.349}
+            />
 
             <Obstacle
-                type="device"
-                position={[5.5, 0, 20.5]}
-                size={[2, .5, 2]}
-            />
-            <Obstacle
-                type="device"
                 position={[-1, 0, 14.5]}
-                size={[2, 1.5, 3]}
-            />
-            <Turret
-                position={[-1, .5, 16]}
-                floorLevel={0}
-                rotation={Math.PI * -.5}
+                rotation={0}
+                size={[1, 0.5, 1]}
+                type={"box"}
             />
 
-            <Plane
-                position={[-4, .5, 8.5]}
-                rotation={2}
-                speed={0}
-            />
-            <Plane
-                position={[-4, .5, 18]}
-                rotation={0}
-                speed={0}
+            <PlaneSpawner
+                position={[6.5, 0.5, 16.5]}
+                rotation={0.942}
             />
 
             <Obstacle
-                type="device"
-                position={[5.5, 0, 30]}
-                size={[2, .5, 3]}
-            />
-            <Rocket position={[5.5, 0, 32]} />
-
-            <Plane
-                position={[2, .5, 23]}
-                targetY={WORLD_TOP_EDGE}
+                position={[-1, 0.25, 17.5]}
+                rotation={0}
+                size={[1, 0.5, 4]}
+                type={"box"}
             />
 
-            <Barrel
-                position={[-1, 0, 32]}
-            />
-            <Barrel
-                position={[0, 0, 36]}
-            />
-
-            <Plane
-                position={[2, .5, 39]}
-                targetY={WORLD_TOP_EDGE}
+            <Dirt
+                position={[10.5, 0, 18.5]}
+                rotation={1.292}
+                scale={1.3}
             />
 
-            <Barrel
-                position={[5, 0, 45]}
+            <PlaneSpawner
+                position={[2, 0.5, 23]}
+                rotation={3.142}
+
             />
 
-            <Rocket position={[-4, 0, 42]} />
-
-            <Wall1
-                position={[7, 0, position.z + 45]}
-                scale={[1, 1, .7]}
-                rotation={[0, Math.PI, 0]}
+            <EdgeElement
+                position={[8, 0, 25]}
+                rotation={3.142}
+                type={"hangar"}
+                scale={[1.1, 1.1, 1.1]}
             />
 
-            <Cable
-                position={[8, 0, 39]}
-                rotation={2}
+            <Dirt
+                position={[-1.5, 0, 25]}
+                rotation={0}
+                scale={1.9}
+            />
+
+            <Plant
+                position={[-1, 0, 27]}
+                rotation={1.728}
+                scale={0.7}
+            />
+
+            <Obstacle
+                position={[-1, 0.5, 29.5]}
+                rotation={0}
+                size={[1, 2, 1]}
+                type={"box"}
+            />
+
+            <EdgeElement
+                position={[11, 0, 30]}
+                rotation={3.142}
+                type={"wall2"}
+                scale={[1.4, 1.4, 1.4]}
+            />
+
+            <BarrelSpawner
+                position={[7, 0, 31]}
+            />
+
+            <Obstacle
+                position={[-1, -1, 33]}
+                rotation={0}
+                size={[1, 5, 5.5]}
+                type={"box"}
+            />
+
+            <EdgeElement
+                position={[5.5, 0, 34]}
+                rotation={3.142}
+                type={"tower1"}
+                scale={[1, 1, 1]}
+            />
+
+            <Grass
+                position={[-5.5, 1, 39]}
+                rotation={0.611}
+            />
+
+            <Plant
+                position={[8.5, 0, 41.5]}
+                rotation={0}
+                scale={1}
+            />
+
+            <Dirt
+                position={[-4, 0, 42.5]}
+                rotation={1.466}
+                scale={1.3}
+            />
+
+            <Dirt
+                position={[7.5, 0, 44]}
+                rotation={0.419}
+                scale={1.6}
+            />
+
+            <TurretSpawner
+                position={[7, 0, 44.5]}
+                rotation={3.142}
+                floorLevel={0}
             />
         </WorldPartWrapper>
     )

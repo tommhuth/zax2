@@ -8,17 +8,17 @@ interface RocketSpawnerProps {
 }
 
 export default function RocketSpawner({
-    position = [0, 0, 0],
+    position: [x, y, z] = [0, 0, 0],
 }: RocketSpawnerProps) {
-    let partPosition = useWorldPart()
+    let [, , partZ] = useWorldPart()
 
     useEffect(() => {
         startTransition(() => {
             createRocket(
-                [position[0], position[1], partPosition[2] + position[2]],
+                [x, y, z + partZ],
             )
         })
-    }, position)
+    }, [x, y, z, partZ])
 
     return null
 }

@@ -35,7 +35,7 @@ export function createExplosion({
     fireballPath: [fireballStart, fireballDirection] = [[0, 0, 0], [0, 0, 0]],
     fireballCount = 0,
     secondaryFireballCount = radius > .65 ? random.integer(0, 3) : 0,
-    shockwave = random.boolean(.5),
+    shockwave = random.boolean(.75),
     blastRadius = radius * random.float(4, 5),
     delay = 0,
 }: CreateExplosionParams) {

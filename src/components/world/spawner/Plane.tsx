@@ -12,25 +12,25 @@ interface PlaneSpawnerProps {
 }
 
 export default function PlaneSpawner({
-    position,
+    position: [x, y, z],
     speed,
     fireFrequency,
     rotation,
     targetY,
 }: PlaneSpawnerProps) {
-    let partPosition = useWorldPart()
+    let [, , partZ] = useWorldPart()
 
     useEffect(() => {
         startTransition(() => {
             createPlane({
-                position: [position[0], position[1], partPosition[2] + position[2]],
+                position: [x, y, z + partZ],
                 targetY,
                 rotation,
                 speed,
                 fireFrequency
             })
         })
-    }, [...position])
+    }, [fireFrequency, partZ, x, y, z, rotation, speed, targetY])
 
     return null
 }

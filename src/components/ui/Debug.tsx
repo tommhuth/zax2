@@ -81,11 +81,11 @@ export default function Debug() {
                 <li>Heat seakers: {boss.heatSeakers.length}</li>
             </ul>
             <fieldset>
-                <legend>World</legend>
+                <legend className="visually-hidden">World</legend>
 
                 <label
                     style={{
-                        margin: "5px 0 5px 10px",
+                        margin: "5px 0 5px 0",
                     }}
                 >
                     <input
@@ -97,7 +97,7 @@ export default function Debug() {
                 </label>
                 <div
                     style={{
-                        margin: "5px 0 5px 10px",
+                        margin: "5px 0 5px 0",
                         display: "flex",
                         flexDirection: "column",
                         color: "black",
@@ -143,13 +143,12 @@ export default function Debug() {
                     </div>
                 </div>
 
-                <ul>
+                <ol>
                     {world.parts.map(i => {
                         return (
                             <li
                                 key={i.id}
-                                style={{
-                                    marginLeft: 10,
+                                style={{ 
                                     opacity: i.position.z + i.size[1] < player.position.z ? .5 : 1,
                                     color: i.position.z < player.position.z && i.position.z + i.size[1] > player.position.z ? "orange" : undefined
                                 }}
@@ -160,20 +159,17 @@ export default function Debug() {
                     })}
                     {debug.forcedWorldParts.map((i, index) => {
                         return (
-                            <li
-                                style={{ marginLeft: 10 }}
+                            <li 
                                 key={index}
                             >
                                 [{i}]
                             </li>
                         )
                     })}
-                    <li
-                        style={{ marginLeft: 10 }}
-                    >
+                    <li>
                         [{(1 - worlPartTypes.randomPickChance) * 100}% {worlPartTypes.peak()}]
                     </li>
-                </ul>
+                </ol>
             </fieldset>
         </fieldset>
     )

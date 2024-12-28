@@ -12,22 +12,22 @@ interface TurretSpawnerProps {
 
 export default function TurretSpawner({
     fireFrequency,
-    position = [0, 0, 0],
+    position: [x, y, z] = [0, 0, 0],
     rotation = 0,
     floorLevel
 }: TurretSpawnerProps) {
-    let partPosition = useWorldPart()
+    let [, , partZ] = useWorldPart()
 
     useEffect(() => {
         startTransition(() => {
             createTurret({
                 fireFrequency,
-                position: [position[0], position[1], partPosition[2] + position[2]],
+                position: [x, y, z + partZ],
                 rotation,
                 floorLevel
             })
         })
-    }, [fireFrequency, floorLevel, rotation, ...partPosition, ...position])
+    }, [fireFrequency, floorLevel, rotation, x, y, z, partZ])
 
     return null
 }

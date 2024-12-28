@@ -24,6 +24,7 @@ export default function MapPicker() {
                         width: "22em"
                     }}
                     onChange={e => setName(e.currentTarget.value)}
+                    onKeyDown={e => e.nativeEvent.stopImmediatePropagation()}
                     value={name}
                     type="text"
                 />
@@ -55,7 +56,7 @@ export default function MapPicker() {
                         <li
                             key={i.data.id}
                             style={{
-                                position: "relative", 
+                                position: "relative",
                                 borderBottom: "1px solid rgba(255, 255, 255, .31)",
                             }}
                         >
@@ -67,7 +68,7 @@ export default function MapPicker() {
                                 style={{
                                     padding: "1em",
                                     fontFamily: "monospace",
-                                    cursor: "pointer", 
+                                    cursor: "pointer",
                                     textAlign: "left",
                                     width: "calc(100% - 4em)"
                                 }}
@@ -92,7 +93,7 @@ export default function MapPicker() {
                                 }}
                             >
                                 ✕
-                            </button> 
+                            </button>
                         </li>
                     )
                 })}

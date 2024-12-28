@@ -12,7 +12,7 @@ export default function Dirt() {
     return ( 
         <InstancedMesh
             name="dirt"
-            count={5}
+            count={15}
             castShadow
             receiveShadow
         >

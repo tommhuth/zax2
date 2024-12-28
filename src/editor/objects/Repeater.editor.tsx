@@ -8,16 +8,16 @@ export default function RepeaterEditor({ type, id }: { id: string; type: Repeate
     let {
         rotation,
         position: [x, y, z],
-        scale = [1, 1, 1]
+        uniformScaler,
     } = useEditorObject(id)
 
     useEffect(() => {
         if (building) {
             building.position.set(x, y, z)
             building.rotation.y = rotation
-            building.scale.set(...scale)
+            building.scale.setScalar(uniformScaler)
         }
-    }, [building, rotation, x, y, z])
+    }, [building, rotation, x, y, z, uniformScaler])
 
     useEffect(() => {
         if (building) {
