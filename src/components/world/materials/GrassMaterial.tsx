@@ -16,17 +16,7 @@ export const getGrassTransform = glsl`
         float heightScale = easeInQuad(clamp(localPosition.y / height, 0., 1.));
         float offsetSize = .4;
         float timeScale = 2.;
-        vec3 offsetPosition = vec3(playerPosition.x, globalPosition.y, playerPosition.z); 
-        vec3 offsetNormal = inverse(mat3(modelMatrix)) * normalize(globalPosition - offsetPosition);
-        float offsetRadius = 6.;
-        float offsetEffect = 1. - clamp(length(offsetPosition - globalPosition) / offsetRadius, 0., 1.); 
-
-        transform += (offsetNormal + vec3(0., -.5, 0.))
-            * offsetEffect   
-            * clamp((localPosition.y - .1) / height, 0., 1.) 
-            * easeInCubic(1. - clamp((playerPosition.y - height * .65) / 1.5, 0., 1.))
-            * .85; 
-
+ 
         transform.x += cos(globalPosition.x * .1 + uTime * timeScale) * heightScale * offsetSize;
         transform.x += sin(globalPosition.z * .6 + -uTime * timeScale) * heightScale * 1.5 * offsetSize; 
         transform.x += sin(globalPosition.z * .3 + -uTime * timeScale) * heightScale * .25 * offsetSize; 
@@ -35,6 +25,21 @@ export const getGrassTransform = glsl`
         transform.z += sin(globalPosition.x * .3 + -uTime * timeScale * .7) * heightScale * 1. * offsetSize; 
         transform.z -= sin(globalPosition.x * .15 + -uTime * timeScale * .5) * heightScale * .35 * offsetSize;  
 
+        transform.y -= sin(length(globalPosition.xz * .5))  
+            * cos(globalPosition.x * .3) ;
+
+        vec3 transformGlobalPosition = globalPosition + transform;
+        vec3 offsetPosition = vec3(playerPosition.x, transformGlobalPosition.y, playerPosition.z); 
+        vec3 offsetNormal = inverse(mat3(modelMatrix)) * normalize(transformGlobalPosition - offsetPosition);
+        float offsetRadius = 7.;
+        float offsetEffect = 1. - clamp(length(offsetPosition - globalPosition) / offsetRadius, 0., 1.); 
+
+        transform += (offsetNormal + vec3(0., -.5, 0.))
+            * offsetEffect   
+            * clamp((localPosition.y - .1) / (height * .85), 0., 1.) 
+            * (1. - clamp((playerPosition.y - height) / 1.5, 0., 1.))
+            * .9;
+        
         return transform;
     }
 `
@@ -106,8 +111,7 @@ export default function GrassMaterial() {
                 vec3 n1 = vGlobalPosition * .1 + uTime * .2 * 1.4;
                 float noiseEffect = easeInOutSine((noise(n1) + 1.) / 2.) * .8;
                 float heightScaler = 1. - clamp((vGlobalPosition.y) / height * .6, 0., 1.);   
-                
-
+                 
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
                     uFogColor, 
@@ -115,6 +119,13 @@ export default function GrassMaterial() {
                 );
 
                 ${lightFragment}
+
+                // engine light
+                gl_FragColor.rgb = mix(
+                    gl_FragColor.rgb, 
+                    vec3(1., .6, .5), 
+                    easeInQuad(1. - clamp(length(vGlobalPosition - uPlayerPosition - vec3(0., 0., -.85)) / 4., 0., 1.)) 
+                ); 
 
                 gl_FragColor.a = clamp((vPosition.y) / .5, 0., 1.);
                 gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 11., .0071);  
