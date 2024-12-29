@@ -9,9 +9,9 @@ import { glsl } from "../../../data/utils"
 import { store } from "../../../data/store"
 import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater } from "./helpers"
 
-export const getGrassTransform = glsl`
+export const getGrassTransform = glsl` 
     vec3 getGrassTransform(vec3 localPosition, vec3 globalPosition, vec3 playerPosition, mat4 modelMatrix) {
-        vec3 transform = vec3(0.);
+        vec3 transform = vec3(localPosition);
         float height = 1.75;
         float heightScale = easeInQuad(clamp(localPosition.y / height, 0., 1.));
         float offsetSize = .4;
@@ -28,17 +28,19 @@ export const getGrassTransform = glsl`
         transform.y -= sin(length(globalPosition.xz * .5))  
             * cos(globalPosition.x * .3) ;
 
-        vec3 transformGlobalPosition = globalPosition + transform;
-        vec3 offsetPosition = vec3(playerPosition.x, transformGlobalPosition.y, playerPosition.z); 
-        vec3 offsetNormal = inverse(mat3(modelMatrix)) * normalize(transformGlobalPosition - offsetPosition);
-        float offsetRadius = 7.;
-        float offsetEffect = 1. - clamp(length(offsetPosition - globalPosition) / offsetRadius, 0., 1.); 
+        float playerRadius = 3.;
+        float distanceToPlayer = easeInOutQuad(1. - clamp(length(globalPosition - playerPosition) / playerRadius, 0., 1.));
+        float verticalDistanceToPlayer = easeOutQuad(1. - clamp((playerPosition.y - height) / 1.5, 0., 1.));
+        vec3 offsetPosition = vec3(playerPosition.x, transform.y, playerPosition.z); 
+        vec3 pushAway = inverse(mat3(modelMatrix)) * normalize(globalPosition - offsetPosition);
+        
+        transform += pushAway  
+            * distanceToPlayer  
+            * verticalDistanceToPlayer  
+            * clamp((localPosition.y - .2) / (height * .85), 0., 1.)  
+            * 1.; 
 
-        transform += (offsetNormal + vec3(0., -.5, 0.))
-            * offsetEffect   
-            * clamp((localPosition.y - .1) / (height * .85), 0., 1.) 
-            * (1. - clamp((playerPosition.y - height) / 1.5, 0., 1.))
-            * .9;
+        transform.y = mix(transform.y, .5, distanceToPlayer * verticalDistanceToPlayer); 
         
         return transform;
     }
@@ -85,7 +87,7 @@ export default function GrassMaterial() {
                 vGlobalPosition = (modelMatrix * vec4(position, 1.)).xyz;
                 vPosition = transformed;
 
-                transformed += getGrassTransform(position, vGlobalPosition, uPlayerPosition, modelMatrix);
+                transformed = getGrassTransform(position, vGlobalPosition, uPlayerPosition, modelMatrix);
 
                 vGlobalPosition = (modelMatrix * vec4(transformed, 1.)).xyz;
             `

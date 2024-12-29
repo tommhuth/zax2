@@ -23,6 +23,7 @@ import { ndelta } from "@data/utils"
 import RockValley from "./parts/RockValley"
 import { DynamicWorldPartType, partGenerator } from "@data/world/getNextWorldPart"
 import { WorldPartType } from "@data/types"
+import GrassPart from "./parts/Grass"
 
 export default function World() {
     let diagonal = useStore(i => i.world.diagonal)
@@ -97,10 +98,12 @@ function WorldParts() {
                 return <BuildingsLow key={i.id} {...i} />
             case WorldPartType.AIRSTRIP:
                 return <Airstrip key={i.id} {...i} />
+            case WorldPartType.GRASS:
+                return <GrassPart key={i.id} {...i} />
             case WorldPartType.BOSS:
                 return <BossPart key={i.id} {...i} />
             default:
-                throw new Error(`Unknown type: ${i.type}`)
+                throw new Error(`Unregistered part type: ${i.type}`)
         }
     })
 }

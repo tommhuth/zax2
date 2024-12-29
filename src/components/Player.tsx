@@ -98,8 +98,6 @@ export default function Player({
                 }
             })
 
-            let colors = ["#88F", "#00f", "#007", "#249", "#09F"]
-
             for (let i = 0; i < 9; i++) {
                 createExplosion({
                     position: position.toArray(),
@@ -121,7 +119,7 @@ export default function Player({
                     restitution: [.4, .85],
                     normal: [random.float(-1, 1), 1, -1],
                     delay: i * 650,
-                    color: random.pick(...colors)
+                    color: ["#88F", "#00f", "#007", "#249", "#09F"]
                 })
             }
 

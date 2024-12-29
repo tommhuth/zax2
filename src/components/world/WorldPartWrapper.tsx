@@ -67,7 +67,7 @@ export default function WorldPartWrapper({
             >
                 {children}
 
-                <Only if={showColliders}>
+                {showColliders && (
                     <mesh
                         position-y={-1}
                         position-z={position.z + depth / 2}
@@ -76,7 +76,7 @@ export default function WorldPartWrapper({
                         <boxGeometry args={[width, 2, depth, 1, 1, 1]} />
                         <meshBasicMaterial wireframe color="green" name="debug" />
                     </mesh>
-                </Only>
+                )}
             </context.Provider>
         </>
     )

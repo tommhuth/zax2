@@ -247,7 +247,7 @@ interface CreateParticlesParams {
     stagger?: Tuple2 // individual delay in ms
     friction?: Tuple2 | number
     radius?: Tuple2 | number
-    color?: ColorRepresentation
+    color: ColorRepresentation | ColorRepresentation[]
     name?: string
     delay?: number // base delay
     gravity?: Tuple3
@@ -265,7 +265,7 @@ export function createParticles({
     count = [2, 3],
     friction = [1.25, 1.5], // 0 - 5
     restitution = [.2, .5],
-    color = "#FFFFFF",
+    color,
     radius = [.15, .25],
     stagger = [-150, 0],
     delay = 0,
@@ -307,7 +307,7 @@ export function createParticles({
                 restitution: random.float(...restitution),
                 friction: typeof friction == "number" ? friction : random.float(...friction),
                 radius: typeof radius === "number" ? radius : radius[0] + (radius[1] - radius[0]) * (index / (list.length - 1)),
-                color,
+                color: Array.isArray(color) ? random.pick(...color) : color,
                 time: random.integer(...stagger),
             }
         })

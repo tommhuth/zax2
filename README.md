@@ -2,12 +2,11 @@
 
 ## Todo
 
--   intro 
+-   intro
 -   boss cleanup
--   clean actual level design, min. current parts + 5 ish?
+-   clean up instances/repeaters, single api entry, reuse in editor
 -   gameplay loop with game over
--   ui 
--   shockwave tweak/thicker 
+-   ui
 
 53 mat + 22 instances
 

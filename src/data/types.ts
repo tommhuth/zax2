@@ -14,7 +14,7 @@ export type InstanceName = "leaf" | "scrap" | "line" | "sphere" | "particle"
 export type RepeaterName = "tower1" | "tower2" | "tower3"
     | "tanks" | "hangar"
     | "wall1" | "wall2" | "wall3" | "wall4"
-    | "floor1" | "floor2" | "floor3" | "floor4" | "floor5" | "floor6" 
+    | "floor1" | "floor2" | "floor3" | "floor4" | "floor5" | "floor6"
 
 export type CollisionObjectType = "plant" | "barrel" | "player" | "boss" | "heatSeaker"
     | "plane" | "turret" | "building" | "rocket" | "vehicle" | "obstacle"
@@ -129,7 +129,8 @@ export enum WorldPartType {
     BUILDINGS_LOW = "buildings-low",
     AIRSTRIP = "airstrip",
     BOSS = "boss",
-    ROCK_VALLEY = "rock-valley"
+    ROCK_VALLEY = "rock-valley",
+    GRASS = "grass",
 }
 
 export interface WorldPart {

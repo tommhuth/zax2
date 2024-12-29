@@ -24,6 +24,7 @@ export let partGenerator: Record<DynamicWorldPartType, (previous: Pick<WorldPart
     [WorldPartType.AIRSTRIP]: makeWorldPartGenerator(WorldPartType.AIRSTRIP),
     [WorldPartType.BOSS]: makeWorldPartGenerator(WorldPartType.BOSS),
     [WorldPartType.ROCK_VALLEY]: makeWorldPartGenerator(WorldPartType.ROCK_VALLEY),
+    [WorldPartType.GRASS]: makeWorldPartGenerator(WorldPartType.GRASS),
 }
 
 export function getNextWorldPart(previous: WorldPart): WorldPart {

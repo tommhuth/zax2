@@ -1,15 +1,15 @@
 import { startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta, setBufferAttribute, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
+import { clamp, ndelta, setBufferAttribute, setMatrixAt, setMatrixNullAt } from "@data/utils"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
-import { store, useStore } from "../../../data/store"
-import { useCollisionDetection } from "../../../data/collisions"
+import { store, useStore } from "@data/store"
+import { useCollisionDetection } from "@data/collisions"
 import { Vector3 } from "three"
 import { useFrame } from "@react-three/fiber"
-import { createParticles } from "../../../data/store/effects"
-import { Owner } from "../../../data/types"
+import { createParticles } from "@data/store/effects"
+import { Owner } from "@data/types"
 import { damp } from "three/src/math/MathUtils.js"
 import DebugBox from "@components/DebugBox"
 import { plantColor } from "@data/theme"
@@ -34,32 +34,18 @@ interface Leaf {
 let width = 5
 let height = 2.75
 let depth = 4
+let colors = [
+    plantColor,
+    "#3d005c",
+    "#e600ff"
+]
 
-export default function Plant({
-    position: [x, y, z] = [0, 0, 0],
-    scale = 1,
-    rotation = random.float(0, Math.PI * 2)
-}: PlantProps) {
-    let [index, instance] = useInstance("plant")
-    let partPosition = useWorldPart()
-    let grid = useStore(i => i.world.grid)
-    let size: Tuple3 = [width * scale * .5, height * scale, depth * scale * .5]
-    let id = useMemo(() => random.id(), [])
-    let [health, setHealth] = useState(random.pick(30, 40, 20))
-    let position = useMemo(() => new Vector3(x, y, partPosition[2] + z), [])
-    let client = useMemo(() => {
-        return grid.createClient(
-            position.toArray(),
-            size,
-            { type: "plant", id }
-        )
-    }, [grid])
-    let trauma = useRef(0)
-    let leaves = useMemo<Leaf[]>(() => [], [])
-    let createLeaves = () => {
-        let leaf = store.getState().instances.leaf
+function makeLeaves(position: Vector3, size: Tuple3): Leaf[] {
+    let instance = store.getState().instances.leaf
 
-        leaves.push(...new Array(random.integer(6, 8)).fill(null).map((_i, index, list) => {
+    return Array.from({ length: random.integer(6, 8) })
+        .fill(null)
+        .map((_i, index, list) => {
             let x = position.x + random.float(-.5, .5)
             let z = position.z + random.float(-.5, .5)
             let baseScale = 1 + (index / (list.length - 1)) * random.float(-.4, .1)
@@ -80,10 +66,32 @@ export default function Plant({
                 rotation: [0, random.float(0, Math.PI * 2), 0] as Tuple3,
                 scale: [baseScale, random.float(1, 2.25), baseScale] as Tuple3,
                 time: random.float(0, Math.PI * 2),
-                index: leaf.index.next()
+                index: instance.index.next()
             }
-        }))
-    }
+        })
+}
+
+export default function Plant({
+    position: [x, y, z] = [0, 0, 0],
+    scale = 1,
+    rotation = random.float(0, Math.PI * 2)
+}: PlantProps) {
+    let [index, instance] = useInstance("plant")
+    let partPosition = useWorldPart()
+    let grid = useStore(i => i.world.grid)
+    let size: Tuple3 = useMemo(() => [width * scale * .5, height * scale, depth * scale * .5], [scale])
+    let id = useMemo(() => random.id(), [])
+    let [health, setHealth] = useState(random.pick(30, 40, 20))
+    let position = useMemo(() => new Vector3(x, y, partPosition[2] + z), [x, y, z, partPosition])
+    let client = useMemo(() => {
+        return grid.createClient(
+            position.toArray(),
+            size,
+            { type: "plant", id }
+        )
+    }, [grid, id, size, position])
+    let trauma = useRef(0)
+    let [leaves, setLeaves] = useState<Leaf[]>([])
 
     useCollisionDetection({
         interval: 2,
@@ -92,17 +100,6 @@ export default function Plant({
         bullet: ({ client, type, bullet }) => {
             if (client.data.id === id && type === "plant" && bullet.owner === Owner.PLAYER) {
                 setHealth(Math.max(health - 10, 0))
-                createParticles({
-                    position: position.toArray(),
-                    count: [5, 10],
-                    radius: [.01 * scale, .3],
-                    normal: [0, 1, 0],
-                    spread: [[-.85, .85], [0, 1]],
-                    speed: [10, 27],
-                    color: plantColor,
-                    stagger: [0, 0],
-                    gravity: [0, -random.integer(35, 50), 0]
-                })
             }
         },
         player: () => {
@@ -112,27 +109,29 @@ export default function Plant({
 
     // health change
     useEffect(() => {
-        if (health === 0 && typeof index === "number") {
+        if (typeof index === "number") {
+            trauma.current += .3
             startTransition(() => {
-                grid.removeClient(client)
-                setMatrixNullAt(instance, index as number)
-                createLeaves()
                 createParticles({
                     position: position.toArray(),
-                    count: [20, 25],
+                    count: health === 0 ? [20, 25] : [5, 10],
                     radius: [.01 * scale, .3],
                     normal: [0, 1, 0],
                     spread: [[-.85, .85], [0, 1]],
                     speed: [10, 27],
-                    color: plantColor,
+                    color: colors,
                     stagger: [0, 0],
                     gravity: [0, -random.integer(35, 50), 0]
                 })
+
+                if (health === 0) {
+                    grid.removeClient(client)
+                    setMatrixNullAt(instance, index as number)
+                    setLeaves(makeLeaves(position, size))
+                }
             })
         }
-
-        trauma.current += .3
-    }, [health, grid, client])
+    }, [health, grid, index, position, scale, instance, client, size])
 
     // unmount
     useEffect(() => {
@@ -150,7 +149,7 @@ export default function Plant({
                 position: [x, y, partPosition[2] + z],
             })
         }
-    }, [index, instance])
+    }, [index, instance, rotation, x, y, z, partPosition, scale])
 
     // trauma
     useFrame((state, delta) => {
