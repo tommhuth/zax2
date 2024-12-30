@@ -123,10 +123,13 @@ export default function GrassMaterial() {
                 ${lightFragment}
 
                 // engine light
+                float engineDistance = easeInOutQuad(1. - clamp(length(vGlobalPosition - uPlayerPosition - vec3(0., 0., -1.5)) / 3., 0., 1.));
+     
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
-                    vec3(1., .6, .5), 
-                    easeInQuad(1. - clamp(length(vGlobalPosition - uPlayerPosition - vec3(0., 0., -.85)) / 4., 0., 1.)) 
+                    // purple => orange
+                    mix(vec3(1.1, .0, 1.6), vec3(1.3, .9, 0.), engineDistance), 
+                    engineDistance
                 ); 
 
                 gl_FragColor.a = clamp((vPosition.y) / .5, 0., 1.);

@@ -22,7 +22,6 @@ export default function BuildingsLow({
         >
             <Floor
                 position={[position.x, 0, size[1] / 2]}
-                scale={[random.pick(-1, 1), 1, random.pick(-1, 1)]}
                 type="floor2"
             />
 

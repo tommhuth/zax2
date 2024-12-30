@@ -59,30 +59,6 @@ function MaterialLoader() {
                     backColorIntensity={0}
                     colorCount={8}
                     dither={.005}
-                    shader={{
-                        shared: glsl`
-                        varying float vTrauma;
-                    `,
-                        vertex: {
-                            head: glsl`
-                            attribute float aTrauma;
-                        `,
-                            main: glsl`
-                                vTrauma = aTrauma;
-                                /*
-                                transformed += normalize(vec3(position.x, 0., position.z)) 
-                                    * .25 
-                                    * random(globalPosition.xz + uTime) 
-                                    * aTrauma ;
-                                    * */
-                            `
-                        },
-                        fragment: {
-                            main: glsl`
-                            gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1.), vTrauma);
-                        `
-                        }
-                    }}
                 />
             ),
             barrel: (
@@ -184,7 +160,7 @@ function MaterialLoader() {
     }, [])
 
     return (
-        <group>
+        <>
             {Object.entries(materials).map(([name, material]) => {
                 return (
                     <MaterialHandler
@@ -195,7 +171,7 @@ function MaterialLoader() {
                     </MaterialHandler>
                 )
             })}
-        </group>
+        </>
     )
 }
 
