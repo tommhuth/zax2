@@ -5,7 +5,7 @@ import { useFrame } from "@react-three/fiber"
 import { ndelta } from "../../../data/utils"
 import { Mesh, Vector3 } from "three"
 import random from "@huth/random"
-import { GLTFModel, Tuple3 } from "../../../types.global"
+import { Tuple3 } from "../../../types.global"
 import { useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createParticles, increaseTrauma } from "../../../data/store/effects"
@@ -13,11 +13,10 @@ import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
 import Exhaust from "../../Exhaust"
 import { WORLD_TOP_EDGE } from "../../../data/const"
-import models from "@assets/models/rocket.glb"
-import { useGLTF } from "@react-three/drei"
 import DebugBox from "@components/DebugBox"
 import { useBaseActorHandler } from "@data/hooks"
 import { removeRocket, damageRocket } from "@data/store/actors/rocket.actions"
+import RocketModel from "../models/RocketModel"
 
 function explode(position: Vector3, size: Tuple3) {
     let shouldDoFireball = position.y < 2
@@ -88,11 +87,9 @@ export default function Rocket({
     id,
     client,
     health,
-}: Rocket) { 
-    let { nodes } = useGLTF(models) as GLTFModel<["rocket", "platform"]>
+}: Rocket) {
     let [removed, setRemoved] = useState(false)
     let rocketRef = useRef<Mesh>(null)
-    let materials = useStore(i => i.materials)
     let data = useMemo(() => {
         return {
             speed: random.float(1, 2),
@@ -169,24 +166,11 @@ export default function Rocket({
 
     return (
         <>
-
-            <mesh
-                castShadow
-                receiveShadow
-                ref={rocketRef}
-                rotation-y={data.rotationY}
-                visible={!removed}
-                dispose={null}
-                geometry={nodes.rocket.geometry}
-                material={materials.rocket}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                dispose={null}
-                geometry={nodes.platform.geometry}
-                material={materials.device}
+            <RocketModel
                 position={[position.x, 0, position.z]}
+                ref={rocketRef}
+                rotation={data.rotationY}
+                removed={removed}
             />
 
             {!removed && (

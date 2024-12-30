@@ -1,15 +1,15 @@
 import Camera from "@components/Camera"
 import Canvas from "./Canvas"
-import Models from "@components/world/models/Models"
+import SharedModels from "@components/world/models/SharedModels"
 import EdgeOverlay from "@components/EdgeOverlay"
 import { FLOOR_SIZE, WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "@data/const"
 import EditorObjects from "./editor/EditorObjects"
 import Dropzone from "./editor/Dropzone"
-import Floor from "@components/world/decoration/Floor"
+import Floor from "@components/world/actors/Floor"
 import { Suspense } from "react"
 import { setActiveObject } from "./editor/data/actions"
 import { useEditorStore } from "./editor/data/store"
-import Toolbar from "./editor/Toolbar" 
+import Toolbar from "./editor/Toolbar"
 
 export default function Editor() {
     let floorType = useEditorStore(i => i.floorType)
@@ -29,7 +29,7 @@ export default function Editor() {
                 <Dropzone />
                 <EditorObjects />
                 <Camera editorMode z={z} />
-                <Models />
+                <SharedModels />
                 <EdgeOverlay ready />
 
                 <Suspense>
@@ -38,7 +38,7 @@ export default function Editor() {
                         position={[WORLD_CENTER_X, 0, WORLD_PLAYER_START_Z + FLOOR_SIZE[floorType] / 2]}
                         type={floorType}
                     />
-                </Suspense> 
+                </Suspense>
 
                 <mesh
                     position={[0, 0, WORLD_PLAYER_START_Z]}

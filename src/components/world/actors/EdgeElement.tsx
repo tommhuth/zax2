@@ -12,7 +12,7 @@ interface EdgeElementProps {
 }
 
 export default function EdgeElement({
-    position,
+    position: [x, y, z],
     rotation = Math.PI,
     scale,
     type
@@ -22,14 +22,14 @@ export default function EdgeElement({
 
     useEffect(() => {
         if (building) {
-            building.position.set(position[0], position[1], position[2] + partPosition[2])
+            building.position.set(x, y, z + partPosition[2])
             building.rotation.y = rotation
 
             if (scale) {
                 building.scale.set(...scale)
             }
         }
-    }, [building, rotation, ...position])
+    }, [building, rotation, scale, x, y, z, partPosition])
 
     return null
 }

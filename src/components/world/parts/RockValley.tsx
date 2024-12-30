@@ -2,12 +2,12 @@
 import random from "@huth/random"
 import { WorldPart } from "@data/types"
 import WorldPartWrapper from "@components/world/WorldPartWrapper"
-import Floor from "@components/world/decoration/Floor"
+import Floor from "@components/world/actors/Floor"
 import Plant from "@components/world/actors/Plant"
-import Grass from "@components/world/decoration/Grass"
-import Obstacle from "@components/world/decoration/Obstacle"
+import Grass from "@components/world/actors/Grass"
+import Obstacle from "@components/world/actors/Obstacle"
 import TurretSpawner from "../spawner/Turret"
-import Dirt from "../decoration/Dirt"
+import Dirt from "../actors/Dirt"
 
 export default function RockValley({
     id,
@@ -34,7 +34,7 @@ export default function RockValley({
 
             <Grass
                 position={[2, 0, 5.5]}
-                rotation={5.829} 
+                rotation={5.829}
             />
 
             <Plant

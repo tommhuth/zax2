@@ -10,7 +10,11 @@ interface DirtProps {
     rotation?: number
 }
 
-export default function Dirt({ position = [0, 0, 0], rotation = 0, scale = 1 }: DirtProps) {
+export default function Dirt({
+    position: [x, y, z],
+    rotation = 0,
+    scale = 1
+}: DirtProps) {
     let [index, instance] = useInstance("dirt")
     let partPosition = useWorldPart()
 
@@ -21,10 +25,10 @@ export default function Dirt({ position = [0, 0, 0], rotation = 0, scale = 1 }: 
                 index,
                 scale,
                 rotation: [0, rotation, 0],
-                position: [position[0], position[1], partPosition[2] + position[2]],
+                position: [x, y, partPosition[2] + z],
             })
         }
-    }, [index, scale, rotation, instance, ...position])
+    }, [index, scale, rotation, instance, x, y, z, partPosition])
 
     return null
 }

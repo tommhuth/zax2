@@ -2,22 +2,20 @@ import { memo, startTransition, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
 import { clamp, ndelta } from "../../../data/utils"
 import random from "@huth/random"
-import { Mesh, Vector3 } from "three"
+import { Vector3 } from "three"
 import { Owner, Turret as TurretType } from "../../../data/types"
-import { GLTFModel, Tuple3 } from "../../../types.global"
+import { Tuple3 } from "../../../types.global"
 import { store, useStore } from "../../../data/store"
 import { createExplosion, createImpactDecal, createParticles, createScrap, increaseTrauma } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 import { useBaseActorHandler } from "../../../data/hooks"
-import { useGLTF } from "@react-three/drei"
-import { damp } from "three/src/math/MathUtils.js"
-import model from "@assets/models/turret2.glb"
 import DebugBox from "@components/DebugBox"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { removeTurret, damageTurret } from "@data/store/actors/turret.actions"
 import { increaseScore } from "@data/store/player"
+import TurretModel, { TurretRef } from "../models/TurretModel"
 
 function explode(position: Vector3, size: Tuple3) {
     createExplosion({
@@ -52,11 +50,9 @@ function Turret({
     rotation,
     floorAt: floorLevel
 }: TurretType) {
-    let { nodes } = useGLTF(model) as GLTFModel<["turret2_1", "turret2_2"]>
     let diagonal = useStore(i => i.world.diagonal)
-    let materials = useStore(i => i.materials)
     let shootTimer = useRef(0)
-    let barrellRef = useRef<Mesh>(null)
+    let ref = useRef<TurretRef>(null)
     let nextShotAt = useRef(fireFrequency)
 
     useBaseActorHandler({
@@ -136,51 +132,19 @@ function Turret({
                 + heightPenalty * fireFrequency * 2
             ) * (1 / effects.timeScale)
 
-            if (barrellRef.current) {
-                barrellRef.current.position.z = -.5
-            }
+            ref.current?.shoot()
         }
 
         shootTimer.current += ndelta(delta) * 1000
     })
 
-    // barrell anim
-    useFrame((state, delta) => {
-        if (!barrellRef.current) {
-            return
-        }
-
-        barrellRef.current.position.z = damp(barrellRef.current.position.z, 0, 1.5, ndelta(delta))
-    })
-
     return (
         <>
-            <group
-                dispose={null}
+            <TurretModel
+                ref={ref}
                 position={position.toArray()}
-                rotation={[0, -rotation + Math.PI * .5, 0]}
-            >
-                <group>
-                    <mesh
-                        castShadow
-                        receiveShadow
-                        material={materials.turret}
-                    >
-                        <primitive
-                            object={nodes.turret2_1.geometry}
-                            attach="geometry"
-                        />
-                    </mesh>
-                    {/* barrell */}
-                    <mesh
-                        castShadow
-                        receiveShadow
-                        ref={barrellRef}
-                        geometry={nodes.turret2_2.geometry}
-                        material={materials.turret}
-                    />
-                </group>
-            </group>
+                rotation={rotation}
+            />
 
             <DebugBox size={size} position={position} />
         </>

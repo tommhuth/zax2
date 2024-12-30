@@ -1,16 +1,16 @@
 import { WorldPart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
-import EdgeElement from "../decoration/EdgeElement"
+import EdgeElement from "../actors/EdgeElement"
 import Barrel from "../spawner/Barrel"
-import Dirt from "../decoration/Dirt"  
-import Cable from "../decoration/Cable" 
-import Plant from "../actors/Plant" 
+import Dirt from "../actors/Dirt"
+import Cable from "../actors/Cable"
+import Plant from "../actors/Plant"
 
 export default function Start({
     id,
     position,
     size,
-}: WorldPart) { 
+}: WorldPart) {
     return (
         <WorldPartWrapper
             size={size}
@@ -61,7 +61,7 @@ export default function Start({
                 type="tanks"
                 position={[-6, 0, -12]}
                 rotation={Math.PI * -.75}
-            />  
+            />
         </WorldPartWrapper>
     )
 } 

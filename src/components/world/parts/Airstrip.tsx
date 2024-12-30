@@ -1,14 +1,14 @@
 import WorldPartWrapper from "../WorldPartWrapper"
-import EdgeElement from "../decoration/EdgeElement"
+import EdgeElement from "../actors/EdgeElement"
 import PlaneSpawner from "../spawner/Plane"
-import Floor from "../decoration/Floor"
+import Floor from "../actors/Floor"
 import BarrelSpawner from "../spawner/Barrel"
 import { WorldPart } from "@data/types"
-import Dirt from "../decoration/Dirt"
+import Dirt from "../actors/Dirt"
 import TurretSpawner from "../spawner/Turret"
 import Plant from "../actors/Plant"
-import Grass from "../decoration/Grass"
-import Obstacle from "../decoration/Obstacle"
+import Grass from "../actors/Grass"
+import Obstacle from "../actors/Obstacle"
 
 export default function Airstrip({
     id,

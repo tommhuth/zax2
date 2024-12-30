@@ -1,12 +1,12 @@
 import { WorldPart } from "../../../data/types"
-import WorldPartWrapper from "../WorldPartWrapper" 
+import WorldPartWrapper from "../WorldPartWrapper"
 import random from "@huth/random"
-import Floor from "../decoration/Floor"
+import Floor from "../actors/Floor"
 import TurretSpawner from "../spawner/Turret"
-import Obstacle from "../decoration/Obstacle"
-import EdgeElement from "../decoration/EdgeElement"
-import Cable from "../decoration/Cable"
-import Dirt from "../decoration/Dirt"
+import Obstacle from "../actors/Obstacle"
+import EdgeElement from "../actors/EdgeElement"
+import Cable from "../actors/Cable"
+import Dirt from "../actors/Dirt"
 import BarrelSpawner from "../spawner/Barrel"
 
 export default function BuildingsLow({

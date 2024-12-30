@@ -5,15 +5,15 @@ import WorldPartWrapper from "../WorldPartWrapper"
 import Boss from "../actors/Boss"
 import { registerBoss, resetBoss, setBossProp } from "../../../data/store/boss"
 import BarrelSpawner from "../spawner/Barrel"
-import Cable from "../decoration/Cable"
-import Dirt from "../decoration/Dirt"
+import Cable from "../actors/Cable"
+import Dirt from "../actors/Dirt"
 import timeout from "../../../data/timeout"
 import { uiTunnel } from "../../ui/tunnels"
-import Floor from "../decoration/Floor"
-import EdgeElement from "../decoration/EdgeElement"
-import Grass from "../decoration/Grass"
+import Floor from "../actors/Floor"
+import EdgeElement from "../actors/EdgeElement"
+import Grass from "../actors/Grass"
 import Plant from "../actors/Plant"
-import Obstacle from "../decoration/Obstacle"
+import Obstacle from "../actors/Obstacle"
 
 export default function BossPart({
     id,
@@ -51,7 +51,7 @@ export default function BossPart({
             <Boss startPosition={[0, 0, bossZ]} />
 
             <Floor
-                position={[position.x, 0, size[1] / 2]} 
+                position={[position.x, 0, size[1] / 2]}
                 type="floor5"
             />
 
@@ -165,7 +165,7 @@ export default function BossPart({
 
             <Grass
                 position={[3, 0, 43]}
-                rotation={0} 
+                rotation={0}
             />
 
             <Grass

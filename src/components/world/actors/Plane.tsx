@@ -2,7 +2,7 @@ import { memo, startTransition, useMemo, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
 import { clamp, ndelta } from "../../../data/utils"
 import random from "@huth/random"
-import { GLTFModel, Tuple3 } from "../../../types.global"
+import { Tuple3 } from "../../../types.global"
 import { Mesh, Vector3 } from "three"
 import { Owner, Plane as PlaneType } from "../../../data/types"
 import { store, useStore } from "../../../data/store"
@@ -13,17 +13,15 @@ import { useCollisionDetection } from "../../../data/collisions"
 import { damp } from "three/src/math/MathUtils.js"
 import Counter from "../../../data/Counter"
 import { easeInOutCubic } from "../../../data/shaping"
-import Exhaust from "../../Exhaust"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 
-import planeModel from "@assets/models/plane.glb"
-import { useGLTF } from "@react-three/drei"
 import DebugBox from "@components/DebugBox"
 import { useBaseActorHandler } from "@data/hooks"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { removePlane, damagePlane } from "@data/store/actors/plane.actions"
 import { damageTurret } from "@data/store/actors/turret.actions"
 import { damageBarrel } from "@data/store/actors/barrel.actions"
+import PlaneModel from "../models/PlaneModel"
 
 function explode(position: Vector3) {
     createExplosion({
@@ -57,9 +55,7 @@ function Plane({
     fireFrequency,
     speed,
     rotation = 0,
-}: PlaneType) { 
-    let { nodes } = useGLTF(planeModel) as GLTFModel<["plane"]>
-    let materials = useStore(i => i.materials)
+}: PlaneType) {
     let planeRef = useRef<Mesh>(null)
     let data = useMemo(() => ({
         removed: false,
@@ -72,7 +68,7 @@ function Plane({
         nextShotAt: fireFrequency * .5,
         liftoffDuration: 4_300,
         liftoffTimer: 0,
-    }), [])
+    }), [fireFrequency, rotation, speed])
     let bottomY = 0
     let weaponSide = useMemo(() => new Counter(2), [])
     let isStatic = speed === 0
@@ -231,30 +227,13 @@ function Plane({
 
     return (
         <>
-            <mesh
-                castShadow
-                receiveShadow
+            <PlaneModel
                 rotation={data.rotation}
-                position={position.toArray()}
+                position={position}
                 ref={planeRef}
-                material={materials.plane}
-                dispose={null}
-            >
-                <primitive
-                    object={nodes.plane.geometry}
-                    attach="geometry"
-                />
-            </mesh>
-
-            {!isStatic && (
-                <Exhaust
-                    targetPosition={position}
-                    offset={[0, .35, 2]}
-                    scale={[.4, .2, .9]}
-                    rotation={[0, -Math.PI, 0]}
-                    visible={health > 0}
-                />
-            )}
+                moving={!isStatic}
+                disabled={health === 0}
+            />
 
             <DebugBox
                 size={size}

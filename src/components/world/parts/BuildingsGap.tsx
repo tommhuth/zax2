@@ -1,12 +1,12 @@
 import random from "@huth/random"
-import WorldPartWrapper from "../WorldPartWrapper" 
+import WorldPartWrapper from "../WorldPartWrapper"
 import TurretSpawner from "../spawner/Turret"
-import Floor from "../decoration/Floor"
+import Floor from "../actors/Floor"
 import { WorldPart } from "@data/types"
-import Dirt from "../decoration/Dirt"
+import Dirt from "../actors/Dirt"
 import Plant from "../actors/Plant"
-import Obstacle from "../decoration/Obstacle"
-import Grass from "../decoration/Grass"
+import Obstacle from "../actors/Obstacle"
+import Grass from "../actors/Grass"
 import BarrelSpawner from "../spawner/Barrel"
 
 export default function BuildingsGap({
@@ -48,7 +48,7 @@ export default function BuildingsGap({
 
             <TurretSpawner
                 position={[2, 1.5, 4.5]}
-                rotation={4.712} 
+                rotation={4.712}
                 floorLevel={2}
             />
 
@@ -68,12 +68,12 @@ export default function BuildingsGap({
 
             <Grass
                 position={[-5.5, 0, 8.5]}
-                rotation={2.758} 
+                rotation={2.758}
             />
 
             <Grass
                 position={[9, 0, 10]}
-                rotation={0} 
+                rotation={0}
             />
 
             <Obstacle

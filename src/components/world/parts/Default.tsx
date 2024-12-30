@@ -1,11 +1,11 @@
 import { WorldPart } from "../../../data/types"
-import WorldPartWrapper from "../WorldPartWrapper" 
-import EdgeElement from "../decoration/EdgeElement" 
+import WorldPartWrapper from "../WorldPartWrapper"
+import EdgeElement from "../actors/EdgeElement"
 import random from "@huth/random"
-import Floor from "../decoration/Floor"
-import Dirt from "../decoration/Dirt"
-import Cable from "../decoration/Cable"
-import Obstacle from "../decoration/Obstacle"
+import Floor from "../actors/Floor"
+import Dirt from "../actors/Dirt"
+import Cable from "../actors/Cable"
+import Obstacle from "../actors/Obstacle"
 import TurretSpawner from "../spawner/Turret"
 import BarrelSpawner from "../spawner/Barrel"
 
@@ -40,7 +40,7 @@ export default function Default({
             />
 
             <BarrelSpawner
-                position={[5.5, 0, 4]} 
+                position={[5.5, 0, 4]}
             />
 
             <Dirt
@@ -56,7 +56,7 @@ export default function Default({
             />
 
             <BarrelSpawner
-                position={[3, 0, 11.5]} 
+                position={[3, 0, 11.5]}
             />
 
             <EdgeElement

@@ -10,7 +10,11 @@ interface CableProps {
     rotation?: number
 }
 
-export default function Cable({ position = [0, 0, 0], rotation = 0, scale = 1 }: CableProps) {
+export default function Cable({
+    position: [x, y, z],
+    rotation = 0,
+    scale = 1
+}: CableProps) {
     let [index, instance] = useInstance("cable")
     let partPosition = useWorldPart()
 
@@ -21,10 +25,10 @@ export default function Cable({ position = [0, 0, 0], rotation = 0, scale = 1 }:
                 index,
                 scale,
                 rotation: [0, rotation, 0],
-                position: [position[0], position[1], partPosition[2] + position[2]],
+                position: [x, y, partPosition[2] + z],
             })
         }
-    }, [index, scale, rotation, instance, ...position])
+    }, [index, scale, rotation, instance, x, y, z, partPosition])
 
     return null
 }

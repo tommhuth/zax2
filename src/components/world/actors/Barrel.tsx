@@ -1,19 +1,16 @@
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { Vector3 } from "three"
 import { Barrel as BarrelType, Owner } from "../../../data/types"
 import random from "@huth/random"
-import { GLTFModel, Tuple3 } from "../../../types.global"
+import { Tuple3 } from "../../../types.global"
 import { createExplosion, createImpactDecal, createParticles, createScrap, increaseTrauma } from "../../../data/store/effects"
 import { barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
 import { useCollisionDetection } from "../../../data/collisions"
 import { useBaseActorHandler } from "../../../data/hooks"
-import { useStore } from "../../../data/store"
-
-import barrelsModel from "@assets/models/barrels.glb"
-import { useGLTF } from "@react-three/drei"
 import DebugBox from "@components/DebugBox"
 import { removeBarrel, damageBarrel } from "@data/store/actors/barrel.actions"
+import { BarrelModel } from "../models/BarrelModel"
 
 function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({
@@ -49,10 +46,7 @@ export default function Barrel({
     client,
     health,
 }: BarrelType) {
-    let type = useMemo(() => random.pick("barrel1", "barrel2", "barrel3", "barrel4"), [])
-    let { nodes } = useGLTF(barrelsModel) as GLTFModel<["barrel1", "barrel2", "barrel3", "barrel4"]>
     let [rotation] = useState(random.pick(...rotations))
-    let materials = useStore(i => i.materials)
 
     useBaseActorHandler({
         health,
@@ -79,40 +73,10 @@ export default function Barrel({
 
     return (
         <>
-            <group
+            <BarrelModel
                 position={[position.x, position.y - size[1] / 2, position.z]}
                 rotation-y={rotation}
-                dispose={null}
-            >
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.barrel1.geometry}
-                    material={materials.barrel}
-                    visible={type === "barrel1"}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.barrel2.geometry}
-                    material={materials.barrel}
-                    visible={type === "barrel2"}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.barrel3.geometry}
-                    material={materials.barrel}
-                    visible={type === "barrel3"}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.barrel4.geometry}
-                    material={materials.barrel}
-                    visible={type === "barrel4"}
-                />
-            </group>
+            />
 
             <DebugBox size={size} position={position} />
         </>

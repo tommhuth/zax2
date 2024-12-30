@@ -27,7 +27,7 @@ export default function Floor({
                 floor?.position.set(0, 0, -1000)
             }
         }
-    }, [floor])
+    }, [floor, partPosition, scale, x, y, z])
 
     return null
 }
