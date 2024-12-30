@@ -43,12 +43,14 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
             nextBulletAt: 1500,
         }
     }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     let position = useMemo(() => new Vector3(...startPosition), startPosition)
     let client = useMemo(() => {
-        return grid.createClient([...startPosition], bossSize, {
+        return grid.createClient(startPosition, bossSize, {
             type: "boss",
             id: "boss",
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [grid, ...startPosition])
 
     useGravity({
@@ -150,7 +152,7 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
                 setTimeout(() => defeatBoss(), 1200)
             })
         }
-    }, [boss?.health])
+    }, [boss?.health, client, data, grid, position])
 
     useEffect(() => {
         return () => grid.removeClient(client)

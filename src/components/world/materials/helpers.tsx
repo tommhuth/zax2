@@ -103,7 +103,7 @@ export function useLightsUpdater(uniforms: { uLightSources: UniformLightSource; 
                 lightSourceCounter.next()
             }
         )
-    }, [])
+    }, [lightSourceCounter, uniforms])
 
     useFrame((state, delta) => {
         for (let i = 0; i < uniforms.uLightSources.value.length; i++) {

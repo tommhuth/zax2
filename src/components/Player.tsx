@@ -42,8 +42,9 @@ interface LocalData {
     bossDeadAt: number
 }
 
+const size: Tuple3 = [1.5, 1, depth]
+
 export default function Player({
-    size = [1.5, 1, depth],
     z = 0,
     y = 1.5
 }: PlayerProps) {
@@ -68,7 +69,7 @@ export default function Player({
             type: "player",
             id: "player",
         })
-    }, [grid])
+    }, [grid, z])
     let data = useMemo<LocalData>(() => {
         return {
             nextShotAt: 0,
@@ -124,7 +125,7 @@ export default function Player({
             }
 
         }
-    }, [health])
+    }, [health, position])
 
     useEffect(() => {
         if (playerGroupRef.current) {
@@ -132,13 +133,13 @@ export default function Player({
             playerGroupRef.current.position.y = y
             playerGroupRef.current.position.z = z
         }
-    }, [])
+    }, [z, y])
 
     useEffect(() => {
         if (bossState === BossState.DEAD) {
             data.bossDeadAt = Date.now()
         }
-    }, [bossState])
+    }, [bossState, data])
 
     useCollisionDetection({
         client,

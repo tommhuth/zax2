@@ -15,7 +15,7 @@ interface BarrelModelProps {
 }
 
 export function BarrelModel({ position, type: typeOverride }: BarrelModelProps) {
-    let type = useMemo(() => typeOverride || random.pick("barrel1", "barrel2", "barrel3", "barrel4"), [])
+    let type = useMemo(() => typeOverride || random.pick("barrel1", "barrel2", "barrel3", "barrel4"), [typeOverride])
     let { nodes } = useGLTF(barrelsModel) as GLTFModel<["barrel1", "barrel2", "barrel3", "barrel4"]>
     let [rotation] = useState(random.pick(...rotations))
     let materials = useStore(i => i.materials)

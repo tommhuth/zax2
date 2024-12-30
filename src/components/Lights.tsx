@@ -20,7 +20,7 @@ export default function Lights() {
 
         shadowLightRef.current.position.z = z
         shadowLightRef.current.target.position.z = z
-    }, [])
+    }, [camera])
 
     useEffect(() => {
         if (!shadowLightRef.current) {
@@ -35,7 +35,7 @@ export default function Lights() {
             updateShadowCamera()
             shadowLightRef.current?.shadow.camera.updateProjectionMatrix()
         }
-    }, [ready])
+    }, [ready, updateShadowCamera])
 
     useFrame((state, delta) => {
         let { ready } = useStore.getState()

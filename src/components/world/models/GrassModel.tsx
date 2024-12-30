@@ -1,6 +1,5 @@
 import { GLTFModel, Tuple3 } from "src/types.global"
 import { useStore } from "../../../data/store"
-import { useWorldPart } from "../WorldPartWrapper"
 import model from "@assets/models/grass.glb"
 import { useGLTF } from "@react-three/drei"
 

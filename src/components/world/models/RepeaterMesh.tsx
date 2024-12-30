@@ -14,7 +14,7 @@ export function useRepeater(name: RepeaterName) {
             setRepeater(requestRepeater(name))
             hasRepeater.current = true
         }
-    }, [hasData])
+    }, [hasData, name])
 
     return repeater
 }

@@ -76,8 +76,12 @@ export default function Plant({
     scale = 1,
     rotation = random.float(0, Math.PI * 2)
 }: PlantProps) {
-    let [index, instance] = useInstance("plant")
     let partPosition = useWorldPart()
+    let [index, instance] = useInstance("plant", {
+        scale,
+        rotation: [0, rotation, 0],
+        position: [x, y, partPosition[2] + z],
+    })
     let grid = useStore(i => i.world.grid)
     let size: Tuple3 = useMemo(() => [width * scale * .5, height * scale, depth * scale * .5], [scale])
     let id = useMemo(() => random.id(), [])
@@ -137,19 +141,6 @@ export default function Plant({
     useEffect(() => {
         return () => grid.removeClient(client)
     }, [client, grid])
-
-    // set instance
-    useEffect(() => {
-        if (typeof index === "number") {
-            setMatrixAt({
-                instance,
-                index,
-                scale,
-                rotation: [0, rotation, 0],
-                position: [x, y, partPosition[2] + z],
-            })
-        }
-    }, [index, instance, rotation, x, y, z, partPosition, scale])
 
     // trauma
     useFrame((state, delta) => {

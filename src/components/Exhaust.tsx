@@ -14,7 +14,7 @@ interface ExhaustProps {
     turbulence?: number
 }
 
-const geo = new SphereGeometry(1, 10, 10)
+const geometry = new SphereGeometry(1, 10, 10)
 
 export default function Exhaust({
     rotation,
@@ -42,6 +42,7 @@ export default function Exhaust({
 
     useEffect(() => {
         !targetPosition && offset && exhaustRef.current?.position.set(...offset)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, offset)
 
     return (
@@ -52,7 +53,7 @@ export default function Exhaust({
             visible={visible}
             dispose={null}
         >
-            <primitive object={geo} />
+            <primitive object={geometry} />
             <primitive object={materials.exhaust} attach="material" />
         </mesh>
     )

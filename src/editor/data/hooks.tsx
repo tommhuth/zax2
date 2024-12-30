@@ -95,7 +95,7 @@ export function useEditorObject(id: string) {
             window.removeEventListener("pointerdown", onpointerdown)
             window.removeEventListener("pointermove", onpointermove)
         }
-    }, [mode, camera, viewport, startY, position, width, height, depth, offset])
+    }, [mode, camera, viewport, startY, position, width, height, depth, id, offset])
 
     return {
         width,

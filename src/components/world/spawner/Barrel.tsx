@@ -10,7 +10,7 @@ interface BarrelSpawnerProps {
 }
 
 export default function BarrelSpawner({
-    position = [0, 0, 0],
+    position: [x, y, z],
     rotation = 0,
     health,
 }: BarrelSpawnerProps) {
@@ -19,12 +19,12 @@ export default function BarrelSpawner({
     useEffect(() => {
         startTransition(() => {
             createBarrel({
-                position: [position[0], position[1], partPosition[2] + position[2]],
+                position: [x, y, partPosition[2] + z],
                 rotation,
                 health
             })
         })
-    }, [...position])
+    }, [partPosition, x, y, z, rotation, health])
 
     return null
 }

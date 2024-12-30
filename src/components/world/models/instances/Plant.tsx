@@ -15,7 +15,7 @@ import { store } from "@data/store"
 export default function Plant() {
     let count = 10
     let { nodes } = useGLTF(model) as GLTFModel<["plant"]>
-    let traumaData = useMemo(() => new Float32Array(count).fill(0), [])
+    let traumaData = useMemo(() => new Float32Array(count).fill(0), [count])
     let uniforms = useMemo(() => ({ uTime: { value: 0, needsUpdate: true } }), [])
     let getPlantTransform = glsl`
         vec3 getPlantTransform(vec3 localPosition, vec3 globalPosition) {

@@ -55,7 +55,7 @@ function MaterialLoader() {
                     emissive={turretColor}
                     emissiveIntensity={0.55}
                     rightColor="#f00"
-                    rightColorIntensity={.45} 
+                    rightColorIntensity={.45}
                     backColorIntensity={0}
                     colorCount={8}
                     dither={.005}
@@ -98,29 +98,29 @@ function MaterialLoader() {
             ),
             buildingBase: (
                 <MeshRetroMaterial
-                    backColorIntensity={.5}  
-                    color={buildingBaseColor} 
+                    backColorIntensity={.5}
+                    color={buildingBaseColor}
                     emissive={buildingBaseColor}
                     emissiveIntensity={.1}
-                    rightColorIntensity={.4} 
+                    rightColorIntensity={.4}
                 />
             ),
             buildingDark: (
-                <MeshRetroMaterial 
+                <MeshRetroMaterial
                     color={"#005"}
                     backColorIntensity={0}
-                    rightColorIntensity={0} 
+                    rightColorIntensity={0}
                     emissive={"#000"}
                     emissiveIntensity={.0}
                 />
             ),
             buildingHi: (
-                <MeshRetroMaterial 
+                <MeshRetroMaterial
                     color={buildingHiColor}
                     emissive={buildingHiColor}
                     emissiveIntensity={.5}
-                    backColorIntensity={0} 
-                    rightColorIntensity={0} 
+                    backColorIntensity={0}
+                    rightColorIntensity={0}
                 />
             ),
             device: <MeshRetroMaterial color={deviceColor} name="device" />,
@@ -164,7 +164,7 @@ function MaterialLoader() {
                     emissive={floorBaseColor}
                     emissiveIntensity={.1}
                     rightColorIntensity={0}
-                    rightColor="white" 
+                    rightColor="white"
                 />
             ),
             exhaust: <ExhaustMaterial />,
@@ -206,7 +206,7 @@ function MaterialHandler({ children, name }: { children: React.ReactNode; name: 
         if (mesh) {
             startTransition(() => setMaterial(name, mesh.material))
         }
-    }, [])
+    }, [name])
 
     return (
         <mesh

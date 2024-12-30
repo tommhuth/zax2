@@ -1,6 +1,6 @@
 import React, { startTransition, useEffect, useMemo, useState } from "react"
 import { setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
-import { ColorRepresentation, InstancedMesh as InstancedMeshThree, Vector3 } from "three"
+import { ColorRepresentation, InstancedMesh as InstancedMeshThree } from "three"
 import { Tuple3, Tuple4 } from "../../../types.global"
 import { store, useStore } from "../../../data/store"
 import { setInstance } from "../../../data/store/utils"
@@ -9,17 +9,17 @@ import { InstanceName } from "../../../data/types"
 interface UseInstanceOptions {
     reset?: boolean
     color?: ColorRepresentation
-    scale?: Tuple3 | number
+    scale?: number
     rotation?: Tuple3 | Tuple4
-    position?: Vector3 | Tuple3
+    position?: Tuple3
 }
 
 export function useInstance(name: InstanceName, {
     reset = true,
     color,
     scale,
-    rotation,
-    position
+    rotation = [0, 0, 0],
+    position = [0, 0, 0],
 }: UseInstanceOptions = {}) {
     let instance = useStore(i => i.instances[name])
     let [index, setIndex] = useState<null | number>(null)
@@ -31,16 +31,17 @@ export function useInstance(name: InstanceName, {
     }, [instance])
 
     useEffect(() => {
-        if (typeof index === "number" && instance && (position || rotation || scale)) {
+        if (typeof index === "number" && instance) {
             setMatrixAt({
                 instance: instance.mesh,
                 index,
-                position: position instanceof Vector3 ? position.toArray() : position,
+                position,
                 scale,
                 rotation,
             })
         }
-    }, [index, rotation, instance, ...(position instanceof Vector3 ? position.toArray() : position || [])])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [index, ...rotation, ...position, scale, instance])
 
     useEffect(() => {
         if (typeof index === "number" && instance && reset) {
@@ -48,7 +49,7 @@ export function useInstance(name: InstanceName, {
                 setMatrixNullAt(instance.mesh, index as number)
             }
         }
-    }, [index, instance])
+    }, [index, instance, reset])
 
     useEffect(() => {
         if (instance && typeof index === "number" && color) {
@@ -78,7 +79,7 @@ export default function InstancedMesh({
     count,
     name,
 }: InstancedMeshProps) {
-    let colorData = useMemo(() => new Float32Array(count * 3).fill(0), [])
+    let colorData = useMemo(() => new Float32Array(count * 3).fill(0), [count])
     let [instance, setInstanceRef] = useState<InstancedMeshThree | null>(null)
 
     useEffect(() => {
@@ -87,7 +88,7 @@ export default function InstancedMesh({
         }
 
         setInstance(name, instance, count)
-    }, [instance])
+    }, [count, instance, name])
 
     return (
         <instancedMesh

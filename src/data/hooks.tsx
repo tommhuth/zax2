@@ -98,12 +98,14 @@ export function useBaseActorHandler({
         if (shouldExit) {
             setTimeout(() => startTransition(remove), removeDelay)
         }
-    }, [shouldExit])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [shouldExit, removeDelay])
 
     useEffect(() => {
         return () => {
             remove()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useLayoutEffect(() => {
@@ -116,7 +118,8 @@ export function useBaseActorHandler({
                 setShouldExit(!keepAround)
             })
         }
-    }, [health, client, keepAround])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [health, client, keepAround, position])
 }
 
 export const useAnimationFrame = (callback: (delta: number) => void) => {
@@ -125,20 +128,21 @@ export const useAnimationFrame = (callback: (delta: number) => void) => {
     const requestRef = useRef<number>()
     const previousTimeRef = useRef<number>()
 
-    const animate = (time: number) => {
-        if (previousTimeRef.current != undefined) {
-            const deltaTime = time - previousTimeRef.current
-
-            callback(deltaTime)
-        }
-        previousTimeRef.current = time
-        requestRef.current = requestAnimationFrame(animate)
-    }
-
     useEffect(() => {
+        const animate = (time: number) => {
+            if (previousTimeRef.current != undefined) {
+                const deltaTime = time - previousTimeRef.current
+
+                callback(deltaTime)
+            }
+            previousTimeRef.current = time
+            requestRef.current = requestAnimationFrame(animate)
+        }
+
         requestRef.current = requestAnimationFrame(animate)
 
         return () => cancelAnimationFrame(requestRef.current as number)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 }
 
@@ -157,6 +161,7 @@ export function useWindowEvent(name: string | string[], func: (e: any) => void, 
                 window.removeEventListener(name, func)
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps)
 }
 
@@ -203,6 +208,7 @@ export function useShader<T extends UniformsRecord>({
 }: UseShaderParams<T>): ReturnUseShader<T> {
     let uniforms = useMemo(() => {
         return incomingUniforms || {}
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     let id = useMemo(() => random.id(), [])
     let customProgramCacheKey = useCallback(() => id, [id])
@@ -234,7 +240,8 @@ export function useShader<T extends UniformsRecord>({
 
             ${fragment?.main}  
         `)
-    }, [vertex?.head, vertex?.main, fragment?.head, fragment?.main])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [vertex?.head, vertex?.main, fragment?.head, fragment?.main, shared])
 
     return {
         // aaah why is this cast neccessary ts

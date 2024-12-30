@@ -1,18 +1,14 @@
 import random from "@huth/random"
 import { useEffect, useMemo } from "react"
 import DebugBox from "@components/DebugBox"
-import { GLTFModel, Tuple3 } from "src/types.global"
-import { BoxGeometry, Vector3 } from "three"
-import { useGLTF } from "@react-three/drei"
+import { Tuple3 } from "src/types.global"
+import { Vector3 } from "three"
 import { useStore } from "@data/store"
-import rockfaceModel from "@assets/models/rockface.glb"
-import deviceModel from "@assets/models/device.glb"
 import { useCollisionDetection } from "@data/collisions"
 import { createParticles } from "@data/store/effects"
 import { deviceColor } from "@data/theme"
 import { useWorldPart } from "../WorldPartWrapper"
-
-let box = new BoxGeometry(1, 1, 1, 1, 1, 1)
+import ObstacleModel from "../models/ObstacleModel"
 
 interface ObstacleProps {
     size: Tuple3
@@ -22,33 +18,26 @@ interface ObstacleProps {
 }
 
 export default function Obstacle({
-    size,
+    size: [width, height, depth],
     rotation = 0,
-    position,
+    position: [x, y, z],
     type = "box",
 }: ObstacleProps) {
     const partPosition = useWorldPart()
-    const rockface = useGLTF(rockfaceModel) as GLTFModel<["rockface"]>
-    const device = useGLTF(deviceModel) as GLTFModel<["device"]>
-    const materials = useStore(i => i.materials)
     const grid = useStore(i => i.world.grid)
-    const resolvedPosition: Tuple3 = [
-        position[0],
-        position[1],
-        position[2] + partPosition[2]
-    ]
-    const debugPosition = useMemo(() => new Vector3(...resolvedPosition), [])
+    const resolvedPosition: Tuple3 = useMemo(() => [x, y, partPosition[2] + z], [partPosition, x, y, z])
+    const debugPosition = useMemo(() => new Vector3(...resolvedPosition), [resolvedPosition])
     const id = useMemo(() => random.id(), [])
     const client = useMemo(() => {
-        return grid.createClient(resolvedPosition, size, {
+        return grid.createClient(resolvedPosition, [width, height, depth], {
             type: "obstacle",
             id,
         })
-    }, [grid, id])
-    const [material, geometry, color] = {
-        box: [materials.device, box, deviceColor] as const,
-        rockface: [materials.rock, rockface.nodes.rockface.geometry, "#0F5"] as const,
-        device: [materials.buildingBase, device.nodes.device.geometry, deviceColor] as const,
+    }, [grid, id, resolvedPosition, width, height, depth])
+    const color = {
+        box: deviceColor,
+        rockface: "#0F5",
+        device: deviceColor
     }[type]
 
     useCollisionDetection({
@@ -79,18 +68,17 @@ export default function Obstacle({
 
     return (
         <>
-            <mesh
-                dispose={null}
-                material={material}
-                geometry={geometry}
+            <ObstacleModel
                 position={resolvedPosition}
-                scale={size}
-                rotation-y={rotation}
-                castShadow
-                receiveShadow
+                size={[width, height, depth]}
+                rotation={rotation}
+                type={type}
             />
 
-            <DebugBox size={size} position={debugPosition} />
+            <DebugBox
+                size={[width, height, depth]}
+                position={debugPosition}
+            />
         </>
     )
 }

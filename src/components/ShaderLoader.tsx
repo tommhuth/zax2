@@ -6,14 +6,14 @@ import { startTransition, useEffect } from "react"
 
 export default function ShaderLoader() {
     let { scene, gl, camera, viewport: { getCurrentViewport } } = useThree()
-    let loaded = useStore((i) => i.loaded) 
- 
-    useEffect(() => { 
+    let loaded = useStore((i) => i.loaded)
+
+    useEffect(() => {
         let onResize = () => {
-            let viewport = getCurrentViewport(camera) 
-    
+            let viewport = getCurrentViewport(camera)
+
             startTransition(() => setDiagonal(Math.hypot(viewport.width, viewport.height)))
-        } 
+        }
 
         startTransition(onResize)
         window.addEventListener("resize", onResize)
@@ -21,24 +21,24 @@ export default function ShaderLoader() {
         return () => {
             window.removeEventListener("resize", onResize)
         }
-    }, [])
+    }, [camera, getCurrentViewport])
 
     useEffect(() => {
         // not sure this is really needed
-        gl.compile(scene, camera)  
+        gl.compile(scene, camera)
 
-        setTimeout(() => { 
+        setTimeout(() => {
             startTransition(setLoaded)
         }, 2000)
-    }, [scene, camera])
+    }, [scene, camera, gl])
 
-    useEffect(() => { 
-        if (loaded) {  
+    useEffect(() => {
+        if (loaded) {
             startTransition(setSetup)
-            setTimeout(() => { 
+            setTimeout(() => {
                 document.getElementById("loading")?.remove()
                 startTransition(setReady)
-            }, 1000)  
+            }, 1000)
         }
     }, [loaded])
 

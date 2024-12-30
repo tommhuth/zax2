@@ -100,7 +100,7 @@ export default function HeatSeaker({
                 })
             })
         }
-    }, [index, grid])
+    }, [index, grid, client, position])
 
     return null
 }

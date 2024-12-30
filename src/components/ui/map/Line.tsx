@@ -7,7 +7,7 @@ import { toIsometric } from "./utils"
 export default function Line({ index }: { index: number }) {
     let gap = 3.5
     let z = index * gap
-    let position = useMemo(() => new Vector3(0, 0, z), [])
+    let position = useMemo(() => new Vector3(0, 0, z), [z])
     let width = 1000
     let lineRef = useRef<SVGLineElement>(null)
     let distanceTravelled = useRef(0)

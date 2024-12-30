@@ -78,7 +78,8 @@ export function useCollisionDetection({
         return () => {
             window.removeEventListener("bulletcollision", onBulletCollision as EventListener)
         }
-    }, [actions.bullet, active])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [actions.bullet, active, client])
 
     useFrame((state, delta) => {
         if (active() && tick.current % interval === 0 && client) {

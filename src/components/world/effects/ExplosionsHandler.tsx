@@ -14,11 +14,11 @@ import Counter from "../../../data/Counter"
 import { damp } from "three/src/math/MathUtils.js"
 
 export default function ExplosionsHandler() {
-    let decalCount = 15 
-    let [impactMap] = useLoader(TextureLoader, ["/textures/decal1.png"])  
+    let decalCount = 15
+    let [impactMap] = useLoader(TextureLoader, ["/textures/decal1.png"])
     let explosionLightRef1 = useRef<PointLight>(null)
     let explosionLightRef2 = useRef<PointLight>(null)
-    let explosionLights = [explosionLightRef1, explosionLightRef2] 
+    let explosionLights = useMemo(() => [explosionLightRef1, explosionLightRef2], [])
     let counter = useMemo(() => new Counter(1), [])
     let diagonal = useStore(i => i.world.diagonal)
 
@@ -38,19 +38,19 @@ export default function ExplosionsHandler() {
             (lastExplosion) => {
                 if (lastExplosion?.radius > .5) {
                     let light = explosionLights[counter.current].current
-        
+
                     if (light) {
                         light.intensity = 40
                         light.distance = lastExplosion.radius * 16
                         light.position.set(...lastExplosion.position)
                         light.position.y += 2
                     }
-        
+
                     counter.next()
                 }
             }
-        ) 
-    }, [])
+        )
+    }, [counter, explosionLights])
 
     // lightout
     useFrame((state, delta) => {
@@ -59,22 +59,22 @@ export default function ExplosionsHandler() {
                 light.current.intensity = damp(light.current.intensity, 0, 3, delta)
             }
         }
-    }) 
+    })
 
     // main
-    useFrame((state, delta) => { 
+    useFrame((state, delta) => {
         let {
-            effects: { explosions },  player
+            effects: { explosions }, player
         } = useStore.getState()
-        let dead: string[] = [] 
+        let dead: string[] = []
 
-        for (let explosion of explosions) {  
+        for (let explosion of explosions) {
             let outside = explosion.position[2] < player.position.z - diagonal
 
             if (outside || explosion.time > explosion.lifetime) {
                 dead.push(explosion.id)
                 continue
-            }  else {
+            } else {
                 explosion.time += ndelta(delta) * 1000
             }
         }
@@ -92,14 +92,14 @@ export default function ExplosionsHandler() {
 
             <InstancedMesh
                 name="decal"
-                count={decalCount}  
+                count={decalCount}
             >
                 <planeGeometry args={[2, 2, 1, 1]} />
-                <MeshRetroMaterial  
+                <MeshRetroMaterial
                     color={"rgb(0, 0, 96)"}
                     name="impact"
                     depthWrite={false}
-                    transparent  
+                    transparent
                     shader={{
                         fragment: {
                             main: glsl` 
@@ -108,14 +108,14 @@ export default function ExplosionsHandler() {
                         }
                     }}
                 >
-                    <primitive 
-                        object={impactMap} 
-                        attach="map" 
+                    <primitive
+                        object={impactMap}
+                        attach="map"
                         magFilter={LinearFilter}
                         minFilter={LinearFilter}
                     />
-                </MeshRetroMaterial> 
-            </InstancedMesh> 
+                </MeshRetroMaterial>
+            </InstancedMesh>
 
             <pointLight
                 ref={explosionLightRef1}
