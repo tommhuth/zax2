@@ -13,51 +13,101 @@ import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
 import { BossState, Owner } from "../../../data/types"
 import { useCollisionDetection } from "../../../data/collisions"
-import { useGLTF } from "@react-three/drei"
-import bossModel from "@assets/models/boss.glb"
-import bossdestroyedModel from "@assets/models/bossdestroyed.glb"
 import DebugBox from "@components/DebugBox"
 import { createBullet } from "@data/store/actors/bullet.actions"
-import { useGravity } from "@data/hooks"
 import { increaseScore } from "@data/store/player"
+import { ndelta } from "@data/utils"
+import BossModel from "../models/BossModel"
 
-let bossSize: Tuple3 = [4.5, 4.75, 2]
+let size: Tuple3 = [4.5, 4.75, 2]
 
 interface BossProps {
     startPosition: Tuple3
 }
 
-// clean this up
-export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
-    let materials = useStore((i) => i.materials)
+function explode(position: Vector3) {
+    for (let i = 0; i < 6; i++) {
+        let basePosition = position.toArray()
+        let delay = i * random.integer(200, 350)
+
+        createExplosion({
+            position: [
+                basePosition[0] + random.float(-size[0] / 2, size[0] / 2),
+                basePosition[1] + random.float(-size[1] / 2, 0),
+                basePosition[2] + random.float(-size[2] / 2, size[2] / 2),
+            ],
+            radius: random.float(0.4, 0.6),
+            count: 14,
+            shockwave: false,
+            delay,
+        })
+        createParticles({
+            position: [
+                basePosition[0] + random.float(-size[0] / 2, size[0] / 2),
+                basePosition[1] + random.float((-size[1] / 2) * 0.5, (size[1] / 2) * 0.5),
+                basePosition[2],
+            ],
+            offset: [[0, 0], [0, 0], [0, 0]],
+            speed: [0, 25],
+            spread: [[-1, 1], [0, 1]],
+            normal: [random.float(-1, 1), 1, random.float(-1, 1)],
+            count: [8, 14],
+            radius: [0.1, 0.5],
+            color: "#00f",
+            delay: delay * 1.1,
+        })
+    }
+
+    createExplosion({
+        position: [position.x, .5, position.z],
+        radius: 0.7,
+        count: 16,
+        shockwave: true,
+        delay: 800,
+    })
+
+    createExplosion({
+        position: position.toArray(),
+        radius: 0.7,
+        count: 14,
+        shockwave: true,
+    })
+
+    createExplosion({
+        position: [position.x, 1, position.z],
+        radius: 0.8,
+        count: 20,
+        fireballCount: 6,
+        fireballPath: [[position.x, 0, position.z], [0, 8, 0]],
+        shockwave: true,
+        delay: 1300,
+    })
+}
+
+const HEAT_SEAKER_FREQUENCY = [1500, 3000, 650, 2500, 2000]
+const FIRE_FREQUENCY = [1100, 700, 500, 300]
+
+export default function Boss({ startPosition: [startX, startY, startZ] }: BossProps) {
     let boss = useStore((i) => i.boss)
-    let bossWrapper = useRef<Group>(null)
-    let { nodes: boss2 } = useGLTF(bossdestroyedModel) as any
-    let { nodes: boss1 } = useGLTF(bossModel) as any
     let grid = useStore((i) => i.world.grid)
+    let bossWrapper = useRef<Group>(null)
     let data = useMemo(() => {
         return {
             dead: false,
             time: 0,
-            nextHeatSeakerAt: 2000,
-            nextBulletAt: 1500,
+            nextHeatSeakerAt: Math.max(...HEAT_SEAKER_FREQUENCY),
+            nextBulletAt: Math.max(...FIRE_FREQUENCY),
+            acceleration: 0,
+            velocity: 0,
+            position: new Vector3(startX, startY, startZ)
         }
-    }, [])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    let position = useMemo(() => new Vector3(...startPosition), startPosition)
+    }, [startX, startY, startZ])
     let client = useMemo(() => {
-        return grid.createClient(startPosition, bossSize, {
+        return grid.createClient([startX, startY, startZ], size, {
             type: "boss",
             id: "boss",
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [grid, ...startPosition])
-
-    useGravity({
-        ref: bossWrapper,
-        stopAt: bossSize[1] * 0.3,
-        active: boss.health === 0,
-    })
+    }, [grid, startX, startY, startZ])
 
     useCollisionDetection({
         client,
@@ -86,77 +136,41 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
     })
 
     useEffect(() => {
-        if (boss?.health === 0 && !data.dead) {
+        let { state } = store.getState()
+
+        if (boss?.health === 0 && !data.dead && state !== "gameover") {
             data.dead = true
             grid.removeClient(client)
 
             startTransition(() => {
-                for (let i = 0; i < 6; i++) {
-                    let basePosition = position.toArray()
-                    let delay = i * random.integer(200, 350)
-
-                    createExplosion({
-                        position: [
-                            basePosition[0] + random.float(-bossSize[0] / 2, bossSize[0] / 2),
-                            basePosition[1] + random.float(-bossSize[1] / 2, 0),
-                            basePosition[2] + random.float(-bossSize[2] / 2, bossSize[2] / 2),
-                        ],
-                        radius: random.float(0.4, 0.6),
-                        count: 14,
-                        shockwave: false,
-                        delay,
-                    })
-                    createParticles({
-                        position: [
-                            basePosition[0] + random.float(-bossSize[0] / 2, bossSize[0] / 2),
-                            basePosition[1] + random.float((-bossSize[1] / 2) * 0.5, (bossSize[1] / 2) * 0.5),
-                            basePosition[2],
-                        ],
-                        offset: [[0, 0], [0, 0], [0, 0]],
-                        speed: [0, 25],
-                        spread: [[-1, 1], [0, 1]],
-                        normal: [random.float(-1, 1), 1, random.float(-1, 1)],
-                        count: [8, 14],
-                        radius: [0.1, 0.5],
-                        color: "#00f",
-                        delay: delay * 1.1,
-                    })
-                }
-
-                createExplosion({
-                    position: [position.x, .5, position.z],
-                    radius: 0.7,
-                    count: 16,
-                    shockwave: true,
-                    delay: 800,
-                })
-
-                createExplosion({
-                    position: position.toArray(),
-                    radius: 0.7,
-                    count: 14,
-                    shockwave: true,
-                })
-
-                createExplosion({
-                    position: [position.x, 1, position.z],
-                    radius: 0.8,
-                    count: 20,
-                    fireballCount: 6,
-                    fireballPath: [[position.x, 0, position.z], [0, 8, 0]],
-                    shockwave: true,
-                    delay: 1300,
-                })
-
-                setTimeout(() => createImpactDecal([position.x, .1, position.z], 6), 900)
+                explode(data.position)
+                setTimeout(() => createImpactDecal([data.position.x, .1, data.position.z], 6), 900)
                 setTimeout(() => defeatBoss(), 1200)
             })
         }
-    }, [boss?.health, client, data, grid, position])
+    }, [boss?.health, client, data, grid])
 
     useEffect(() => {
         return () => grid.removeClient(client)
     }, [client, grid])
+
+    // gravity
+    useFrame((state, delta) => {
+        let nd = ndelta(delta)
+        let force = -15
+        let element = bossWrapper.current
+        let active = boss.health === 0
+
+        if (active && element && element.position.y > size[1] * 0.3) {
+            data.velocity += data.acceleration * nd
+            data.acceleration += force * nd
+
+            element.position.y += data.velocity * nd
+            element.rotation.x += force * nd * .001
+            element.rotation.y += force * nd * .0005
+            element.rotation.z += force * nd * -.008
+        }
+    })
 
     // shooting
     useFrame((state, delta) => {
@@ -171,11 +185,11 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
         if (data.time >= data.nextHeatSeakerAt) {
             startTransition(() => {
                 createHeatSeaker([
-                    position.x + (bossSize[0] / 2) * random.pick(-1, 1) * 1,
-                    position.y + 0.65,
-                    position.z - 0.5,
+                    data.position.x + (size[0] / 2) * random.pick(-1, 1) * 1,
+                    data.position.y + 0.65,
+                    data.position.z - 0.5,
                 ])
-                data.nextHeatSeakerAt = data.time + random.pick(1500, 700, 250, 400) * (1 / effects.timeScale)
+                data.nextHeatSeakerAt = data.time + random.pick(...HEAT_SEAKER_FREQUENCY) * (1 / effects.timeScale)
             })
         }
 
@@ -183,117 +197,56 @@ export default function Boss({ startPosition = [0, 0, 0] }: BossProps) {
             startTransition(() => {
                 createBullet({
                     position: [
-                        position.x + (bossSize[0] / 2) * random.pick(-1, 1) * 1,
-                        position.y + 0.65,
-                        position.z - 2,
+                        data.position.x + (size[0] / 2) * random.pick(-1, 1) * 1,
+                        data.position.y + 0.65,
+                        data.position.z - 2,
                     ],
                     color: "red",
                     speed: 25,
                     rotation: -Math.PI * 0.5,
                     owner: Owner.ENEMY,
                 })
-                data.nextBulletAt = data.time + random.pick(1100, 500, 250) * (1 / effects.timeScale)
+                data.nextBulletAt = data.time + random.pick(...FIRE_FREQUENCY) * (1 / effects.timeScale)
             })
         }
     })
 
+    // movement
     useFrame((state) => {
         if (!bossWrapper.current) {
             return
         }
 
         if (boss.health > 0) {
-            bossWrapper.current.position.y = bossSize[1] / 2 + 1 + Math.sin(state.clock.elapsedTime * 0.97) * 0.85
+            bossWrapper.current.position.y = size[1] / 2 + 1 + Math.sin(state.clock.elapsedTime * 0.97) * 0.85
             bossWrapper.current.position.x = Math.cos(state.clock.elapsedTime * 0.45) * 3 - 1
-            bossWrapper.current.position.z = startPosition[2] - ((Math.sin(state.clock.elapsedTime * 0.6) + 1) / 2) * 3
+            bossWrapper.current.position.z = startZ - ((Math.sin(state.clock.elapsedTime * 0.6) + 1) / 2) * 3
 
-            position.copy(bossWrapper.current.position)
-            client.position = position.toArray()
+            data.position.copy(bossWrapper.current.position)
+            client.position = data.position.toArray()
             grid.updateClient(client)
         }
     })
 
     return (
         <>
-            <DebugBox
-                dynamic
-                size={bossSize}
-                position={position}
-                active={boss.state !== BossState.DEAD}
-            />
-
             {boss?.heatSeakers.map((i) => {
                 return (
-                    <HeatSeaker
-                        key={i.id}
-                        {...i}
-                    />
+                    <HeatSeaker key={i.id} {...i} />
                 )
             })}
 
-            <group ref={bossWrapper}>
-                <group
-                    dispose={null}
-                    visible={boss.health === 0}
-                >
-                    <mesh
-                        receiveShadow
-                        geometry={boss2.Cube001.geometry}
-                        material={materials.bossLightBlue}
-                    />
-                    <mesh
-                        receiveShadow
-                        geometry={boss2.Cube001_1.geometry}
-                        material={materials.bossBlack}
-                    />
-                    <mesh
-                        receiveShadow
-                        geometry={boss2.Cube001_2.geometry}
-                        material={materials.bossDarkBlue}
-                    />
-                    <mesh
-                        receiveShadow
-                        geometry={boss2.Cube001_3.geometry}
-                        material={materials.bossBlue}
-                    />
-                    <mesh
-                        receiveShadow
-                        geometry={boss2.Cube001_4.geometry}
-                        material={materials.bossSecondaryBlue}
-                    />
-                </group>
+            <BossModel
+                ref={bossWrapper}
+                destroyed={boss.health === 0}
+            />
 
-                <group
-                    dispose={null}
-                    visible={boss.health > 0}
-                >
-                    <mesh
-                        geometry={boss1.Cube012.geometry}
-                        material={materials.bossLightBlue}
-                    />
-                    <mesh
-                        geometry={boss1.Cube012_1.geometry}
-                        material={materials.bossBlack}
-                    />
-                    <mesh
-                        geometry={boss1.Cube012_2.geometry}
-                        material={materials.bossDarkBlue}
-                    />
-                    <mesh
-                        castShadow
-                        geometry={boss1.Cube012_3.geometry}
-                        material={materials.bossBlue}
-                    />
-                    <mesh
-                        geometry={boss1.Cube012_4.geometry}
-                        material={materials.bossSecondaryBlue}
-                    />
-                    <mesh
-                        geometry={boss1.Cube012_5.geometry}
-                        material={materials.bossWhite}
-                    />
-                </group>
-            </group>
+            <DebugBox
+                dynamic
+                size={size}
+                position={data.position}
+                active={boss.state !== BossState.DEAD}
+            />
         </>
     )
 } 

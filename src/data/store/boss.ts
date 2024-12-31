@@ -37,6 +37,10 @@ export function resetBoss() {
 export function defeatBoss() {
     let { boss, player } = store.getState()
 
+    if (player.health === 0) {
+        return
+    }
+
     store.setState({
         player: {
             ...player,

@@ -4,7 +4,8 @@
 
 -   intro
 -   boss cleanup
--   clean up instances/repeaters, single api entry, reuse in editor
+-   clean up plane
+-   rocket smoke
 -   gameplay loop with game over
 -   ui
 

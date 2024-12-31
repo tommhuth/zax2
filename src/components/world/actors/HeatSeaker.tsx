@@ -4,12 +4,13 @@ import { useFrame } from "@react-three/fiber"
 import { removeHeatSeaker } from "../../../data/store/boss"
 import { ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { startTransition, useEffect, useMemo } from "react"
-import { createExplosion, createImpactDecal } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles } from "../../../data/store/effects"
 import random from "@huth/random"
 import type { HeatSeaker } from "../../../data/types"
 import { useCollisionDetection } from "../../../data/collisions"
+import { floorBaseColor, floorHiColor } from "@data/theme"
 
-let _dir = new Vector3()
+let _direction = new Vector3()
 
 export default function HeatSeaker({
     position,
@@ -32,20 +33,28 @@ export default function HeatSeaker({
     })
 
     useFrame(() => {
-        let { frustum } = store.getState().world
+        let { world: { frustum }, boss } = store.getState()
 
         if (
-            !frustum.containsPoint(position)
+            (!frustum.containsPoint(position) && boss.pauseAt < position.z)
             || position.x > 10
             || position.x < -10
-            || position.y > 100
+            || position.y > 50
             || position.y < .45
         ) {
             startTransition(() => {
                 removeHeatSeaker(id)
 
-                if (position.y < .45) {
+                if (position.y < 1.5) {
                     createImpactDecal([position.x, .05, position.z], random.float(1.5, 2))
+                    createParticles({
+                        position: position.toArray(),
+                        count: random.integer(6, 10),
+                        normal: [0, 1, 0],
+                        speed: [8, 25],
+                        spread: [[-1, 1], [0, 1]],
+                        color: [floorBaseColor, floorHiColor]
+                    })
                 }
             })
         }
@@ -60,14 +69,14 @@ export default function HeatSeaker({
             return
         }
 
-        _dir.copy(position)
+        _direction.copy(position)
             .sub(player.object.position)
             .normalize()
             .multiplyScalar(-accuracy)
 
-        velocity.x += _dir.x * nd * 4
-        velocity.y += _dir.y * nd * 4
-        velocity.z += _dir.z * nd * 4
+        velocity.x += _direction.x * nd * 4
+        velocity.y += _direction.y * nd * 4
+        velocity.z += _direction.z * nd * 4
 
         velocity.normalize()
 

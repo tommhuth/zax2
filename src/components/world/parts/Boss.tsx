@@ -20,8 +20,8 @@ export default function BossPart({
     position,
     size,
 }: WorldPart) {
-    let bossZ = position.z + 23
-    let pauseAt = position.z + 5
+    let pauseAt = position.z + 16
+    let bossZ = pauseAt + 16
     let boss = useStore(i => i.boss)
     let level = useStore(i => i.player.level)
 
