@@ -25,7 +25,7 @@ export default forwardRef<TurretRef, TurretModelProps>(
             return {
                 shoot: () => {
                     if (barrellRef.current) {
-                        barrellRef.current.position.z = -.75
+                        barrellRef.current.position.x = .75
                     }
                 }
             }
@@ -36,14 +36,14 @@ export default forwardRef<TurretRef, TurretModelProps>(
                 return
             }
 
-            barrellRef.current.position.z = damp(barrellRef.current.position.z, 0, 1.5, ndelta(delta))
+            barrellRef.current.position.x = damp(barrellRef.current.position.x, 0, 1.5, ndelta(delta))
         })
 
         return (
             <group
                 dispose={null}
                 position={position}
-                rotation={[0, rotation + Math.PI * .5, 0]}
+                rotation={[0, rotation, 0]}
             >
                 <mesh
                     castShadow

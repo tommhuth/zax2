@@ -28,7 +28,7 @@ import { damageRocket } from "@data/store/actors/rocket.actions"
 import { damageTurret } from "@data/store/actors/turret.actions"
 import { damageBarrel } from "@data/store/actors/barrel.actions"
 
-let depth = 3
+let depth = 2
 
 interface PlayerProps {
     size?: Tuple3
@@ -51,7 +51,6 @@ export default function Player({
     let playerGroupRef = useRef<Group | null>(null)
     let scoreRef = useRef<HTMLDivElement>(null)
     let grid = useStore(i => i.world.grid)
-    let weapon = useStore(i => i.player.weapon)
     let ready = useStore(i => i.ready)
     let setup = useStore(i => i.setup)
     let innerRef = useRef<Group>(null)
@@ -216,20 +215,25 @@ export default function Player({
 
     // shoot
     useFrame(() => {
+        let {
+            effects: { timeScale },
+            player: { weapon }
+        } = store.getState()
+
         if (Date.now() > data.nextShotAt && controls.keys.space && setup) {
             startTransition(() => {
                 createBullet({
                     position: [
                         position.x,
                         position.y,
-                        position.z + (depth / 2 + BULLET_SIZE[2] / 2) * 1.5
+                        position.z + (depth / 2 + BULLET_SIZE / 2) * 1.5
                     ],
                     owner: Owner.PLAYER,
-                    rotation: Math.PI * .5,
+                    rotation: Math.PI * -.5,
                     speed: weapon.speed,
                     color: "#fff",
                 })
-                data.nextShotAt = Date.now() + weapon.fireFrequency * (1 / store.getState().effects.timeScale)
+                data.nextShotAt = Date.now() + weapon.fireFrequency * (1 / timeScale)
             })
         }
     })

@@ -106,21 +106,19 @@ function Turret({
             let playerPosition = playerObject.position
             let distanceFromPlayer = 1 - clamp(Math.abs(playerPosition.z - playerPosition.z) / (diagonal / 2), 0, 1)
             let heightPenalty = clamp((playerPosition.y - WORLD_BOTTOM_EDGE) / (WORLD_TOP_EDGE - WORLD_BOTTOM_EDGE), 0, 1)
-
             let offsetRadius = size[0] + 1.35
-            let offsetx = Math.cos(rotation) * offsetRadius
-            let offsetz = Math.sin(rotation) * offsetRadius
             let bulletSpeed = 18
 
             startTransition(() => {
                 createBullet({
                     position: [
-                        position.x + offsetx,
+                        // why does rotation need to be flipped?
+                        position.x + Math.cos(-rotation) * offsetRadius,
                         position.y + 1.8,
-                        position.z + offsetz
+                        position.z + Math.sin(-rotation) * offsetRadius
                     ],
                     speed: bulletSpeed,
-                    rotation: rotation,
+                    rotation,
                     owner: Owner.ENEMY
                 })
             })

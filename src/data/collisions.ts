@@ -2,10 +2,9 @@ import { useFrame } from "@react-three/fiber"
 import { startTransition, useEffect, useRef } from "react"
 import { Box3, Ray, Vector3 } from "three"
 import { SpatialHashGrid3D, Client, ClientData } from "./SpatialHashGrid3D"
-import { useStore } from "./store"
+import { store, useStore } from "./store"
 import { Tuple3 } from "../types.global"
 import { Bullet, CollisionObjectType } from "./types"
-import { BULLET_SIZE } from "./const"
 
 interface BulletActions extends Partial<Record<CollisionObjectType, (data: ClientData, otherClient: Client, delta: number) => void>> {
     bullet?: (e: CollisionEventDetails) => void
@@ -130,18 +129,35 @@ interface BoxParams {
 
 interface RayParams {
     position: Vector3
-    direction: Tuple3
+    direction: Vector3
 }
 
 export function getIntersection(box: BoxParams, ray: RayParams): Tuple3 {
     _box3.setFromCenterAndSize(_center.set(...box.position), _size.set(...box.size))
     _origin.copy(ray.position)
-        .add(_offset.set(...ray.direction).multiplyScalar(-2))
-    _origin.y += Math.sign(_origin.y - box.position[1]) * BULLET_SIZE[1] / 2
-    _ray.set(_origin, _direction.set(...ray.direction))
+        .add(_offset.copy(ray.direction).multiplyScalar(-2))
+    _ray.set(_origin, _direction.copy(ray.direction))
 
     let intersection = _ray.intersectBox(_box3, _intersection)
 
     // fallback to infinity offscreen :/
     return intersection ? intersection.toArray() : [0, 0, -Infinity]
+}
+
+export function getBulletCollisions(bullet: Bullet) {
+    let grid = store.getState().world.grid
+    let near = grid.findNear(bullet.line.position.toArray(), [1.5, 1, 1.5])
+    let collisions: Client[] = []
+
+    for (let client of near) {
+        _box1.setFromCenterAndSize(_center1.set(...client.position), _size1.set(...client.size))
+
+        if (bullet.line.intersectsBox(_box1)) {
+            collisions.push(client)
+
+            break
+        }
+    }
+
+    return collisions
 }

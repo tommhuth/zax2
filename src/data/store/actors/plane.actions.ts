@@ -4,6 +4,7 @@ import { Box3, Vector3 } from "three"
 import { updateWorld } from "../utils"
 import { Plane } from "@data/types"
 import { Tuple3 } from "src/types.global"
+import { WORLD_TOP_EDGE } from "@data/const"
 
 export function damagePlane(id: string, damage: number) {
     let planes = store.getState().world.planes
@@ -39,15 +40,16 @@ interface CreatePlaneParams {
     rotation?: number
 }
 
+const size: Tuple3 = [1.5, 1.25, 2]
+
 export function createPlane({
     position: [x, y, z],
-    targetY = y,
     rotation = 0,
-    speed = random.float(4, 5),
-    fireFrequency = random.integer(150, 350),
+    targetY = rotation === 0 ? WORLD_TOP_EDGE : y,
+    speed = rotation === 0 ? 3 : 0,
+    fireFrequency = random.integer(500, 750),
 }: CreatePlaneParams) {
     let id = random.id()
-    let size = [1, 1.5, 2] as Tuple3
     let position = new Vector3(x, y, z)
     let aabb = new Box3().setFromCenterAndSize(position, new Vector3(...size))
     let { grid, planes } = store.getState().world

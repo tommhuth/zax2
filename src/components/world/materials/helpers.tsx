@@ -69,19 +69,21 @@ type UniformBulletLight = { value: { radius: number; position: Vector3 }[]; need
 export function useLightsUpdater(uniforms: { uLightSources: UniformLightSource; uBulletLights: UniformBulletLight }) {
     let lightSourceCounter = useMemo(() => new Counter(LIGHT_SOURCES_COUNT - 1), [])
 
-    useFrame(() => {
+    useFrame((state, delta) => {
         let bullets = store.getState().world.bullets
 
         for (let i = 0; i < BULLET_LIGHT_COUNT; i++) {
-            uniforms.uBulletLights.value[i].radius = 0
+            uniforms.uBulletLights.value[i].radius = damp(uniforms.uBulletLights.value[i].radius, 0, 5, ndelta(delta))
         }
 
         for (let i = 0; i < BULLET_LIGHT_COUNT; i++) {
             let bullet = bullets[i]
 
             if (bullet) {
-                uniforms.uBulletLights.value[bullet.lightIndex].position.copy(bullet.position)
-                uniforms.uBulletLights.value[bullet.lightIndex].radius = 5
+                let uniform = uniforms.uBulletLights.value[bullet.lightIndex]
+
+                uniform.position.copy(bullet.line.position)
+                uniform.radius = 5
             }
         }
 
@@ -96,9 +98,11 @@ export function useLightsUpdater(uniforms: { uLightSources: UniformLightSource; 
                     return
                 }
 
-                uniforms.uLightSources.value[lightSourceCounter.current].strength = 1
-                uniforms.uLightSources.value[lightSourceCounter.current].radius = lastExplosion.radius * 1.6
-                uniforms.uLightSources.value[lightSourceCounter.current].position.set(...lastExplosion.position)
+                let uniform = uniforms.uLightSources.value[lightSourceCounter.current]
+
+                uniform.strength = 1
+                uniform.radius = lastExplosion.radius * 1.6
+                uniform.position.set(...lastExplosion.position)
 
                 lightSourceCounter.next()
             }
@@ -107,7 +111,9 @@ export function useLightsUpdater(uniforms: { uLightSources: UniformLightSource; 
 
     useFrame((state, delta) => {
         for (let i = 0; i < uniforms.uLightSources.value.length; i++) {
-            uniforms.uLightSources.value[i].strength = damp(uniforms.uLightSources.value[i].strength, 0, 1.25, ndelta(delta))
+            let uniform = uniforms.uLightSources.value[i]
+
+            uniform.strength = damp(uniform.strength, 0, 1.25, ndelta(delta))
         }
 
         uniforms.uLightSources.needsUpdate = true

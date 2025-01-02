@@ -2,6 +2,7 @@ import { Box3, ColorRepresentation, InstancedMesh, Object3D, Vector3 } from "thr
 import { Tuple2, Tuple3 } from "../types.global"
 import Counter from "./Counter"
 import { Client } from "./SpatialHashGrid3D"
+import LineSegment from "./LineSegment"
 
 export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" | "exhaust"
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
@@ -147,17 +148,14 @@ export enum Owner {
 
 export interface Bullet {
     id: string
-    position: Vector3
     speed: number
     index: number
     rotation: number
-    direction: Tuple3
     mounted: boolean
-    size: Tuple3
-    aabb: Box3
     color: ColorRepresentation
     owner: Owner
     lightIndex: number
+    line: LineSegment
 }
 
 export interface Particle {

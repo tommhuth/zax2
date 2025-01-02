@@ -5,9 +5,9 @@ import { ColorRepresentation, Vector3 } from "three"
 import { Explosion, Particle } from "../types"
 import { clamp, setColorAt, setMatrixAt } from "../utils"
 import { easeOutCubic } from "../shaping"
-import { Store } from "./types.store"
+import { ZaxStore } from "./types.store"
 
-function updateEffects(data: Partial<Store["effects"]>) {
+function updateEffects(data: Partial<ZaxStore["effects"]>) {
     store.setState({
         effects: {
             ...store.getState().effects,

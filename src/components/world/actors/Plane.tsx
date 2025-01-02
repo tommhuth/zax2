@@ -54,14 +54,14 @@ function Plane({
     takeoffAt,
     fireFrequency,
     speed,
-    rotation = 0,
+    rotation,
 }: PlaneType) {
     let planeRef = useRef<Mesh>(null)
     let data = useMemo(() => ({
         removed: false,
         grounded: false,
         gravity: 0,
-        actualSpeed: speed,
+        currentSpeed: speed,
         rotation: [0, rotation + Math.PI, 0] as Tuple3,
         tilt: random.float(0.002, 0.05),
         shootTimer: random.float(0, fireFrequency),
@@ -71,7 +71,7 @@ function Plane({
     }), [fireFrequency, rotation, speed])
     let bottomY = 0
     let weaponSide = useMemo(() => new Counter(2), [])
-    let isStatic = speed === 0
+    let moving = speed > 0
     let diagonal = useStore(i => i.world.diagonal)
 
     useBaseActorHandler({
@@ -80,12 +80,12 @@ function Plane({
         size,
         aabb,
         health,
-        keepAround: !isStatic,
+        keepAround: moving,
         remove: () => removePlane(id),
         destroy: (position) => {
             explode(position)
 
-            if (isStatic) {
+            if (!moving) {
                 createImpactDecal([position.x, .1, position.z], 2.25)
             }
         }
@@ -100,7 +100,7 @@ function Plane({
 
             if (damagePlane(id, 50)) {
                 increaseScore(1_000)
-                increaseTrauma(1)
+                increaseTrauma(.25)
             } else {
                 increaseScore(100)
                 increaseTrauma(.05)
@@ -111,7 +111,7 @@ function Plane({
                 count: [4, 7],
                 speed: [8, 12],
                 offset: [[0, 0], [0, 0], [0, 0]],
-                spread: [[0, 0], [0, 0]],
+                spread: [[-1, 1], [-1, 1]],
                 normal,
                 color: planeColor,
             })
@@ -129,16 +129,17 @@ function Plane({
         let playerPosition = store.getState().player.object?.position
         let { world, effects } = store.getState()
 
-        if (!playerPosition || isStatic) {
+        if (!playerPosition || !moving) {
             return
         }
 
         let distanceFromPlayer = 1 - clamp((-position.z - playerPosition.z) / 15, 0, 1)
         let heightPenalty = 1 - clamp((playerPosition.y - WORLD_BOTTOM_EDGE) / (WORLD_TOP_EDGE - WORLD_BOTTOM_EDGE), 0, 1)
         let shootDisabled = position.z > playerPosition.z || !world.frustum.containsPoint(position)
-        let canShoot = health > 0
+        let alive = health > 0
+        let nextShotAt = data.nextShotAt + heightPenalty * fireFrequency * .35
 
-        if (!shootDisabled && canShoot && data.shootTimer > data.nextShotAt + heightPenalty * fireFrequency) {
+        if (!shootDisabled && alive && data.shootTimer > nextShotAt) {
             startTransition(() => {
                 createBullet({
                     position: [
@@ -161,12 +162,12 @@ function Plane({
 
     // move
     useFrame((state, delta) => {
-        if (planeRef.current && !data.removed && !isStatic) {
+        if (planeRef.current && !data.removed && moving) {
             let { player } = useStore.getState()
             let playerZ = player.object?.position.z || Infinity
             let shouldMoveForward = targetY === startY || position.z - diagonal * 1.5 < playerZ
 
-            position.z -= shouldMoveForward ? data.actualSpeed * ndelta(delta) : 0
+            position.z -= shouldMoveForward ? data.currentSpeed * ndelta(delta) : 0
 
             planeRef.current.position.copy(position)
             planeRef.current.rotation.set(...data.rotation)
@@ -175,7 +176,7 @@ function Plane({
 
     // grounding
     useFrame((state, delta) => {
-        if (health === 0 && !isStatic) {
+        if (health === 0 && moving) {
             if (!data.grounded) {
                 let nd = ndelta(delta)
 
@@ -183,7 +184,7 @@ function Plane({
                 position.y -= data.gravity * 60 * nd
                 data.rotation[0] -= data.tilt * .5 * 60 * nd
                 data.rotation[2] += data.tilt * .25 * 60 * nd
-                data.actualSpeed = damp(data.actualSpeed, 0, .5, nd)
+                data.currentSpeed = damp(data.currentSpeed, 0, .5, nd)
                 data.grounded = position.y <= (bottomY + .5 / 2)
 
                 if (data.grounded) {
@@ -195,23 +196,23 @@ function Plane({
                             fireballCount: 5,
                             fireballPath: [[position.x, 0, position.z], [0, 4, 0]]
                         })
+                        createParticles({
+                            position: [position.x, 0, position.z],
+                            normal: [0, 1, 0],
+                            speed: [10, 20],
+                            count: [6, 10],
+                            color: planeColor,
+                            spread: [[-1, 1], [0, 1]]
+                        })
+                        createScrap([position.x, .1, position.z], 1, planeColor)
+                        createImpactDecal([position.x, .1, position.z], 3)
                     })
-                    createParticles({
-                        position: [position.x, 0, position.z],
-                        normal: [0, 1, 0],
-                        speed: [10, 20],
-                        count: [6, 10],
-                        color: planeColor,
-                        spread: [[-1, 1], [0, 1]]
-                    })
-                    createScrap([position.x, .1, position.z], 1, planeColor)
-                    createImpactDecal([position.x, .1, position.z], 3)
                 }
             } else {
-                data.actualSpeed = damp(data.actualSpeed, 0, 2.25, delta)
+                data.currentSpeed = damp(data.currentSpeed, 0, 2.25, delta)
                 position.y = (bottomY + .5 / 2)
             }
-        } else if (!isStatic) {
+        } else if (moving) {
             let t = clamp(data.liftoffTimer / data.liftoffDuration, 0, 1)
 
             position.y = easeInOutCubic(t) * (targetY - startY) + startY
@@ -220,7 +221,7 @@ function Plane({
 
     // takeoff
     useFrame((state, delta) => {
-        if (takeoffAt > position.z && !isStatic) {
+        if (takeoffAt > position.z && moving) {
             data.liftoffTimer += delta * 1000
         }
     })
@@ -231,7 +232,7 @@ function Plane({
                 rotation={data.rotation}
                 position={position}
                 ref={planeRef}
-                moving={!isStatic}
+                moving={moving}
                 disabled={health === 0}
             />
 

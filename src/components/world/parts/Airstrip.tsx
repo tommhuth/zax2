@@ -9,6 +9,7 @@ import TurretSpawner from "../spawner/Turret"
 import Plant from "../actors/Plant"
 import Grass from "../actors/Grass"
 import Obstacle from "../actors/Obstacle"
+import { WORLD_TOP_EDGE } from "@data/const"
 
 export default function Airstrip({
     id,
@@ -68,9 +69,13 @@ export default function Airstrip({
             />
 
             <PlaneSpawner
-                position={[2, 0.5, 23]}
-                rotation={3.142}
+                position={[2, 0.5, 26]}
+                rotation={0}
+            />
 
+            <PlaneSpawner
+                position={[2, WORLD_TOP_EDGE, 36]}
+                rotation={0}
             />
 
             <EdgeElement

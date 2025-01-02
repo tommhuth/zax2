@@ -1,16 +1,15 @@
 import random from "@huth/random"
 import { store } from "../index"
-import { Box3, ColorRepresentation, Matrix4, Quaternion, Vector3 } from "three"
+import { ColorRepresentation, Matrix4, Quaternion, Vector3 } from "three"
 import { updateWorld } from "../utils"
 import { BULLET_LIGHT_COUNT, BULLET_SIZE } from "../../const"
 import Counter from "@data/Counter"
 import { Tuple3 } from "src/types.global"
 import { Owner } from "@data/types"
+import LineSegment from "@data/LineSegment"
 
 let _matrix4 = new Matrix4()
 let _translation = new Vector3()
-let _position = new Vector3()
-let _size = new Vector3()
 let _scale = new Vector3(1, 1, 1)
 let _yAxis = new Vector3(0, 1, 0)
 let _quaternion = new Quaternion()
@@ -21,7 +20,6 @@ interface CreateBulletParams {
     position: Tuple3
     rotation?: number
     owner: Owner
-    size?: Tuple3
     speed: number
     color?: ColorRepresentation
 }
@@ -30,33 +28,32 @@ export function createBullet({
     position,
     rotation = 0,
     owner,
-    size = BULLET_SIZE,
     speed,
     color = "#fff",
 }: CreateBulletParams) {
     let id = random.id()
     let { instances, world } = store.getState()
-    // since rotation is always incremenets of 90deg, 
-    // this still works with aabb
-    let aabb = new Box3()
-        .setFromCenterAndSize(_position.set(...position), _size.set(...size))
+    // default dir = left side screen (positive x)
+    let direction = new Vector3(1, 0, 0)
         .applyMatrix4(_matrix4.compose(
             _translation,
             _quaternion.setFromAxisAngle(_yAxis, rotation),
             _scale,
-        ))
+        )).normalize()
+    let line = new LineSegment(
+        new Vector3(...position),
+        direction,
+        BULLET_SIZE
+    )
 
     updateWorld({
         bullets: [
             {
-                position: new Vector3(...position),
+                line,
                 id,
                 mounted: false,
                 index: instances.line.index.next(),
-                aabb,
                 color,
-                size,
-                direction: [Math.cos(rotation), 0, Math.sin(rotation)],
                 speed,
                 owner,
                 rotation,

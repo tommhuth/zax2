@@ -2,9 +2,9 @@ import { InstancedMesh, Material, Object3D } from "three"
 import Counter from "../Counter"
 import { store } from "."
 import { MaterialName } from "../types"
-import { Store } from "./types.store"
+import { ZaxStore } from "./types.store"
 
-export function updateWorld(data: Partial<Store["world"]>) {
+export function updateWorld(data: Partial<ZaxStore["world"]>) {
     store.setState({
         world: {
             ...store.getState().world,
@@ -13,7 +13,7 @@ export function updateWorld(data: Partial<Store["world"]>) {
     })
 }
 
-export function setState(state: Store["state"]) {
+export function setState(state: ZaxStore["state"]) {
     store.setState({
         state,
     })

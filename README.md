@@ -3,7 +3,7 @@
 ## Todo
 
 -   intro
--   boss cleanup
+-   bullet cleanup, line segment instead?
 -   clean up plane
 -   rocket smoke
 -   gameplay loop with game over

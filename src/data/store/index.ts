@@ -4,10 +4,10 @@ import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { BossState } from "../types"
 import { SpatialHashGrid3D } from "../SpatialHashGrid3D"
-import { Store } from "./types.store"
+import { ZaxStore } from "./types.store"
 
 const store = create(
-    subscribeWithSelector<Store>(() => ({
+    subscribeWithSelector<ZaxStore>(() => ({
         debug: {
             showColliders: false,
             forcedWorldParts: [],
@@ -36,9 +36,9 @@ const store = create(
             timeScale: 1,
             time: 0,
         },
-        instances: {} as Store["instances"],
+        instances: {} as ZaxStore["instances"],
         repeaters: {},
-        materials: {} as Store["materials"],
+        materials: {} as ZaxStore["materials"],
         boss: {
             pauseAt: -Infinity,
             health: Infinity,

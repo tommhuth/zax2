@@ -11,7 +11,7 @@ interface ControlsMap {
     space?: boolean
 }
 
-export interface Store {
+export interface ZaxStore {
     debug: {
         showColliders: boolean
         forcedWorldParts: WorldPartType[]
@@ -45,7 +45,7 @@ export interface Store {
     materials: Record<MaterialName, Material>
     boss: {
         pauseAt: number
-        health: number 
+        health: number
         maxHealth: number
         heatSeakers: HeatSeaker[]
         state: BossState

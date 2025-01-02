@@ -1,6 +1,5 @@
 import { Vector3 } from "three"
 import { clamp } from "./utils"
-import { Tuple3 } from "../types.global" 
 import { EditorStore } from "src/editor/data/types"
 
 export const WORLD_START_Z = 100
@@ -27,7 +26,7 @@ export const ZOOM = 70 - clamp(1 - (Math.min(window.innerWidth, window.innerHeig
 
 export const PIXEL_SIZE = Math.min(window.innerWidth, window.innerHeight) < 800 ? 3 : 4
 export const DPR = 1 / PIXEL_SIZE
-export const BULLET_SIZE: Tuple3 = [.1, .1, 1.5]
+export const BULLET_SIZE = 1.25
 export const BULLET_LIGHT_COUNT = 14
 export const LIGHT_SOURCES_COUNT = 4
 
