@@ -64,7 +64,7 @@ export function createBullet({
     })
 }
 
-export function removeBullet(...ids: string[]) {
+export function removeBullet(ids: string[]) {
     updateWorld({
         bullets: store.getState().world.bullets.filter(i => !ids.includes(i.id))
     })

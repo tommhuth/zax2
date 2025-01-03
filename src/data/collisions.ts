@@ -104,7 +104,6 @@ export function useCollisionDetection({
     })
 }
 
-
 export interface CollisionEventDetails {
     client: Client
     bullet: Bullet
@@ -138,10 +137,8 @@ export function getIntersection(box: BoxParams, ray: RayParams): Tuple3 {
         .add(_offset.copy(ray.direction).multiplyScalar(-2))
     _ray.set(_origin, _direction.copy(ray.direction))
 
-    let intersection = _ray.intersectBox(_box3, _intersection)
-
-    // fallback to infinity offscreen :/
-    return intersection ? intersection.toArray() : [0, 0, -Infinity]
+    // fallback to offscreen :/
+    return _ray.intersectBox(_box3, _intersection)?.toArray() || [0, 0, -1000]
 }
 
 export function getBulletCollisions(bullet: Bullet) {
@@ -160,4 +157,14 @@ export function getBulletCollisions(bullet: Bullet) {
     }
 
     return collisions
+}
+
+export function dispatchCollisionEvent(detail: CollisionEventDetails) {
+    window.dispatchEvent(
+        new CustomEvent<CollisionEventDetails>("bulletcollision", {
+            bubbles: false,
+            cancelable: false,
+            detail,
+        })
+    )
 }

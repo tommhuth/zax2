@@ -3,10 +3,8 @@
 ## Todo
 
 -   intro
--   bullet cleanup, line segment instead?
--   clean up plane
--   rocket smoke
 -   gameplay loop with game over
+-   rocket smoke, rename heat seaker to rocket? turret muzzle
 -   ui
 
 53 mat + 22 instances
