@@ -1,7 +1,6 @@
 import { WorldPart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import EdgeElement from "../actors/EdgeElement"
-import random from "@huth/random"
 import Floor from "../actors/Floor"
 import Dirt from "../actors/Dirt"
 import Cable from "../actors/Cable"

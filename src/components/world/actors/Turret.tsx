@@ -16,6 +16,7 @@ import { createBullet } from "@data/store/actors/bullet.actions"
 import { removeTurret, damageTurret } from "@data/store/actors/turret.actions"
 import { increaseScore } from "@data/store/player"
 import TurretModel, { TurretRef } from "../models/TurretModel"
+import Muzzle, { MuzzleRef } from "../effects/Muzzle"
 
 function explode(position: Vector3, size: Tuple3) {
     createExplosion({
@@ -40,6 +41,7 @@ function explode(position: Vector3, size: Tuple3) {
     })
 }
 
+
 function Turret({
     id,
     client,
@@ -52,7 +54,8 @@ function Turret({
 }: TurretType) {
     let diagonal = useStore(i => i.world.diagonal)
     let shootTimer = useRef(0)
-    let ref = useRef<TurretRef>(null)
+    let modelRef = useRef<TurretRef>(null)
+    let muzzleRef = useRef<MuzzleRef>(null)
     let nextShotAt = useRef(fireFrequency)
 
     useBaseActorHandler({
@@ -130,7 +133,8 @@ function Turret({
                 + heightPenalty * fireFrequency * 2
             ) * (1 / effects.timeScale)
 
-            ref.current?.shoot()
+            modelRef.current?.shoot()
+            muzzleRef.current?.activate()
         }
 
         shootTimer.current += ndelta(delta) * 1000
@@ -139,10 +143,12 @@ function Turret({
     return (
         <>
             <TurretModel
-                ref={ref}
+                ref={modelRef}
                 position={position.toArray()}
                 rotation={rotation}
-            />
+            >
+                <Muzzle ref={muzzleRef} position={[2.75, 1.85, 0]} />
+            </TurretModel>
 
             <DebugBox size={size} position={position} />
         </>

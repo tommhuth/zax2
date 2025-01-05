@@ -29,6 +29,7 @@ export default class LineSegment {
     }
 
     // Check if the line segment intersects a Box3, using the Slab Method
+    // thanks chattyman
     intersectsBox(box: Box3): boolean {
         let start = this.getStartPoint(_start)
         let end = this.getEndPoint(_end)

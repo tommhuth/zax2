@@ -51,7 +51,7 @@ export default function Airstrip({
             />
 
             <PlaneSpawner
-                position={[6.5, 0.5, 16.5]}
+                position={[5.5, 0.5, 16.5]}
                 rotation={0.942}
             />
 

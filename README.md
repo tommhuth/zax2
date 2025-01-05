@@ -4,7 +4,8 @@
 
 -   intro
 -   gameplay loop with game over
--   rocket smoke, rename heat seaker to rocket? turret muzzle
+-   rocket smoke, rename heat seaker to rocket? model?
+-   bullet casings?
 -   ui
 
 53 mat + 22 instances

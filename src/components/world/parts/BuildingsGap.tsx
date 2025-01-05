@@ -1,4 +1,3 @@
-import random from "@huth/random"
 import WorldPartWrapper from "../WorldPartWrapper"
 import TurretSpawner from "../spawner/Turret"
 import Floor from "../actors/Floor"
@@ -48,6 +47,12 @@ export default function BuildingsGap({
             <TurretSpawner
                 position={[2, 1.5, 4.5]}
                 rotation={4.712}
+                floorLevel={2}
+            />
+
+            <TurretSpawner
+                position={[2, 1.5, .5]}
+                rotation={4.712 * 2}
                 floorLevel={2}
             />
 

@@ -1,5 +1,3 @@
-
-import random from "@huth/random"
 import { WorldPart } from "@data/types"
 import WorldPartWrapper from "@components/world/WorldPartWrapper"
 import Floor from "@components/world/actors/Floor"

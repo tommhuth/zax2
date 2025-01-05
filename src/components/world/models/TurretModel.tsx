@@ -2,7 +2,7 @@ import { GLTFModel, Tuple3 } from "src/types.global"
 import { useStore } from "../../../data/store"
 import model from "@assets/models/turret2.glb"
 import { useGLTF } from "@react-three/drei"
-import { forwardRef, useImperativeHandle, useRef } from "react"
+import { forwardRef, ReactNode, useImperativeHandle, useRef } from "react"
 import { Mesh } from "three"
 import { useFrame } from "@react-three/fiber"
 import { damp } from "three/src/math/MathUtils.js"
@@ -11,12 +11,13 @@ import { ndelta } from "@data/utils"
 interface TurretModelProps {
     position: Tuple3
     rotation?: number
+    children?: ReactNode
 }
 
 export type TurretRef = { shoot: () => void }
 
 export default forwardRef<TurretRef, TurretModelProps>(
-    function TurretModel({ position, rotation = 0 }, ref) {
+    function TurretModel({ position, rotation = 0, children }, ref) {
         let { nodes } = useGLTF(model) as GLTFModel<["turret2_1", "turret2_2"]>
         let materials = useStore(i => i.materials)
         let barrellRef = useRef<Mesh>(null)
@@ -58,6 +59,7 @@ export default forwardRef<TurretRef, TurretModelProps>(
                     geometry={nodes.turret2_2.geometry}
                     material={materials.turret}
                 />
+                {children}
             </group>
         )
     }

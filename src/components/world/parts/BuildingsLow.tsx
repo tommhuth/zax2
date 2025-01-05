@@ -1,6 +1,5 @@
 import { WorldPart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
-import random from "@huth/random"
 import Floor from "../actors/Floor"
 import TurretSpawner from "../spawner/Turret"
 import Obstacle from "../actors/Obstacle"

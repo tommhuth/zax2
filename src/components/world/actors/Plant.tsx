@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useMemo, useRef, useState } from "react"
+import { forwardRef, startTransition, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react"
 import { useInstance } from "../models/InstancedMesh"
 import { clamp, ndelta, setBufferAttribute, setMatrixAt, setMatrixNullAt } from "@data/utils"
 import random from "@huth/random"
@@ -14,12 +14,6 @@ import { damp } from "three/src/math/MathUtils.js"
 import DebugBox from "@components/DebugBox"
 import { plantColor } from "@data/theme"
 
-interface PlantProps {
-    position: Tuple3
-    scale?: number
-    rotation?: number
-}
-
 interface Leaf {
     position: Tuple3
     acceleration: Tuple3
@@ -31,130 +25,47 @@ interface Leaf {
     friction: number
 }
 
-let width = 5
-let height = 2.75
-let depth = 4
-let colors = [
-    plantColor,
-    "#3d005c",
-    "#e600ff"
-]
+type LeavesRef = { spawn: (count: number, position: Vector3, size: Tuple3) => void }
 
-function makeLeaves(position: Vector3, size: Tuple3): Leaf[] {
-    let instance = store.getState().instances.leaf
-
-    return Array.from({ length: random.integer(6, 8) })
-        .fill(null)
-        .map((_i, index, list) => {
-            let x = position.x + random.float(-.5, .5)
-            let z = position.z + random.float(-.5, .5)
-            let baseScale = 1 + (index / (list.length - 1)) * random.float(-.4, .1)
-
-            return {
-                position: [
-                    x,
-                    position.y + .5 + (index / (list.length - 1)) * (size[1] * .75),
-                    z
-                ] as Tuple3,
-                acceleration: [0, -random.float(8, 10), 0] as Tuple3,
-                velocity: [
-                    (x - position.x) * random.float(6, 12),
-                    random.float(.0, 6),
-                    (z - position.z) * random.float(6, 12),
-                ] as Tuple3,
-                friction: random.float(.9, 1.35),
-                rotation: [0, random.float(0, Math.PI * 2), 0] as Tuple3,
-                scale: [baseScale, random.float(1, 2.25), baseScale] as Tuple3,
-                time: random.float(0, Math.PI * 2),
-                index: instance.index.next()
-            }
-        })
-}
-
-export default function Plant({
-    position: [x, y, z] = [0, 0, 0],
-    scale = 1,
-    rotation = random.float(0, Math.PI * 2)
-}: PlantProps) {
-    let partPosition = useWorldPart()
-    let [index, instance] = useInstance("plant", {
-        scale,
-        rotation: [0, rotation, 0],
-        position: [x, y, partPosition[2] + z],
-    })
-    let grid = useStore(i => i.world.grid)
-    let size: Tuple3 = useMemo(() => [width * scale * .5, height * scale, depth * scale * .5], [scale])
-    let id = useMemo(() => random.id(), [])
-    let [health, setHealth] = useState(random.pick(30, 40, 20))
-    let position = useMemo(() => new Vector3(x, y, partPosition[2] + z), [x, y, z, partPosition])
-    let client = useMemo(() => {
-        return grid.createClient(
-            position.toArray(),
-            size,
-            { type: "plant", id }
-        )
-    }, [grid, id, size, position])
-    let trauma = useRef(0)
+const Leaves = forwardRef<LeavesRef>((props, ref) => {
     let [leaves, setLeaves] = useState<Leaf[]>([])
 
-    useCollisionDetection({
-        interval: 2,
-        client,
-        active: () => health > 0,
-        bullet: ({ client, type, bullet }) => {
-            if (client.data.id === id && type === "plant" && bullet.owner === Owner.PLAYER) {
-                setHealth(Math.max(health - 10, 0))
+    useImperativeHandle(ref, () => {
+        return {
+            spawn(count: number, position: Vector3, size: Tuple3) {
+                let instance = store.getState().instances.leaf
+                let leaves = Array.from({ length: random.integer(count - 2, count) })
+                    .fill(null)
+                    .map((_i, index, list) => {
+                        let x = position.x + random.float(-.5, .5)
+                        let z = position.z + random.float(-.5, .5)
+                        let baseScale = 1 + (index / (list.length - 1)) * random.float(-.4, .1)
+
+                        return {
+                            position: [
+                                x,
+                                position.y + .5 + (index / (list.length - 1)) * (size[1] * .75),
+                                z
+                            ] as Tuple3,
+                            acceleration: [0, -random.float(8, 10), 0] as Tuple3,
+                            velocity: [
+                                (x - position.x) * random.float(6, 12),
+                                random.float(.0, 6),
+                                (z - position.z) * random.float(6, 12),
+                            ] as Tuple3,
+                            friction: random.float(.9, 1.35),
+                            rotation: [0, random.float(0, Math.PI * 2), 0] as Tuple3,
+                            scale: [baseScale, random.float(1, 2.25), baseScale] as Tuple3,
+                            time: random.float(0, Math.PI * 2),
+                            index: instance.index.next()
+                        }
+                    })
+
+                setLeaves(leaves)
             }
-        },
-        player: () => {
-            setHealth(Math.max(health - 5, 0))
         }
     })
 
-    // health change
-    useEffect(() => {
-        if (typeof index === "number") {
-            trauma.current += .3
-            startTransition(() => {
-                createParticles({
-                    position: position.toArray(),
-                    count: health === 0 ? [20, 25] : [5, 10],
-                    radius: [.01 * scale, .3],
-                    normal: [0, 1, 0],
-                    spread: [[-.85, .85], [0, 1]],
-                    speed: [10, 27],
-                    color: colors,
-                    stagger: [0, 0],
-                    gravity: [0, -random.integer(35, 50), 0]
-                })
-
-                if (health === 0) {
-                    grid.removeClient(client)
-                    setMatrixNullAt(instance, index as number)
-                    setLeaves(makeLeaves(position, size))
-                }
-            })
-        }
-    }, [health, grid, index, position, scale, instance, client, size])
-
-    // unmount
-    useEffect(() => {
-        return () => grid.removeClient(client)
-    }, [client, grid])
-
-    // trauma
-    useFrame((state, delta) => {
-        if (typeof index !== "number" || trauma.current < .001) {
-            return
-        }
-
-        let { instances } = store.getState()
-
-        setBufferAttribute(instances.plant.mesh.geometry, "aTrauma", trauma.current, index)
-        trauma.current = damp(trauma.current, 0, 8, ndelta(delta))
-    })
-
-    // leaves
     useFrame((state, delta) => {
         let { instances } = store.getState()
         let floorY = .25
@@ -197,5 +108,113 @@ export default function Plant({
         }
     })
 
-    return <DebugBox size={size} position={position} />
+    return null
+})
+
+interface PlantProps {
+    position: Tuple3
+    scale?: number
+    rotation?: number
+}
+
+let [width, height, depth]: Tuple3 = [5, 3, 4]
+let colors = [
+    plantColor,
+    "#3d005c",
+    "#e600ff"
+]
+
+export default function Plant({
+    position: [x, y, z] = [0, 0, 0],
+    scale = 1,
+    rotation = random.float(0, Math.PI * 2)
+}: PlantProps) {
+    let partPosition = useWorldPart()
+    let [index, instance] = useInstance("plant", {
+        scale,
+        rotation: [0, rotation, 0],
+        position: [x, y, partPosition[2] + z],
+    })
+    let grid = useStore(i => i.world.grid)
+    let size: Tuple3 = useMemo(() => [
+        width * scale * .5,
+        height * scale,
+        depth * scale * .5
+    ], [scale])
+    let id = useMemo(() => random.id(), [])
+    let [health, setHealth] = useState(random.pick(30, 40, 20))
+    let position = useMemo(() => new Vector3(x, y, partPosition[2] + z), [x, y, z, partPosition])
+    let client = useMemo(() => {
+        return grid.createClient(
+            position.toArray(),
+            size,
+            { type: "plant", id }
+        )
+    }, [grid, id, size, position])
+    let trauma = useRef(0)
+    let leavesRef = useRef<LeavesRef>(null)
+
+    useCollisionDetection({
+        interval: 2,
+        client,
+        active: () => health > 0,
+        bullet: ({ client, type, bullet }) => {
+            if (client.data.id === id && type === "plant" && bullet.owner === Owner.PLAYER) {
+                setHealth(Math.max(health - 10, 0))
+            }
+        },
+        player: () => {
+            setHealth(Math.max(health - 5, 0))
+        }
+    })
+
+    // health change
+    useEffect(() => {
+        if (typeof index === "number") {
+            trauma.current += .3
+            startTransition(() => {
+                createParticles({
+                    position: position.toArray(),
+                    count: health === 0 ? [20, 25] : [5, 10],
+                    radius: [.01 * scale, .3],
+                    normal: [0, 1, 0],
+                    spread: [[-.85, .85], [0, 1]],
+                    speed: [10, 27],
+                    color: colors,
+                    stagger: [0, 0],
+                    gravity: [0, -random.integer(35, 50), 0]
+                })
+
+                if (health === 0) {
+                    grid.removeClient(client)
+                    setMatrixNullAt(instance, index as number)
+                    leavesRef.current?.spawn(8, position, size)
+                }
+            })
+        }
+    }, [health, grid, index, position, scale, instance, client, size])
+
+    // unmount
+    useEffect(() => {
+        return () => grid.removeClient(client)
+    }, [client, grid])
+
+    // trauma
+    useFrame((state, delta) => {
+        if (typeof index !== "number" || trauma.current < .001) {
+            return
+        }
+
+        let { instances } = store.getState()
+
+        setBufferAttribute(instances.plant.mesh.geometry, "aTrauma", trauma.current, index)
+        trauma.current = damp(trauma.current, 0, 8, ndelta(delta))
+    })
+
+    return (
+        <>
+            <Leaves ref={leavesRef} />
+            <DebugBox size={size} position={position} />
+        </>
+    )
 }

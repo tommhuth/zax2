@@ -18,6 +18,7 @@ import { createBullet } from "@data/store/actors/bullet.actions"
 import { increaseScore } from "@data/store/player"
 import { ndelta } from "@data/utils"
 import BossModel from "../models/BossModel"
+import Muzzle, { MuzzleRef } from "../effects/Muzzle"
 
 let size: Tuple3 = [4.5, 4.75, 2]
 
@@ -84,12 +85,14 @@ function explode(position: Vector3) {
     })
 }
 
-const HEAT_SEAKER_FREQUENCY = [1500, 3000, 650, 2500, 2000]
-const FIRE_FREQUENCY = [1100, 700, 500, 300]
+const HEAT_SEAKER_FREQUENCY = [1500, 3000, 2200, 2500, 2500]
+const FIRE_FREQUENCY = [2100, 700, 1500, 3000]
 
 export default function Boss({ startPosition: [startX, startY, startZ] }: BossProps) {
     let boss = useStore((i) => i.boss)
     let grid = useStore((i) => i.world.grid)
+    let leftMuzzleRef = useRef<MuzzleRef>(null)
+    let rightMuzzleRef = useRef<MuzzleRef>(null)
     let bossWrapper = useRef<Group>(null)
     let data = useMemo(() => {
         return {
@@ -183,31 +186,47 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
         data.time += delta * 1000
 
         if (data.time >= data.nextHeatSeakerAt) {
+            let side = random.pick(-1, 1)
+
             startTransition(() => {
                 createHeatSeaker([
-                    data.position.x + (size[0] / 2) * random.pick(-1, 1) * 1,
+                    data.position.x + (size[0] / 2) * side,
                     data.position.y + 0.65,
                     data.position.z - 0.5,
                 ])
                 data.nextHeatSeakerAt = data.time + random.pick(...HEAT_SEAKER_FREQUENCY) * (1 / effects.timeScale)
             })
+
+            if (side === 1) {
+                rightMuzzleRef.current?.activate()
+            } else {
+                leftMuzzleRef.current?.activate()
+            }
         }
 
         if (data.time >= data.nextBulletAt) {
+            let side = random.pick(-1, 1)
+
             startTransition(() => {
                 createBullet({
                     position: [
-                        data.position.x + (size[0] / 2) * random.pick(-1, 1) * 1,
+                        data.position.x + (size[0] / 2) * side,
                         data.position.y + 0.65,
                         data.position.z - 2,
                     ],
                     color: "red",
                     speed: 25,
-                    rotation: -Math.PI * 0.5,
+                    rotation: Math.PI * 0.5,
                     owner: Owner.ENEMY,
                 })
                 data.nextBulletAt = data.time + random.pick(...FIRE_FREQUENCY) * (1 / effects.timeScale)
             })
+
+            if (side === 1) {
+                rightMuzzleRef.current?.activate()
+            } else {
+                leftMuzzleRef.current?.activate()
+            }
         }
     })
 
@@ -239,7 +258,20 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
             <BossModel
                 ref={bossWrapper}
                 destroyed={boss.health === 0}
-            />
+            >
+                <Muzzle
+                    ref={leftMuzzleRef}
+                    position={[-2.25, .5, -.75]}
+                    rotation-y={Math.PI * .5}
+                    speed={2}
+                />
+                <Muzzle
+                    ref={rightMuzzleRef}
+                    position={[2.25, .5, -.75]}
+                    rotation-y={Math.PI * .5}
+                    speed={2}
+                />
+            </BossModel>
 
             <DebugBox
                 dynamic

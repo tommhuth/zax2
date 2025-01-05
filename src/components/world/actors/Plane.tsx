@@ -148,7 +148,7 @@ function Plane({
                         position.z - 2
                     ],
                     speed: 30,
-                    rotation: -Math.PI * .5,
+                    rotation: Math.PI * .5,
                     owner: Owner.ENEMY
                 })
                 data.shootTimer = 0
