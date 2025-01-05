@@ -263,13 +263,13 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
                     ref={leftMuzzleRef}
                     position={[-2.25, .5, -.75]}
                     rotation-y={Math.PI * .5}
-                    speed={2}
+                    decay={2}
                 />
                 <Muzzle
                     ref={rightMuzzleRef}
                     position={[2.25, .5, -.75]}
                     rotation-y={Math.PI * .5}
-                    speed={2}
+                    decay={2}
                 />
             </BossModel>
 

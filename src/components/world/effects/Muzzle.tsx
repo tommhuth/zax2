@@ -14,7 +14,11 @@ let material = new MeshLambertMaterial({
     emissiveIntensity: .3
 })
 
-export default forwardRef<MuzzleRef, ComponentPropsWithRef<"group"> & { speed?: number }>(({ speed = 0, ...props }, ref) => {
+interface MuzzleProps extends ComponentPropsWithRef<"group"> {
+    decay?: number
+}
+
+export default forwardRef<MuzzleRef, MuzzleProps>(({ decay = 0, ...props }, ref) => {
     let groupRef = useRef<Group>(null)
 
     useImperativeHandle(ref, () => {
@@ -43,9 +47,9 @@ export default forwardRef<MuzzleRef, ComponentPropsWithRef<"group"> & { speed?: 
         for (let i = 0; i < groupRef.current.children.length; i++) {
             let child = groupRef.current.children[i]
 
-            child.scale.x = damp(child.scale.x, 0, i + 2 + speed, ndelta(delta))
-            child.scale.y = damp(child.scale.y, 0, i + 2 + speed, ndelta(delta))
-            child.scale.z = damp(child.scale.z, 0, i + 2 + speed, ndelta(delta))
+            child.scale.x = damp(child.scale.x, 0, i + 2 + decay, ndelta(delta))
+            child.scale.y = damp(child.scale.y, 0, i + 2 + decay, ndelta(delta))
+            child.scale.z = damp(child.scale.z, 0, i + 2 + decay, ndelta(delta))
 
             child.position.x += child.scale.x * 10 * ndelta(delta)
         }
