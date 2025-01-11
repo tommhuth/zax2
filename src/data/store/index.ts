@@ -5,6 +5,7 @@ import { subscribeWithSelector } from "zustand/middleware"
 import { BossState } from "../types"
 import { SpatialHashGrid3D } from "../SpatialHashGrid3D"
 import { ZaxStore } from "./types.store"
+import { WORLD_CENTER_X } from "@data/const"
 
 const store = create(
     subscribeWithSelector<ZaxStore>(() => ({
@@ -57,10 +58,10 @@ const store = create(
         },
         player: {
             position: new Vector3(),
-            targetPosition: new Vector3(),
+            targetPosition: new Vector3(WORLD_CENTER_X, 0, 0),
             velocity: new Vector3(),
             level: 1,
-            speed: 4,
+            speed: 0,
             health: 100,
             score: 0,
             object: null,

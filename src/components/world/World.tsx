@@ -42,12 +42,11 @@ export default function World() {
         } = store.getState()
         let forwardWorldPart = parts[parts.length - 1]
 
-        if (forwardWorldPart) {
-            let lastPartIsAtEdge = player
-                && forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal * 1
+        if (forwardWorldPart && player) {
+            let lastPartIsAtEdge = forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
 
             if (
-                (lastPartIsAtEdge || !forwardWorldPart)
+                lastPartIsAtEdge
                 && ready
                 && !debug.pauseWorldGeneration
             ) {
@@ -57,11 +56,13 @@ export default function World() {
     })
 
     useEffect(() => {
-        const startType = window.localStorage.getItem("initPartType") as DynamicWorldPartType || WorldPartType.DEFAULT
+        const startType = window.localStorage.getItem("initPartType") as DynamicWorldPartType
+
+        window.localStorage.removeItem("initPartType")
 
         if (loaded) {
             startTransition(() => {
-                addWorldPart(partGenerator[startType]({
+                addWorldPart(partGenerator[startType || WorldPartType.START]({
                     position: new Vector3(0, 0, WORLD_START_Z),
                     size: [0, 0],
                 }))

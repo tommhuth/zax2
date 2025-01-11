@@ -6,7 +6,7 @@ import { ColorRepresentation, Mesh, Vector3 } from "three"
 
 interface DebugBoxProps {
     size: Tuple3
-    position: Vector3
+    position?: Vector3
     dynamic?: boolean
     color?: ColorRepresentation
     active?: boolean
@@ -23,7 +23,7 @@ export default function DebugBox({
     let showColliders = useStore(i => i.debug.showColliders)
 
     useFrame(() => {
-        if (ref.current && dynamic) {
+        if (ref.current && dynamic && position) {
             ref.current.position.copy(position)
         }
     })
@@ -33,7 +33,7 @@ export default function DebugBox({
     }
 
     return (
-        <mesh ref={ref} scale={size} position={position.toArray()}>
+        <mesh ref={ref} scale={size} position={position?.toArray()}>
             <boxGeometry />
             <meshBasicMaterial color={color} wireframe />
         </mesh>

@@ -6,7 +6,7 @@ import { WorldPart, WorldPartType } from "../types"
 const depthMap: Record<WorldPartType, number> = {
     [WorldPartType.BUILDINGS_GAP]: 20,
     [WorldPartType.DEFAULT]: 20,
-    [WorldPartType.START]: 40,
+    [WorldPartType.START]: 50,
     [WorldPartType.BOSS]: 50,
     [WorldPartType.BUILDINGS_LOW]: 20,
     [WorldPartType.ROCK_VALLEY]: 20,

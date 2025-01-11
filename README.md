@@ -3,9 +3,11 @@
 ## Todo
 
 -   intro
+-   fix akward player jank when moving
+-   player cleanup, exessive updates?
+-   mouse controls
 -   gameplay loop with game over
 -   rocket smoke, rename heat seaker to rocket? model?
--   bullet casings?
 -   ui
 
 53 mat + 22 instances

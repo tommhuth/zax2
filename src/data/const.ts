@@ -36,5 +36,4 @@ export const FLOOR_SIZE: Record<EditorStore["floorType"], number> = {
     floor3: 20,
     floor4: 48,
     floor5: 50.6,
-    floor6: 0,
 }

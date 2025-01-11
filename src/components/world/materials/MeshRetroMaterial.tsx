@@ -15,6 +15,7 @@ import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater }
 type MeshRetroMaterialProps = {
     colorCount?: number
     dither?: number
+    fog?: number
     rightColor?: string
     rightColorIntensity?: number
     backColor?: string
@@ -26,13 +27,14 @@ type MeshRetroMaterialProps = {
         vertex?: ShaderPart
         fragment?: ShaderPart
     }
-} & Omit<MeshLambertMaterialProps, "onBeforeCompile" | "dithering">
+} & Omit<MeshLambertMaterialProps, "onBeforeCompile" | "dithering" | "fog">
 
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
     color = bcolor,
     colorCount = 6,
     dither = .015,
+    fog = 1,
     rightColor = defaultRightColor,
     rightColorIntensity = .75,
     backColor = defaultBackColor,
@@ -49,6 +51,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
             ...shader?.uniforms,
             ...makeLightUniforms(),
             uTime: { value: 0 },
+            uFog: { value: fog },
             uColorCount: { value: colorCount },
             uDither: { value: dither },
             uAdditionalShadowStrength: {
@@ -75,6 +78,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         },
         shared: glsl`  
             uniform float uTime; 
+            uniform float uFog; 
             uniform vec3 uFogColor;  
             uniform vec3 uPlayerPosition; 
             uniform float uDither;    
@@ -121,8 +125,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
         },
         fragment: {
             head: shader?.fragment?.head,
-            main: glsl`   
-                 
+            main: glsl`    
                 for (int i = 0; i < uBasicDirectionLights.length(); i++) { 
                     BasicDirectionLight light = uBasicDirectionLights[i];
 
@@ -145,7 +148,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
                     baseFogColor, 
-                    min(1., noiseEffect * heightScaler + heightMin) 
+                    min(1., noiseEffect * heightScaler + heightMin) * uFog
                 );  
 
                 // custom lights

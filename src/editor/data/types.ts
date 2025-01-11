@@ -31,5 +31,5 @@ export interface EditorStore {
     axesVisible: boolean
     worldCenterVisible: boolean
     name: string
-    floorType: "floor1" | "floor2" | "floor3" | "floor4" | "floor5" | "floor6"
+    floorType: "floor1" | "floor2" | "floor3" | "floor4" | "floor5"
 }
