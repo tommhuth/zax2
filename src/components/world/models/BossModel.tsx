@@ -1,7 +1,7 @@
 import { GLTFModel } from "src/types.global"
 import { useStore } from "../../../data/store"
 import bossModel from "@assets/models/boss.glb"
-import bossDestroyedModel from "@assets/models/bossdestroyed.glb"
+import bossDestroyedModel from "@assets/models/boss-destroyed.glb"
 import { useGLTF } from "@react-three/drei"
 import { forwardRef, ReactNode } from "react"
 import { Group } from "three"
