@@ -127,7 +127,7 @@ let colors = [
 export default function Plant({
     position: [x, y, z] = [0, 0, 0],
     scale = 1,
-    rotation = random.float(0, Math.PI * 2)
+    rotation = 0
 }: PlantProps) {
     let partPosition = useWorldPart()
     let [index, instance] = useInstance("plant", {
