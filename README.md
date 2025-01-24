@@ -3,11 +3,14 @@
 ## Todo
 
 -   intro
--   fix akward player jank when moving
--   player cleanup, exessive updates?
--   mouse controls
--   gameplay loop with game over
+-   improve intro
+-   mouse controls?
+-   better player model/material
+-   gameplay loop with game over, improve loading state and game state?
 -   rocket smoke, rename heat seaker to rocket? model?
+-   forcefield obstacle??
+-   stronger shadow fix?
+-   invisible obstacle
 -   ui
 
 53 mat + 22 instances

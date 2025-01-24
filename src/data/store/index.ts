@@ -61,7 +61,7 @@ const store = create(
             targetPosition: new Vector3(WORLD_CENTER_X, 0, 0),
             velocity: new Vector3(),
             level: 1,
-            speed: 4,
+            speed: 0,
             health: 100,
             score: 0,
             object: null,

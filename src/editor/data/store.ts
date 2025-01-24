@@ -2,15 +2,15 @@ import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import random from "@huth/random"
 import { EditorStore } from "./types"
-import { getActiveMap, getStoreList, setActiveMap, setStoreList } from "./localStorage"
+import { getEditorActiveMap, getEditorMapList, setEditorActiveMap, setEditorMapList } from "./localStorage"
 
 const id = random.id()
-const activeMap = getActiveMap()
+const activeMap = getEditorActiveMap()
 const now = new Date()
-const initStore = getStoreList().find(i => i.data.id === activeMap)
+const initStore = getEditorMapList().find(i => i.data.id === activeMap)
 
-if (!getStoreList().some(i => i.data.id === getActiveMap())) {
-    setActiveMap(id)
+if (!getEditorMapList().some(i => i.data.id === getEditorActiveMap())) {
+    setEditorActiveMap(id)
 }
 
 const editorStore = create(
@@ -22,7 +22,11 @@ const editorStore = create(
         axesVisible: false,
         worldCenterVisible: false,
         floorType: "floor1",
-        name: `Untitled (${now.toLocaleDateString("en")} ${now.toLocaleTimeString("en", { hour: "2-digit", minute: "2-digit", hour12: false })})`,
+        name: `Untitled (${now.toLocaleDateString("en")} ${now.toLocaleTimeString("en", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        })})`,
         objects: [],
         ...initStore?.data,
     }))
@@ -30,15 +34,15 @@ const editorStore = create(
 const useEditorStore = editorStore
 
 editorStore.subscribe(state => {
-    let list = getStoreList()
+    let list = getEditorMapList()
 
-    setStoreList([
+    setEditorMapList([
         {
             data: state,
             savedAt: Date.now()
         },
-        ...list.filter(i => i.data.id !== getActiveMap())
+        ...list.filter(i => i.data.id !== getEditorActiveMap())
     ])
-}) 
+})
 
 export { editorStore, useEditorStore }

@@ -36,7 +36,7 @@ export default function Line({ index }: { index: number }) {
     return (
         <line
             ref={lineRef}
-            strokeWidth={4}
+            strokeWidth={6}
             stroke="rgb(255, 255, 255, 1)"
         />
     )

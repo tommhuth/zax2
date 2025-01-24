@@ -25,7 +25,7 @@ export default function Debug() {
         >
             <div>{state}</div>
             <label>
-                Speed: {player.speed}
+                Speed: {player.speed.toFixed(4)}
                 <input
                     type="range"
                     min={0}
@@ -148,7 +148,7 @@ export default function Debug() {
                         return (
                             <li
                                 key={i.id}
-                                style={{ 
+                                style={{
                                     opacity: i.position.z + i.size[1] < player.position.z ? .5 : 1,
                                     color: i.position.z < player.position.z && i.position.z + i.size[1] > player.position.z ? "orange" : undefined
                                 }}
@@ -159,7 +159,7 @@ export default function Debug() {
                     })}
                     {debug.forcedWorldParts.map((i, index) => {
                         return (
-                            <li 
+                            <li
                                 key={index}
                             >
                                 [{i}]

@@ -12,7 +12,7 @@ export default function ShaderLoader() {
         let onResize = () => {
             let viewport = getCurrentViewport(camera)
 
-            startTransition(() => setDiagonal(Math.hypot(viewport.width, viewport.height)))
+            startTransition(() => setDiagonal(viewport.width))
         }
 
         startTransition(onResize)

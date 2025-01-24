@@ -11,7 +11,7 @@ import { removeHeatSeaker, setBossProp } from "../data/store/boss"
 import { useCollisionDetection } from "../data/collisions"
 import { easeInOutCubic, easeInQuad } from "../data/shaping"
 import { damp } from "three/src/math/MathUtils.js"
-import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "../data/const"
+import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_PLAYER_START_Z } from "../data/const"
 import { uiTunnel } from "../components/ui/tunnels"
 import DebugBox from "./DebugBox"
 import { createExplosion, createParticles, setTimeScale } from "@data/store/effects"
@@ -58,19 +58,13 @@ interface LocalData {
     bossDeadAt: number
 }
 
-interface PlayerProps {
-    size?: Tuple3
-    z?: number
-    y?: number
-}
+let [x, y, z]: Tuple3 = [1.5, 1.5, 2]
 
-export default function Player({
-    z = 0,
-    y = 1.5
-}: PlayerProps) {
+export default function Player() {
     let scoreRef = useRef<HTMLDivElement>(null)
     let grid = useStore(i => i.world.grid)
     let ready = useStore(i => i.ready)
+    let state = useStore(i => i.state)
     let setup = useStore(i => i.setup)
     let bossState = useStore(i => i.boss.state)
     let position = useStore(i => i.player.position)
@@ -84,7 +78,7 @@ export default function Player({
             type: "player",
             id: "player",
         })
-    }, [grid, z])
+    }, [grid])
     let data = useMemo<LocalData>(() => {
         return {
             nextShotAt: 0,
@@ -117,9 +111,10 @@ export default function Player({
 
     useEffect(() => {
         if (playerObject && playerObject) {
-            playerObject.position.set(WORLD_CENTER_X, y, z)
+            playerObject.position.set(x, y, z)
+            targetPosition.copy(playerObject.position)
         }
-    }, [playerObject, z, y])
+    }, [playerObject, targetPosition])
 
     useEffect(() => {
         if (bossState === BossState.DEAD) {
@@ -242,8 +237,8 @@ export default function Player({
                 object.position.y = damp(object.position.y, y, 5, nd)
                 object.position.z += speed * nd
 
-                object.rotation.z = (targetPosition.x - object.position.x) * -.15
-                object.rotation.x = (targetPosition.y - object.position.y) * -.1
+                object.rotation.z = (targetPosition.x - object.position.x) * -.25
+                object.rotation.x = (targetPosition.y - object.position.y) * -.2
 
                 player.velocity.z = clamp((speed * nd) / (speed * nd), 0, 1)
             }
@@ -285,7 +280,7 @@ export default function Player({
                     className="player-ui"
                     key="player"
                     style={{
-                        opacity: !ready ? 0 : 1,
+                        opacity: !ready || state !== "running" ? 0 : 1,
                         marginBottom: ready ? 0 : "-1em",
                     }}
                 >

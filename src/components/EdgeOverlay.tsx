@@ -5,7 +5,7 @@ import { Group, MeshBasicMaterial } from "three"
 import animate from "@huth/animate"
 import { easeInOutQuart } from "../data/shaping"
 
-let material = new MeshBasicMaterial({ color: "#000", name: "edge" })
+let material = new MeshBasicMaterial({ wireframe: false, color: "#000", name: "edge" })
 
 export default function EdgeOverlay({ ready = false }) {
     let groupRef = useRef<Group>(null)
@@ -61,15 +61,18 @@ export default function EdgeOverlay({ ready = false }) {
                 position-y={13}
                 rotation-y={-.65}
                 material={material}
+                frustumCulled={false}
             >
-                <planeGeometry args={[22, 100, 1, 1]} />
+                <planeGeometry args={[22, 150, 1, 1]} />
             </mesh>
             <mesh
                 rotation-x={-Math.PI / 2}
                 position-y={12}
                 material={material}
+                frustumCulled={false}
+
             >
-                <planeGeometry args={[22, 100, 1, 1]} />
+                <planeGeometry args={[22, 150, 1, 1]} />
             </mesh>
         </group>
 

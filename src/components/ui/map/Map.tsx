@@ -1,6 +1,6 @@
 import { useStore } from "../../../data/store"
 import { BossState } from "../../../data/types"
-import Grid from "./Grid" 
+import Grid from "./Grid"
 import Marker from "./Marker"
 import { height, width } from "./utils"
 
@@ -11,6 +11,7 @@ export default function Map() {
     let turrets = useStore(i => i.world.turrets)
     let ready = useStore(i => i.ready)
     let bossState = useStore(i => i.boss.state)
+    let state = useStore(i => i.state)
 
     return (
         <div
@@ -18,7 +19,7 @@ export default function Map() {
                 position: "absolute",
                 height: 200,
                 zIndex: 100000000,
-                display: ready && bossState === BossState.UNKNOWN ? "flex" : "none",
+                display: state == "running" && ready && bossState === BossState.UNKNOWN ? "flex" : "none",
                 placeItems: "center",
                 placeContent: "center",
                 pointerEvents: "none"
@@ -50,7 +51,7 @@ export default function Map() {
                     zIndex: -1,
                     position: "absolute",
                     left: "50%",
-                    backgroundImage: "radial-gradient(at center, black 5%, transparent 70%)",
+                    //backgroundImage: "radial-gradient(at center, black 5%, transparent 70%)",
                     translate: "-50% 0",
                 }}
             />

@@ -49,6 +49,7 @@ export default function PlayerModel({ dead }: { dead: boolean }) {
                 receiveShadow
                 castShadow
                 visible={!dead}
+                frustumCulled={false}
             >
                 <MeshRetroMaterial
                     name="player"
@@ -64,12 +65,14 @@ export default function PlayerModel({ dead }: { dead: boolean }) {
                 rotation-x={-Math.PI * .5}
                 position={[0, -.25, -.7]}
                 visible={!dead}
+                frustumCulled={false}
             >
                 <planeGeometry args={[1, 1, 1, 1]} />
                 <meshBasicMaterial
                     map={glow}
                     transparent
                     depthWrite={false}
+                    name="playerGlow"
                     opacity={.2}
                     blending={AdditiveBlending}
                 />

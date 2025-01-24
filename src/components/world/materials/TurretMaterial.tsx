@@ -1,0 +1,18 @@
+import { MeshRetroMaterial } from "./MeshRetroMaterial"
+import { turretColor } from "@data/theme"
+
+export default function TurretMaterial() {
+    return (
+        <MeshRetroMaterial
+            color={turretColor}
+            name="turret"
+            emissive={turretColor}
+            emissiveIntensity={0.55}
+            rightColor="#f00"
+            rightColorIntensity={.45}
+            backColorIntensity={0}
+            colorCount={8}
+            dither={.005}
+        />
+    )
+}

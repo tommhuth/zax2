@@ -1,24 +1,19 @@
 import { WorldPart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
 import { useStore } from "@data/store"
-import model from "@assets/models/asteroid.glb"
-import { useGLTF } from "@react-three/drei"
-import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
-import Grass from "../actors/Grass"
-import Dirt from "../actors/Dirt"
-import Plant from "../actors/Plant"
-import { ComponentPropsWithoutRef, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { InstancedMesh, Mesh, Vector3 } from "three"
 import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
-import { clamp, glsl, ndelta, setColorAt, setMatrixAt } from "@data/utils"
-import { GLTFModel, Tuple2, Tuple3 } from "src/types.global"
-import { easeInOutCubic } from "@data/shaping"
+import { glsl, ndelta, setColorAt, setMatrixAt } from "@data/utils"
+import { Tuple3 } from "src/types.global"
 
 import noise from "../../../shaders/noise.glsl"
 import dither from "../../../shaders/dither.glsl"
 import utils from "../../../shaders/utils.glsl"
 import easings from "../../../shaders/easings.glsl"
+import animate from "@huth/animate"
+import { setPlayerSpeed } from "@data/store/player"
 
 export default function Start({
     id,
@@ -31,20 +26,17 @@ export default function Start({
             position={position}
             id={id}
         >
-            <Asteroid position={[3, 0, size[1] + position.z]} />
-            <Starfield position={position} size={size} />
-
-            <Plant position={[-5, 0, size[1] + -2]} />
-            <Grass position={[11, 0, size[1] + -5]} rotation={-.6} />
-            <Dirt position={[6, 0, size[1] + -8]} scale={1.5} />
-            <Dirt position={[-1, 0, size[1] + -5]} scale={1.25} rotation={2} />
+            <Starfield position={position} />
         </WorldPartWrapper>
     )
 }
 
-function Starfield({ position, count = 200, size }: { position: Vector3; count?: number; size: Tuple2 }) {
-    let diagonal = useStore(i => i.world.diagonal)
+function Starfield({ position }: { position: Vector3; }) {
+    let diagonal = useStore(i => i.world.diagonal) * 1
+    let count = Math.ceil(diagonal / .065)
     let player = useStore(i => i.player)
+    let state = useStore(i => i.state)
+    let [minSpeed, maxSpeed] = [1, 50]
     let colorData = useMemo(() => new Float32Array(count * 3).fill(1), [count])
     let [instance, setInstance] = useState<InstancedMesh | null>(null)
     let ref = useRef<Mesh>(null)
@@ -54,30 +46,44 @@ function Starfield({ position, count = 200, size }: { position: Vector3; count?:
             .map((i, index) => ({
                 position: [
                     random.float(-15, 20),
-                    random.float(-6, -3),
-                    position.z + random.float(-10, size[1])
+                    random.float(-10, -4),
+                    position.z + random.float(-10, diagonal)
                 ] as Tuple3,
                 id: random.id(),
                 radius: random.float(.025, .075),
-                length: random.float(3, 8),
-                speed: random.integer(15, 30),
+                length: 6,
+                speed: random.integer(minSpeed, maxSpeed),
                 color: random.integer(0, 255),
                 index,
             }))
-    }, [count, size, position])
+    }, [position, minSpeed, count, diagonal, maxSpeed])
     let uniforms = useMemo(() => {
         return {
             uTime: { value: 0 },
             uSpeed: { value: 1 }
         }
     }, [])
+    let speed = useRef(0)
+    let hasInitialized = useRef(false)
+
+    useEffect(() => {
+        if (state === "running" && !hasInitialized.current) {
+            hasInitialized.current = true
+            animate({
+                from: 0,
+                to: 1,
+                duration: 1_000,
+                //easing: easeOutCubic,
+                render(value) {
+                    speed.current = value
+                    setPlayerSpeed(value * 4)
+                },
+            })
+        }
+    }, [state])
 
     useFrame((state, delta) => {
-        let startAt = position.z + size[1] * .25
-        let exitDistance = 2
-        let t = (clamp((startAt - player.position.z) / (exitDistance), 0, 1))
-
-        uniforms.uSpeed.value = t
+        uniforms.uSpeed.value = 1 - speed.current
         uniforms.uTime.value += ndelta(delta)
     })
 
@@ -86,18 +92,13 @@ function Starfield({ position, count = 200, size }: { position: Vector3; count?:
             return
         }
 
-        let startAt = position.z + size[1] * .35
-        let exitDistance = 5
-
         for (let star of stars) {
-            let t = easeInOutCubic(
-                1 - clamp((startAt - player.position.z - star.speed * .05) / exitDistance, 0, 1)
-            )
+            let t = speed.current
 
-            star.position[2] -= star.speed * delta * (1 - t)
+            star.position[2] -= star.speed * ndelta(delta) * (1 - t)
 
-            if (star.position[2] < player.position.z - diagonal * 1) {
-                star.position[2] += diagonal * 2 + star.length
+            if (star.position[2] < player.position.z - diagonal) {
+                star.position[2] += diagonal * 3 + star.length
             }
 
             setColorAt(instance, star.index, `rgb(${star.color * .5}, ${star.color}, 255)`)
@@ -109,18 +110,21 @@ function Starfield({ position, count = 200, size }: { position: Vector3; count?:
                     star.position[1],
                     star.position[2] - (t - 1) * star.length * .25,
                 ],
-                scale: [star.radius, star.radius, star.radius + (t - 1) * star.length]
+                scale: [
+                    star.radius,
+                    star.radius,
+                    star.radius + (t - 1) * star.length * (star.speed - 10) / 30
+                ]
             })
         }
     })
-
 
     useFrame(() => {
         if (!player.object || !ref.current) {
             return
         }
 
-        ref.current.position.z = player.object.position.z + 6
+        ref.current.position.z = player.object.position.z + diagonal
     })
 
     return (
@@ -134,21 +138,22 @@ function Starfield({ position, count = 200, size }: { position: Vector3; count?:
                     args={[colorData, 3, false]}
                 />
                 <sphereGeometry args={[1, 16, 16]} />
-                <meshBasicMaterial color="white" />
+                <meshBasicMaterial name="star" color="white" />
             </instancedMesh>
 
             <mesh
                 ref={ref}
                 position-x={11}
-                position-y={-6}
+                position-y={-3.75}
             >
                 <planeGeometry
-                    args={[15, diagonal * 2, 1, 1]}
+                    args={[15, diagonal * 3, 1, 1]}
                     onUpdate={e => e.rotateX(-Math.PI * .5)}
                 />
                 <shaderMaterial
                     transparent
                     uniforms={uniforms}
+                    name="hyperspeed"
                     vertexShader={glsl`
                         varying vec3 vPosition;
 
@@ -173,9 +178,9 @@ function Starfield({ position, count = 200, size }: { position: Vector3; count?:
                         }
 
                         void main() {
-                            float width = 26.;
-                            float n = (noise(vPosition * .1 + vec3(0., uTime, uTime)) + 1.) / 2.;
-                            float edge = 1. - sat(abs(vPosition.x) / (width * .5)); 
+                            float width = 26. * uSpeed;
+                            float n = (noise(vPosition * vec3(.1, .1, .05) + vec3(0., uTime * .5, uTime * 1.)) + 1.) / 2.;
+                            float edge = 1. - sat(abs(vPosition.x + 3.) / (width * .5)); 
 
                             // big stroke
                             gl_FragColor.rgb = mix(
@@ -190,68 +195,16 @@ function Starfield({ position, count = 200, size }: { position: Vector3; count?:
                             gl_FragColor.rgb = mix(
                                 vec3(1.),
                                 gl_FragColor.rgb,
-                                easeOutCubic(sat(abs(vPosition.x+2.) / 2.))  - n * .5
-                            );
+                                easeOutCubic(sat(abs(vPosition.x + 3.) / 3.)) - n * .85
+                            ) ;
 
-                            gl_FragColor.a = luma(dither(gl_FragCoord.xy, vec3(easeInCubic(sat(edge + n * (1. - edge)))) * uSpeed, 3., .02));  
+                            gl_FragColor.a = easeInCubic(sat(edge + n * (1. - edge) * uSpeed));
+                            gl_FragColor.a = luma(dither(gl_FragCoord.xy, vec3(gl_FragColor.a), 3., .02)); 
+                            gl_FragColor.a = smoothstep(0.25, .75, gl_FragColor.a);
                         }
                     `}
                 />
             </mesh>
         </>
-    )
-}
-
-
-
-useGLTF.preload(model)
-
-export function Asteroid(props: ComponentPropsWithoutRef<"group">) {
-    let { nodes } = useGLTF(model) as GLTFModel<["Plane001", "Plane001_1"]>
-    let materials = useStore(i => i.materials)
-
-    return (
-        <group {...props} dispose={null}>
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Plane001_1.geometry}
-                material={materials.floorBase}
-            />
-            <mesh
-                geometry={nodes.Plane001.geometry}
-                castShadow
-                receiveShadow
-            >
-                <MeshRetroMaterial
-                    color="#5e00c9"
-                    emissive={"#5e00c9"}
-                    fog={.1}
-                    emissiveIntensity={.2}
-                    rightColorIntensity={0}
-                    backColorIntensity={0}
-                    shader={{
-                        fragment: {
-                            main: glsl` 
-                                    float n = (noise(vGlobalPosition * .25 + uTime * .5) + 1.) / 2.;
-                                    vec3 highlightPosition = vec3(-1., -.2, -.25) * n;
-
-                                    gl_FragColor.rgb = mix(
-                                        gl_FragColor.rgb, 
-                                        vec3(0., 0., .1), 
-                                        easeInQuad(clamp(-vPosition.y / 2.2, 0., 1.))  
-                                    );
- 
-                                    gl_FragColor.rgb = mix(
-                                        gl_FragColor.rgb, 
-                                        vec3(1., 0., 0.), 
-                                        clamp(dot(vGlobalNormal, highlightPosition), 0., 1.)
-                                    );
-                                `
-                        }
-                    }}
-                />
-            </mesh>
-        </group>
     )
 }

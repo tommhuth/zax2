@@ -1,15 +1,15 @@
 import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
-import { Mesh } from "three" 
+import { Mesh } from "three"
 import { useWindowEvent } from "../data/hooks"
-import { useStore } from "../data/store" 
+import { useStore } from "../data/store"
 import { EDGE_MAX, EDGE_MIN } from "../data/const"
- 
+
 export default function Controls() {
-    let {pointerPosition, keys, startPointerPosition} = useStore(i => i.controls)
+    let { pointerPosition, keys, startPointerPosition } = useStore(i => i.controls)
     let playerTargetPosition = useStore(i => i.player.targetPosition)
     let playerPosition = useStore(i => i.player.position)
-    let hitboxRef = useRef<Mesh>(null) 
+    let hitboxRef = useRef<Mesh>(null)
     let [isMovingUp, setIsMovingUp] = useState(false)
     let previousZ = useRef<null | number>(null)
 
@@ -42,41 +42,41 @@ export default function Controls() {
         }
     }, [keys])
 
-    useFrame(() => { 
-        if (previousZ.current !== null) { 
+    useFrame(() => {
+        if (previousZ.current !== null) {
             // also move any pointer start position forward too
-            pointerPosition.z += playerPosition.z - previousZ.current   
+            pointerPosition.z += playerPosition.z - previousZ.current
         }
 
-        previousZ.current = playerPosition.z  
+        previousZ.current = playerPosition.z
     })
 
-    useFrame(()=> {
+    useFrame(() => {
         if (!hitboxRef.current) {
-            return 
+            return
         }
 
         hitboxRef.current.position.z = playerPosition.z
     })
 
-    return ( 
+    return (
         <mesh
             ref={hitboxRef}
             position-y={.1}
             visible={false}
             rotation-x={-Math.PI / 2}
             onPointerUp={() => {
-                setIsMovingUp(false) 
+                setIsMovingUp(false)
             }}
             onPointerMove={({ pointerType, point }) => {
                 if (pointerType === "touch") {
-                    let depthThreshold = 2  
+                    let depthThreshold = 2
 
                     if (Math.abs(startPointerPosition.z - point.z) > depthThreshold) {
-                        setIsMovingUp(true) 
+                        setIsMovingUp(true)
                     }
 
-                    if (isMovingUp) { 
+                    if (isMovingUp) {
                         playerTargetPosition.y += (point.z - pointerPosition.z)
                     }
 

@@ -1,6 +1,6 @@
 import { setName } from "./data/actions"
 import { useState } from "react"
-import { getActiveMap, getStoreList, setActiveMap, setStoreList } from "./data/localStorage"
+import { getEditorActiveMap, getEditorMapList, setEditorActiveMap, setEditorMapList } from "./data/localStorage"
 import { useEditorStore } from "./data/store"
 
 export default function MapPicker() {
@@ -51,7 +51,7 @@ export default function MapPicker() {
                     display: mapListOpen ? undefined : "none"
                 }}
             >
-                {getStoreList().filter(i => i.data.id !== getActiveMap()).map(i => {
+                {getEditorMapList().filter(i => i.data.id !== getEditorActiveMap()).map(i => {
                     return (
                         <li
                             key={i.data.id}
@@ -62,7 +62,7 @@ export default function MapPicker() {
                         >
                             <button
                                 onClick={() => {
-                                    setActiveMap(i.data.id)
+                                    setEditorActiveMap(i.data.id)
                                     window.location.reload()
                                 }}
                                 style={{
@@ -87,7 +87,7 @@ export default function MapPicker() {
                                 }}
                                 onClick={() => {
                                     if (confirm("Delete " + i.data.name + "?")) {
-                                        setStoreList(getStoreList().filter(j => j.data.id !== i.data.id))
+                                        setEditorMapList(getEditorMapList().filter(j => j.data.id !== i.data.id))
                                         location.reload()
                                     }
                                 }}
@@ -100,7 +100,7 @@ export default function MapPicker() {
                 <li>
                     <button
                         onClick={() => {
-                            setActiveMap(-1)
+                            setEditorActiveMap(-1)
                             window.location.reload()
                         }}
                         style={{

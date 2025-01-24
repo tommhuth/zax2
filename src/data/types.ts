@@ -7,7 +7,7 @@ import LineSegment from "./LineSegment"
 export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" | "exhaust"
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
     | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock"
-    | "floorBase" | "floorHi" | "floorMark" | "floorSolid" | "bossFloorHi" | "turret"
+    | "floorBase" | "floorHi" | "floorMark" | "floorSolid" | "turret" | "asteroid"
 
 export type InstanceName = "leaf" | "scrap" | "line" | "sphere" | "particle"
     | "fireball" | "cable" | "shimmer" | "dirt" | "plant" | "shockwave" | "blast" | "decal"
@@ -125,6 +125,7 @@ export interface Plane {
 
 export enum WorldPartType {
     START = "start",
+    ASTEROID_START = "asteroid-start",
     DEFAULT = "default",
     BUILDINGS_GAP = "buildings-gap",
     BUILDINGS_LOW = "buildings-low",

@@ -1,12 +1,12 @@
 import { EditorStore } from "./types"
 
-interface LocaleStorageMapStore {
+interface StoredEditorMap {
     savedAt: number
     data: EditorStore
 }
 
-export function getStoreList() {
-    let stored: LocaleStorageMapStore[] = []
+export function getEditorMapList() {
+    let stored: StoredEditorMap[] = []
 
     try {
         let existing = JSON.parse(window.localStorage.getItem("editorMapList") as string)
@@ -16,19 +16,19 @@ export function getStoreList() {
         }
     } catch (e) {
         // do nothing
-    } 
+    }
 
     return stored
 }
 
-export function setStoreList(list: LocaleStorageMapStore[]) {
+export function setEditorMapList(list: StoredEditorMap[]) {
     window.localStorage.setItem("editorMapList", JSON.stringify(list))
 }
 
-export function getActiveMap() {
+export function getEditorActiveMap() {
     return window.localStorage.getItem("editorActiveMap")
 }
 
-export function setActiveMap(id: string | number) {
-    return window.localStorage.setItem("editorActiveMap", id.toString())
+export function setEditorActiveMap(id: string | number) {
+    window.localStorage.setItem("editorActiveMap", id.toString())
 }

@@ -1,6 +1,9 @@
-.player-ui {
+:root {
     --offsetx: 8vw;
     --offsety: 6vw;
+}
+
+.player-ui {
     position: fixed;
     left: var(--offsetx);
     right: var(--offsetx);
@@ -8,7 +11,7 @@
     display: flex;
     gap: 1.5em;
     z-index: 100;
-    transition: all .5s 2s;
+    transition: all .5s;
     flex-direction: row-reverse;
     pointer-events: none;
     font-size: 1.5em;
@@ -17,12 +20,22 @@
         display: none;
     }
 
-    @media (max-width: 800px), (max-height: 500px) {
+    @media (max-width: 800px),
+    (max-height: 500px) {
         font-size: 1.25em;
         flex-direction: row-reverse;
         --offsetx: 1.75em;
         --offsety: 1.5em;
     }
+}
+
+.intro {
+    position: absolute;
+    left: 50%;
+    font-size: 1.5em;
+    translate: -50% 0;
+    bottom: calc(max(var(--offsety), env(safe-area-inset-left)));
+    z-index: 100000;
 }
 
 .map {
@@ -49,11 +62,11 @@
         font-size: clamp(2.5em, 5vw, 4em);
         line-height: .9;
         margin-bottom: .75rem;
-        letter-spacing: -.01em; 
+        letter-spacing: -.01em;
     }
 
     p {
-        font-size: clamp(1.5em, 2vw, 2.5em); 
+        font-size: clamp(1.5em, 2vw, 2.5em);
     }
 }
 

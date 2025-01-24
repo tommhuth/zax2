@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { memo, startTransition, useEffect } from "react"
+import { memo, startTransition, useEffect, useLayoutEffect, useRef } from "react"
 import { store, useStore } from "../../data/store"
 import Turret from "./actors/Turret"
 import Plane from "./actors/Plane"
@@ -24,25 +24,74 @@ import RockValley from "./parts/RockValley"
 import { DynamicWorldPartType, partGenerator } from "@data/world/getNextWorldPart"
 import { WorldPartType } from "@data/types"
 import GrassPart from "./parts/Grass"
+import { makeAsteroidStart, makeStart } from "@data/world/generators"
+import AsteroidStart from "./parts/AsteroidStart"
+import { setState } from "@data/store/utils"
+
+
+const startType = window.localStorage.getItem("initPartType") as DynamicWorldPartType | null
+
+window.localStorage.removeItem("initPartType")
 
 export default function World() {
     let diagonal = useStore(i => i.world.diagonal)
     let loaded = useStore(i => i.loaded)
+    let state = useStore(i => i.state)
+    let hasinit = useRef(false)
 
     useFrame((state, delta) => {
         setTime(store.getState().effects.time + ndelta(delta))
     })
+
+    useEffect(() => {
+        let onClick = () => {
+            let { state, world } = useStore.getState()
+            let previousPart = world.parts.at(-1)
+
+            if (state === "intro" && previousPart) {
+                setState("running")
+                addWorldPart(makeAsteroidStart(previousPart))
+            } else if (state === "gameover") {
+                // reset
+            }
+        }
+
+        window.addEventListener("click", onClick)
+
+        return () => {
+            window.removeEventListener("click", onClick)
+        }
+    }, [])
+
+    useLayoutEffect(() => {
+        if (!loaded || !diagonal) {
+            return
+        }
+
+        if (startType) {
+            startTransition(() => {
+                addWorldPart(partGenerator[startType]({
+                    position: new Vector3(0, 0, WORLD_START_Z),
+                    size: [0, 0],
+                }))
+            })
+        } else if (state === "intro" && !hasinit.current) {
+            addWorldPart(makeStart(diagonal))
+            hasinit.current = true
+        }
+    }, [loaded, diagonal, state])
 
     useFrame(() => {
         let {
             world: { parts },
             player: { object: player },
             ready,
-            debug
+            debug,
+            state
         } = store.getState()
         let forwardWorldPart = parts[parts.length - 1]
 
-        if (forwardWorldPart && player) {
+        if (forwardWorldPart && player && state === "running") {
             let lastPartIsAtEdge = forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
 
             if (
@@ -54,21 +103,6 @@ export default function World() {
             }
         }
     })
-
-    useEffect(() => {
-        const startType = window.localStorage.getItem("initPartType") as DynamicWorldPartType
-
-        window.localStorage.removeItem("initPartType")
-
-        if (loaded) {
-            startTransition(() => {
-                addWorldPart(partGenerator[startType || WorldPartType.START]({
-                    position: new Vector3(0, 0, WORLD_START_Z),
-                    size: [0, 0],
-                }))
-            })
-        }
-    }, [loaded])
 
     return (
         <>
@@ -87,12 +121,14 @@ function WorldParts() {
 
     return parts.map(i => {
         switch (i.type) {
+            case WorldPartType.START:
+                return <Start key={i.id} {...i} />
+            case WorldPartType.ASTEROID_START:
+                return <AsteroidStart key={i.id} {...i} />
             case WorldPartType.ROCK_VALLEY:
                 return <RockValley key={i.id} {...i} />
             case WorldPartType.DEFAULT:
                 return <Default key={i.id} {...i} />
-            case WorldPartType.START:
-                return <Start key={i.id} {...i} />
             case WorldPartType.BUILDINGS_GAP:
                 return <BuildingsGap key={i.id} {...i} />
             case WorldPartType.BUILDINGS_LOW:
