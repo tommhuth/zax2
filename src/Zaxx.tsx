@@ -14,6 +14,8 @@ import Config from "@data/Config"
 
 export default function Zaxx() {
     let ready = useStore(i => i.ready)
+    let attempts = useStore(i => i.player.attempts)
+
 
     return (
         <>
@@ -21,14 +23,14 @@ export default function Zaxx() {
             <Canvas>
                 {Config.STATS && <Perf deepAnalyze />}
 
-                <Controls />
-                <Camera />
-                <EdgeOverlay ready={ready} />
+                <Controls key={"controls-" + attempts} />
+                <Camera key={"camera-" + attempts} />
+                <EdgeOverlay key={"edgeoverlay-" + attempts} ready={ready} />
 
                 <group dispose={null}>
                     <SharedModels />
-                    <World />
-                    <Player />
+                    <World key={"world-" + attempts} />
+                    <Player key={"player-" + attempts} />
                 </group>
             </Canvas>
         </>

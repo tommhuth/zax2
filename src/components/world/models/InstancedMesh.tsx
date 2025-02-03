@@ -81,6 +81,17 @@ export default function InstancedMesh({
 }: InstancedMeshProps) {
     let colorData = useMemo(() => new Float32Array(count * 3).fill(0), [count])
     let [instance, setInstanceRef] = useState<InstancedMeshThree | null>(null)
+    let attempts = useStore(i => i.player.attempts)
+
+    useEffect(() => {
+        if (!instance) {
+            return
+        }
+
+        for (let i = 0; i < count; i++) {
+            setMatrixNullAt(instance, i)
+        }
+    }, [attempts, count, instance])
 
     useEffect(() => {
         if (!instance || store.getState().instances[name]?.mesh === instance) {

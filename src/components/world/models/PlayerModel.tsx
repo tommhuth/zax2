@@ -19,28 +19,26 @@ export default function PlayerModel({ dead }: { dead: boolean }) {
 
     // intro anim in
     useLayoutEffect(() => {
-        if (!innerRef.current) {
+        if (!innerRef.current || !ready || !diagonal) {
             return
         }
 
         innerRef.current.position.z = -diagonal
 
-        if (ready) {
-            return animate({
-                from: -diagonal,
-                to: 0,
-                easing: easeOutExpo,
-                duration: 4000,
-                delay: 2000,
-                render(z) {
-                    if (!innerRef.current) {
-                        return
-                    }
+        return animate({
+            from: -diagonal,
+            to: 0,
+            easing: easeOutExpo,
+            duration: 4000,
+            delay: 2000,
+            render(z) {
+                if (!innerRef.current) {
+                    return
+                }
 
-                    innerRef.current.position.z = z
-                },
-            })
-        }
+                innerRef.current.position.z = z
+            },
+        })
     }, [ready, diagonal])
 
     return (

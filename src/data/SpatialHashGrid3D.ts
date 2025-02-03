@@ -22,6 +22,10 @@ export class SpatialHashGrid3D {
         this.cellSize = cellSize
     }
 
+    public empty() {
+        this.grid.clear()
+    }
+
     private getCellIndex(x: number, y: number, z: number): Tuple3 {
         return [
             Math.floor(x / this.cellSize[0]),

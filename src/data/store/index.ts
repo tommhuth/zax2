@@ -65,6 +65,7 @@ const store = create(
             health: 100,
             score: 0,
             object: null,
+            attempts: 0,
             weapon: {
                 fireFrequency: 150,
                 damage: 35,

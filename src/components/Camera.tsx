@@ -11,19 +11,20 @@ let _matrix = new Matrix4()
 
 export default function Camera({ editorMode = false, z = 0 }) {
     let { camera } = useThree()
-    let setup = useStore(i => i.setup)  
+    let setup = useStore(i => i.setup)
+    let attempts = useStore(i => i.player.attempts)
 
     useLayoutEffect(() => {
         camera.position.copy(CAMERA_POSITION)
         camera.lookAt(0, 0, 0)
         camera.position.add(CAMERA_OFFSET)
-    }, [camera])
+    }, [camera, attempts])
 
     useLayoutEffect(() => {
-        if (setup) {
+        if (setup || attempts > 0) {
             camera.position.z = WORLD_PLAYER_START_Z + CAMERA_POSITION.z + CAMERA_OFFSET.z
         }
-    }, [setup, editorMode, camera])
+    }, [setup, editorMode, camera, attempts])
 
     useFrame(() => {
         let { world } = store.getState()
@@ -32,21 +33,29 @@ export default function Camera({ editorMode = false, z = 0 }) {
         world.frustum.setFromProjectionMatrix(_matrix)
     })
 
-    useEffect(()=> {
+    useEffect(() => {
         if (editorMode && typeof z === "number" && setup) {
             // not sure whats going on here
-            camera.position.z = WORLD_PLAYER_START_Z + CAMERA_POSITION.z + CAMERA_OFFSET.z + z
+            camera.position.z = WORLD_PLAYER_START_Z
+                + CAMERA_POSITION.z
+                + CAMERA_OFFSET.z
+                + z
         }
     }, [z, editorMode, camera, setup])
 
-    useFrame((state, delta) => {
-        let { player, effects } = store.getState()
+    useFrame((_, delta) => {
+        let { player, effects, state } = store.getState()
 
         if (player.object && setup && !editorMode) {
-            let targetZ = player.object.position.z + CAMERA_POSITION.z + CAMERA_OFFSET.z
+            let offset = ["running", "gameover"].includes(state) ? CAMERA_OFFSET.z : 0
+            let targetZ = player.object.position.z
+                + CAMERA_POSITION.z
+                + offset
 
-            camera.position.z = damp(camera.position.z, targetZ, 5, delta)
-            camera.position.x = CAMERA_POSITION.x + CAMERA_OFFSET.x + effects.trauma.x * random.float(-1, 1)
+            camera.position.z = damp(camera.position.z, targetZ, 4, delta)
+            camera.position.x = CAMERA_POSITION.x
+                + CAMERA_OFFSET.x
+                + effects.trauma.x * random.float(-1, 1)
 
             setTrauma(damp(effects.trauma.x, 0, 3, delta))
         }

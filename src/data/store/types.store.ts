@@ -66,6 +66,7 @@ export interface ZaxStore {
         level: number
         position: Vector3
         targetPosition: Vector3
+        attempts: number,
         weapon: {
             fireFrequency: number,
             color: string,

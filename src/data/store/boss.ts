@@ -25,7 +25,7 @@ export function resetBoss() {
         boss: {
             ...state.boss,
             pauseAt: Infinity,
-            health: 1,
+            health: Infinity,
             state: BossState.UNKNOWN,
             lastActiveAt: new Date(),
             heatSeakers: [],

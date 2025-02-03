@@ -5,8 +5,30 @@ import { setPlayerHealth, setPlayerSpeed } from "@data/store/player"
 import { addForcedWorldPart, setPauseWorldGeneration, setShowColliders } from "@data/store/debug"
 import { WorldPartType } from "@data/types"
 import { worlPartTypes } from "@data/world/getNextWorldPart"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { setTimeScale } from "@data/store/effects"
+import { Vector3 } from "three"
+import { useAnimationFrame } from "@data/hooks"
+
+
+function RealtimePosition({ position, label }: { position?: Vector3, label?: string }) {
+    let [ref, setRef] = useState<HTMLDivElement | null>(null)
+
+    useAnimationFrame(() => {
+        if (!ref || !position) {
+            return
+        }
+
+        ref.innerText = `[ ${position.x.toFixed(1)}, ${position.y.toFixed(1)}, ${position.z.toFixed(1)} ]`
+    }, [position, ref])
+
+    return (
+        <div>
+            {label}
+            <div ref={setRef} />
+        </div>
+    )
+}
 
 export default function Debug() {
     const [
@@ -17,6 +39,7 @@ export default function Debug() {
         player,
         effects,
     ] = useStore(i => [i.state, i.boss, i.world, i.debug, i.player, i.effects])
+    const playerObject = useStore(i => i.player.object)
     const selectRef = useRef<HTMLSelectElement>(null)
 
     return (
@@ -73,13 +96,14 @@ export default function Debug() {
                 </div>
             </div>
             <ul>
-                <li>Turrets: {world.turrets.length}</li>
-                <li>Planes: {world.planes.length}</li>
-                <li>Barells: {world.barrels.length}</li>
-                <li>Rockets: {world.rockets.length}</li>
-                <li>Bullets: {world.bullets.length}</li>
-                <li>Heat seakers: {boss.heatSeakers.length}</li>
+                <li>{world.turrets.length} turrets</li>
+                <li>{world.planes.length} planes</li>
+                <li>{world.barrels.length} barells</li>
+                <li>{world.rockets.length} rockets</li>
+                <li>{world.bullets.length} bullets</li>
+                <li>{boss.heatSeakers.length} heat seakers</li>
             </ul>
+            <RealtimePosition label="Player" position={playerObject?.position} />
             <fieldset>
                 <legend className="visually-hidden">World</legend>
 

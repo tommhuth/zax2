@@ -10,7 +10,7 @@ import BulletHandler from "../BulletHandler"
 import BuildingsGap from "./parts/BuildingsGap"
 import BuildingsLow from "./parts/BuildingsLow"
 import Rocket from "./actors/Rocket"
-import { addWorldPart } from "../../data/store/world"
+import { addWorldPart, reset } from "../../data/store/world"
 import ExplosionsHandler from "./effects/ExplosionsHandler"
 import Airstrip from "./parts/Airstrip"
 import Start from "./parts/Start"
@@ -37,7 +37,12 @@ export default function World() {
     let diagonal = useStore(i => i.world.diagonal)
     let loaded = useStore(i => i.loaded)
     let state = useStore(i => i.state)
-    let hasinit = useRef(false)
+    let attempts = useStore(i => i.player.attempts)
+    let hasInitialized = useRef(false)
+
+    useLayoutEffect(() => {
+        hasInitialized.current = false
+    }, [attempts])
 
     useFrame((state, delta) => {
         setTime(store.getState().effects.time + ndelta(delta))
@@ -52,7 +57,7 @@ export default function World() {
                 setState("running")
                 addWorldPart(makeAsteroidStart(previousPart))
             } else if (state === "gameover") {
-                // reset
+                reset()
             }
         }
 
@@ -75,9 +80,9 @@ export default function World() {
                     size: [0, 0],
                 }))
             })
-        } else if (state === "intro" && !hasinit.current) {
+        } else if (state === "intro" && !hasInitialized.current) {
             addWorldPart(makeStart(diagonal))
-            hasinit.current = true
+            hasInitialized.current = true
         }
     }, [loaded, diagonal, state])
 

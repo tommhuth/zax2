@@ -1,18 +1,18 @@
 import { useFrame } from "@react-three/fiber"
-import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react"
 import { Group, Vector3 } from "three"
 import { Tuple3 } from "../types.global"
 import { clamp, ndelta } from "../data/utils"
 import { BossState, Owner } from "../data/types"
 import animate from "@huth/animate"
 import { store, useStore } from "../data/store"
+import { useShallow } from "zustand/react/shallow"
 import { damagePlayer, setPlayerObject } from "../data/store/player"
 import { removeHeatSeaker, setBossProp } from "../data/store/boss"
 import { useCollisionDetection } from "../data/collisions"
 import { easeInOutCubic, easeInQuad } from "../data/shaping"
 import { damp } from "three/src/math/MathUtils.js"
 import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_PLAYER_START_Z } from "../data/const"
-import { uiTunnel } from "../components/ui/tunnels"
 import DebugBox from "./DebugBox"
 import { createExplosion, createParticles, setTimeScale } from "@data/store/effects"
 import random from "@huth/random"
@@ -22,9 +22,11 @@ import { damageRocket } from "@data/store/actors/rocket.actions"
 import { damageTurret } from "@data/store/actors/turret.actions"
 import { damageBarrel } from "@data/store/actors/barrel.actions"
 import PlayerModel from "./world/models/PlayerModel"
+import { setState } from "@data/store/utils"
 
 const depth = 2
 const size: Tuple3 = [1.5, 1, depth]
+const [x, y, z]: Tuple3 = [1.5, 1.5, 0]
 
 function explode(position: Vector3) {
     for (let i = 0; i < 9; i++) {
@@ -58,21 +60,23 @@ interface LocalData {
     bossDeadAt: number
 }
 
-let [x, y, z]: Tuple3 = [1.5, 1.5, 2]
-
 export default function Player() {
-    let scoreRef = useRef<HTMLDivElement>(null)
     let grid = useStore(i => i.world.grid)
-    let ready = useStore(i => i.ready)
-    let state = useStore(i => i.state)
-    let setup = useStore(i => i.setup)
     let bossState = useStore(i => i.boss.state)
-    let position = useStore(i => i.player.position)
-    let targetPosition = useStore(i => i.player.targetPosition)
-    let health = useStore(i => i.player.health)
-    let playerObject = useStore(i => i.player.object)
+    let [
+        setup,
+        controls
+    ] = useStore(useShallow(i => [i.setup, i.controls]))
+    let [
+        targetPosition,
+        position,
+        health,
+        attempts,
+        playerObject
+    ] = useStore(
+        useShallow(({ player }) => [player.targetPosition, player.position, player.health, player.attempts, player.object])
+    )
     let [dead, setDead] = useState(false)
-    let controls = useStore(i => i.controls)
     let client = useMemo(() => {
         return grid.createClient([0, 0, z], size, {
             type: "player",
@@ -96,6 +100,7 @@ export default function Player() {
     useEffect(() => {
         if (health === 0) {
             explode(position)
+            setState("gameover")
             setDead(true)
             animate({
                 from: 1,
@@ -108,13 +113,6 @@ export default function Player() {
             })
         }
     }, [health, position])
-
-    useEffect(() => {
-        if (playerObject && playerObject) {
-            playerObject.position.set(x, y, z)
-            targetPosition.copy(playerObject.position)
-        }
-    }, [playerObject, targetPosition])
 
     useEffect(() => {
         if (bossState === BossState.DEAD) {
@@ -155,22 +153,20 @@ export default function Player() {
         },
     })
 
-    useEffect(() => {
-        return useStore.subscribe((state) => {
-            if (!scoreRef.current) {
-                return
-            }
-
-            scoreRef.current.innerText = state.player.score.toLocaleString("en")
-        })
-    }, [])
+    // init player position
+    useLayoutEffect(() => {
+        if (playerObject) {
+            playerObject.position.set(x, y, z)
+            targetPosition.copy(playerObject.position)
+        }
+    }, [playerObject, targetPosition])
 
     // init player ready position
     useLayoutEffect(() => {
         if (setup && playerObject) {
             playerObject.position.z = WORLD_PLAYER_START_Z
         }
-    }, [setup, playerObject])
+    }, [setup, attempts, playerObject])
 
     // input
     useFrame((state, delta) => {
@@ -267,28 +263,12 @@ export default function Player() {
         }
     })
 
-
     return (
         <>
             <group ref={handleRef}>
                 <PlayerModel dead={dead} />
                 <DebugBox size={size} />
             </group>
-
-            <uiTunnel.In>
-                <div
-                    className="player-ui"
-                    key="player"
-                    style={{
-                        opacity: !ready || state !== "running" ? 0 : 1,
-                        marginBottom: ready ? 0 : "-1em",
-                    }}
-                >
-                    {health.toFixed(0)}%
-
-                    <div ref={scoreRef} />
-                </div>
-            </uiTunnel.In>
         </>
     )
 }

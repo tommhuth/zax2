@@ -14,6 +14,7 @@ import utils from "../../../shaders/utils.glsl"
 import easings from "../../../shaders/easings.glsl"
 import animate from "@huth/animate"
 import { setPlayerSpeed } from "@data/store/player"
+import { easeOutSine } from "@data/shaping"
 
 export default function Start({
     id,
@@ -32,8 +33,8 @@ export default function Start({
 }
 
 function Starfield({ position }: { position: Vector3; }) {
-    let diagonal = useStore(i => i.world.diagonal) * 1
-    let count = Math.ceil(diagonal / .065)
+    let diagonal = useStore(i => i.world.diagonal)
+    let count = Math.ceil(diagonal / .015)
     let player = useStore(i => i.player)
     let state = useStore(i => i.state)
     let [minSpeed, maxSpeed] = [1, 50]
@@ -72,8 +73,8 @@ function Starfield({ position }: { position: Vector3; }) {
             animate({
                 from: 0,
                 to: 1,
-                duration: 1_000,
-                //easing: easeOutCubic,
+                duration: 1600,
+                easing: easeOutSine,
                 render(value) {
                     speed.current = value
                     setPlayerSpeed(value * 4)
@@ -124,7 +125,7 @@ function Starfield({ position }: { position: Vector3; }) {
             return
         }
 
-        ref.current.position.z = player.object.position.z + diagonal
+        ref.current.position.z = player.object.position.z
     })
 
     return (
@@ -137,7 +138,7 @@ function Starfield({ position }: { position: Vector3; }) {
                     attach="instanceColor"
                     args={[colorData, 3, false]}
                 />
-                <sphereGeometry args={[1, 16, 16]} />
+                <sphereGeometry args={[1, 24, 24]} />
                 <meshBasicMaterial name="star" color="white" />
             </instancedMesh>
 
@@ -147,7 +148,7 @@ function Starfield({ position }: { position: Vector3; }) {
                 position-y={-3.75}
             >
                 <planeGeometry
-                    args={[15, diagonal * 3, 1, 1]}
+                    args={[30, diagonal * 3, 1, 1]}
                     onUpdate={e => e.rotateX(-Math.PI * .5)}
                 />
                 <shaderMaterial
