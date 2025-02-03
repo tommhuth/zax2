@@ -3,27 +3,37 @@ import MaterialLoader from "@components/world/materials/MaterialLoader"
 import Config from "@data/Config"
 import { Perf } from "r3f-perf"
 import { CanvasProps, Canvas as FiberCanvas } from "@react-three/fiber"
-import { DPR, PIXEL_SIZE, ZOOM } from "@data/const"
-import { Suspense, useEffect, useState } from "react"
+import { startTransition, Suspense, useEffect, useState } from "react"
 import { BasicShadowMap, NoToneMapping } from "three"
 import { useStore } from "@data/store"
 import ShaderLoader from "./components/ShaderLoader"
+import { getZoom } from "@components/Camera"
 
 // round up to full pixel
 export let getSize = () => [
-    Math.ceil(window.innerWidth / PIXEL_SIZE) * PIXEL_SIZE,
-    Math.ceil(window.innerHeight / PIXEL_SIZE) * PIXEL_SIZE,
+    Math.ceil(window.innerWidth / getPixelSize()) * getPixelSize(),
+    Math.ceil(window.innerHeight / getPixelSize()) * getPixelSize(),
 ]
+
+function getPixelSize() {
+    return Math.min(window.innerWidth, window.innerHeight) < 800 ? 3 : 4
+}
+
+export function getDpr() {
+    const pixelSize = getPixelSize()
+
+    return 1 / pixelSize
+}
 
 export default function Canvas({ children, ...rest }: CanvasProps) {
     let [size, setSize] = useState(() => getSize())
     let ready = useStore((i) => i.ready)
 
     useEffect(() => {
-        let tid: ReturnType<typeof setTimeout>
         let update = () => {
-            clearTimeout(tid)
-            tid = setTimeout(() => setSize(getSize()), 50)
+            startTransition(() => {
+                setSize(getSize())
+            })
         }
 
         screen.orientation.addEventListener("change", update)
@@ -58,11 +68,11 @@ export default function Canvas({ children, ...rest }: CanvasProps) {
             }}
             orthographic
             camera={{
-                zoom: ZOOM,
+                zoom: getZoom(),
                 near: 1,
                 far: 150,
             }}
-            dpr={DPR}
+            dpr={getDpr()} // todo: inline reactive
             {...rest}
         >
             <Lights />

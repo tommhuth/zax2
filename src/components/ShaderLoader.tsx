@@ -9,10 +9,14 @@ export default function ShaderLoader() {
     let loaded = useStore((i) => i.loaded)
 
     useEffect(() => {
+        let tid: ReturnType<typeof setTimeout>
         let onResize = () => {
-            let viewport = getCurrentViewport(camera)
+            clearTimeout(tid)
+            tid = setTimeout(() => {
+                let viewport = getCurrentViewport(camera)
 
-            startTransition(() => setDiagonal(viewport.width))
+                startTransition(() => setDiagonal(viewport.width))
+            }, 150)
         }
 
         startTransition(onResize)
@@ -35,10 +39,14 @@ export default function ShaderLoader() {
     useEffect(() => {
         if (loaded) {
             startTransition(setSetup)
-            setTimeout(() => {
+            let tid = setTimeout(() => {
                 document.getElementById("loading")?.remove()
                 startTransition(setReady)
             }, 1000)
+
+            return () => {
+                clearTimeout(tid)
+            }
         }
     }, [loaded])
 

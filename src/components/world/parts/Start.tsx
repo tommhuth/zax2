@@ -33,7 +33,7 @@ export default function Start({
 }
 
 function Starfield({ position }: { position: Vector3; }) {
-    let diagonal = useStore(i => i.world.diagonal)
+    let diagonal = useStore(i => i.world.diagonal) * 3
     let count = Math.ceil(diagonal / .015)
     let player = useStore(i => i.player)
     let state = useStore(i => i.state)
@@ -125,7 +125,7 @@ function Starfield({ position }: { position: Vector3; }) {
             return
         }
 
-        ref.current.position.z = player.object.position.z
+        ref.current.position.z = player.object.position.z + diagonal * .25
     })
 
     return (
@@ -148,7 +148,7 @@ function Starfield({ position }: { position: Vector3; }) {
                 position-y={-3.75}
             >
                 <planeGeometry
-                    args={[30, diagonal * 3, 1, 1]}
+                    args={[30, diagonal, 1, 1]}
                     onUpdate={e => e.rotateX(-Math.PI * .5)}
                 />
                 <shaderMaterial
@@ -180,8 +180,9 @@ function Starfield({ position }: { position: Vector3; }) {
 
                         void main() {
                             float width = 26. * uSpeed;
+                            float centerOffset = 4.5; // align with world center 
                             float n = (noise(vPosition * vec3(.1, .1, .05) + vec3(0., uTime * .5, uTime * 1.)) + 1.) / 2.;
-                            float edge = 1. - sat(abs(vPosition.x + 3.) / (width * .5)); 
+                            float edge = 1. - sat(abs(vPosition.x + centerOffset) / (width * .5)); 
 
                             // big stroke
                             gl_FragColor.rgb = mix(
@@ -196,7 +197,7 @@ function Starfield({ position }: { position: Vector3; }) {
                             gl_FragColor.rgb = mix(
                                 vec3(1.),
                                 gl_FragColor.rgb,
-                                easeOutCubic(sat(abs(vPosition.x + 3.) / 3.)) - n * .85
+                                easeOutCubic(sat(abs(vPosition.x + centerOffset) / 3.)) - n * .85
                             ) ;
 
                             gl_FragColor.a = easeInCubic(sat(edge + n * (1. - edge) * uSpeed));

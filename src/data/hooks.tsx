@@ -103,7 +103,7 @@ export const useAnimationFrame = (callback: (delta: number) => void) => {
         requestRef.current = requestAnimationFrame(animate)
 
         return () => cancelAnimationFrame(requestRef.current as number)
-    }, [callback])
+    })
 }
 
 export function useWindowEvent(name: string | string[], func: (e: any) => void, deps: any[] = []) {

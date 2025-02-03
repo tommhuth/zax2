@@ -20,7 +20,7 @@ function RealtimePosition({ position, label }: { position?: Vector3, label?: str
         }
 
         ref.innerText = `[ ${position.x.toFixed(1)}, ${position.y.toFixed(1)}, ${position.z.toFixed(1)} ]`
-    }, [position, ref])
+    })
 
     return (
         <div>

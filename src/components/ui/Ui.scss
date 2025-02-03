@@ -37,6 +37,7 @@
     translate: -50% 0;
     bottom: calc(max(var(--offsety), env(safe-area-inset-left)));
     z-index: 100000;
+    white-space: nowrap;
 }
 
 .map {

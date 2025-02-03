@@ -28,7 +28,6 @@ import { makeAsteroidStart, makeStart } from "@data/world/generators"
 import AsteroidStart from "./parts/AsteroidStart"
 import { setState } from "@data/store/utils"
 
-
 const startType = window.localStorage.getItem("initPartType") as DynamicWorldPartType | null
 
 window.localStorage.removeItem("initPartType")
@@ -97,7 +96,8 @@ export default function World() {
         let forwardWorldPart = parts[parts.length - 1]
 
         if (forwardWorldPart && player && state === "running") {
-            let lastPartIsAtEdge = forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + diagonal
+            let buffer = Math.max(diagonal * 1.5, 20)
+            let lastPartIsAtEdge = forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + buffer
 
             if (
                 lastPartIsAtEdge

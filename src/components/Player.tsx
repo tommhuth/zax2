@@ -26,7 +26,7 @@ import { setState } from "@data/store/utils"
 
 const depth = 2
 const size: Tuple3 = [1.5, 1, depth]
-const [x, y, z]: Tuple3 = [1.5, 1.5, 0]
+const [x, y, z]: Tuple3 = [0, 1.5, 0]
 
 function explode(position: Vector3) {
     for (let i = 0; i < 9; i++) {
@@ -264,11 +264,9 @@ export default function Player() {
     })
 
     return (
-        <>
-            <group ref={handleRef}>
-                <PlayerModel dead={dead} />
-                <DebugBox size={size} />
-            </group>
-        </>
+        <group ref={handleRef}>
+            <PlayerModel dead={dead} />
+            <DebugBox size={size} />
+        </group>
     )
 }
