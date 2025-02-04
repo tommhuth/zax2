@@ -181,7 +181,7 @@ function Starfield({ position }: { position: Vector3; }) {
                         void main() {
                             float width = 26. * uSpeed;
                             float centerOffset = 4.5; // align with world center 
-                            float n = (noise(vPosition * vec3(.1, .1, .05) + vec3(0., uTime * .5, uTime * 1.)) + 1.) / 2.;
+                            float n = (noise(vPosition * vec3(.1, .1, .05) + vec3(0., uTime * .75, uTime * 1.5)) + 1.) / 2.;
                             float edge = 1. - sat(abs(vPosition.x + centerOffset) / (width * .5)); 
 
                             // big stroke

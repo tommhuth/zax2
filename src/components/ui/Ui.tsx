@@ -1,14 +1,48 @@
 import { useStore } from "../../data/store"
 import Map from "./map/Map"
 import Debug from "./Debug"
-import { uiTunnel } from "./tunnels"
 import { useEffect, useRef } from "react"
 
 import "./Ui.scss"
+import { BossState } from "@data/types"
 
 function GameOver() {
     return (
         <div className="game-over">Game over</div>
+    )
+}
+
+function BossUi() {
+    let boss = useStore(i => i.boss)
+    let level = useStore(i => i.player.level)
+
+    return (
+        <>
+            <div
+                className="boss-health"
+                style={{
+                    display: boss.state === BossState.ACTIVE ? "block" : "none"
+                }}
+                key="bosshealth"
+            >
+                <div
+                    className="boss-health__bar"
+                    style={{
+                        width: boss ? (boss.health / boss.maxHealth) * 100 + "%" : 0,
+                    }}
+                />
+            </div>
+
+            <div
+                className={"level"}
+                key="level"
+                style={{
+                    display: boss?.state === BossState.OUTRO ? "block" : "none"
+                }}
+            >
+                <p>Level#{level}</p>
+            </div>
+        </>
     )
 }
 
@@ -41,15 +75,16 @@ export default function Ui() {
     let qs = new URLSearchParams(location.search)
     let ready = useStore(i => i.ready)
     let state = useStore(i => i.state)
+    let boss = useStore(i => i.boss)
 
     return (
         <>
             <Map />
-            <uiTunnel.Out />
 
             {ready && state === "intro" && <Intro />}
             {state === "gameover" && <GameOver />}
             {state === "running" && <PlayerUi />}
+            {state !== "gameover" && boss.state !== "unknown" && <BossUi />}
 
             {qs.has("debug") ? <Debug /> : null}
             {!qs.has("editor") ? <div id="shoot" /> : null}

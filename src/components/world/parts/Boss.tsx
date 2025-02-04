@@ -8,7 +8,6 @@ import BarrelSpawner from "../spawner/Barrel"
 import Cable from "../actors/Cable"
 import Dirt from "../actors/Dirt"
 import timeout from "../../../data/timeout"
-import { uiTunnel } from "../../ui/tunnels"
 import Floor from "../actors/Floor"
 import EdgeElement from "../actors/EdgeElement"
 import Grass from "../actors/Grass"
@@ -23,7 +22,6 @@ export default function BossPart({
     let pauseAt = position.z + 16
     let bossZ = pauseAt + 16
     let boss = useStore(i => i.boss)
-    let level = useStore(i => i.player.level)
 
     useEffect(() => {
         if (boss.state === BossState.DEAD) {
@@ -179,33 +177,6 @@ export default function BossPart({
                 rotation={0}
                 scale={1}
             />
-
-            <uiTunnel.In>
-                <div
-                    className="boss-health"
-                    style={{
-                        display: boss.state === BossState.ACTIVE ? "block" : "none"
-                    }}
-                    key="bosshealth"
-                >
-                    <div
-                        className="boss-health__bar"
-                        style={{
-                            width: boss ? (boss.health / boss.maxHealth) * 100 + "%" : 0,
-                        }}
-                    />
-                </div>
-
-                <div
-                    className={"level"}
-                    key="level"
-                    style={{
-                        display: boss?.state === BossState.OUTRO ? "block" : "none"
-                    }}
-                >
-                    <h1>Level#{level}</h1>
-                </div>
-            </uiTunnel.In>
         </WorldPartWrapper>
     )
 }

@@ -1,15 +1,14 @@
 import { useFrame, useThree } from "@react-three/fiber"
-import { useStore } from "../data/store"
 import { useLayoutEffect, useRef } from "react"
-import { Group, MeshBasicMaterial } from "three"
+import { Group, MeshBasicMaterial, PlaneGeometry } from "three"
 import animate from "@huth/animate"
 import { easeInOutQuart } from "../data/shaping"
 
-let material = new MeshBasicMaterial({ wireframe: false, color: "#000", name: "edge" })
+let material = new MeshBasicMaterial({ color: "#000", name: "edge" })
+let geometry = new PlaneGeometry(22, 150, 1, 1)
 
 export default function EdgeOverlay({ ready = false }) {
     let groupRef = useRef<Group>(null)
-    let diagonal = useStore(i => i.world.diagonal)
     let { camera } = useThree()
 
     useFrame(() => {
@@ -19,7 +18,7 @@ export default function EdgeOverlay({ ready = false }) {
     })
 
     useLayoutEffect(() => {
-        if (!groupRef.current) {
+        if (!groupRef.current || !ready) {
             return
         }
 
@@ -27,32 +26,26 @@ export default function EdgeOverlay({ ready = false }) {
         let xLeft = 13
         let offset = 12
 
-        groupRef.current.children[0].position.x = xRight + offset
-        groupRef.current.children[1].position.x = xLeft - offset
+        groupRef.current.children[0]?.position.setComponent(0, xRight + offset)
+        groupRef.current.children[1]?.position.setComponent(0, xLeft - offset)
 
-        if (ready) {
-            return animate({
-                from: {
-                    xRight: xRight + offset,
-                    xLeft: xLeft - offset,
-                },
-                to: {
-                    xLeft,
-                    xRight
-                },
-                easing: easeInOutQuart,
-                duration: 2000,
-                render({ xLeft, xRight }) {
-                    if (!groupRef.current) {
-                        return
-                    }
-
-                    groupRef.current.children[0].position.x = xLeft
-                    groupRef.current.children[1].position.x = xRight
-                },
-            })
-        }
-    }, [ready, diagonal])
+        return animate({
+            from: {
+                xRight: xRight + offset,
+                xLeft: xLeft - offset,
+            },
+            to: {
+                xLeft,
+                xRight
+            },
+            easing: easeInOutQuart,
+            duration: 2000,
+            render({ xLeft, xRight }) {
+                groupRef.current?.children[0]?.position.setComponent(0, xLeft)
+                groupRef.current?.children[1]?.position.setComponent(0, xRight)
+            },
+        })
+    }, [ready])
 
     return (
         <group ref={groupRef}>
@@ -62,19 +55,15 @@ export default function EdgeOverlay({ ready = false }) {
                 rotation-y={-.65}
                 material={material}
                 frustumCulled={false}
-            >
-                <planeGeometry args={[22, 150, 1, 1]} />
-            </mesh>
+                geometry={geometry}
+            />
             <mesh
                 rotation-x={-Math.PI / 2}
                 position-y={12}
                 material={material}
                 frustumCulled={false}
-
-            >
-                <planeGeometry args={[22, 150, 1, 1]} />
-            </mesh>
+                geometry={geometry}
+            />
         </group>
-
     )
 }

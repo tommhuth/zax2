@@ -14,15 +14,17 @@ export default function PlayerModel({ dead }: { dead: boolean }) {
     let { nodes } = useGLTF(playerModel) as GLTFModel<["player"]>
     let glow = useLoader(TextureLoader, "/textures/glow.png")
     let innerRef = useRef<Group>(null)
+    let hasInitialized = useRef(false)
     let ready = useStore(i => i.ready)
     let diagonal = useStore(i => i.world.diagonal)
 
     // intro anim in
     useLayoutEffect(() => {
-        if (!innerRef.current || !ready || !diagonal) {
+        if (!innerRef.current || !ready || !diagonal || hasInitialized.current) {
             return
         }
 
+        hasInitialized.current = true
         innerRef.current.position.z = -diagonal
 
         return animate({
@@ -32,11 +34,7 @@ export default function PlayerModel({ dead }: { dead: boolean }) {
             duration: 4000,
             delay: 2000,
             render(z) {
-                if (!innerRef.current) {
-                    return
-                }
-
-                innerRef.current.position.z = z
+                innerRef.current?.position.setComponent(2, z)
             },
         })
     }, [ready, diagonal])

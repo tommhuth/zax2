@@ -1,5 +1,4 @@
 import { useStore } from "../../../data/store"
-import { BossState } from "../../../data/types"
 import Grid from "./Grid"
 import Marker from "./Marker"
 import { height, width } from "./utils"
@@ -10,7 +9,6 @@ export default function Map() {
     let rockets = useStore(i => i.world.rockets)
     let turrets = useStore(i => i.world.turrets)
     let ready = useStore(i => i.ready)
-    let bossState = useStore(i => i.boss.state)
     let state = useStore(i => i.state)
 
     return (
@@ -19,7 +17,7 @@ export default function Map() {
                 position: "absolute",
                 height: 200,
                 zIndex: 100000000,
-                display: state == "running" && ready && bossState === BossState.UNKNOWN ? "flex" : "none",
+                display: state === "running" && ready ? undefined : "none",
                 placeItems: "center",
                 placeContent: "center",
                 pointerEvents: "none"
@@ -41,20 +39,8 @@ export default function Map() {
                 {turrets.map(i => i.health > 0 ? <Marker targetPosition={i.position} key={i.id} color="orange" offset={[0, 2, 0]} /> : null)}
                 {rockets.map(i => i.health > 0 ? <Marker targetPosition={i.position} key={i.id} color="blue" /> : null)}
             </svg>
-            <Grid />
 
-            <div
-                style={{
-                    height: "100%",
-                    width: "clamp(8em, 30vw, 350px)",
-                    overflow: "visible",
-                    zIndex: -1,
-                    position: "absolute",
-                    left: "50%",
-                    //backgroundImage: "radial-gradient(at center, black 5%, transparent 70%)",
-                    translate: "-50% 0",
-                }}
-            />
+            <Grid />
         </div>
     )
 }

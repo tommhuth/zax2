@@ -16,10 +16,6 @@
     pointer-events: none;
     font-size: 1.5em;
 
-    @media (max-width: 800px) and (orientation: portrait) {
-        display: none;
-    }
-
     @media (max-width: 800px),
     (max-height: 500px) {
         font-size: 1.25em;
@@ -42,12 +38,11 @@
 
 .map {
     bottom: -48px;
-    right: 0;
     left: 0;
 
-    @media (orientation: landscape) and (max-height: 600px) {
-        //left: 25vw;
-        bottom: -60px;
+    @media (max-height: 600px),
+    (max-width: 800px) {
+        display: none;
     }
 }
 

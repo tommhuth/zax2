@@ -2,16 +2,13 @@
 
 ## Todo
 
--   intro
--   improve intro
--   mouse controls?
+-   ui
 -   better player model/material
--   gameplay loop with game over, improve loading state and game state?
+-   improve intro
+-   invisible obstacle
 -   rocket smoke, rename heat seaker to rocket? model?
 -   forcefield obstacle??
 -   stronger shadow fix?
--   invisible obstacle
--   ui
 
 53 mat + 22 instances
 
