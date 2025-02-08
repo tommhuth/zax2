@@ -3,12 +3,10 @@
 ## Todo
 
 -   ui
--   better player model/material
 -   improve intro
--   invisible obstacle
+-   invisible obstacle?
 -   rocket smoke, rename heat seaker to rocket? model?
 -   forcefield obstacle??
--   stronger shadow fix?
 
 53 mat + 22 instances
 

@@ -61,7 +61,15 @@ function MaterialLoader() {
             floorHi: <MeshRetroMaterial color={floorHiColor} />,
             floorSolid: <meshBasicMaterial color={"red"} />,
             floorMark: <meshBasicMaterial color={floorMarkColor} />,
-            bossLightBlue: <MeshRetroMaterial color="lightblue" />,
+            bossLightBlue: (
+                <MeshRetroMaterial
+                    rightColorIntensity={.4}
+                    rightColor="blue"
+                    color="#b5dbff"
+                    emissive="#04f"
+                    emissiveIntensity={.5}
+                />
+            ),
             bossBlack: <MeshRetroMaterial color="black" />,
             bossDarkBlue: <MeshRetroMaterial color="darkblue" />,
             bossBlue: <MeshRetroMaterial color="blue" />,

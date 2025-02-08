@@ -30,7 +30,7 @@ function explode(position: Vector3, size: Tuple3) {
     })
     createParticles({
         position: position.toArray(),
-        offset: [[-.5, .5], [0, .5], [-.5, .5]],
+        offset: [[-1.5, 1.5], [-1.5, 1.5], [-1.5, 1.5]],
         speed: [5, 25],
         spread: [[-1, 1], [.5, 2]],
         normal: [0, 1, 0],
@@ -40,7 +40,6 @@ function explode(position: Vector3, size: Tuple3) {
         color: turretParticleColor,
     })
 }
-
 
 function Turret({
     id,

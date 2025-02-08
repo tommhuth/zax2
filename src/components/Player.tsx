@@ -74,7 +74,13 @@ export default function Player() {
         attempts,
         playerObject
     ] = useStore(
-        useShallow(({ player }) => [player.targetPosition, player.position, player.health, player.attempts, player.object])
+        useShallow(({ player }) => [
+            player.targetPosition,
+            player.position,
+            player.health,
+            player.attempts,
+            player.object
+        ])
     )
     let [dead, setDead] = useState(false)
     let client = useMemo(() => {
@@ -195,10 +201,11 @@ export default function Player() {
     useFrame(() => {
         let {
             effects: { timeScale },
-            player: { weapon }
+            player: { weapon },
+            state
         } = store.getState()
 
-        if (Date.now() > data.nextShotAt && controls.keys.space && setup) {
+        if (Date.now() > data.nextShotAt && controls.keys.space && setup && state === "running") {
             startTransition(() => {
                 createBullet({
                     position: [
@@ -217,10 +224,10 @@ export default function Player() {
     })
 
     // movement
-    useFrame((state, delta) => {
-        let { ready, boss, player } = useStore.getState()
+    useFrame((_, delta) => {
+        let { ready, boss, player, state } = useStore.getState()
 
-        if (playerObject && ready) {
+        if (playerObject && ready && state === "running") {
             let nd = ndelta(delta)
             let object = playerObject
             let y = clamp(targetPosition.y, EDGE_MIN.y, EDGE_MAX.y)

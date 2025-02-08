@@ -11,12 +11,13 @@ import { easeOutExpo } from "@data/shaping"
 import animate from "@huth/animate"
 
 export default function PlayerModel({ dead }: { dead: boolean }) {
-    let { nodes } = useGLTF(playerModel) as GLTFModel<["player"]>
+    let { nodes } = useGLTF(playerModel) as GLTFModel<["player_1", "player_2", "player_3", "player_4"]>
     let glow = useLoader(TextureLoader, "/textures/glow.png")
     let innerRef = useRef<Group>(null)
     let hasInitialized = useRef(false)
     let ready = useStore(i => i.ready)
     let diagonal = useStore(i => i.world.diagonal)
+    let materials = useStore(i => i.materials)
 
     // intro anim in
     useLayoutEffect(() => {
@@ -41,38 +42,39 @@ export default function PlayerModel({ dead }: { dead: boolean }) {
 
     return (
         <group ref={innerRef}>
-            <mesh
-                receiveShadow
-                castShadow
+            <group
                 visible={!dead}
                 frustumCulled={false}
             >
-                <MeshRetroMaterial
-                    name="player"
-                    attach={"material"}
-                    color={"orange"}
-                    colorCount={3}
+                {/* base */}
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.player_1.geometry}
+                    material={materials.bossLightBlue}
                 />
-                <primitive object={nodes.player.geometry} attach="geometry" />
-            </mesh>
-
-            <mesh
-                scale={[3.5, 6, 1]}
-                rotation-x={-Math.PI * .5}
-                position={[0, -.25, -.7]}
-                visible={!dead}
-                frustumCulled={false}
-            >
-                <planeGeometry args={[1, 1, 1, 1]} />
-                <meshBasicMaterial
-                    map={glow}
-                    transparent
-                    depthWrite={false}
-                    name="playerGlow"
-                    opacity={.2}
-                    blending={AdditiveBlending}
+                {/* top */}
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.player_2.geometry}
+                    material={materials.bossBlack}
                 />
-            </mesh>
+                {/* back */}
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.player_3.geometry}
+                    material={materials.turret}
+                />
+                {/* edge */}
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.player_4.geometry}
+                    material={materials.plane}
+                />
+            </group>
 
             <Exhaust
                 offset={[0, -.15, -3.35]}
@@ -82,7 +84,7 @@ export default function PlayerModel({ dead }: { dead: boolean }) {
 
             <pointLight
                 distance={80}
-                position={[0, .1, -1.75]}
+                position={[0, -.25, -1.75]}
                 intensity={dead ? 0 : 80}
                 color={"#ffffff"}
             />

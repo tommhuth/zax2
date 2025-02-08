@@ -22,14 +22,14 @@ function explode(position: Vector3, size: Tuple3, color: string) {
     })
     createParticles({
         position: [position.x, .5, position.z],
-        offset: [[-.5, .5], [0, .5], [-.5, .5]],
+        offset: [[-1.5, 1.5], [-1.5, 1.5], [-1.5, 1.5]],
         speed: [5, 25],
         normal: [0, 1, 0],
         spread: [[-1, 1], [.5, 2]],
         count: [15, 20],
         radius: [.1, .4],
         color,
-        stagger: [-150, 0]
+        stagger: [-150, 0],
     })
     createImpactDecal([position.x, 0, position.z])
     createScrap([position.x, position.y - size[1] * .65, position.z], 2, color)
