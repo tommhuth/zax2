@@ -1,4 +1,4 @@
-import { memo, startTransition, useRef } from "react"
+import { memo, startTransition, useEffect, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
 import { clamp, ndelta } from "../../../data/utils"
 import random from "@huth/random"
@@ -79,10 +79,8 @@ function Turret({
 
             if (damageTurret(id, 25)) {
                 increaseScore(2_000)
-                increaseTrauma(.5)
             } else {
                 increaseScore(50)
-                increaseTrauma(.05)
             }
 
             createParticles({
@@ -98,6 +96,10 @@ function Turret({
             })
         }
     })
+
+    useEffect(() => {
+        modelRef.current?.traumatize(.75)
+    }, [health])
 
     // shooting
     useFrame((state, delta) => {

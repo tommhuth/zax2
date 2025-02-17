@@ -175,12 +175,13 @@ export default function Player() {
     }, [setup, attempts, playerObject])
 
     // input
-    useFrame((state, delta) => {
+    useFrame((_, delta) => {
         let xSpeed = 12
         let ySpeed = 10
         let nd = ndelta(delta)
+        let { state } = useStore.getState()
 
-        if (Object.entries(controls.keys).length) {
+        if (Object.entries(controls.keys).length && state === "running") {
             if (controls.keys.a) {
                 targetPosition.x += xSpeed * nd
             } else if (controls.keys.d) {

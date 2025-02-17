@@ -3,6 +3,10 @@
 ## Todo
 
 -   ui
+-   actor material improvs
+-   distance based trauma
+-   what happend to the decal
+-   should intro just be playerless loop instead????
 -   improve intro
 -   invisible obstacle?
 -   rocket smoke, rename heat seaker to rocket? model?

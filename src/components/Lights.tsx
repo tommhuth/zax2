@@ -53,7 +53,7 @@ export default function Lights() {
         <>
             <ambientLight
                 color={"#ffffff"}
-                intensity={.4} />
+                intensity={.1} />
 
             <directionalLight
                 ref={shadowLightRef}
@@ -72,7 +72,7 @@ export default function Lights() {
             />
             <directionalLight
                 position={[-6, 15, -15]}
-                intensity={.8}
+                intensity={1}
                 color={"#aaeaff"}
             />
         </>

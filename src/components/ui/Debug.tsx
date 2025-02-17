@@ -45,6 +45,10 @@ export default function Debug() {
     return (
         <fieldset
             className="debug"
+            onClick={e => {
+                e.stopPropagation()
+                e.nativeEvent.stopImmediatePropagation()
+            }}
         >
             <div>{state}</div>
             <label>

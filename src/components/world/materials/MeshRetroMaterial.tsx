@@ -11,8 +11,7 @@ import { forwardRef } from "react"
 import { store, useStore } from "../../../data/store"
 import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater } from "./helpers"
 
-
-type MeshRetroMaterialProps = {
+export type MeshRetroMaterialProps = {
     colorCount?: number
     dither?: number
     fog?: number

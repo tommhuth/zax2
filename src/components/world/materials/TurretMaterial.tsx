@@ -1,7 +1,7 @@
-import { MeshRetroMaterial } from "./MeshRetroMaterial"
+import { MeshRetroMaterial, MeshRetroMaterialProps } from "./MeshRetroMaterial"
 import { turretColor } from "@data/theme"
 
-export default function TurretMaterial() {
+export default function TurretMaterial(props: MeshRetroMaterialProps) {
     return (
         <MeshRetroMaterial
             color={turretColor}
@@ -13,6 +13,7 @@ export default function TurretMaterial() {
             backColorIntensity={0}
             colorCount={8}
             dither={.005}
+            {...props}
         />
     )
 }
