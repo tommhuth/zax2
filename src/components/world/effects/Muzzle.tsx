@@ -52,6 +52,10 @@ export default forwardRef<MuzzleRef, MuzzleProps>(({ decay = 0, ...props }, ref)
             child.scale.z = damp(child.scale.z, 0, i + 2 + decay, ndelta(delta))
 
             child.position.x += child.scale.x * 10 * ndelta(delta)
+
+            if (child.scale.lengthSq() < .015) {
+                child.scale.setScalar(0)
+            }
         }
     })
 
