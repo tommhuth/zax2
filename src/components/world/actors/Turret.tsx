@@ -6,7 +6,7 @@ import { Vector3 } from "three"
 import { Owner, Turret as TurretType } from "../../../data/types"
 import { Tuple3 } from "../../../types.global"
 import { store, useStore } from "../../../data/store"
-import { createExplosion, createImpactDecal, createParticles, createScrap, increaseTrauma } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { useCollisionDetection } from "../../../data/collisions"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
@@ -148,7 +148,7 @@ function Turret({
                 position={position.toArray()}
                 rotation={rotation}
             >
-                <Muzzle ref={muzzleRef} position={[2.75, 1.85, 0]} />
+                <Muzzle ref={muzzleRef} position={[2.75, 1.75, 0]} />
             </TurretModel>
 
             <DebugBox size={size} position={position} />

@@ -39,7 +39,7 @@ export function createExplosion({
     blastRadius = radius * random.float(4, 5),
     delay = 0,
 }: CreateExplosionParams) {
-    setTimeout(() => {
+    return setTimeout(() => {
         let baseLifetime = random.integer(1600, 1800)
         let {
             instances,
@@ -271,7 +271,7 @@ export function createParticles({
     delay = 0,
     gravity = [0, -random.integer(45, 50), 0],
 }: CreateParticlesParams) {
-    setTimeout(() => {
+    return setTimeout(() => {
         let instance = store.getState().instances.particle
         let amount = Array.isArray(count) ? random.integer(...count) : count
         let particles: Particle[] = new Array(amount).fill(null).map((i, index, list) => {

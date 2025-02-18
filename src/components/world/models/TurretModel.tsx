@@ -30,7 +30,7 @@ export default forwardRef<TurretRef, TurretModelProps>(
             let api = {
                 shoot: () => {
                     if (barrellRef.current && innerRef.current) {
-                        barrellRef.current.position.x = -.75
+                        barrellRef.current.position.x = -.85
                         innerRef.current.position.x = -.125
                     }
                 },
@@ -49,35 +49,60 @@ export default forwardRef<TurretRef, TurretModelProps>(
 
             trauma.current = damp(trauma.current, 0, 8, ndelta(delta))
 
-            if (trauma.current > .001 && wrapperRef.current) {
+            if (wrapperRef.current) {
                 for (let child of wrapperRef.current.children) {
-                    let scale = .125
+                    let offset = .125
+                    let x = random.float(-offset, offset)
+                    let y = random.float(-offset, offset)
+                    let z = random.float(-offset, offset)
 
-                    child.position.set(
-                        random.float(-scale, scale), random.float(-scale, scale), random.float(-scale, scale)
-                    ).multiplyScalar(trauma.current)
+                    child.position.set(x, y, z).multiplyScalar(trauma.current)
                 }
             }
 
-            barrellRef.current.position.x = damp(barrellRef.current.position.x, 0, 3, ndelta(delta))
+            barrellRef.current.position.x = damp(barrellRef.current.position.x, 0, 2, ndelta(delta))
             innerRef.current.position.x = damp(innerRef.current.position.x, 0, 4, ndelta(delta))
         })
 
         return (
             <>
                 <group
-                    ref={wrapperRef}
                     dispose={null}
                     position={position}
                     rotation={[0, rotation, 0]}
                 >
-                    {/* top */}
-                    <mesh
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.turret2_1.geometry}
-                        material={materials.turret}
-                    />
+                    <group ref={wrapperRef}>
+                        {/* top */}
+                        <mesh
+                            castShadow
+                            receiveShadow
+                            geometry={nodes.turret2_1.geometry}
+                            material={materials.turret}
+                        />
+                        {/* inner */}
+                        <mesh
+                            castShadow
+                            receiveShadow
+                            ref={innerRef}
+                            geometry={nodes.turret2_3.geometry}
+                            material={materials.bossBlack}
+                        />
+                        {/* details */}
+                        <mesh
+                            castShadow
+                            receiveShadow
+                            geometry={nodes.turret2_4.geometry}
+                            material={materials.bossBlack}
+                        />
+                        {/* base */}
+                        <mesh
+                            castShadow
+                            receiveShadow
+                            geometry={nodes.turret2_5.geometry}
+                            material={materials.turret}
+                        />
+                    </group>
+
                     {/* barrell */}
                     <mesh
                         castShadow
@@ -85,28 +110,6 @@ export default forwardRef<TurretRef, TurretModelProps>(
                         geometry={nodes.turret2_2.geometry}
                         ref={barrellRef}
                         material={materials.bossBlack}
-                    />
-                    {/* inner */}
-                    <mesh
-                        castShadow
-                        receiveShadow
-                        ref={innerRef}
-                        geometry={nodes.turret2_3.geometry}
-                        material={materials.bossBlack}
-                    />
-                    {/* details */}
-                    <mesh
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.turret2_4.geometry}
-                        material={materials.bossBlack}
-                    />
-                    {/* base */}
-                    <mesh
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.turret2_5.geometry}
-                        material={materials.turret}
                     />
 
                     {children}

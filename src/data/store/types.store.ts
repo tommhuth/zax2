@@ -1,5 +1,5 @@
 import { SpatialHashGrid3D } from "@data/SpatialHashGrid3D"
-import { WorldPartType, WorldPart, Bullet, Plane, Turret, Barrel, Rocket, Particle, Explosion, InstanceName, RepeaterMesh, MaterialName, HeatSeaker, BossState, Instance } from "@data/types"
+import { WorldPartType, WorldPart, Bullet, Plane, Turret, Barrel, Rocket, Particle, Explosion, InstanceName, RepeaterMesh, MaterialName, HeatSeaker, BossState, Instance, State } from "@data/types"
 import { Tuple3 } from "src/types.global"
 import { Frustum, Vector2, Material, Vector3, Object3D } from "three"
 
@@ -20,7 +20,7 @@ export interface ZaxStore {
     loaded: boolean
     setup: boolean
     ready: boolean
-    state: "intro" | "running" | "gameover"
+    state: State
     world: {
         diagonal: number
         parts: WorldPart[]

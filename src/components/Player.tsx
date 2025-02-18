@@ -24,35 +24,42 @@ import { damageBarrel } from "@data/store/actors/barrel.actions"
 import PlayerModel from "./world/models/PlayerModel"
 import { setState } from "@data/store/utils"
 
+const OFFSCREEN_Y = -10
 const depth = 2
 const size: Tuple3 = [1.5, 1, depth]
 const [x, y, z]: Tuple3 = [0, 1.5, 0]
 
 function explode(position: Vector3) {
+    let ids: number[] = []
+
     for (let i = 0; i < 9; i++) {
-        createExplosion({
-            position: position.toArray(),
-            count: random.integer(6, 8),
-            delay: i * 400,
-            shockwave: i === 7,
-            blastRadius: i % 3 === 0 ? random.float(3, 5) : 0
-        })
-        createParticles({
-            position: position.toArray(),
-            offset: [
-                [-size[0] / 2, size[0] / 2],
-                [-size[1] / 2, size[1] / 2],
-                [-size[2] / 2, size[2] / 2]
-            ],
-            count: random.integer(8, 16),
-            radius: [.05, .3],
-            stagger: [0, 100],
-            restitution: [.4, .85],
-            normal: [random.float(-1, 1), 1, -1],
-            delay: i * 650,
-            color: ["#88F", "#00f", "#007", "#249", "#09F"]
-        })
+        ids.push(
+            createExplosion({
+                position: position.toArray(),
+                count: random.integer(6, 8),
+                delay: i * 400,
+                shockwave: i === 7,
+                blastRadius: i % 3 === 0 ? random.float(3, 5) : 0
+            }),
+            createParticles({
+                position: position.toArray(),
+                offset: [
+                    [-size[0] / 2, size[0] / 2],
+                    [-size[1] / 2, size[1] / 2],
+                    [-size[2] / 2, size[2] / 2]
+                ],
+                count: random.integer(8, 16),
+                radius: [.05, .3],
+                stagger: [0, 100],
+                restitution: [.4, .85],
+                normal: [random.float(-1, 1), 1, random.float(-1, 1)],
+                delay: i * 500,
+                color: ["#88F", "#00f", "#007", "#249", "#09F"]
+            })
+        )
     }
+
+    return ids
 }
 
 interface LocalData {
@@ -62,10 +69,11 @@ interface LocalData {
 
 export default function Player() {
     let grid = useStore(i => i.world.grid)
+    let state = useStore(i => i.state)
     let bossState = useStore(i => i.boss.state)
     let [
         setup,
-        controls
+        controls,
     ] = useStore(useShallow(i => [i.setup, i.controls]))
     let [
         targetPosition,
@@ -105,10 +113,8 @@ export default function Player() {
 
     useEffect(() => {
         if (health === 0) {
-            explode(position)
-            setState("gameover")
-            setDead(true)
-            animate({
+            let ids = explode(position)
+            let stopAnimation = animate({
                 from: 1,
                 to: .3,
                 duration: 1500,
@@ -117,6 +123,14 @@ export default function Player() {
                     setTimeScale(timeScale)
                 }
             })
+
+            setState("gameover")
+            setDead(true)
+
+            return () => {
+                stopAnimation()
+                ids.forEach(id => clearTimeout(id))
+            }
         }
     }, [health, position])
 
@@ -162,7 +176,7 @@ export default function Player() {
     // init player position
     useLayoutEffect(() => {
         if (playerObject) {
-            playerObject.position.set(x, y, z)
+            playerObject.position.set(x, OFFSCREEN_Y, z)
             targetPosition.copy(playerObject.position)
         }
     }, [playerObject, targetPosition])
@@ -173,6 +187,19 @@ export default function Player() {
             playerObject.position.z = WORLD_PLAYER_START_Z
         }
     }, [setup, attempts, playerObject])
+
+    useEffect(() => {
+
+        if (!playerObject) {
+            return
+        }
+
+        if (state === "running") {
+            playerObject.position.y = y
+            targetPosition.y = y
+        }
+    }, [playerObject, targetPosition, state])
+
 
     // input
     useFrame((_, delta) => {
@@ -228,7 +255,7 @@ export default function Player() {
     useFrame((_, delta) => {
         let { ready, boss, player, state } = useStore.getState()
 
-        if (playerObject && ready && state === "running") {
+        if (playerObject && ready) {
             let nd = ndelta(delta)
             let object = playerObject
             let y = clamp(targetPosition.y, EDGE_MIN.y, EDGE_MAX.y)
@@ -238,11 +265,15 @@ export default function Player() {
                 }
 
                 object.position.x = damp(object.position.x, targetPosition.x, 4, nd)
-                object.position.y = damp(object.position.y, y, 5, nd)
                 object.position.z += speed * nd
 
-                object.rotation.z = (targetPosition.x - object.position.x) * -.25
-                object.rotation.x = (targetPosition.y - object.position.y) * -.2
+                if (state === "running") {
+                    object.position.y = damp(object.position.y, y, 5, nd)
+                    object.rotation.z = (targetPosition.x - object.position.x) * -.25
+                    object.rotation.x = (targetPosition.y - object.position.y) * -.2
+                } else {
+                    object.position.y = OFFSCREEN_Y
+                }
 
                 player.velocity.z = clamp((speed * nd) / (speed * nd), 0, 1)
             }

@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber"
-import { useEffect, useLayoutEffect, useState } from "react"
+import { useEffect, useLayoutEffect } from "react"
 import { Matrix4 } from "three"
 import { store, useStore } from "../data/store"
 import { setTrauma } from "../data/store/effects"
@@ -33,7 +33,6 @@ export default function Camera({ editorMode = false, z = 0 }) {
         }
     }, [camera])
 
-
     useLayoutEffect(() => {
         camera.position.copy(CAMERA_POSITION)
         camera.lookAt(0, 0, 0)
@@ -45,13 +44,6 @@ export default function Camera({ editorMode = false, z = 0 }) {
         }
     }, [setup, camera, attempts])
 
-    useFrame(() => {
-        let { world } = store.getState()
-
-        _matrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
-        world.frustum.setFromProjectionMatrix(_matrix)
-    })
-
     useEffect(() => {
         if (editorMode && typeof z === "number" && setup) {
             camera.position.z = WORLD_PLAYER_START_Z
@@ -59,6 +51,13 @@ export default function Camera({ editorMode = false, z = 0 }) {
                 + z
         }
     }, [z, editorMode, camera, setup])
+
+    useFrame(() => {
+        let { world } = store.getState()
+
+        _matrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
+        world.frustum.setFromProjectionMatrix(_matrix)
+    })
 
     useFrame((_, delta) => {
         let { player, effects, state } = store.getState()

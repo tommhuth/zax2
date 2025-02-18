@@ -52,9 +52,8 @@ export default function Exhaust({
             rotation={rotation}
             visible={visible}
             dispose={null}
-        >
-            <primitive object={geometry} />
-            <primitive object={materials.exhaust} attach="material" />
-        </mesh>
+            material={materials.exhaust}
+            geometry={geometry}
+        />
     )
 }

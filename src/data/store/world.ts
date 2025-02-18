@@ -1,13 +1,13 @@
 import { store } from "."
-import { WorldPart } from "../types"
+import { State, WorldPart } from "../types"
 import { getNextWorldPart } from "../world/getNextWorldPart"
 
-export function reset() {
+export function reset(state?: State) {
     let { world, effects, player } = store.getState()
 
     world.grid.empty()
     store.setState({
-        state: "intro",
+        state: state || "intro",
         world: {
             ...world,
             parts: [],
@@ -23,7 +23,7 @@ export function reset() {
         player: {
             ...player,
             level: 1,
-            speed: 0,
+            speed: 4,
             health: 100,
             score: 0,
             attempts: player.attempts + 1,

@@ -1,32 +1,19 @@
 import { useFrame } from "@react-three/fiber"
-import { memo, startTransition, useEffect, useLayoutEffect, useRef } from "react"
+import { startTransition, useEffect, useLayoutEffect, useRef } from "react"
 import { store, useStore } from "../../data/store"
-import Turret from "./actors/Turret"
-import Plane from "./actors/Plane"
-import Default from "./parts/Default"
-import Barrel from "./actors/Barrel"
 import ParticleHandler from "./effects/ParticleHandler"
 import BulletHandler from "../BulletHandler"
-import BuildingsGap from "./parts/BuildingsGap"
-import BuildingsLow from "./parts/BuildingsLow"
-import Rocket from "./actors/Rocket"
 import { addWorldPart, reset } from "../../data/store/world"
 import ExplosionsHandler from "./effects/ExplosionsHandler"
-import Airstrip from "./parts/Airstrip"
-import Start from "./parts/Start"
-import BossPart from "./parts/Boss"
 import { Vector3 } from "three"
 import SmokeHandler from "./effects/SmokeHandler"
-import { WORLD_START_Z } from "../../data/const"
+import { WORLD_PLAYER_START_Z, WORLD_START_Z } from "../../data/const"
 import { setTime } from "@data/store/effects"
 import { ndelta } from "@data/utils"
-import RockValley from "./parts/RockValley"
 import { DynamicWorldPartType, partGenerator } from "@data/world/getNextWorldPart"
 import { WorldPartType } from "@data/types"
-import GrassPart from "./parts/Grass"
-import { makeAsteroidStart, makeStart } from "@data/world/generators"
-import AsteroidStart from "./parts/AsteroidStart"
-import { setState } from "@data/store/utils"
+import Actors from "./Actors"
+import WorldParts from "./WorldParts"
 
 const startType = window.localStorage.getItem("initPartType") as DynamicWorldPartType | null
 
@@ -44,19 +31,17 @@ export default function World() {
     }, [attempts])
 
     useFrame((state, delta) => {
-        setTime(store.getState().effects.time + ndelta(delta))
+        let { effects } = store.getState()
+
+        setTime(effects.time + ndelta(delta))
     })
 
     useEffect(() => {
         let onClick = () => {
-            let { state, world } = useStore.getState()
-            let previousPart = world.parts.at(-1)
+            let { state } = useStore.getState()
 
-            if (state === "intro" && previousPart) {
-                setState("running")
-                addWorldPart(makeAsteroidStart(previousPart))
-            } else if (state === "gameover") {
-                reset()
+            if (["gameover", "intro"].includes(state)) {
+                startTransition(() => reset("running"))
             }
         }
 
@@ -68,21 +53,20 @@ export default function World() {
     }, [])
 
     useLayoutEffect(() => {
-        if (!loaded || !diagonal) {
+        if (!loaded || !diagonal || state === "gameover") {
             return
         }
 
-        if (startType) {
-            startTransition(() => {
-                addWorldPart(partGenerator[startType]({
-                    position: new Vector3(0, 0, WORLD_START_Z),
-                    size: [0, 0],
-                }))
-            })
-        } else if (state === "intro" && !hasInitialized.current) {
-            addWorldPart(makeStart(diagonal))
-            hasInitialized.current = true
-        }
+        let z = {
+            intro: WORLD_PLAYER_START_Z - diagonal * .5,
+            running: WORLD_START_Z,
+        }[state]
+        let part = partGenerator[startType || WorldPartType.DEFAULT]({
+            position: new Vector3(0, 0, z),
+            size: [0, 0],
+        })
+
+        startTransition(() => addWorldPart(part))
     }, [loaded, diagonal, state])
 
     useFrame(() => {
@@ -91,11 +75,10 @@ export default function World() {
             player: { object: player },
             ready,
             debug,
-            state
         } = store.getState()
         let forwardWorldPart = parts[parts.length - 1]
 
-        if (forwardWorldPart && player && state === "running") {
+        if (forwardWorldPart && player) {
             let buffer = Math.max(diagonal * 1.5, 20)
             let lastPartIsAtEdge = forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + buffer
 
@@ -120,56 +103,3 @@ export default function World() {
         </>
     )
 }
-
-function WorldParts() {
-    let parts = useStore(i => i.world.parts)
-
-    return parts.map(i => {
-        switch (i.type) {
-            case WorldPartType.START:
-                return <Start key={i.id} {...i} />
-            case WorldPartType.ASTEROID_START:
-                return <AsteroidStart key={i.id} {...i} />
-            case WorldPartType.ROCK_VALLEY:
-                return <RockValley key={i.id} {...i} />
-            case WorldPartType.DEFAULT:
-                return <Default key={i.id} {...i} />
-            case WorldPartType.BUILDINGS_GAP:
-                return <BuildingsGap key={i.id} {...i} />
-            case WorldPartType.BUILDINGS_LOW:
-                return <BuildingsLow key={i.id} {...i} />
-            case WorldPartType.AIRSTRIP:
-                return <Airstrip key={i.id} {...i} />
-            case WorldPartType.GRASS:
-                return <GrassPart key={i.id} {...i} />
-            case WorldPartType.BOSS:
-                return <BossPart key={i.id} {...i} />
-            default:
-                throw new Error(`Unregistered part type: ${i.type}`)
-        }
-    })
-}
-
-const Actors = memo(() => {
-    let turrets = useStore(i => i.world.turrets)
-    let planes = useStore(i => i.world.planes)
-    let barrels = useStore(i => i.world.barrels)
-    let rockets = useStore(i => i.world.rockets)
-
-    return (
-        <>
-            {turrets.map(i => {
-                return <Turret key={i.id} {...i} />
-            })}
-            {planes.map(i => {
-                return <Plane key={i.id} {...i} />
-            })}
-            {barrels.map(i => {
-                return <Barrel key={i.id} {...i} />
-            })}
-            {rockets.map(i => {
-                return <Rocket key={i.id} {...i} />
-            })}
-        </>
-    )
-})

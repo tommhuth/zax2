@@ -28,6 +28,8 @@ export enum BossState {
     UNKNOWN = "unknown"
 }
 
+export type State = "intro" | "running" | "gameover"
+
 export interface Fireball {
     isPrimary?: boolean
     position: Tuple3

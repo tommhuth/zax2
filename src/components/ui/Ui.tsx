@@ -94,8 +94,9 @@ export default function Ui() {
 
 function Intro() {
     return (
-        <div className="intro">
-            Tap to start
-        </div>
+        <h1 className="intro">
+            Untitled <br />
+            retro shooter
+        </h1>
     )
 }

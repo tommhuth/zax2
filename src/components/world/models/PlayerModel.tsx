@@ -2,17 +2,14 @@ import { useLayoutEffect, useRef } from "react"
 import playerModel from "@assets/models/player.glb"
 import { useGLTF } from "@react-three/drei"
 import Exhaust from "@components/Exhaust"
-import { useLoader } from "@react-three/fiber"
 import { GLTFModel } from "src/types.global"
-import { TextureLoader, AdditiveBlending, Group } from "three"
-import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
+import { Group } from "three"
 import { useStore } from "@data/store"
 import { easeOutExpo } from "@data/shaping"
 import animate from "@huth/animate"
 
 export default function PlayerModel({ dead }: { dead: boolean }) {
     let { nodes } = useGLTF(playerModel) as GLTFModel<["player_1", "player_2", "player_3", "player_4"]>
-    let glow = useLoader(TextureLoader, "/textures/glow.png")
     let innerRef = useRef<Group>(null)
     let hasInitialized = useRef(false)
     let ready = useStore(i => i.ready)
