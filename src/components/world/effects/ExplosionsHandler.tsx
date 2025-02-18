@@ -96,14 +96,14 @@ export default function ExplosionsHandler() {
             >
                 <planeGeometry args={[2, 2, 1, 1]} />
                 <MeshRetroMaterial
-                    color={"rgb(0, 0, 96)"}
+                    color={"rgb(255, 0, 153)"}
                     name="impact"
                     depthWrite={false}
                     transparent
                     shader={{
                         fragment: {
                             main: glsl` 
-                                gl_FragColor.a *= .7; 
+                                gl_FragColor.a *= 1.; 
                             `
                         }
                     }}
