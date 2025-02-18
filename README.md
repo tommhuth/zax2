@@ -2,12 +2,9 @@
 
 ## Todo
 
--   ui
--   actor material improvs
+-   reset bugs/ set timeouts etc
 -   distance based trauma
--   what happend to the decal
--   should intro just be playerless loop instead????
--   improve intro
+-   intro element
 -   invisible obstacle?
 -   rocket smoke, rename heat seaker to rocket? model?
 -   forcefield obstacle??
