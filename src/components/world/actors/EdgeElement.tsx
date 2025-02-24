@@ -28,6 +28,10 @@ export default function EdgeElement({
             if (scale) {
                 building.scale.set(...scale)
             }
+
+            return () => {
+                building.position.set(0, 0, 0)
+            }
         }
     }, [building, rotation, scale, x, y, z, partPosition])
 

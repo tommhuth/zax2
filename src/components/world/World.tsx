@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { startTransition, useEffect, useLayoutEffect, useRef } from "react"
+import { startTransition, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { store, useStore } from "../../data/store"
 import ParticleHandler from "./effects/ParticleHandler"
 import BulletHandler from "../BulletHandler"
@@ -25,22 +25,30 @@ export default function World() {
     let state = useStore(i => i.state)
     let attempts = useStore(i => i.player.attempts)
     let hasInitialized = useRef(false)
+    let [restartEnabled, setRestartEnabled] = useState(false)
+
 
     useLayoutEffect(() => {
         hasInitialized.current = false
     }, [attempts])
 
-    useFrame((state, delta) => {
-        let { effects } = store.getState()
+    useLayoutEffect(() => {
+        if (state === "gameover") {
+            let tid = setTimeout(() => setRestartEnabled(true), 8_000)
 
-        setTime(effects.time + ndelta(delta))
-    })
+            setRestartEnabled(false)
+
+            return () => {
+                clearTimeout(tid)
+            }
+        }
+    }, [state])
 
     useEffect(() => {
         let onClick = () => {
             let { state } = useStore.getState()
 
-            if (["gameover", "intro"].includes(state)) {
+            if ((state === "gameover" && restartEnabled) || state === "intro") {
                 startTransition(() => reset("running"))
             }
         }
@@ -50,7 +58,7 @@ export default function World() {
         return () => {
             window.removeEventListener("click", onClick)
         }
-    }, [])
+    }, [restartEnabled])
 
     useLayoutEffect(() => {
         if (!loaded || !diagonal || state === "gameover") {
@@ -68,6 +76,12 @@ export default function World() {
 
         startTransition(() => addWorldPart(part))
     }, [loaded, diagonal, state])
+
+    useFrame((state, delta) => {
+        let { effects } = store.getState()
+
+        setTime(effects.time + ndelta(delta))
+    })
 
     useFrame(() => {
         let {
