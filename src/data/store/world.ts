@@ -23,7 +23,7 @@ export function reset(state?: State) {
         player: {
             ...player,
             level: 1,
-            speed: 4,
+            speed: 3,
             health: 100,
             score: 0,
             attempts: player.attempts + 1,
