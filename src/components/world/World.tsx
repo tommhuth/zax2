@@ -27,7 +27,6 @@ export default function World() {
     let hasInitialized = useRef(false)
     let [restartEnabled, setRestartEnabled] = useState(false)
 
-
     useLayoutEffect(() => {
         hasInitialized.current = false
     }, [attempts])
@@ -65,17 +64,18 @@ export default function World() {
             return
         }
 
-        let z = {
+        let startZ = {
             intro: WORLD_PLAYER_START_Z - diagonal * .5,
             running: WORLD_START_Z,
         }[state]
         let part = partGenerator[startType || WorldPartType.DEFAULT]({
-            position: new Vector3(0, 0, z),
+            position: new Vector3(0, 0, startZ),
             size: [0, 0],
         })
 
         startTransition(() => addWorldPart(part))
-    }, [loaded, diagonal, state])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loaded, state])
 
     useFrame((state, delta) => {
         let { effects } = store.getState()
@@ -93,8 +93,9 @@ export default function World() {
         let forwardWorldPart = parts[parts.length - 1]
 
         if (forwardWorldPart && player) {
-            let buffer = Math.max(diagonal * 1.5, 20)
-            let lastPartIsAtEdge = forwardWorldPart.position.z + forwardWorldPart.size[1] < player.position.z + buffer
+            let { size, position } = forwardWorldPart
+            let buffer = diagonal * 1.5
+            let lastPartIsAtEdge = position.z + size[1] < player.position.z + buffer
 
             if (
                 lastPartIsAtEdge

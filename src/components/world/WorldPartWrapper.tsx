@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber"
-import React, { createContext, startTransition, useContext, useMemo, useState } from "react"
-import { Box3, Vector3 } from "three"
+import React, { createContext, startTransition, useContext, useMemo } from "react"
+import { Vector3 } from "three"
 import { Tuple2, Tuple3 } from "../../types.global"
 import { store, useStore } from "../../data/store"
 import { removeWorldPart } from "../../data/store/world"
@@ -12,10 +12,6 @@ interface WorldPartWrapperProps {
     children?: React.ReactNode
     size: Tuple2
 }
-
-let _box = new Box3()
-let _center = new Vector3()
-let _size = new Vector3()
 
 let context = createContext<Tuple3>([0, 0, 0])
 
@@ -37,24 +33,18 @@ export default function WorldPartWrapper({
     size: [width, depth],
     id,
 }: WorldPartWrapperProps) {
-    let [removed, setRemoved] = useState(false)
     let showColliders = useStore(i => i.debug.showColliders)
     let sharedPosition = useMemo(() => position.toArray(), [position])
 
     useFrame(() => {
-        let { player, world, ready } = store.getState()
+        let { player, ready, world } = store.getState()
+        let buffer = world.diagonal * .75
 
-        if (removed || !ready || !player.object || position.z + depth > player.object.position.z) {
+        if (!ready || !player.object) {
             return
         }
 
-        let height = 1
-
-        _center.set(position.x, position.y + height / 2, position.z + depth / 2)
-        _box.setFromCenterAndSize(_center, _size.set(width, height, depth))
-
-        if (!world.frustum.intersectsBox(_box)) {
-            setRemoved(true)
+        if (position.z + depth < player.object.position.z - buffer) {
             startTransition(() => removeWorldPart(id))
         }
     })

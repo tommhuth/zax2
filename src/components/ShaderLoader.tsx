@@ -1,31 +1,11 @@
 import { useStore } from "@data/store"
 import { setLoaded, setReady, setSetup } from "@data/store/utils"
-import { setDiagonal } from "@data/store/world"
 import { useThree } from "@react-three/fiber"
 import { startTransition, useEffect } from "react"
 
 export default function ShaderLoader() {
-    let { scene, gl, camera, viewport: { getCurrentViewport } } = useThree()
+    let { scene, gl, camera } = useThree()
     let loaded = useStore((i) => i.loaded)
-
-    useEffect(() => {
-        let tid: ReturnType<typeof setTimeout>
-        let onResize = () => {
-            clearTimeout(tid)
-            tid = setTimeout(() => {
-                let viewport = getCurrentViewport(camera)
-
-                startTransition(() => setDiagonal(viewport.width))
-            }, 150)
-        }
-
-        startTransition(onResize)
-        window.addEventListener("resize", onResize)
-
-        return () => {
-            window.removeEventListener("resize", onResize)
-        }
-    }, [camera, getCurrentViewport])
 
     useEffect(() => {
         // not sure this is really needed
@@ -39,6 +19,7 @@ export default function ShaderLoader() {
     useEffect(() => {
         if (loaded) {
             startTransition(setSetup)
+
             let tid = setTimeout(() => {
                 document.getElementById("loading")?.remove()
                 startTransition(setReady)
