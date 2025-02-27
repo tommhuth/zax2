@@ -23,9 +23,11 @@ export default function Obstacle({
     position: [x, y, z],
     type = "box",
 }: ObstacleProps) {
-    const partPosition = useWorldPart()
+    const part = useWorldPart()
     const grid = useStore(i => i.world.grid)
-    const resolvedPosition: Tuple3 = useMemo(() => [x, y, partPosition[2] + z], [partPosition, x, y, z])
+    const resolvedPosition: Tuple3 = useMemo(() => {
+        return [x, y, part.position.z + z]
+    }, [part.position.z, x, y, z])
     const debugPosition = useMemo(() => new Vector3(...resolvedPosition), [resolvedPosition])
     const id = useMemo(() => random.id(), [])
     const client = useMemo(() => {

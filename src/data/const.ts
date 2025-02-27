@@ -15,6 +15,8 @@ export const EDGE_MAX = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, Infinity)
 
 export const CAMERA_Y = 50
 export const CAMERA_OFFSET = new Vector3(4, 0, 8)
+
+// https://discourse.threejs.org/t/dimetric-orthographic-camera-angle-for-retro-pixel-look/24455/2
 export const CAMERA_POSITION = new Vector3().setFromSphericalCoords(
     CAMERA_Y,
     -Math.PI / 3, // 60 degrees from positive Y-axis and 30 degrees to XZ-plane

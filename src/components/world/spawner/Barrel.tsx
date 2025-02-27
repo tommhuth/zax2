@@ -14,17 +14,17 @@ export default function BarrelSpawner({
     rotation = 0,
     health,
 }: BarrelSpawnerProps) {
-    let partPosition = useWorldPart()
+    let part = useWorldPart()
 
     useEffect(() => {
         startTransition(() => {
             createBarrel({
-                position: [x, y, partPosition[2] + z],
+                position: [x, y, part.position.z + z],
                 rotation,
                 health
             })
         })
-    }, [partPosition, x, y, z, rotation, health])
+    }, [part.position.z, x, y, z, rotation, health])
 
     return null
 }

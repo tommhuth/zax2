@@ -13,12 +13,12 @@ export default function Dirt({
     rotation = 0,
     scale = 1
 }: DirtProps) {
-    let partPosition = useWorldPart()
+    let { position } = useWorldPart()
 
     useInstance("dirt", {
         scale,
         rotation: [0, rotation, 0],
-        position: [x, y, partPosition[2] + z],
+        position: [x, y, position.z + z],
     })
 
     return null

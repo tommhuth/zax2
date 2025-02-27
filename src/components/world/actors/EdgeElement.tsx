@@ -18,11 +18,11 @@ export default function EdgeElement({
     type
 }: EdgeElementProps) {
     let building = useRepeater(type)
-    let partPosition = useWorldPart()
+    let { position } = useWorldPart()
 
     useEffect(() => {
         if (building) {
-            building.position.set(x, y, z + partPosition[2])
+            building.position.set(x, y, z + position.z)
             building.rotation.y = rotation
 
             if (scale) {
@@ -30,10 +30,10 @@ export default function EdgeElement({
             }
 
             return () => {
-                building.position.set(0, 0, 0)
+                building?.position.set(0, 0, 0)
             }
         }
-    }, [building, rotation, scale, x, y, z, partPosition])
+    }, [building, rotation, scale, x, y, z, position.z])
 
     return null
 }

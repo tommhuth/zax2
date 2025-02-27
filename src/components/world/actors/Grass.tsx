@@ -8,12 +8,12 @@ interface GrassProps {
 }
 
 export default function Grass({ position: [x, y, z], rotation }: GrassProps) {
-    let partPosition = useWorldPart()
+    let { position } = useWorldPart()
 
     return (
         <GrassModel
             rotation={rotation}
-            position={[x, y, partPosition[2] + z]}
+            position={[x, y, position.z + z]}
         />
     )
 } 

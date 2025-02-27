@@ -2,7 +2,6 @@
 
 ## Todo
 
--   reset bugs/ set timeouts etc
 -   distance based trauma
 -   intro element
 -   invisible obstacle?

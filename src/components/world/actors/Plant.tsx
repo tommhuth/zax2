@@ -129,11 +129,11 @@ export default function Plant({
     scale = 1,
     rotation = 0
 }: PlantProps) {
-    let partPosition = useWorldPart()
+    let part = useWorldPart()
     let [index, instance] = useInstance("plant", {
         scale,
         rotation: [0, rotation, 0],
-        position: [x, y, partPosition[2] + z],
+        position: [x, y, part.position.z + z],
     })
     let grid = useStore(i => i.world.grid)
     let size: Tuple3 = useMemo(() => [
@@ -143,7 +143,9 @@ export default function Plant({
     ], [scale])
     let id = useMemo(() => random.id(), [])
     let [health, setHealth] = useState(random.pick(30, 40, 20))
-    let position = useMemo(() => new Vector3(x, y, partPosition[2] + z), [x, y, z, partPosition])
+    let position = useMemo(() => {
+        return new Vector3(x, y, part.position.z + z)
+    }, [x, y, z, part.position.z])
     let client = useMemo(() => {
         return grid.createClient(
             position.toArray(),

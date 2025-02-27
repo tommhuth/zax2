@@ -10,15 +10,15 @@ interface RocketSpawnerProps {
 export default function RocketSpawner({
     position: [x, y, z] = [0, 0, 0],
 }: RocketSpawnerProps) {
-    let [, , partZ] = useWorldPart()
+    let part = useWorldPart()
 
     useEffect(() => {
         startTransition(() => {
             createRocket(
-                [x, y, z + partZ],
+                [x, y, z + part.position.z],
             )
         })
-    }, [x, y, z, partZ])
+    }, [x, y, z, part.position.z])
 
     return null
 }

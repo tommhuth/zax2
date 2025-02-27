@@ -16,18 +16,18 @@ export default function TurretSpawner({
     rotation = 0,
     floorLevel
 }: TurretSpawnerProps) {
-    let [, , partZ] = useWorldPart()
+    let part = useWorldPart()
 
     useEffect(() => {
         startTransition(() => {
             createTurret({
                 fireFrequency,
-                position: [x, y, z + partZ],
+                position: [x, y, z + part.position.z],
                 rotation,
                 floorLevel
             })
         })
-    }, [fireFrequency, floorLevel, rotation, x, y, z, partZ])
+    }, [fireFrequency, floorLevel, rotation, x, y, z, part.position.z])
 
     return null
 }

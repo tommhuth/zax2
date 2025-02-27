@@ -26,7 +26,7 @@ import { setState } from "@data/store/utils"
 
 const OFFSCREEN_Y = -10
 const depth = 2
-const size: Tuple3 = [1.5, 1, depth]
+const size: Tuple3 = [1.5, .5, depth]
 const [x, y, z]: Tuple3 = [0, 1.5, 0]
 
 function explode(position: Vector3) {
@@ -189,7 +189,6 @@ export default function Player() {
     }, [setup, attempts, playerObject])
 
     useEffect(() => {
-
         if (!playerObject) {
             return
         }

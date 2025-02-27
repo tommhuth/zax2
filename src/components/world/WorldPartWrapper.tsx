@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber"
-import React, { createContext, startTransition, useContext, useMemo } from "react"
+import { createContext, ReactNode, startTransition, useContext, useMemo } from "react"
 import { Vector3 } from "three"
-import { Tuple2, Tuple3 } from "../../types.global"
+import { Tuple2 } from "../../types.global"
 import { store, useStore } from "../../data/store"
 import { removeWorldPart } from "../../data/store/world"
 import { WORLD_CENTER_X } from "../../data/const"
@@ -9,22 +9,22 @@ import { WORLD_CENTER_X } from "../../data/const"
 interface WorldPartWrapperProps {
     position: Vector3
     id: string
-    children?: React.ReactNode
+    children?: ReactNode
     size: Tuple2
 }
 
-let context = createContext<Tuple3>([0, 0, 0])
+interface WorldPartContext {
+    position: Vector3
+    size: Tuple2
+}
+
+let context = createContext<WorldPartContext>({
+    position: new Vector3(),
+    size: [0, 0]
+})
 
 export function useWorldPart() {
     return useContext(context)
-}
-
-export function RootWorld({ children }) {
-    return (
-        <context.Provider value={[0, 0, 0]}>
-            {children}
-        </context.Provider>
-    )
 }
 
 export default function WorldPartWrapper({
@@ -34,7 +34,12 @@ export default function WorldPartWrapper({
     id,
 }: WorldPartWrapperProps) {
     let showColliders = useStore(i => i.debug.showColliders)
-    let sharedPosition = useMemo(() => position.toArray(), [position])
+    let value = useMemo(() => {
+        return {
+            position,
+            size: [width, depth] as Tuple2
+        }
+    }, [position, width, depth])
 
     useFrame(() => {
         let { player, ready, world } = store.getState()
@@ -50,23 +55,19 @@ export default function WorldPartWrapper({
     })
 
     return (
-        <>
-            <context.Provider
-                value={sharedPosition}
-            >
-                {children}
+        <context.Provider
+            value={value}
+        >
+            {children}
 
-                {showColliders && (
-                    <mesh
-                        position-y={-1}
-                        position-z={position.z + depth / 2}
-                        position-x={WORLD_CENTER_X}
-                    >
-                        <boxGeometry args={[width, 2, depth, 1, 1, 1]} />
-                        <meshBasicMaterial wireframe color="green" name="debug" />
-                    </mesh>
-                )}
-            </context.Provider>
-        </>
+            {showColliders && (
+                <mesh
+                    position={[WORLD_CENTER_X, -1, position.z + depth / 2]}
+                >
+                    <boxGeometry args={[width, 2, depth, 1, 1, 1]} />
+                    <meshBasicMaterial wireframe color="green" name="debug" />
+                </mesh>
+            )}
+        </context.Provider>
     )
 }

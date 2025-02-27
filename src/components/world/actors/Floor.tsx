@@ -16,18 +16,18 @@ export default function Floor({
     scale = [1, 1, 1]
 }: FloorProps) {
     let floor = useRepeater(type)
-    let partPosition = useWorldPart()
+    let { position } = useWorldPart()
 
     useEffect(() => {
         if (floor) {
-            floor.position.set(x, y, z + partPosition[2])
+            floor.position.set(x, y, z + position.z)
             floor.scale.set(...scale)
 
             return () => {
                 floor?.position.set(0, 0, -1000)
             }
         }
-    }, [floor, partPosition, scale, x, y, z])
+    }, [floor, position.z, scale, x, y, z])
 
     return null
 }

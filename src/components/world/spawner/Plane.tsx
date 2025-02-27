@@ -18,19 +18,19 @@ export default function PlaneSpawner({
     rotation,
     targetY,
 }: PlaneSpawnerProps) {
-    let [, , partZ] = useWorldPart()
+    let part = useWorldPart()
 
     useEffect(() => {
         startTransition(() => {
             createPlane({
-                position: [x, y, z + partZ],
+                position: [x, y, z + part.position.z],
                 targetY,
                 rotation,
                 speed,
                 fireFrequency
             })
         })
-    }, [fireFrequency, partZ, x, y, z, rotation, speed, targetY])
+    }, [fireFrequency, part.position.z, x, y, z, rotation, speed, targetY])
 
     return null
 }
