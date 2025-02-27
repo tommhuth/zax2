@@ -27,11 +27,12 @@ interface BossProps {
 }
 
 function explode(position: Vector3) {
+    let ids: number[] = []
+
     for (let i = 0; i < 6; i++) {
         let basePosition = position.toArray()
         let delay = i * random.integer(200, 350)
-
-        createExplosion({
+        let explosionId = createExplosion({
             position: [
                 basePosition[0] + random.float(-size[0] / 2, size[0] / 2),
                 basePosition[1] + random.float(-size[1] / 2, 0),
@@ -42,7 +43,7 @@ function explode(position: Vector3) {
             shockwave: false,
             delay,
         })
-        createParticles({
+        let particlesId = createParticles({
             position: [
                 basePosition[0] + random.float(-size[0] / 2, size[0] / 2),
                 basePosition[1] + random.float((-size[1] / 2) * 0.5, (size[1] / 2) * 0.5),
@@ -57,24 +58,24 @@ function explode(position: Vector3) {
             color: "#00f",
             delay: delay * 1.1,
         })
+
+        ids.push(explosionId, particlesId)
     }
 
-    createExplosion({
+    let explosion2Id = createExplosion({
         position: [position.x, .5, position.z],
         radius: 0.7,
         count: 16,
         shockwave: true,
         delay: 800,
     })
-
-    createExplosion({
+    let explosion3Id = createExplosion({
         position: position.toArray(),
         radius: 0.7,
         count: 14,
         shockwave: true,
     })
-
-    createExplosion({
+    let explosion4Id = createExplosion({
         position: [position.x, 1, position.z],
         radius: 0.8,
         count: 20,
@@ -83,6 +84,10 @@ function explode(position: Vector3) {
         shockwave: true,
         delay: 1300,
     })
+
+    ids.push(explosion2Id, explosion3Id, explosion4Id)
+
+    return ids
 }
 
 const HEAT_SEAKER_FREQUENCY = [1500, 3000, 2200, 2500, 2500]
@@ -142,14 +147,19 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
         let { state } = store.getState()
 
         if (boss?.health === 0 && !data.dead && state !== "gameover") {
+            let ids = explode(data.position)
+            let decalId = setTimeout(() => {
+                startTransition(() => createImpactDecal([data.position.x, .1, data.position.z], 6))
+            }, 900)
+            let defeatId = setTimeout(() => startTransition(defeatBoss), 1200)
+
+            ids.push(decalId, defeatId)
             data.dead = true
             grid.removeClient(client)
 
-            startTransition(() => {
-                explode(data.position)
-                setTimeout(() => createImpactDecal([data.position.x, .1, data.position.z], 6), 900)
-                setTimeout(() => defeatBoss(), 1200)
-            })
+            return () => {
+                ids.forEach((id) => clearTimeout(id))
+            }
         }
     }, [boss?.health, client, data, grid])
 
@@ -181,9 +191,7 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
             return
         }
 
-        let { effects } = store.getState()
-
-        data.time += delta * 1000
+        data.time += ndelta(delta) * 1000
 
         if (data.time >= data.nextHeatSeakerAt) {
             let side = random.pick(-1, 1)
@@ -194,7 +202,7 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
                     data.position.y + 0.65,
                     data.position.z - 0.5,
                 ])
-                data.nextHeatSeakerAt = data.time + random.pick(...HEAT_SEAKER_FREQUENCY) * (1 / effects.timeScale)
+                data.nextHeatSeakerAt = data.time + random.pick(...HEAT_SEAKER_FREQUENCY)
             })
 
             if (side === 1) {
@@ -219,7 +227,7 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
                     rotation: Math.PI * 0.5,
                     owner: Owner.ENEMY,
                 })
-                data.nextBulletAt = data.time + random.pick(...FIRE_FREQUENCY) * (1 / effects.timeScale)
+                data.nextBulletAt = data.time + random.pick(...FIRE_FREQUENCY)
             })
 
             if (side === 1) {

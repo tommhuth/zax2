@@ -124,8 +124,10 @@ export default function Player() {
                 }
             })
 
-            setState("gameover")
-            setDead(true)
+            startTransition(() => {
+                setState("gameover")
+                setDead(true)
+            })
 
             return () => {
                 stopAnimation()

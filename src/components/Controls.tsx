@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber"
-import { useEffect, useRef, useState } from "react"
+import { startTransition, useEffect, useRef, useState } from "react"
 import { Mesh } from "three"
 import { useWindowEvent } from "../data/hooks"
 import { useStore } from "../data/store"
@@ -23,7 +23,6 @@ export default function Controls() {
 
     useEffect(() => {
         let shootDiv = document.getElementById("shoot") as HTMLElement
-        // shoot 
         let onTouchStartShoot = () => {
             keys.space = true
         }
@@ -66,14 +65,14 @@ export default function Controls() {
             visible={false}
             rotation-x={-Math.PI / 2}
             onPointerUp={() => {
-                setIsMovingUp(false)
+                startTransition(() => setIsMovingUp(false))
             }}
             onPointerMove={({ pointerType, point }) => {
                 if (pointerType === "touch") {
                     let depthThreshold = 2
 
                     if (Math.abs(startPointerPosition.z - point.z) > depthThreshold) {
-                        setIsMovingUp(true)
+                        startTransition(() => setIsMovingUp(true))
                     }
 
                     if (isMovingUp) {

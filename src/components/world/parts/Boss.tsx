@@ -25,7 +25,7 @@ export default function BossPart({
 
     useEffect(() => {
         if (boss.state === BossState.DEAD) {
-            timeout(() => {
+            return timeout(() => {
                 setBossProp("state", BossState.OUTRO)
                 timeout(() => setBossProp("state", BossState.UNKNOWN), 6_000)
             }, 2000)
@@ -37,7 +37,7 @@ export default function BossPart({
             registerBoss(pauseAt)
         })
 
-        return () => resetBoss()
+        return () => startTransition(resetBoss)
     }, [pauseAt])
 
     return (

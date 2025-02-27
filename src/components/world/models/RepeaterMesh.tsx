@@ -1,4 +1,4 @@
-import React, { cloneElement, useEffect, useRef, useState } from "react"
+import React, { cloneElement, startTransition, useEffect, useRef, useState } from "react"
 import { Group, Object3D } from "three"
 import { useStore } from "../../../data/store"
 import { requestRepeater, createRepeater } from "../../../data/store/utils"
@@ -11,7 +11,7 @@ export function useRepeater(name: RepeaterName) {
 
     useEffect(() => {
         if (!hasRepeater.current && hasData) {
-            setRepeater(requestRepeater(name))
+            startTransition(() => setRepeater(requestRepeater(name)))
             hasRepeater.current = true
         }
     }, [hasData, name])

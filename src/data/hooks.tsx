@@ -39,7 +39,7 @@ export function useBaseActorHandler({
         let outsideFrustum = player.object && position.z < player.object.position.z - world.diagonal * .85
 
         if (!shouldExit && outsideFrustum) {
-            setShouldExit(true)
+            startTransition(() => setShouldExit(true))
         }
     })
 
@@ -72,10 +72,10 @@ export function useBaseActorHandler({
 
     useLayoutEffect(() => {
         if (health <= 0) {
-            let { world } = store.getState()
-
-            world.grid.removeClient(client)
             startTransition(() => {
+                let { world } = store.getState()
+
+                world.grid.removeClient(client)
                 destroy(position)
                 setShouldExit(!keepAround)
             })

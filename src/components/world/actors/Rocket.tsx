@@ -18,8 +18,11 @@ import { useBaseActorHandler } from "@data/hooks"
 import { removeRocket, damageRocket } from "@data/store/actors/rocket.actions"
 import RocketModel from "../models/RocketModel"
 
+type ExplosionPart = [delay: number, offset: Tuple3, radius: number]
+
 function explode(position: Vector3, size: Tuple3) {
     let shouldDoFireball = position.y < 2
+    let ids: number[] = []
 
     if (shouldDoFireball) {
         createParticles({
@@ -42,7 +45,6 @@ function explode(position: Vector3, size: Tuple3) {
             fireballPath: [[position.x, 0, position.z], [0, 6, 0]]
         })
     } else {
-        type ExplosionPart = [delay: number, offset: Tuple3, radius: number]
         let explosions: ExplosionPart[] = [
             [155, [.2, size[1] / 2 - .2, .3], .2],
             [20, [-.2, -size[1] / 2, -.25], .3],
@@ -50,24 +52,25 @@ function explode(position: Vector3, size: Tuple3) {
         ]
 
         for (let [delay, [x, y, z], radius] of explosions) {
-            createExplosion({
+            let id = createExplosion({
                 position: [position.x + x, position.y + y, position.z + z],
                 count: 10,
                 shockwave: true,
                 radius,
                 delay
             })
+
+            ids.push(id)
         }
 
-        createExplosion({
+        let explosionId = createExplosion({
             position: [position.x, position.y, position.z],
             count: 20,
             radius: random.float(.8, 1),
             delay: 520,
             secondaryFireballCount: 3
         })
-
-        createParticles({
+        let particlesId = createParticles({
             position: position.toArray(),
             speed: [5, 20],
             normal: [0, 0, 0],
@@ -77,6 +80,8 @@ function explode(position: Vector3, size: Tuple3) {
             color: rocketColor,
             delay: 520
         })
+
+        return [...ids, explosionId, particlesId]
     }
 }
 

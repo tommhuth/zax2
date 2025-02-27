@@ -174,6 +174,7 @@ export default function Plant({
     useEffect(() => {
         if (typeof index === "number") {
             trauma.current += .3
+
             startTransition(() => {
                 createParticles({
                     position: position.toArray(),
