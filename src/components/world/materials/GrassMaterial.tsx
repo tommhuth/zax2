@@ -132,6 +132,17 @@ export default function GrassMaterial() {
                     engineDistance
                 ); 
 
+                // shadow player
+                gl_FragColor.rgb = mix(
+                    gl_FragColor.rgb * .45, 
+                    gl_FragColor.rgb,  
+                    smoothstep(
+                        .25, 
+                        .75, 
+                        clamp(length((vGlobalPosition.xz - uPlayerPosition.xz) / vec2(.8, 2.5)) / 1.5, 0., 1.)
+                    )
+                ); 
+
                 gl_FragColor.a = clamp((vPosition.y) / .5, 0., 1.);
                 gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 11., .0071);  
             `

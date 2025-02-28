@@ -105,6 +105,7 @@ export default function Plant() {
                 backColor="#ff0000"
                 backColorIntensity={.4}
                 dither={.015}
+                additionalShadowStrength={.4}
                 shader={{
                     vertex: {
                         head: glsl` 

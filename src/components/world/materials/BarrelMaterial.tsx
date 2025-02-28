@@ -11,7 +11,7 @@ export default function BarrelMaterial() {
             name="barrel"
             emissive={barellColor}
             emissiveIntensity={barrellEmissiveIntensity}
-            additionalShadowStrength={0}
+            additionalShadowStrength={.3}
         />
     )
 }

@@ -12,6 +12,7 @@ export default function TurretMaterial(props: MeshRetroMaterialProps) {
             rightColorIntensity={.45}
             backColorIntensity={0}
             colorCount={8}
+            additionalShadowStrength={.6}
             dither={.005}
             {...props}
         />
