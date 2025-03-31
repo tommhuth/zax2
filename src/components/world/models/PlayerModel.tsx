@@ -1,12 +1,12 @@
 import { useLayoutEffect, useRef } from "react"
 import playerModel from "@assets/models/player.glb"
 import { useGLTF } from "@react-three/drei"
-import Exhaust from "@components/Exhaust"
 import { GLTFModel } from "src/types.global"
 import { Group } from "three"
 import { useStore } from "@data/store"
 import { easeOutExpo } from "@data/shaping"
 import animate from "@huth/animate"
+import Exhaust from "../effects/Exhaust"
 
 export default function PlayerModel({ dead }: { dead: boolean }) {
     let { nodes } = useGLTF(playerModel) as GLTFModel<["player_1", "player_2", "player_3", "player_4"]>

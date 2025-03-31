@@ -5,7 +5,7 @@ import { partValidator } from "./validator"
 import { removeOldestForcedWorldPart } from "@data/store/debug"
 import { makeWorldPartGenerator } from "./generators"
 
-const specialParts = [WorldPartType.START, WorldPartType.ASTEROID_START] as const
+const specialParts = [WorldPartType.START] as const
 
 export type DynamicWorldPartType = Exclude<WorldPartType, typeof specialParts[number]>
 
@@ -17,7 +17,7 @@ export const worlPartTypes = new Cycler<DynamicWorldPartType>(
     1
 )
 
-export let partGenerator: Record<DynamicWorldPartType, (previous: Pick<WorldPart, "size" | "position">) => WorldPart> = {
+export let partGenerator: Record<WorldPartType, (previous: Pick<WorldPart, "size" | "position">) => WorldPart> = {
     [WorldPartType.DEFAULT]: makeWorldPartGenerator(WorldPartType.DEFAULT),
     [WorldPartType.BUILDINGS_GAP]: makeWorldPartGenerator(WorldPartType.BUILDINGS_GAP),
     [WorldPartType.BUILDINGS_LOW]: makeWorldPartGenerator(WorldPartType.BUILDINGS_LOW),
@@ -25,6 +25,7 @@ export let partGenerator: Record<DynamicWorldPartType, (previous: Pick<WorldPart
     [WorldPartType.BOSS]: makeWorldPartGenerator(WorldPartType.BOSS),
     [WorldPartType.ROCK_VALLEY]: makeWorldPartGenerator(WorldPartType.ROCK_VALLEY),
     [WorldPartType.GRASS]: makeWorldPartGenerator(WorldPartType.GRASS),
+    [WorldPartType.START]: makeWorldPartGenerator(WorldPartType.START),
 }
 
 export function getNextWorldPart(previous: WorldPart): WorldPart {

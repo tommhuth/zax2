@@ -4,7 +4,7 @@ import { useGLTF } from "@react-three/drei"
 import { forwardRef } from "react"
 import planeModel from "@assets/models/plane.glb"
 import { Mesh, Vector3 } from "three"
-import Exhaust from "@components/Exhaust"
+import Exhaust from "../effects/Exhaust"
 
 interface PlaneModelProps {
     position: Vector3

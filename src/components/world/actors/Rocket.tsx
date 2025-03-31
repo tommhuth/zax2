@@ -11,12 +11,12 @@ import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createParticles, increaseTrauma } from "../../../data/store/effects"
 import { useCollisionDetection } from "../../../data/collisions"
 import { rocketColor } from "../../../data/theme"
-import Exhaust from "../../Exhaust"
 import { WORLD_TOP_EDGE } from "../../../data/const"
 import DebugBox from "@components/DebugBox"
 import { useBaseActorHandler } from "@data/hooks"
 import { removeRocket, damageRocket } from "@data/store/actors/rocket.actions"
 import RocketModel from "../models/RocketModel"
+import Exhaust from "../effects/Exhaust"
 
 type ExplosionPart = [delay: number, offset: Tuple3, radius: number]
 

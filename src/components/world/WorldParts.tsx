@@ -5,7 +5,6 @@ import Start from "./parts/Start"
 import BossPart from "./parts/Boss"
 import RockValley from "./parts/RockValley"
 import GrassPart from "./parts/Grass"
-import AsteroidStart from "./parts/AsteroidStart"
 import { WorldPartType } from "@data/types"
 import { useStore } from "@data/store"
 import Default from "./parts/Default"
@@ -17,8 +16,6 @@ export default function WorldParts() {
         switch (i.type) {
             case WorldPartType.START:
                 return <Start key={i.id} {...i} />
-            case WorldPartType.ASTEROID_START:
-                return <AsteroidStart key={i.id} {...i} />
             case WorldPartType.ROCK_VALLEY:
                 return <RockValley key={i.id} {...i} />
             case WorldPartType.DEFAULT:

@@ -6,9 +6,9 @@ import { CanvasProps, Canvas as FiberCanvas } from "@react-three/fiber"
 import { Suspense } from "react"
 import { BasicShadowMap, NoToneMapping } from "three"
 import { useStore } from "@data/store"
-import ShaderLoader from "./components/ShaderLoader"
 import { getZoom } from "@components/Camera"
 import Viewport, { getDpr } from "./Viewport"
+import ShaderLoader from "@components/world/materials/ShaderLoader"
 
 export default function Canvas({ children, ...rest }: CanvasProps) {
     let ready = useStore((i) => i.ready)

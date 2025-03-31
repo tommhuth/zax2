@@ -3,9 +3,8 @@ import { Vector3 } from "three"
 import { Tuple2 } from "../../types.global"
 import { WorldPart, WorldPartType } from "../types"
 import { WORLD_START_Z } from "@data/const"
-import { DynamicWorldPartType } from "./getNextWorldPart"
 
-const depthMap: Record<DynamicWorldPartType, number> = {
+const depthMap: Record<WorldPartType, number> = {
     [WorldPartType.BUILDINGS_GAP]: 20,
     [WorldPartType.DEFAULT]: 20,
     [WorldPartType.BOSS]: 50,
@@ -13,6 +12,7 @@ const depthMap: Record<DynamicWorldPartType, number> = {
     [WorldPartType.ROCK_VALLEY]: 20,
     [WorldPartType.AIRSTRIP]: 48,
     [WorldPartType.GRASS]: 48,
+    [WorldPartType.START]: 56.8,
 }
 
 export function makeWorldPartGenerator(type: WorldPartType) {
@@ -34,16 +34,5 @@ export function makeStart(depth: number): WorldPart {
         position: new Vector3(0, 0, WORLD_START_Z),
         size: [10, depth] as Tuple2,
         type: WorldPartType.START
-    }
-}
-
-export function makeAsteroidStart(previous: Pick<WorldPart, "size" | "position">): WorldPart {
-    let startZ = previous.position.z + previous.size[1]
-
-    return {
-        id: random.id(),
-        position: new Vector3(0, 0, startZ),
-        size: [10, 20] as Tuple2,
-        type: WorldPartType.ASTEROID_START
     }
 } 

@@ -9,6 +9,9 @@ export function easeInOutCubic(x: number): number {
 export function easeInOutQuart(x: number): number {
     return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2
 }
+export function easeInQuart(x: number): number {
+    return x * x * x * x
+}
 
 export function easeInQuint(x: number): number {
     return x * x * x

@@ -76,7 +76,7 @@ export default function Toolbar() {
                         cursor: "pointer"
                     }}
                 >
-                    {["floor1", "floor2", "floor3", "floor4", "floor5"].map((value) => {
+                    {["floor1", "floor2", "floor3", "floor4", "floor5", "floor6"].map((value) => {
                         return (
                             <option key={value} value={value}>
                                 {value}

@@ -5,7 +5,7 @@
 -   distance based trauma
 -   intro element
 -   invisible obstacle?
--   rocket smoke, rename heat seaker to rocket? model?
+-   rocket smoke? model?
 -   forcefield obstacle??
 
 53 mat + 22 instances

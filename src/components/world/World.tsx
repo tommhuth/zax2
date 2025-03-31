@@ -64,12 +64,13 @@ export default function World() {
             return
         }
 
-        let startZ = {
-            intro: WORLD_PLAYER_START_Z - diagonal * .5,
-            running: WORLD_START_Z,
-        }[state]
-        let part = partGenerator[startType || WorldPartType.DEFAULT]({
-            position: new Vector3(0, 0, startZ),
+        let generator = partGenerator[startType || WorldPartType.START]
+        let part = generator({
+            position: new Vector3(
+                0,
+                0,
+                state === "intro" ? WORLD_PLAYER_START_Z - 60 : WORLD_START_Z - 35
+            ),
             size: [0, 0],
         })
 

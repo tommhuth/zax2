@@ -112,7 +112,7 @@ export default function GrassMaterial() {
                 // fog
                 vec3 n1 = vGlobalPosition * .1 + uTime * .2 * 1.4;
                 float noiseEffect = easeInOutSine((noise(n1) + 1.) / 2.) * .8;
-                float heightScaler = 1. - clamp((vGlobalPosition.y) / height * .6, 0., 1.);   
+                float heightScaler = 1. - clamp((vPosition.y) / height * .6, 0., 1.);   
                  
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 

@@ -16,7 +16,6 @@ export default function Zaxx() {
     let ready = useStore(i => i.ready)
     let attempts = useStore(i => i.player.attempts)
 
-
     return (
         <>
             <Ui />

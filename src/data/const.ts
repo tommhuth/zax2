@@ -17,7 +17,7 @@ export const CAMERA_Y = 50
 export const CAMERA_OFFSET = new Vector3(4, 0, 8)
 
 // https://discourse.threejs.org/t/dimetric-orthographic-camera-angle-for-retro-pixel-look/24455/2
-export const CAMERA_POSITION = new Vector3().setFromSphericalCoords(
+export const CAMERA_DIRECTION = new Vector3().setFromSphericalCoords(
     CAMERA_Y,
     -Math.PI / 3, // 60 degrees from positive Y-axis and 30 degrees to XZ-plane
     Math.PI / 4  // 45 degrees, between positive X and Z axes, thus on XZ-plane
@@ -33,4 +33,5 @@ export const FLOOR_SIZE: Record<EditorStore["floorType"], number> = {
     floor3: 20,
     floor4: 48,
     floor5: 50.6,
+    floor6: 56.8,
 }
