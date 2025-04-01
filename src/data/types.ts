@@ -7,7 +7,7 @@ import LineSegment from "./LineSegment"
 export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" | "exhaust"
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
     | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock"
-    | "floorBase" | "floorHi" | "floorMark" | "floorSolid" | "turret" | "asteroid" | "turretDark"
+    | "floorBase" | "floorHi" | "floorMark" | "floorRock" | "turret" | "asteroid" | "turretDark"
 
 export type InstanceName = "leaf" | "scrap" | "line" | "sphere" | "particle"
     | "fireball" | "cable" | "shimmer" | "dirt" | "plant" | "shockwave" | "blast" | "decal"

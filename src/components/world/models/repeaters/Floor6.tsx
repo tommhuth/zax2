@@ -1,6 +1,7 @@
 import model from "@assets/models/floor6.glb"
 import { MeshRetroMaterial } from "@components/world/materials/MeshRetroMaterial"
 import { useStore } from "@data/store"
+import { glsl } from "@data/utils"
 import { useGLTF } from "@react-three/drei"
 import { GLTFModel } from "src/types.global"
 
@@ -14,13 +15,8 @@ export default function Floor6() {
                 castShadow
                 receiveShadow
                 geometry={nodes.Plane002.geometry}
-            >
-                <MeshRetroMaterial
-                    fog={.25}
-                    color={"#059"}
-                    backColorIntensity={0}
-                />
-            </mesh>
+                material={materials.floorRock}
+            />
             <mesh
                 castShadow
                 receiveShadow

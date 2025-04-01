@@ -142,7 +142,8 @@ export default function Plant({
         depth * scale * .5
     ], [scale])
     let id = useMemo(() => random.id(), [])
-    let [health, setHealth] = useState(random.pick(30, 40, 20))
+    let [maxHealth] = useState(random.pick(30, 40, 20))
+    let [health, setHealth] = useState(maxHealth)
     let position = useMemo(() => {
         return new Vector3(x, y, part.position.z + z)
     }, [x, y, z, part.position.z])
@@ -172,7 +173,7 @@ export default function Plant({
 
     // health change
     useEffect(() => {
-        if (typeof index === "number") {
+        if (typeof index === "number" && health < maxHealth) {
             trauma.current += .3
 
             startTransition(() => {
@@ -195,7 +196,7 @@ export default function Plant({
                 }
             })
         }
-    }, [health, grid, index, position, scale, instance, client, size])
+    }, [maxHealth, health, grid, index, position, scale, instance, client, size])
 
     // unmount
     useEffect(() => {

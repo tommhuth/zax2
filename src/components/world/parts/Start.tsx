@@ -39,9 +39,10 @@ export default function Start({
                 scale={2.3}
             />
 
-            <Grass
-                position={[4, -2.5, 35.5]}
-                rotation={0.942}
+            <Plant
+                position={[3, -5.5, 26]}
+                rotation={0}
+                scale={1.3}
             />
 
             <Dirt
@@ -51,18 +52,23 @@ export default function Start({
             />
 
             <Grass
+                position={[4.5, -3, 36.5]}
+                rotation={0.942}
+            />
+
+            <Grass
                 position={[11.5, -2.5, 36.5]}
                 rotation={0}
             />
 
             <Plant
-                position={[0, 0, 51]}
+                position={[0, 0, 50]}
                 rotation={2.915}
                 scale={1}
             />
 
             <Plant
-                position={[8, 0, 52]}
+                position={[8, 0, 48]}
                 rotation={0}
                 scale={1}
             />
@@ -74,7 +80,7 @@ export default function Start({
             />
 
             <BarrelSpawner
-                position={[0, 0, 53.5]}
+                position={[-1, 0, 52]}
             />
         </WorldPartWrapper>
     )

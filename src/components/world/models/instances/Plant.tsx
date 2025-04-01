@@ -98,6 +98,7 @@ export default function Plant() {
                 name="plant"
                 colorCount={7}
                 vertexColors
+                fog={.6}
                 color={plantColor}
                 side={DoubleSide}
                 rightColorIntensity={.5}

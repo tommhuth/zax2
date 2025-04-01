@@ -12,9 +12,10 @@ import BarrelMaterial from "./BarrelMaterial"
 import TurretMaterial from "./TurretMaterial"
 import PlaneMaterial from "./PlaneMaterial"
 import RockMaterial from "./RockMaterial"
+import { glsl } from "@data/utils"
 
 function MaterialLoader() {
-    let materials = useMemo<Record<MaterialName, ReactNode>>(() => {
+    let materials = useMemo(() => {
         return {
             rocket: <RocketMaterial />,
             asteroid: <AsteroidMaterial />,
@@ -60,8 +61,28 @@ function MaterialLoader() {
             exhaust: <ExhaustMaterial />,
             floorBase: <MeshRetroMaterial color={floorBaseColor} />,
             floorHi: <MeshRetroMaterial color={floorHiColor} />,
-            floorSolid: <meshBasicMaterial color={"red"} />,
             floorMark: <meshBasicMaterial color={floorMarkColor} />,
+            floorRock: <MeshRetroMaterial
+                fog={.25}
+                color={"#059"}
+                backColorIntensity={0}
+                dither={.01}
+                shader={{
+                    fragment: {
+                        main: glsl`
+                            gl_FragColor.rgb = mix(
+                                gl_FragColor.rgb * .75, 
+                                gl_FragColor.rgb * vec3(0., .4, 1.) * 1.5, 
+                                smoothstep( 
+                                    .2, 
+                                    .8, 
+                                    (noise(vGlobalPosition * vec3(.2, .3, .05) + vec3(.7, 0., 0.)) + 1.)  / 2.
+                                )
+                            );
+                        `
+                    }
+                }}
+            />,
             bossLightBlue: (
                 <MeshRetroMaterial
                     rightColorIntensity={.4}
@@ -77,7 +98,7 @@ function MaterialLoader() {
             bossSecondaryBlue: <MeshRetroMaterial color="#00f" />,
             bossWhite: <meshLambertMaterial color="white" />,
             grass: <GrassMaterial />,
-        }
+        } satisfies Record<MaterialName, ReactNode>
     }, [])
 
     return (
