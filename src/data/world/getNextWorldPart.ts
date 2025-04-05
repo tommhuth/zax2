@@ -22,17 +22,16 @@ export let partGenerator: Record<WorldPartType, (previous: Pick<WorldPart, "size
     [WorldPartType.BUILDINGS_GAP]: makeWorldPartGenerator(WorldPartType.BUILDINGS_GAP),
     [WorldPartType.BUILDINGS_LOW]: makeWorldPartGenerator(WorldPartType.BUILDINGS_LOW),
     [WorldPartType.AIRSTRIP]: makeWorldPartGenerator(WorldPartType.AIRSTRIP),
-    [WorldPartType.BOSS]: makeWorldPartGenerator(WorldPartType.BOSS),
     [WorldPartType.ROCK_VALLEY]: makeWorldPartGenerator(WorldPartType.ROCK_VALLEY),
     [WorldPartType.GRASS]: makeWorldPartGenerator(WorldPartType.GRASS),
     [WorldPartType.START]: makeWorldPartGenerator(WorldPartType.START),
+    [WorldPartType.BOSS]: makeWorldPartGenerator(WorldPartType.BOSS),
 }
 
 export function getNextWorldPart(previous: WorldPart): WorldPart {
-    let { debug, boss } = store.getState()
-    let forceBoss = Date.now() - boss.lastActiveAt.getTime() > boss.interval
+    let { debug } = store.getState()
     let forcedType = debug.forcedWorldParts[0]
-    let type = forcedType || (forceBoss ? WorldPartType.BOSS : worlPartTypes.next())
+    let type = forcedType || worlPartTypes.next()
     let validator = partValidator[type]
 
     while (validator ? !validator(previous) : false) {

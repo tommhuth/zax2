@@ -26,7 +26,7 @@ export const transformer: Record<Exclude<Fireball["type"], undefined>, FireballT
 
         let position: Tuple3 = [
             fireball.position[0],
-            fireball.position[1] + t * (fireball.index % 3 + 1),
+            fireball.position[1] + t * (fireball.index % 3),
             fireball.position[2],
         ]
 
@@ -63,6 +63,7 @@ export default function FireballHandler() {
     let { onBeforeCompile, uniforms } = useShader({
         shared: glsl` 
             varying vec3 vGlobalPosition; 
+            varying vec3 vGlobalNormal; 
             uniform float uTime;      
                  
             ${noise}
@@ -79,7 +80,8 @@ export default function FireballHandler() {
                 float noiseEffect = noise(globalPosition.xyz * .96)  ;
 
                 transformed *= 1. + noiseEffect * .15; 
-                vGlobalPosition = globalPosition.xyz;  
+                vGlobalPosition = globalPosition.xyz;   
+                vGlobalNormal = mat3(instanceMatrix) * normal;
             `
         },
         fragment: {
@@ -94,14 +96,22 @@ export default function FireballHandler() {
                     vec3(1., .9, 0.), 
                     edgeEffect
                 );
- 
+
+  
                 gl_FragColor.rgb += .5;
                 gl_FragColor.rgb *= color * 1.6;
                 gl_FragColor.rgb = mix(vec3(0.8, 0.4, 0.), gl_FragColor.rgb, easeInOutQuad(noiseEffect));  
                 gl_FragColor.rgb = mix(vec3(0.1, 0.1, 0.), gl_FragColor.rgb, intensity);
                 gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb * 1.2, 4., .05);  
 
-                gl_FragColor.a = luma(dither(gl_FragCoord.xy, baseShading * 1.6, 2., .05));
+
+                gl_FragColor.rgb = mix(
+                    gl_FragColor.rgb, 
+                    gl_FragColor.rgb * 1.2, 
+                    clamp(-dot(vGlobalNormal, vec3(.3, -.75, .5)), 0., 1.)
+                );
+
+                gl_FragColor.a = luma(dither(gl_FragCoord.xy, baseShading * 1.6, 2., .05)); 
             `
         }
     })
@@ -146,7 +156,7 @@ export default function FireballHandler() {
             name="fireball"
         >
             <sphereGeometry args={[1, 24, 24]} />
-            <meshPhongMaterial
+            <meshLambertMaterial
                 transparent
                 onBeforeCompile={onBeforeCompile}
                 color={"#fff"}

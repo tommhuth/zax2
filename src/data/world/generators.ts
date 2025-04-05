@@ -2,7 +2,6 @@ import random from "@huth/random"
 import { Vector3 } from "three"
 import { Tuple2 } from "../../types.global"
 import { WorldPart, WorldPartType } from "../types"
-import { WORLD_START_Z } from "@data/const"
 
 const depthMap: Record<WorldPartType, number> = {
     [WorldPartType.BUILDINGS_GAP]: 20,
@@ -25,14 +24,5 @@ export function makeWorldPartGenerator(type: WorldPartType) {
             size: [10, depthMap[type]] as Tuple2,
             type
         }
-    }
-}
-
-export function makeStart(depth: number): WorldPart {
-    return {
-        id: random.id(),
-        position: new Vector3(0, 0, WORLD_START_Z),
-        size: [10, depth] as Tuple2,
-        type: WorldPartType.START
     }
 } 

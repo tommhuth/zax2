@@ -1,7 +1,5 @@
 import model from "@assets/models/floor6.glb"
-import { MeshRetroMaterial } from "@components/world/materials/MeshRetroMaterial"
 import { useStore } from "@data/store"
-import { glsl } from "@data/utils"
 import { useGLTF } from "@react-three/drei"
 import { GLTFModel } from "src/types.global"
 

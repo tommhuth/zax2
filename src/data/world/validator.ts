@@ -6,7 +6,7 @@ export const partValidator: Partial<Record<WorldPartType, (previous: WorldPart) 
         let { boss, world, player } = store.getState()
 
         if (
-            player.score > 100_000
+            player.score > 30_000
             && boss.state === BossState.UNKNOWN
             && !world.parts.some(i => i.type === WorldPartType.BOSS)
         ) {

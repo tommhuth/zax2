@@ -3,12 +3,13 @@ import { store, useStore } from "../../../data/store"
 import { useFrame } from "@react-three/fiber"
 import { removeHeatSeaker } from "../../../data/store/boss"
 import { ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
-import { startTransition, useEffect, useMemo } from "react"
+import { startTransition, useEffect, useMemo, useRef } from "react"
 import { createExplosion, createImpactDecal, createParticles } from "../../../data/store/effects"
 import random from "@huth/random"
 import type { HeatSeaker } from "../../../data/types"
 import { useCollisionDetection } from "../../../data/collisions"
 import { floorBaseColor, floorHiColor } from "@data/theme"
+import { Tuple3 } from "src/types.global"
 
 let _direction = new Vector3()
 
@@ -18,10 +19,13 @@ export default function HeatSeaker({
     size,
     client,
     id,
-    velocity
-}: HeatSeaker) {
+    velocity,
+    generateSmoke
+}: HeatSeaker & { generateSmoke: (position: Tuple3) => void }) {
     let grid = useStore(i => i.world.grid)
     let accuracy = useMemo(() => random.float(.25, .4), [])
+    let time = useRef(0)
+    let nextSmokeAt = useRef(random.integer(16, 35))
 
     useCollisionDetection({
         client,
@@ -93,6 +97,23 @@ export default function HeatSeaker({
 
         client.position = position.toArray()
         world.grid.updateClient(client)
+    })
+
+    useFrame((state, delta) => {
+        let fps = 1 / ndelta(delta) / 1000
+
+        if (time.current > nextSmokeAt.current) {
+            time.current = 0
+            nextSmokeAt.current = random.integer(fps * 1.1, fps * 1.35)
+
+            generateSmoke([
+                position.x + random.integer(-.5, .5) - velocity.x * .25,
+                position.y + random.integer(-.35, .35) - velocity.y * .25,
+                position.z + random.integer(-.5, .5) - velocity.z * .25,
+            ])
+        }
+
+        time.current += ndelta(delta) * 1000
     })
 
     useEffect(() => {

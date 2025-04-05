@@ -3,8 +3,7 @@ import { Tuple2, Tuple3 } from "../../types.global"
 import { store } from "."
 import { ColorRepresentation, Vector3 } from "three"
 import { Explosion, Particle } from "../types"
-import { clamp, setColorAt, setMatrixAt } from "../utils"
-import { easeOutCubic } from "../shaping"
+import { setColorAt, setMatrixAt } from "../utils"
 import { ZaxStore } from "./types.store"
 
 function updateEffects(data: Partial<ZaxStore["effects"]>) {
@@ -24,7 +23,6 @@ interface CreateExplosionParams {
     fireballCount?: number
     shockwave?: boolean
     delay?: number
-    blastRadius?: number
     secondaryFireballCount?: number
 }
 
@@ -35,31 +33,19 @@ export function createExplosion({
     fireballPath: [fireballStart, fireballDirection] = [[0, 0, 0], [0, 0, 0]],
     fireballCount = 0,
     secondaryFireballCount = radius > .65 ? random.integer(0, 3) : 0,
-    shockwave = random.boolean(.75),
-    blastRadius = radius * random.float(4, 5),
+    shockwave = random.boolean(.85),
     delay = 0,
 }: CreateExplosionParams) {
     return setTimeout(() => {
         let baseLifetime = random.integer(1600, 1800)
-        let {
-            instances,
-            effects: { trauma: cameraShake },
-            player: { object }
-        } = store.getState()
-        let playerZ = object?.position.z || 0
-        let shake = 1 - clamp(Math.abs(playerZ - position[2]) / 5, 0, 1)
+        let { instances } = store.getState()
+
         let explosion: Explosion = {
             position,
             id: random.id(),
             lifetime: baseLifetime * .85,
             time: 0,
             radius: radius * 7 + (fireballCount ? 1.5 : 0),
-            blast: {
-                lifetime: random.float(baseLifetime * .375, baseLifetime * .45),
-                radius: blastRadius,
-                time: 0,
-                index: instances.blast.index.next(),
-            },
             shockwave: shockwave || fireballCount ? {
                 lifetime: random.float(baseLifetime * .5, baseLifetime * .65),
                 radius: random.float(radius * 2.5, radius * 3),
@@ -92,7 +78,7 @@ export function createExplosion({
                             time: t * duration + durationOffset,
                             lifetime: random.integer(600, 900),
                             type: "secondary"
-                        }
+                        } satisfies Explosion["fireballs"][number]
                     })
                 }).flat(1),
                 ...new Array(fireballCount).fill(null).map((i, index) => {
@@ -110,7 +96,7 @@ export function createExplosion({
                         maxRadius: radius * 3.5,
                         time: index * -random.integer(75, 100),
                         lifetime: 1100 + random.integer(0, 200),
-                    }
+                    } satisfies Explosion["fireballs"][number]
                 }),
                 ...new Array(count).fill(null).map((i, index, list) => {
                     let startRadius = (index / list.length) * (radius * 1.5 - radius * .25) + radius * .25
@@ -127,15 +113,10 @@ export function createExplosion({
                         maxRadius: startRadius * 2.5,
                         time: random.integer(-200, 0),
                         lifetime: random.integer(baseLifetime * .375, baseLifetime * .975),
-                    }
+                    } satisfies Explosion["fireballs"][number]
                 })
             ],
         }
-
-        cameraShake.set(
-            Math.min(cameraShake.x + easeOutCubic(shake), 1),
-            Math.min(cameraShake.x + easeOutCubic(shake), 1)
-        )
 
         updateEffects({
             explosions: [

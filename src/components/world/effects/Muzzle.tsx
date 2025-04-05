@@ -2,17 +2,14 @@ import { ComponentPropsWithRef, forwardRef, useImperativeHandle, useRef } from "
 import { useFrame } from "@react-three/fiber"
 import { ndelta } from "../../../data/utils"
 import random from "@huth/random"
-import { Group, MeshLambertMaterial, SphereGeometry } from "three"
+import { Group, SphereGeometry } from "three"
 import { damp } from "three/src/math/MathUtils.js"
+import { whiteMaterial } from "@data/const"
 
 export type MuzzleRef = { activate: () => void }
 
 let geometry = new SphereGeometry(1, 6, 6)
-let material = new MeshLambertMaterial({
-    color: "white",
-    emissive: "white",
-    emissiveIntensity: .3
-})
+
 
 interface MuzzleProps extends ComponentPropsWithRef<"group"> {
     decay?: number
@@ -70,7 +67,7 @@ export default forwardRef<MuzzleRef, MuzzleProps>(({ decay = 0, ...props }, ref)
                         key={index}
                         castShadow
                         geometry={geometry}
-                        material={material}
+                        material={whiteMaterial}
                     />
                 )
             })}

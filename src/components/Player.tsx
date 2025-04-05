@@ -39,7 +39,6 @@ function explode(position: Vector3) {
                 count: random.integer(6, 8),
                 delay: i * 400,
                 shockwave: i === 7,
-                blastRadius: i % 3 === 0 ? random.float(3, 5) : 0
             }),
             createParticles({
                 position: position.toArray(),

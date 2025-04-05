@@ -3,10 +3,7 @@
 ## Todo
 
 -   distance based trauma
--   intro element
 -   invisible obstacle?
--   rocket smoke? model?
--   forcefield obstacle??
 
 53 mat + 22 instances
 

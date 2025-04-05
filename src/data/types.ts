@@ -10,7 +10,7 @@ export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" 
     | "floorBase" | "floorHi" | "floorMark" | "floorRock" | "turret" | "asteroid" | "turretDark"
 
 export type InstanceName = "leaf" | "scrap" | "line" | "sphere" | "particle"
-    | "fireball" | "cable" | "shimmer" | "dirt" | "plant" | "shockwave" | "blast" | "decal"
+    | "fireball" | "cable" | "shimmer" | "dirt" | "plant" | "shockwave" | "decal"
 
 export type RepeaterName = "tower1" | "tower2" | "tower3"
     | "tanks" | "hangar"
@@ -48,12 +48,6 @@ export interface Explosion {
     lifetime: number
     time: number
     id: string
-    blast: {
-        radius: number
-        lifetime: number
-        time: number
-        index: number
-    }
     shockwave: {
         radius: number
         lifetime: number
@@ -126,12 +120,12 @@ export interface Plane {
 }
 
 export enum WorldPartType {
+    BOSS = "boss",
     START = "start",
     DEFAULT = "default",
     BUILDINGS_GAP = "buildings-gap",
     BUILDINGS_LOW = "buildings-low",
     AIRSTRIP = "airstrip",
-    BOSS = "boss",
     ROCK_VALLEY = "rock-valley",
     GRASS = "grass",
 }

@@ -4,7 +4,7 @@ import {
     damageBoss,
     defeatBoss,
 } from "../../../data/store/boss"
-import { Group, Vector3 } from "three"
+import { Group, InstancedMesh, SphereGeometry, Vector3 } from "three"
 import { store, useStore } from "../../../data/store"
 import { Tuple3 } from "../../../types.global"
 import HeatSeaker from "./HeatSeaker"
@@ -16,9 +16,11 @@ import { useCollisionDetection } from "../../../data/collisions"
 import DebugBox from "@components/DebugBox"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { increaseScore } from "@data/store/player"
-import { ndelta } from "@data/utils"
+import { clamp, ndelta, setMatrixAt } from "@data/utils"
 import BossModel from "../models/BossModel"
 import Muzzle, { MuzzleRef } from "../effects/Muzzle"
+import Counter from "@data/Counter"
+import { whiteMaterial } from "@data/const"
 
 let size: Tuple3 = [4.5, 4.75, 2]
 
@@ -93,12 +95,25 @@ function explode(position: Vector3) {
 const HEAT_SEAKER_FREQUENCY = [1500, 3000, 2200, 2500, 2500]
 const FIRE_FREQUENCY = [2100, 700, 1500, 3000]
 
+interface Smoke {
+    time: number
+    radius: number
+    lifetime: number
+    position: Tuple3
+    id: string
+    index: number
+}
+
+const index = new Counter(100)
+const geometry = new SphereGeometry(1, 16, 16)
+
 export default function Boss({ startPosition: [startX, startY, startZ] }: BossProps) {
     let boss = useStore((i) => i.boss)
     let grid = useStore((i) => i.world.grid)
     let leftMuzzleRef = useRef<MuzzleRef>(null)
     let rightMuzzleRef = useRef<MuzzleRef>(null)
     let bossWrapper = useRef<Group>(null)
+    let ref = useRef<InstancedMesh>(null)
     let data = useMemo(() => {
         return {
             dead: false,
@@ -107,7 +122,8 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
             nextBulletAt: Math.max(...FIRE_FREQUENCY),
             acceleration: 0,
             velocity: 0,
-            position: new Vector3(startX, startY, startZ)
+            position: new Vector3(startX, startY, startZ),
+            smoke: [] as Smoke[],
         }
     }, [startX, startY, startZ])
     let client = useMemo(() => {
@@ -255,13 +271,62 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
         }
     })
 
+    useFrame((state, delta) => {
+        if (!ref.current) {
+            return
+        }
+
+        let removed: string[] = []
+
+        for (let smoke of data.smoke) {
+            let t = 1 - clamp(smoke.time / smoke.lifetime, 0, 1)
+
+            setMatrixAt({
+                instance: ref.current,
+                position: smoke.position,
+                index: smoke.index,
+                scale: smoke.radius * t
+            })
+
+            if (smoke.time > smoke.lifetime) {
+                removed.push(smoke.id)
+            }
+
+            smoke.time += ndelta(delta) * 1000
+        }
+
+        data.smoke = data.smoke.filter((i) => !removed.includes(i.id))
+
+    })
+
     return (
         <>
             {boss?.heatSeakers.map((i) => {
                 return (
-                    <HeatSeaker key={i.id} {...i} />
+                    <HeatSeaker
+                        key={i.id}
+                        generateSmoke={(position: Tuple3) => {
+                            data.smoke.push({
+                                time: 0,
+                                radius: random.float(0.125, 0.5),
+                                position,
+                                id: random.id(),
+                                index: index.next(),
+                                lifetime: random.integer(200, 450),
+                            })
+                        }}
+                        {...i}
+                    />
                 )
             })}
+
+            <instancedMesh
+                castShadow
+                receiveShadow
+                frustumCulled={false}
+                args={[geometry, whiteMaterial, 100]}
+                ref={ref}
+            />
 
             <BossModel
                 ref={bossWrapper}

@@ -6,7 +6,6 @@ import InstancedMesh from "../models/InstancedMesh"
 import { TextureLoader } from "three/src/loaders/TextureLoader.js"
 import { store, useStore } from "../../../data/store"
 import { removeExplosion } from "../../../data/store/effects"
-import BlastHandler from "./BlastHandler"
 import FireballHandler from "./FireballHandler"
 import ShockwaveHandler from "./ShockwaveHandler"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
@@ -86,7 +85,6 @@ export default function ExplosionsHandler() {
 
     return (
         <>
-            <BlastHandler />
             <FireballHandler />
             <ShockwaveHandler />
 
@@ -96,7 +94,7 @@ export default function ExplosionsHandler() {
             >
                 <planeGeometry args={[2, 2, 1, 1]} />
                 <MeshRetroMaterial
-                    color={"rgb(255, 0, 153)"}
+                    color={"rgb(150, 0, 153)"}
                     name="impact"
                     depthWrite={false}
                     transparent
