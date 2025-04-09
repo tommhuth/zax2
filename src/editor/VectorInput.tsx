@@ -9,11 +9,11 @@ interface VectorInputProps {
     onUpdate: (x: number, y: number, z: number) => void
 }
 
-export default function VectorInput({ 
-    legend, 
-    value, 
-    onUpdate, 
-    readOnly = false 
+export default function VectorInput({
+    legend,
+    value,
+    onUpdate,
+    readOnly = false
 }: VectorInputProps) {
     let width = "4.5em"
 
@@ -40,7 +40,7 @@ export default function VectorInput({
                                     cursor: readOnly ? "default" : "ns-resize"
                                 }}
                                 type="number"
-                                value={v.toFixed(1)}
+                                value={v.toFixed(2)}
                                 readOnly
                                 aria-label={["x", "y", "z"][index]}
                                 step={precision * .5}
