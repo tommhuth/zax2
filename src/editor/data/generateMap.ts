@@ -60,6 +60,7 @@ function render(object: EditorObject) {
         case "box":
         case "rockface":
         case "device":
+        case "empty":
             return renderObject("Obstacle", object, ["rotation", "size"], [["type", object.type]])
         case "wall1":
         case "wall2":
@@ -68,13 +69,26 @@ function render(object: EditorObject) {
         case "tower2":
         case "hangar":
         case "tanks":
-            return renderObject("EdgeElement", object, ["rotation"], [["type", object.type], ["scale", [object.uniformScaler, object.uniformScaler, object.uniformScaler]]])
+            return renderObject(
+                "EdgeElement",
+                object,
+                ["rotation"],
+                [
+                    ["type", object.type],
+                    ["scale", [object.uniformScaler, object.uniformScaler, object.uniformScaler]]
+                ]
+            )
         case "grass":
             return renderObject(toTitleCase(object.type), object, ["rotation"])
         case "cable":
         case "plant":
         case "dirt":
-            return renderObject(toTitleCase(object.type), object, ["rotation"], [["scale", object.uniformScaler]])
+            return renderObject(
+                toTitleCase(object.type),
+                object,
+                ["rotation"],
+                [["scale", object.uniformScaler]]
+            )
     }
 }
 

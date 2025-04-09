@@ -13,7 +13,7 @@ import ObstacleModel from "../models/ObstacleModel"
 interface ObstacleProps {
     size: Tuple3
     position: Tuple3
-    type: "box" | "device" | "rockface"
+    type: "box" | "device" | "rockface" | "empty"
     rotation?: number
 }
 
@@ -39,7 +39,8 @@ export default function Obstacle({
     const color = {
         box: deviceColor,
         rockface: "#0F5",
-        device: deviceColor
+        device: deviceColor,
+        empty: deviceColor,
     }[type]
 
     useCollisionDetection({
@@ -70,12 +71,14 @@ export default function Obstacle({
 
     return (
         <>
-            <ObstacleModel
-                position={resolvedPosition}
-                size={[width, height, depth]}
-                rotation={rotation}
-                type={type}
-            />
+            {type !== "empty" && (
+                <ObstacleModel
+                    position={resolvedPosition}
+                    size={[width, height, depth]}
+                    rotation={rotation}
+                    type={type}
+                />
+            )}
 
             <DebugBox
                 size={[width, height, depth]}

@@ -11,6 +11,7 @@ import RocketEditor from "./objects/Rocket.editor"
 import GrassEditor from "./objects/Grass.editor"
 import PlaneEditor from "./objects/Plane.editor"
 
+const defaultControls = ["rotation", "scale"] as const
 const controls = {
     "barrel": [],
     "turret": ["rotation"],
@@ -18,12 +19,11 @@ const controls = {
     "plane": ["rotation"],
     "device": ["rotation", "size"],
     "rockface": ["rotation", "size"],
+    "empty": ["size"],
     "box": ["rotation", "size"],
     "grass": ["rotation"],
     "plant": ["scale", "rotation"],
-}
-
-const defaultControls = ["rotation", "scale"]
+} as const
 
 export default function EditorObjects() {
     let objects = useEditorStore(i => i.objects)
@@ -56,6 +56,9 @@ export default function EditorObjects() {
                 )}
                 {object.type === "rockface" && (
                     <ObstacleEditor type="rockface" id={object.id} />
+                )}
+                {object.type === "empty" && (
+                    <ObstacleEditor type="empty" id={object.id} />
                 )}
                 {object.type === "grass" && (
                     <GrassEditor id={object.id} />

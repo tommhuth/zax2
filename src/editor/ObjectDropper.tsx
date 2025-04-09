@@ -85,6 +85,11 @@ const world: EditorObjectInit[] = [
         type: "rockface",
         mode: "shape",
     },
+    {
+        type: "empty",
+        mode: "shape",
+        invisible: true
+    },
 ]
 
 const decorations: EditorObjectInit[] = [
@@ -110,7 +115,6 @@ export default function ObjectDropper() {
     let [hovering, setHovering] = useState<"left" | null>(null)
 
     return (
-
         <div
             onMouseEnter={() => setHovering("left")}
             onMouseLeave={() => setHovering(null)}
@@ -172,6 +176,6 @@ export default function ObjectDropper() {
                     </div>
                 )
             })}
-        </div> 
+        </div>
     )
 }

@@ -58,7 +58,10 @@ export default function EditorObject({
                         position-z={object.anchor[2] + (object.mode === "shape" ? object.size[2] / 2 : 0)}
                     >
                         <boxGeometry args={[...object.size, 1, 1, 1]} />
-                        <meshPhongMaterial color="yellow" wireframe />
+                        <meshPhongMaterial
+                            wireframe
+                            color={activeObjectId === id ? "yellow" : "purple"}
+                        />
                     </mesh>
                 </group>
 

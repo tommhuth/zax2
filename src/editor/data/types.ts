@@ -7,7 +7,7 @@ export type EditorObjectInit = {
 
 export interface EditorObject {
     id: string;
-    type: "box" | "device" | "rockface"
+    type: "box" | "device" | "rockface" | "empty"
     | "turret" | "barrel" | "rocket" | "plane"
     | "tanks" | "hangar" | "wall1" | "wall2" | "wall3" | "tower1" | "tower2"
     | "plant" | "cable" | "dirt" | "grass"
