@@ -37,7 +37,7 @@ export const FLOOR_SIZE: Record<EditorStore["floorType"], number> = {
 }
 
 export const whiteMaterial = new MeshLambertMaterial({
-    color: "d9f3ff",
+    color: "#d9f3ff",
     emissive: "#ffffff",
     emissiveIntensity: .35
 })

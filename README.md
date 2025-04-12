@@ -3,7 +3,6 @@
 ## Todo
 
 -   distance based trauma
--   invisible obstacle?
 
 53 mat + 22 instances
 

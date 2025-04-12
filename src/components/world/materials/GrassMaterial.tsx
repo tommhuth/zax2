@@ -134,13 +134,13 @@ export default function GrassMaterial() {
 
                 // shadow player
                 gl_FragColor.rgb = mix(
-                    gl_FragColor.rgb * .45, 
-                    gl_FragColor.rgb,  
+                    gl_FragColor.rgb, 
+                    gl_FragColor.rgb * .45,  
                     smoothstep(
                         .25, 
                         .75, 
-                        clamp(length((vGlobalPosition.xz - uPlayerPosition.xz) / vec2(.8, 2.5)) / 1.5, 0., 1.)
-                    )
+                        clamp(1. - length((vGlobalPosition.xz - uPlayerPosition.xz) / vec2(.8, 2.5)) / 1.5, 0., 1.)
+                    ) * step(.5, uPlayerPosition.y)
                 ); 
 
                 gl_FragColor.a = clamp((vPosition.y) / .5, 0., 1.);

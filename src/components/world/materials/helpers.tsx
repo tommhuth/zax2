@@ -22,6 +22,7 @@ export const lightFragmentHead = glsl`
     struct BulletLight {
         vec3 position;  
         float radius;
+        float strength;
     };
     uniform BulletLight uBulletLights[${BULLET_LIGHT_COUNT}];
 `
@@ -43,7 +44,8 @@ export const lightFragment = glsl`
     for (int i = 0; i < uBulletLights.length(); i++) { 
         BulletLight light = uBulletLights[i];
 
-        float currentLightEffect = (1. - clamp(length(light.position - vGlobalPosition) / light.radius, 0., 1.));
+        float currentLightEffect = (1. - clamp(length(light.position - vGlobalPosition) / light.radius, 0., 1.))
+            * light.strength;
 
         bulletLightEffect = max(bulletLightEffect, currentLightEffect);
     } 
@@ -63,17 +65,32 @@ export const lightFragment = glsl`
     ); 
 `
 
-type UniformLightSource = { value: { radius: number; strength: number; position: Vector3 }[]; needsUpdate?: boolean }
-type UniformBulletLight = { value: { radius: number; position: Vector3 }[]; needsUpdate?: boolean }
+type UniformLightSource = {
+    value: {
+        radius: number
+        strength: number
+        position: Vector3
+    }[];
+    needsUpdate?: boolean
+}
 
-export function useLightsUpdater(uniforms: { uLightSources: UniformLightSource; uBulletLights: UniformBulletLight }) {
+interface LightUniforms {
+    uLightSources: UniformLightSource
+    uBulletLights: UniformLightSource
+}
+
+export function useLightsUpdater(uniforms: LightUniforms) {
     let lightSourceCounter = useMemo(() => new Counter(LIGHT_SOURCES_COUNT - 1), [])
 
     useFrame((state, delta) => {
         let bullets = store.getState().world.bullets
 
         for (let i = 0; i < BULLET_LIGHT_COUNT; i++) {
-            uniforms.uBulletLights.value[i].radius = damp(uniforms.uBulletLights.value[i].radius, 0, 5, ndelta(delta))
+
+            let uniform = uniforms.uBulletLights.value[i]
+
+            uniform.radius = damp(uniform.radius, 0, 1, ndelta(delta))
+            uniform.strength = damp(uniform.strength, 0, 2, ndelta(delta))
         }
 
         for (let i = 0; i < BULLET_LIGHT_COUNT; i++) {
@@ -84,6 +101,7 @@ export function useLightsUpdater(uniforms: { uLightSources: UniformLightSource; 
 
                 uniform.position.copy(bullet.line.position)
                 uniform.radius = 5
+                uniform.strength = 1
             }
         }
 
@@ -144,6 +162,7 @@ export function makeLightUniforms(
                 return {
                     position: new Vector3(),
                     radius: 0,
+                    strength: 0,
                 }
             })
         },

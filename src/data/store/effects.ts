@@ -33,7 +33,7 @@ export function createExplosion({
     fireballPath: [fireballStart, fireballDirection] = [[0, 0, 0], [0, 0, 0]],
     fireballCount = 0,
     secondaryFireballCount = radius > .65 ? random.integer(0, 3) : 0,
-    shockwave = random.boolean(.85),
+    shockwave = random.boolean(.9),
     delay = 0,
 }: CreateExplosionParams) {
     return setTimeout(() => {
@@ -47,9 +47,9 @@ export function createExplosion({
             time: 0,
             radius: radius * 7 + (fireballCount ? 1.5 : 0),
             shockwave: shockwave || fireballCount ? {
-                lifetime: random.float(baseLifetime * .5, baseLifetime * .65),
-                radius: random.float(radius * 2.5, radius * 3),
-                time: random.integer(100, 300),
+                lifetime: random.float(700, 850),
+                radius: random.float(radius * 5, radius * 6),
+                time: random.integer(200, 200),
                 index: instances.shockwave.index.next(),
             } : null,
             fireballs: [

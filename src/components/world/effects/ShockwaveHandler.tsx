@@ -4,8 +4,8 @@ import { useShader } from "../../../data/hooks"
 import { useFrame } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
 import { useStore } from "../../../data/store"
-import easings from "../../../shaders/easings.glsl"
 import dither from "../../../shaders/dither.glsl"
+import noise from "../../../shaders/noise.glsl"
 import utils from "../../../shaders/utils.glsl"
 import { easeOutCubic } from "../../../data/shaping"
 
@@ -17,8 +17,8 @@ export default function ShockwaveHandler() {
     let { onBeforeCompile } = useShader({
         shared: glsl`
             varying float vTime;  
-            varying float vDistanceFromCenter;   
-            ${easings}
+            varying vec3 vPosition;   
+            ${noise}
             ${dither} 
             ${utils}  
         `,
@@ -28,17 +28,21 @@ export default function ShockwaveHandler() {
             `,
             main: glsl`
                 vTime = aTime;
-                vDistanceFromCenter = clamp(length(vec3(0., 0., 0.) - position) / 1., 0., 1.); 
+                vPosition = position;  
             `
         },
         fragment: {
             main: glsl`     
+                float innerRadius = smoothstep(.7, 1., vTime);
+                float outerRadius = .95 + innerRadius * .2;
+                float dist = smoothstep(innerRadius  , outerRadius, length(vPosition)); 
+
                 gl_FragColor.rgb = mix(
                     vec3(0.), 
-                    vec3(1.) * 1.5, 
-                    easeInCubic(vDistanceFromCenter) * easeOutQuart(1. - vTime)
+                    vec3(1.15), 
+                    dist - ((noise(gl_FragCoord.xy * .035) + 1.) / 2.) * (1. - length(vPosition)) * .5
                 );
-                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 1., .08);
+                gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, 1., .035);
                 gl_FragColor.a = luma(gl_FragColor.rgb);
             `
         }
@@ -63,7 +67,7 @@ export default function ShockwaveHandler() {
                     instance: instance.mesh,
                     index: shockwave.index,
                     position,
-                    scale: easeOutCubic(t) * shockwave.radius * 1.5 + 1,
+                    scale: easeOutCubic(t) * shockwave.radius, //  easeOutCubic(t) *
                 })
 
                 shockwave.time += ndelta(delta) * 1000
@@ -76,6 +80,7 @@ export default function ShockwaveHandler() {
             castShadow={false}
             receiveShadow={false}
             count={count}
+            renderOrder={1}
             name="shockwave"
         >
             <cylinderGeometry args={[1, 1, .01, 32, 1]}>
@@ -88,9 +93,8 @@ export default function ShockwaveHandler() {
             <meshBasicMaterial
                 color="#fff"
                 name="shockwave"
-                depthWrite={false}
                 transparent
-                forceSinglePass
+                depthWrite={false}
                 onBeforeCompile={onBeforeCompile}
             />
         </InstancedMesh>

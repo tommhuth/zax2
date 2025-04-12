@@ -68,6 +68,7 @@ interface InstancedMeshProps {
     visible?: boolean
     count: number
     name: InstanceName
+    renderOrder?: number
 }
 
 export default function InstancedMesh({
@@ -78,6 +79,7 @@ export default function InstancedMesh({
     visible = true,
     count,
     name,
+    renderOrder,
 }: InstancedMeshProps) {
     let colorData = useMemo(() => new Float32Array(count * 3).fill(0), [count])
     let [instance, setInstanceRef] = useState<InstancedMeshThree | null>(null)
@@ -109,6 +111,7 @@ export default function InstancedMesh({
             ref={setInstanceRef}
             visible={visible}
             frustumCulled={false}
+            renderOrder={renderOrder}
         >
             {colors && (
                 <instancedBufferAttribute
