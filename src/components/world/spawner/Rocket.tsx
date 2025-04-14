@@ -14,9 +14,7 @@ export default function RocketSpawner({
 
     useEffect(() => {
         startTransition(() => {
-            createRocket(
-                [x, y, z + part.position.z],
-            )
+            createRocket([x, y, z + part.position.z])
         })
     }, [x, y, z, part.position.z])
 

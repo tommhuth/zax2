@@ -4,7 +4,7 @@ import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../data/utils"
 import { store, useStore } from "../data/store"
 import { getIntersection, getBulletCollisions, dispatchCollisionEvent } from "../data/collisions"
 import { Tuple3 } from "../types.global"
-import { CylinderGeometry, Mesh } from "three"
+import { CylinderGeometry, Mesh, SphereGeometry } from "three"
 import { removeBullet } from "@data/store/actors/bullet.actions"
 import InstancedMesh from "./world/models/InstancedMesh"
 import { damp } from "three/src/math/MathUtils.js"
@@ -12,9 +12,10 @@ import { setLastImpactLocation } from "@data/store/effects"
 import { BULLET_SIZE } from "@data/const"
 
 
-const geometry = new CylinderGeometry(1, 1, 1, 10, 1)
+const cylinder = new CylinderGeometry(1, 1, 1, 10, 1)
+const sphere = new SphereGeometry(.5, 12, 12)
 
-geometry.rotateX(Math.PI * .5)
+cylinder.rotateX(Math.PI * .5)
 
 function BulletHandler() {
     let impactRef = useRef<Mesh>(null)
@@ -96,17 +97,18 @@ function BulletHandler() {
 
     return (
         <>
-            <mesh ref={impactRef}>
-                <sphereGeometry args={[.5, 16, 16]} />
-                <meshBasicMaterial name="solidWhite" color={"white"} />
-            </mesh>
+            <mesh
+                ref={impactRef}
+                material={materials.white}
+                geometry={sphere}
+            />
 
             <InstancedMesh
                 castShadow
                 name="line"
                 count={40}
                 colors={false}
-                geometry={geometry}
+                geometry={cylinder}
                 material={materials.white}
             />
         </>

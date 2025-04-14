@@ -7,9 +7,9 @@ import LineSegment from "./LineSegment"
 export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" | "exhaust"
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue" | "muzzle"
     | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock" | "white"
-    | "floorBase" | "floorHi" | "floorMark" | "floorRock" | "turret" | "asteroid" | "turretDark"
+    | "floorBase" | "floorHi" | "floorMark" | "floorRock" | "turret" | "turretDark"
 
-export type InstanceName = "leaf" | "scrap" | "line" | "sphere" | "particle"
+export type InstanceName = "leaf" | "scrap" | "line" | "particle"
     | "fireball" | "cable" | "shimmer" | "dirt" | "plant" | "shockwave" | "decal"
 
 export type RepeaterName = "tower1" | "tower2" | "tower3"

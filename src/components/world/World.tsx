@@ -81,7 +81,7 @@ export default function World() {
     useFrame((state, delta) => {
         let { effects } = store.getState()
 
-        setTime(effects.time + ndelta(delta))
+        startTransition(() => setTime(effects.time + ndelta(delta)))
     })
 
     useFrame(() => {

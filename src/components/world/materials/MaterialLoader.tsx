@@ -7,7 +7,6 @@ import { MaterialName } from "../../../data/types"
 import ExhaustMaterial from "./ExhaustMaterial"
 import GrassMaterial from "./GrassMaterial"
 import RocketMaterial from "./RocketMaterial"
-import AsteroidMaterial from "./AsteroidMaterial"
 import BarrelMaterial from "./BarrelMaterial"
 import TurretMaterial from "./TurretMaterial"
 import PlaneMaterial from "./PlaneMaterial"
@@ -18,7 +17,6 @@ function MaterialLoader() {
     let materials = useMemo(() => {
         return {
             rocket: <RocketMaterial />,
-            asteroid: <AsteroidMaterial />,
             platform: (
                 <MeshRetroMaterial
                     color={platformColor}

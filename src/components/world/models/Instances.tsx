@@ -4,9 +4,8 @@ import Cable from "./instances/Cable"
 import Dirt from "./instances/Dirt"
 import Leaf from "./instances/Leaft"
 import Scrap from "./instances/Scrap"
-import Sphere from "./instances/Sphere"
 
-function Instances() { 
+function Instances() {
     return (
         <>
             <Plant />
@@ -14,7 +13,6 @@ function Instances() {
             <Dirt />
             <Leaf />
             <Scrap />
-            <Sphere />
         </>
     )
 }
