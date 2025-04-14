@@ -106,16 +106,9 @@ function BulletHandler() {
                 name="line"
                 count={40}
                 colors={false}
-            >
-                <primitive
-                    object={geometry}
-                    attach="geometry"
-                />
-                <primitive
-                    attach="material"
-                    object={materials.white}
-                />
-            </InstancedMesh>
+                geometry={geometry}
+                material={materials.white}
+            />
         </>
     )
 }

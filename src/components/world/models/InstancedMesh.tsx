@@ -1,6 +1,6 @@
-import React, { startTransition, useEffect, useMemo, useState } from "react"
+import { ReactNode, startTransition, useEffect, useMemo, useState } from "react"
 import { setColorAt, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
-import { ColorRepresentation, InstancedMesh as InstancedMeshThree } from "three"
+import { BufferGeometry, ColorRepresentation, InstancedMesh as InstancedMeshThree, Material } from "three"
 import { Tuple3, Tuple4 } from "../../../types.global"
 import { store, useStore } from "../../../data/store"
 import { setInstance } from "../../../data/store/utils"
@@ -61,7 +61,7 @@ export function useInstance(name: InstanceName, {
 }
 
 interface InstancedMeshProps {
-    children: React.ReactNode
+    children?: ReactNode
     receiveShadow?: boolean
     castShadow?: boolean
     colors?: boolean
@@ -69,6 +69,8 @@ interface InstancedMeshProps {
     count: number
     name: InstanceName
     renderOrder?: number
+    geometry?: BufferGeometry
+    material?: Material
 }
 
 export default function InstancedMesh({
@@ -80,6 +82,8 @@ export default function InstancedMesh({
     count,
     name,
     renderOrder,
+    geometry,
+    material
 }: InstancedMeshProps) {
     let colorData = useMemo(() => new Float32Array(count * 3).fill(0), [count])
     let [instance, setInstanceRef] = useState<InstancedMeshThree | null>(null)
@@ -105,7 +109,7 @@ export default function InstancedMesh({
 
     return (
         <instancedMesh
-            args={[undefined, undefined, count]}
+            args={[geometry, material, count]}
             castShadow={castShadow}
             receiveShadow={receiveShadow}
             ref={setInstanceRef}
