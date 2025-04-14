@@ -65,7 +65,10 @@ export function useBaseActorHandler({
 
     useEffect(() => {
         return () => {
+            let { world } = store.getState()
+
             remove()
+            world.grid.removeClient(client)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

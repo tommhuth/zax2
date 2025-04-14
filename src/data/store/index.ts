@@ -20,7 +20,7 @@ const store = create(
         state: "intro",
         world: {
             diagonal: 1,
-            grid: new SpatialHashGrid3D([4, 3, 4]),
+            grid: new SpatialHashGrid3D([5, 5, 5]),
             frustum: new Frustum(),
             parts: [],
             planes: [],

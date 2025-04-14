@@ -22,6 +22,16 @@ export class SpatialHashGrid3D {
         this.cellSize = cellSize
     }
 
+    public get entries() {
+        let clients: Client[] = []
+
+        for (let [, clients] of this.grid.entries()) {
+            clients.push(...clients)
+        }
+
+        return clients
+    }
+
     public empty() {
         this.grid.clear()
     }
