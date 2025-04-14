@@ -1,3 +1,4 @@
+import { list } from "@data/utils"
 import Line from "./Line"
 import { height, width } from "./utils"
 
@@ -16,7 +17,7 @@ export default function Grid() {
                 maskImage: "radial-gradient(at center 60%, black, transparent 70%)",
             }}
         >
-            {new Array(15).fill(null).map((i, index, list) => {
+            {list(15).map((i, index, list) => {
                 return <Line index={index - list.length * .35} key={index} />
             })}
         </svg>

@@ -10,6 +10,15 @@ export function ndelta(delta: number) {
 
     return nDelta
 }
+export function list(length: number, value?: number) {
+    let result: number[] = []
+
+    for (let i = 0; i < length; i++) {
+        result.push(typeof value !== "undefined" ? value : i)
+    }
+
+    return result
+}
 
 export function glsl(strings: TemplateStringsArray, ...variables) {
     let str: string[] = []

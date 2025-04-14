@@ -3,6 +3,7 @@ import { Group, Object3D } from "three"
 import { useStore } from "../../../data/store"
 import { requestRepeater, createRepeater } from "../../../data/store/utils"
 import { RepeaterName } from "../../../data/types"
+import { list } from "@data/utils"
 
 export function useRepeater(name: RepeaterName) {
     let [repeater, setRepeater] = useState<Object3D | null>(null)
@@ -38,7 +39,7 @@ export default function RepeaterMesh({ name, count, children }: RepeaterMeshProp
 
     return (
         <group ref={setRef}>
-            {new Array(count).fill(null).map((i, index) => cloneElement(children as any, { key: index }))}
+            {list(count).map((index) => cloneElement(children as any, { key: index }))}
         </group>
     )
 }

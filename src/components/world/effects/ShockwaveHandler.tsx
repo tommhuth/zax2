@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { clamp, glsl, ndelta, setBufferAttribute, setMatrixAt } from "../../../data/utils"
+import { clamp, glsl, list, ndelta, setBufferAttribute, setMatrixAt } from "../../../data/utils"
 import { useShader } from "../../../data/hooks"
 import { useFrame } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
@@ -12,7 +12,7 @@ import { easeOutCubic } from "../../../data/shaping"
 export default function ShockwaveHandler() {
     let count = 20
     let opacityAttributes = useMemo(() => {
-        return new Float32Array(new Array(count).fill(0))
+        return new Float32Array(list(count, 0))
     }, [count])
     let { onBeforeCompile } = useShader({
         shared: glsl`

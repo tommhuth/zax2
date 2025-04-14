@@ -5,8 +5,8 @@ import { Client } from "./SpatialHashGrid3D"
 import LineSegment from "./LineSegment"
 
 export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" | "exhaust"
-    | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue"
-    | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock"
+    | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue" | "muzzle"
+    | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock" | "white"
     | "floorBase" | "floorHi" | "floorMark" | "floorRock" | "turret" | "asteroid" | "turretDark"
 
 export type InstanceName = "leaf" | "scrap" | "line" | "sphere" | "particle"

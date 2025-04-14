@@ -1,15 +1,14 @@
 import { ComponentPropsWithRef, forwardRef, useImperativeHandle, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-import { ndelta } from "../../../data/utils"
+import { list, ndelta } from "../../../data/utils"
 import random from "@huth/random"
 import { Group, SphereGeometry } from "three"
 import { damp } from "three/src/math/MathUtils.js"
-import { whiteMaterial } from "@data/const"
+import { useStore } from "@data/store"
 
 export type MuzzleRef = { activate: () => void }
 
 let geometry = new SphereGeometry(1, 6, 6)
-
 
 interface MuzzleProps extends ComponentPropsWithRef<"group"> {
     decay?: number
@@ -17,6 +16,7 @@ interface MuzzleProps extends ComponentPropsWithRef<"group"> {
 
 export default forwardRef<MuzzleRef, MuzzleProps>(({ decay = 0, ...props }, ref) => {
     let groupRef = useRef<Group>(null)
+    let materials = useStore(i => i.materials)
 
     useImperativeHandle(ref, () => {
         return {
@@ -61,13 +61,13 @@ export default forwardRef<MuzzleRef, MuzzleProps>(({ decay = 0, ...props }, ref)
             ref={groupRef}
             {...props}
         >
-            {Array.from({ length: 8 }).map((i, index) => {
+            {list(8).map((index) => {
                 return (
                     <mesh
                         key={index}
                         castShadow
                         geometry={geometry}
-                        material={whiteMaterial}
+                        material={materials.muzzle}
                     />
                 )
             })}

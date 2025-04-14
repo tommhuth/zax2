@@ -11,6 +11,7 @@ import { useBaseActorHandler } from "../../../data/hooks"
 import DebugBox from "@components/DebugBox"
 import { removeBarrel, damageBarrel } from "@data/store/actors/barrel.actions"
 import { BarrelModel } from "../models/BarrelModel"
+import { list } from "@data/utils"
 
 function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({
@@ -35,8 +36,7 @@ function explode(position: Vector3, size: Tuple3, color: string) {
     createScrap([position.x, position.y - size[1] * .65, position.z], 2, color)
 }
 
-const rotations = new Array(8 * 2)
-    .fill(null)
+const rotations = list(8 * 2)
     .map((i, index, list) => (index / list.length) * Math.PI * 2)
 
 export default function Barrel({

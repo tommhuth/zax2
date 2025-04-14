@@ -62,6 +62,7 @@ function MaterialLoader() {
             floorBase: <MeshRetroMaterial color={floorBaseColor} />,
             floorHi: <MeshRetroMaterial color={floorHiColor} />,
             floorMark: <meshBasicMaterial color={floorMarkColor} />,
+            white: <meshBasicMaterial color={"#fff"} />,
             floorRock: <MeshRetroMaterial
                 fog={.25}
                 color={"#059"}
@@ -98,6 +99,13 @@ function MaterialLoader() {
             bossSecondaryBlue: <MeshRetroMaterial color="#00f" />,
             bossWhite: <meshLambertMaterial color="white" />,
             grass: <GrassMaterial />,
+            muzzle: (
+                <meshLambertMaterial
+                    color="#d9f3ff"
+                    emissive="#ffffff"
+                    emissiveIntensity={.35}
+                />
+            )
         } satisfies Record<MaterialName, ReactNode>
     }, [])
 

@@ -1,6 +1,6 @@
 import { forwardRef, startTransition, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react"
 import { useInstance } from "../models/InstancedMesh"
-import { clamp, ndelta, setBufferAttribute, setMatrixAt, setMatrixNullAt } from "@data/utils"
+import { clamp, list, ndelta, setBufferAttribute, setMatrixAt, setMatrixNullAt } from "@data/utils"
 import random from "@huth/random"
 import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
@@ -34,8 +34,7 @@ const Leaves = forwardRef<LeavesRef>((props, ref) => {
         return {
             spawn(count: number, position: Vector3, size: Tuple3) {
                 let instance = store.getState().instances.leaf
-                let leaves = Array.from({ length: random.integer(count - 2, count) })
-                    .fill(null)
+                let leaves = list(random.integer(count - 2, count))
                     .map((_i, index, list) => {
                         let x = position.x + random.float(-.5, .5)
                         let z = position.z + random.float(-.5, .5)

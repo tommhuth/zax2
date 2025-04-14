@@ -28,12 +28,8 @@ export default forwardRef<Mesh, PlaneModelProps>(
                     ref={ref}
                     material={materials.plane}
                     dispose={null}
-                >
-                    <primitive
-                        object={nodes.plane.geometry}
-                        attach="geometry"
-                    />
-                </mesh>
+                    geometry={nodes.plane.geometry}
+                />
 
                 {moving && (
                     <Exhaust

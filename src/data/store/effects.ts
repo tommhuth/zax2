@@ -2,8 +2,8 @@ import random from "@huth/random"
 import { Tuple2, Tuple3 } from "../../types.global"
 import { store } from "."
 import { ColorRepresentation, Vector3 } from "three"
-import { Explosion, Particle } from "../types"
-import { setColorAt, setMatrixAt } from "../utils"
+import { Explosion, Fireball, Instance, Particle } from "../types"
+import { list, setColorAt, setMatrixAt } from "../utils"
 import { ZaxStore } from "./types.store"
 
 function updateEffects(data: Partial<ZaxStore["effects"]>) {
@@ -26,6 +26,15 @@ interface CreateExplosionParams {
     secondaryFireballCount?: number
 }
 
+function getShockwave(radius: number, instance: Instance) {
+    return {
+        lifetime: random.float(700, 850),
+        radius: random.float(radius * 5, radius * 6),
+        time: random.integer(200, 200),
+        index: instance.index.next(),
+    }
+}
+
 export function createExplosion({
     position,
     count = 12,
@@ -38,7 +47,7 @@ export function createExplosion({
 }: CreateExplosionParams) {
     return setTimeout(() => {
         let baseLifetime = random.integer(1600, 1800)
-        let { instances } = store.getState()
+        let { instances, effects } = store.getState()
 
         let explosion: Explosion = {
             position,
@@ -46,14 +55,9 @@ export function createExplosion({
             lifetime: baseLifetime * .85,
             time: 0,
             radius: radius * 7 + (fireballCount ? 1.5 : 0),
-            shockwave: shockwave || fireballCount ? {
-                lifetime: random.float(700, 850),
-                radius: random.float(radius * 5, radius * 6),
-                time: random.integer(200, 200),
-                index: instances.shockwave.index.next(),
-            } : null,
+            shockwave: shockwave || fireballCount ? getShockwave(radius, instances.shockwave) : null,
             fireballs: [
-                ...new Array(secondaryFireballCount).fill(null).map(() => {
+                ...list(secondaryFireballCount).map(() => {
                     let angle = random.float(0, Math.PI * 2)
                     let distance = random.float(4, 5)
                     let range = random.float(.75, 1)
@@ -61,7 +65,7 @@ export function createExplosion({
                     let durationOffset = random.integer(100, 200)
                     let radiusScaler = random.float(.75, 1.5)
 
-                    return new Array(random.integer(8, 10)).fill(null).map((i, index, list) => {
+                    return list(random.integer(8, 10)).map((i, index, list) => {
                         let t = index / (list.length - 1)
                         let radius = random.float(.5, .7)
 
@@ -78,10 +82,10 @@ export function createExplosion({
                             time: t * duration + durationOffset,
                             lifetime: random.integer(600, 900),
                             type: "secondary"
-                        } satisfies Explosion["fireballs"][number]
+                        } satisfies Fireball
                     })
                 }).flat(1),
-                ...new Array(fireballCount).fill(null).map((i, index) => {
+                ...list(fireballCount).map((index) => {
                     let tn = index / (fireballCount - 1)
 
                     return {
@@ -96,9 +100,9 @@ export function createExplosion({
                         maxRadius: radius * 3.5,
                         time: index * -random.integer(75, 100),
                         lifetime: 1100 + random.integer(0, 200),
-                    } satisfies Explosion["fireballs"][number]
+                    } satisfies Fireball
                 }),
-                ...new Array(count).fill(null).map((i, index, list) => {
+                ...list(count).map((i, index, list) => {
                     let startRadius = (index / list.length) * (radius * 1.5 - radius * .25) + radius * .25
 
                     return {
@@ -113,7 +117,7 @@ export function createExplosion({
                         maxRadius: startRadius * 2.5,
                         time: random.integer(-200, 0),
                         lifetime: random.integer(baseLifetime * .375, baseLifetime * .975),
-                    } satisfies Explosion["fireballs"][number]
+                    } satisfies Fireball
                 })
             ],
         }
@@ -121,7 +125,7 @@ export function createExplosion({
         updateEffects({
             explosions: [
                 explosion,
-                ...store.getState().effects.explosions,
+                ...effects.explosions,
             ]
         })
     }, delay)
@@ -255,7 +259,7 @@ export function createParticles({
     return setTimeout(() => {
         let instance = store.getState().instances.particle
         let amount = Array.isArray(count) ? random.integer(...count) : count
-        let particles: Particle[] = new Array(amount).fill(null).map((i, index, list) => {
+        let particles: Particle[] = list(amount).map((i, index, list) => {
             normal = _normal.set(...normal)
                 .add(_spread.set(
                     random.float(...spread[0]),

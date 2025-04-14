@@ -3,7 +3,7 @@ import { useEditorStore } from "./data/store"
 import generateMap from "./data/generateMap"
 import { PointerEvent, useState } from "react"
 import { EditorStore } from "./data/types"
-import { clamp, map } from "@data/utils"
+import { clamp, list, map } from "@data/utils"
 import ObjectDropper from "./ObjectDropper"
 import MapPicker from "./MapPicker"
 
@@ -273,7 +273,7 @@ function Panner() {
             >
                 {z}
             </div>
-            {Array.from({ length: barCount + 1 }).fill(null).map((i, index) => {
+            {list(barCount).map((index) => {
                 return (
                     <div
                         key={index}

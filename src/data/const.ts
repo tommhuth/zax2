@@ -1,4 +1,4 @@
-import { MeshLambertMaterial, Vector3 } from "three"
+import { Vector3 } from "three"
 import { EditorStore } from "src/editor/data/types"
 
 export const WORLD_START_Z = 100
@@ -34,10 +34,4 @@ export const FLOOR_SIZE: Record<EditorStore["floorType"], number> = {
     floor4: 48,
     floor5: 50.6,
     floor6: 56.8,
-}
-
-export const whiteMaterial = new MeshLambertMaterial({
-    color: "#d9f3ff",
-    emissive: "#ffffff",
-    emissiveIntensity: .35
-})
+} 

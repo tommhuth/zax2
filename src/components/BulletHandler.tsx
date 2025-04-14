@@ -1,18 +1,24 @@
 import { useFrame } from "@react-three/fiber"
 import { memo, startTransition, useEffect, useRef } from "react"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../data/utils"
-import { store } from "../data/store"
+import { store, useStore } from "../data/store"
 import { getIntersection, getBulletCollisions, dispatchCollisionEvent } from "../data/collisions"
 import { Tuple3 } from "../types.global"
-import { Mesh } from "three"
+import { CylinderGeometry, Mesh } from "three"
 import { removeBullet } from "@data/store/actors/bullet.actions"
 import InstancedMesh from "./world/models/InstancedMesh"
 import { damp } from "three/src/math/MathUtils.js"
 import { setLastImpactLocation } from "@data/store/effects"
 import { BULLET_SIZE } from "@data/const"
 
+
+const geometry = new CylinderGeometry(1, 1, 1, 10, 1)
+
+geometry.rotateX(Math.PI * .5)
+
 function BulletHandler() {
     let impactRef = useRef<Mesh>(null)
+    let materials = useStore(i => i.materials)
 
     useFrame((state, delta) => {
         let { instances, world: { bullets, frustum }, player } = store.getState()
@@ -101,16 +107,13 @@ function BulletHandler() {
                 count={40}
                 colors={false}
             >
-                <cylinderGeometry
-                    args={[1, 1, 1, 10, 1]}
+                <primitive
+                    object={geometry}
                     attach="geometry"
-                    onUpdate={(e) => {
-                        e.rotateX(Math.PI * .5)
-                    }}
                 />
-                <meshBasicMaterial
-                    name="line"
-                    color="white"
+                <primitive
+                    attach="material"
+                    object={materials.white}
                 />
             </InstancedMesh>
         </>

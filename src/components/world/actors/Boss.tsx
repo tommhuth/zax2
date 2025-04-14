@@ -20,7 +20,6 @@ import { clamp, ndelta, setMatrixAt } from "@data/utils"
 import BossModel from "../models/BossModel"
 import Muzzle, { MuzzleRef } from "../effects/Muzzle"
 import Counter from "@data/Counter"
-import { whiteMaterial } from "@data/const"
 
 let size: Tuple3 = [4.5, 4.75, 2]
 
@@ -110,6 +109,7 @@ const geometry = new SphereGeometry(1, 16, 16)
 export default function Boss({ startPosition: [startX, startY, startZ] }: BossProps) {
     let boss = useStore((i) => i.boss)
     let grid = useStore((i) => i.world.grid)
+    let materials = useStore((i) => i.materials)
     let leftMuzzleRef = useRef<MuzzleRef>(null)
     let rightMuzzleRef = useRef<MuzzleRef>(null)
     let bossWrapper = useRef<Group>(null)
@@ -324,7 +324,7 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
                 castShadow
                 receiveShadow
                 frustumCulled={false}
-                args={[geometry, whiteMaterial, 100]}
+                args={[geometry, materials.muzzle, 100]}
                 ref={ref}
             />
 

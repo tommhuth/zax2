@@ -4,9 +4,9 @@ import { useGLTF } from "@react-three/drei"
 import { useMemo, useState } from "react"
 import { GLTFModel, Tuple3 } from "src/types.global"
 import barrelsModel from "@assets/models/barrels.glb"
+import { list } from "@data/utils"
 
-const rotations = new Array(8 * 2)
-    .fill(null)
+const rotations = list(8 * 2)
     .map((i, index, list) => (index / list.length) * Math.PI * 2)
 
 interface BarrelModelProps {

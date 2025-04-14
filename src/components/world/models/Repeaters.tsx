@@ -100,7 +100,7 @@ export default function Repeaters() {
             </RepeaterMesh>
             <RepeaterMesh
                 name="floor6"
-                count={2}
+                count={1}
             >
                 <Floor6 />
             </RepeaterMesh>

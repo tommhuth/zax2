@@ -2,7 +2,7 @@ import { BULLET_LIGHT_COUNT, LIGHT_SOURCES_COUNT } from "@data/const"
 import Counter from "@data/Counter"
 import { store } from "@data/store"
 import { bulletColor, explosionColor } from "@data/theme"
-import { glsl, ndelta } from "@data/utils"
+import { glsl, list, ndelta } from "@data/utils"
 import { useFrame } from "@react-three/fiber"
 import { useEffect, useMemo } from "react"
 import { Color, ColorRepresentation, Vector3 } from "three"
@@ -149,7 +149,7 @@ export function makeLightUniforms(
             value: new Color(explosionColor),
         },
         uLightSources: {
-            value: new Array(LIGHT_SOURCES_COUNT).fill(null).map(() => {
+            value: list(LIGHT_SOURCES_COUNT).map(() => {
                 return {
                     position: new Vector3(),
                     strength: 0,
@@ -158,7 +158,7 @@ export function makeLightUniforms(
             })
         },
         uBulletLights: {
-            value: new Array(BULLET_LIGHT_COUNT).fill(null).map(() => {
+            value: list(BULLET_LIGHT_COUNT).map(() => {
                 return {
                     position: new Vector3(),
                     radius: 0,
