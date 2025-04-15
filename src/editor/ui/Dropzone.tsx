@@ -1,11 +1,11 @@
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect } from "react"
-import { setActiveObject, addObject } from "./data/actions"
-import { from2dTo3d, roundToNearest, precision } from "./data/utils" 
+import { setActiveObject, addObject } from "../data/actions"
+import { from2dTo3d, roundToNearest, precision } from "../data/utils"
 import { setTime } from "@data/store/effects"
 import { ndelta } from "@data/utils"
 import { store } from "@data/store"
-import { EditorObjectInit } from "./data/types"
+import { EditorObjectInit } from "../data/types"
 
 export default function Dropzone() {
     let { camera, gl } = useThree()

@@ -9,7 +9,7 @@ export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" 
     | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock" | "white"
     | "floorBase" | "floorHi" | "floorMark" | "floorRock" | "turret" | "turretDark"
 
-export type InstanceName = "leaf" | "scrap" | "line" | "particle"
+export type InstanceName = "leaf" | "scrap" | "line" | "particle" | "sphere"
     | "fireball" | "cable" | "shimmer" | "dirt" | "plant" | "shockwave" | "decal"
 
 export type RepeaterName = "tower1" | "tower2" | "tower3"

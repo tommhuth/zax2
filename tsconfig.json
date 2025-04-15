@@ -1,18 +1,24 @@
 {
-    "compilerOptions": { 
+    "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "@assets/*": ["assets/*"],
-            "@data/*": ["src/data/*"],
-            "@components/*": ["src/components/*"]
+            "@assets/*": [
+                "assets/*"
+            ],
+            "@data/*": [
+                "src/data/*"
+            ],
+            "@components/*": [
+                "src/components/*"
+            ]
         },
         "types": [
             "vite-plugin-pwa/client"
         ],
-        "target": "es2022",
+        "target": "ES2023",
         "useDefineForClassFields": true,
         "lib": [
-            "es2022",
+            "ES2023",
             "DOM",
             "DOM.Iterable"
         ],
@@ -31,7 +37,8 @@
         "noFallthroughCasesInSwitch": true
     },
     "include": [
-        "src",   "./app.d.ts"
+        "src",
+        "./*.d.ts",
     ],
     "references": [
         {

@@ -1,7 +1,7 @@
-import { setName } from "./data/actions"
+import { setName } from "../data/actions"
 import { useState } from "react"
-import { getEditorActiveMap, getEditorMapList, setEditorActiveMap, setEditorMapList } from "./data/localStorage"
-import { useEditorStore } from "./data/store"
+import { getEditorActiveMap, getEditorMapList, setEditorActiveMap, setEditorMapList } from "../data/localStorage"
+import { useEditorStore } from "../data/store"
 
 export default function MapPicker() {
     let [mapListOpen, setMapListOpen] = useState(false)
@@ -48,7 +48,8 @@ export default function MapPicker() {
                     right: 0,
                     left: 0,
                     border: "1px solid white",
-                    display: mapListOpen ? undefined : "none"
+                    display: mapListOpen ? undefined : "none",
+                    background: "rgba(0, 0, 0, .65)"
                 }}
             >
                 {getEditorMapList().filter(i => i.data.id !== getEditorActiveMap()).map(i => {

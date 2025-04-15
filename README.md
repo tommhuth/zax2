@@ -2,7 +2,8 @@
 
 ## Todo
 
--   distance based trauma
+-   (distance based) trauma
+-   level parts
 
 53 mat + 22 instances
 

@@ -1,7 +1,7 @@
 import { Tuple3 } from "src/types.global"
-import { instanceEditors, repeaterEditors } from "./data/utils"
+import { instanceEditors, repeaterEditors } from "../data/utils"
 import { useState } from "react"
-import { EditorObjectInit } from "./data/types"
+import { EditorObjectInit } from "../data/types"
 
 const decorationParams: Record<string, { size: Tuple3; anchor: Tuple3; rotation?: number }> = {
     wall1: {

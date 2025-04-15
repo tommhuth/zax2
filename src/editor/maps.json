@@ -1,0 +1,4107 @@
+{
+    "savedAt": "4/16/2025, 12:02:44 AM",
+    "type": "ZAXSAVE_1",
+    "data": [
+        {
+            "data": {
+                "id": "cm9agasce00003b6jt7t3mhzs",
+                "activeObjectId": "cm9agaxny000s3b6jwur7vv50",
+                "cameraPosition": [
+                    0,
+                    0,
+                    10
+                ],
+                "gridVisible": false,
+                "axesVisible": false,
+                "worldCenterVisible": false,
+                "floorType": "floor1",
+                "name": "lorem ipsum",
+                "objects": [
+                    {
+                        "id": "cm9agaxny000s3b6jwur7vv50",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3.5,
+                            2.5,
+                            2.75
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            2,
+                            1.25,
+                            84.25
+                        ],
+                        "type": "empty"
+                    },
+                    {
+                        "id": "cm9agbd92000t3b6jsiwcbdu9",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            8,
+                            4,
+                            8
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            1,
+                            2,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3,
+                            0,
+                            87.75
+                        ],
+                        "type": "tanks"
+                    },
+                    {
+                        "id": "cm9agde8u000u3b6jp7uatc5q",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            1.75,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -2.5,
+                            0.75,
+                            82.25
+                        ],
+                        "type": "rockface"
+                    },
+                    {
+                        "id": "cm9ahd4n5000w3b6jdykqull1",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            5.25,
+                            3,
+                            6.5
+                        ],
+                        "invisible": true,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1.5,
+                            1.5,
+                            93
+                        ],
+                        "type": "empty"
+                    }
+                ]
+            },
+            "savedAt": 1744753867722
+        },
+        {
+            "data": {
+                "id": "cm68j96nt00003b6hvcjgqdcy",
+                "activeObjectId": null,
+                "cameraPosition": [
+                    0,
+                    0,
+                    40
+                ],
+                "gridVisible": false,
+                "axesVisible": false,
+                "worldCenterVisible": false,
+                "floorType": "floor6",
+                "name": "Start",
+                "objects": [
+                    {
+                        "id": "cm8xnpl74000w3b6h6vk3ixnb",
+                        "rotation": 0.9424777960769379,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            1.75,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            4.5,
+                            -3,
+                            116.5
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm8xnqhcj000x3b6hx163t9zw",
+                        "rotation": 0.3141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            1.75,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8.5,
+                            -4.5,
+                            103
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm8xnrl8o000y3b6hpbadip7i",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            1.75,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            11.5,
+                            -2.5,
+                            116.5
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm8xns1em000z3b6hqbjb7lmk",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.9,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            1.5,
+                            -5,
+                            101.5
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm8xnsihw00103b6hjykysbct",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 2.3,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            16,
+                            -5,
+                            105.5
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm8xnt7t100113b6hhcei1dco",
+                        "rotation": 2.321287905152458,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 2.1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8,
+                            -3.5,
+                            115.5
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm8xnufna00123b6hfg0d0dh4",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            1.85,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.925,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            0,
+                            0,
+                            130.5
+                        ],
+                        "type": "barrel"
+                    },
+                    {
+                        "id": "cm8xnxfta000w3b6hbyemn7b9",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.8,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            5.5,
+                            0,
+                            129
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm8xnxnd2000x3b6hn9ibgl5w",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            7,
+                            0,
+                            130
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm8xnxrqf000y3b6hhvt9lazn",
+                        "rotation": 2.91469985083053,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            1,
+                            0,
+                            128
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm8yugusf000t3b6hfxerdbms",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.3,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3,
+                            -5.5,
+                            106
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm9aikno3000s3b6jx52asjuk",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4.5,
+                            3,
+                            3
+                        ],
+                        "invisible": true,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            1.5,
+                            1.5,
+                            125.25
+                        ],
+                        "type": "empty"
+                    }
+                ]
+            },
+            "savedAt": 1744749285929
+        },
+        {
+            "data": {
+                "id": "cm58rrhxs00003b6h7vucwbog",
+                "activeObjectId": null,
+                "cameraPosition": [
+                    0,
+                    0,
+                    3
+                ],
+                "gridVisible": false,
+                "axesVisible": false,
+                "worldCenterVisible": false,
+                "floorType": "floor5",
+                "name": "Grass",
+                "objects": [
+                    {
+                        "id": "cm58rs0p3000r3b6hy6a5zh9i",
+                        "rotation": 3.0543261909900767,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            1.75,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -0.5,
+                            0,
+                            103
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm58rtqti000s3b6hsiuuzjii",
+                        "rotation": 2.2689280275926285,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            1.75,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3,
+                            0,
+                            119
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm5acai8k000q3b6h8vxnrkan",
+                        "rotation": 6.283185307179586,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            1.5,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -0.5,
+                            2.5,
+                            114.5
+                        ],
+                        "type": "plane"
+                    },
+                    {
+                        "id": "cm5acrcsb000q3b6h56wmis2e",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            5.5,
+                            0,
+                            111.5
+                        ],
+                        "type": "turret"
+                    },
+                    {
+                        "id": "cm5aecj8a000q3b6hawe3nvnx",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            7.5,
+                            2,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3.25,
+                            1,
+                            122
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm5aecpb6000r3b6h8ejpq6fa",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4.5,
+                            2.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            7.75,
+                            1.25,
+                            117
+                        ],
+                        "type": "device"
+                    },
+                    {
+                        "id": "cm5aectup000s3b6hy5qbihxl",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3.5,
+                            7,
+                            3
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -3,
+                            4,
+                            115.5
+                        ],
+                        "type": "rockface"
+                    },
+                    {
+                        "id": "cm5afik0m000q3b6h5nhez7b2",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            6.5,
+                            0,
+                            110
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm5afimaj000r3b6hau59egf7",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            4,
+                            0,
+                            108
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm5btn1tc000v3b6h32hbn0jm",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            1.5,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            6,
+                            0,
+                            95
+                        ],
+                        "type": "plane"
+                    },
+                    {
+                        "id": "cm5c0c17w000q3b6h120ye3a0",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            2.5,
+                            0,
+                            85.5
+                        ],
+                        "type": "turret"
+                    }
+                ]
+            },
+            "savedAt": 1736719389145
+        },
+        {
+            "data": {
+                "id": "cm4zz97q100003b6hsyfq7hm9",
+                "activeObjectId": null,
+                "cameraPosition": [
+                    0,
+                    0,
+                    3
+                ],
+                "gridVisible": false,
+                "axesVisible": false,
+                "worldCenterVisible": false,
+                "floorType": "floor2",
+                "name": "RockValley",
+                "objects": [
+                    {
+                        "id": "cm502ggju000q3b6hbaofcjpb",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            3,
+                            7.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8,
+                            1,
+                            88.5
+                        ],
+                        "type": "rockface"
+                    },
+                    {
+                        "id": "cm502h41u000r3b6h20mv6s6v",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            9,
+                            2,
+                            6.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1.5,
+                            1,
+                            96
+                        ],
+                        "type": "rockface"
+                    },
+                    {
+                        "id": "cm502iz79000t3b6hck2ggmk3",
+                        "rotation": 0.13962634015954636,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            11.5,
+                            2.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -5.5,
+                            3,
+                            92.5
+                        ],
+                        "type": "rockface"
+                    },
+                    {
+                        "id": "cm502lypu000w3b6hbs2y50pj",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -3.5,
+                            0,
+                            81.5
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm502mfnq000x3b6hq6o89sbx",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            7,
+                            2.5,
+                            86.5
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm502no39000z3b6hhpg4n8b8",
+                        "rotation": 4.71238898038469,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            0.5,
+                            1,
+                            94.5
+                        ],
+                        "type": "turret"
+                    },
+                    {
+                        "id": "cm502ofd700103b6h2emwvd0e",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.5,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -3,
+                            0,
+                            86.5
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm502sj3r00113b6h8l9ubj8i",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8.5,
+                            0,
+                            97
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm502sml800123b6hbbtj98rc",
+                        "rotation": 6.1086523819801535,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3,
+                            6.5,
+                            3
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            4.5,
+                            1.5,
+                            92
+                        ],
+                        "type": "rockface"
+                    },
+                    {
+                        "id": "cm57hvjde001g3b6hsvcn7nme",
+                        "rotation": 2.705260340591211,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            1.75,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            1,
+                            0,
+                            85.5
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm57jqf7p000v3b6hg7k1u9pn",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            0.5,
+                            0,
+                            91.5
+                        ],
+                        "type": "plant"
+                    }
+                ]
+            },
+            "savedAt": 1735351930501
+        },
+        {
+            "data": {
+                "id": "cm4yj79he00003b6hwwsnmc6x",
+                "activeObjectId": "cm50vw2eg000u3b6hpwn8autz",
+                "cameraPosition": [
+                    0,
+                    0,
+                    11
+                ],
+                "gridVisible": false,
+                "axesVisible": false,
+                "worldCenterVisible": false,
+                "floorType": "floor4",
+                "name": "Airstrip",
+                "objects": [
+                    {
+                        "id": "cm4yjhcjh00183b6h0qae15n0",
+                        "rotation": 0.4188790204786391,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.6,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            7.5,
+                            0,
+                            124
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm4yjhyts00193b6hjh155cvk",
+                        "rotation": 1.4660765716752369,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.3,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -4,
+                            0,
+                            122.5
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm4yjj2z0001a3b6hhvtmdddg",
+                        "rotation": 0.5235987755982988,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.6,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            0.5,
+                            0,
+                            84
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm4yjjqfe001b3b6hb1tvxgsh",
+                        "rotation": 2.4085543677521746,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            1.5,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -3.5,
+                            0.5,
+                            87
+                        ],
+                        "type": "plane"
+                    },
+                    {
+                        "id": "cm4yjknmz001d3b6hbuacf6w7",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            1.85,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.925,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            7,
+                            0,
+                            111
+                        ],
+                        "type": "barrel"
+                    },
+                    {
+                        "id": "cm4yjmhqs001f3b6hd2burmf7",
+                        "rotation": 1.2915436464758039,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.3,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            10.5,
+                            0,
+                            98.5
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm4yjn7bo001h3b6hax0l312b",
+                        "rotation": 0.9424777960769379,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            1.5,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            6.5,
+                            0.5,
+                            96.5
+                        ],
+                        "type": "plane"
+                    },
+                    {
+                        "id": "cm4yjov46001j3b6hn8769n62",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            1.5,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            2,
+                            0.5,
+                            103
+                        ],
+                        "type": "plane"
+                    },
+                    {
+                        "id": "cm4yjw104001n3b6hrphkh924",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            7,
+                            0,
+                            124.5
+                        ],
+                        "type": "turret"
+                    },
+                    {
+                        "id": "cm4zbj6ef000q3b6hg7o9uj0s",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            0.25,
+                            97.5
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4zbjqrz000r3b6hggn116wv",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            0.5,
+                            1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            0,
+                            94.5
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm501s0op000q3b6hp9dl1uc7",
+                        "rotation": 0.6108652381980153,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            2,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -5.5,
+                            0,
+                            119
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm501sz1g000r3b6h9qq2ieg1",
+                        "rotation": 0.3490658503988659,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            2,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8,
+                            0,
+                            87.5
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm501v7cd000t3b6hpfb3wtjk",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            7,
+                            2.5,
+                            6
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.1,
+                        "mode": "complete",
+                        "anchor": [
+                            -3,
+                            1.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8,
+                            0,
+                            105
+                        ],
+                        "type": "hangar"
+                    },
+                    {
+                        "id": "cm50218zn000u3b6hb4525tlq",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            4,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -2,
+                            2,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            5.5,
+                            0,
+                            114
+                        ],
+                        "type": "tower1"
+                    },
+                    {
+                        "id": "cm5021n06000w3b6h7yvwpzrr",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            5,
+                            3.5,
+                            7.1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.4,
+                        "mode": "complete",
+                        "anchor": [
+                            -1.5,
+                            1.75,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            11,
+                            0,
+                            110
+                        ],
+                        "type": "wall2"
+                    },
+                    {
+                        "id": "cm5027hyr000y3b6hrrabzj3q",
+                        "rotation": 1.7278759594743862,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 0.7,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            0,
+                            107
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm5028lfl000z3b6hkvlc7ou0",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            5,
+                            5.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            -1,
+                            113
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm502aqwx00103b6h2xne5nci",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            2,
+                            1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            0.5,
+                            109.5
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm502c06b00113b6h46edzrn9",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8.5,
+                            0,
+                            121.5
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm502cobo00123b6hwa6zjchr",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.9,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1.5,
+                            0,
+                            105
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm50vw2eg000u3b6hpwn8autz",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1,
+                            1.5,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -0.5,
+                            7,
+                            93.5
+                        ],
+                        "type": "plane"
+                    }
+                ]
+            },
+            "savedAt": 1734949089768
+        },
+        {
+            "data": {
+                "id": "cm4ewgug000003b6harthjz7o",
+                "activeObjectId": "cm4zkuvc0000y3b6hllzd4fr1",
+                "cameraPosition": [
+                    0,
+                    0,
+                    5
+                ],
+                "gridVisible": false,
+                "axesVisible": false,
+                "worldCenterVisible": false,
+                "floorType": "floor2",
+                "name": "BuildingsGap",
+                "objects": [
+                    {
+                        "id": "cm4zkzsdz00123b6hnhvmv3gl",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            2,
+                            0.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            2,
+                            1,
+                            80.5
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4zkyzo800113b6hfxqz9y9r",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            2,
+                            1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            2,
+                            1,
+                            81.5
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4znite900183b6ht48lil20",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.3,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            7.5,
+                            0,
+                            82
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm4zngmgo00153b6htbv47a7g",
+                        "rotation": 4.71238898038469,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            2,
+                            1.5,
+                            84.5
+                        ],
+                        "type": "turret"
+                    },
+                    {
+                        "id": "cm4zkuvc0000y3b6hllzd4fr1",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            2,
+                            6
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            2,
+                            1,
+                            85.5
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4zkvo19000z3b6hqikvl0nv",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3,
+                            0.5,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            2,
+                            2,
+                            87
+                        ],
+                        "type": "device"
+                    },
+                    {
+                        "id": "cm4zktvm3000w3b6hzffszplt",
+                        "rotation": 2.7576202181510405,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            2,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -5.5,
+                            0,
+                            88.5
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm4zktnh9000v3b6hypz60sct",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            2,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            9,
+                            0,
+                            90
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm4zkunhc000x3b6hw99jo266",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            2,
+                            2.5,
+                            91
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4zkwys800103b6hnr2ixeuw",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2.5,
+                            3,
+                            2.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            1,
+                            1.5,
+                            91
+                        ],
+                        "type": "device"
+                    },
+                    {
+                        "id": "cm4znb7an00133b6h9krxqmxb",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.8,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -0.5,
+                            0,
+                            96.5
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm4znfwhg00143b6h2u7q6dem",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.3,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3,
+                            0,
+                            97
+                        ],
+                        "type": "plant"
+                    },
+                    {
+                        "id": "cm4znhj4m00163b6h2du9gxjz",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            1.85,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.925,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            0,
+                            97
+                        ],
+                        "type": "barrel"
+                    }
+                ],
+                "activeObject": "cm4ewh14c000u3b6hgrm9iuak"
+            },
+            "savedAt": 1734893738451
+        },
+        {
+            "data": {
+                "id": "cm4znkmdm00003b6homl8a93b",
+                "activeObjectId": null,
+                "cameraPosition": [
+                    0,
+                    0,
+                    5
+                ],
+                "gridVisible": false,
+                "axesVisible": false,
+                "worldCenterVisible": false,
+                "floorType": "floor1",
+                "name": "Default",
+                "objects": [
+                    {
+                        "id": "cm4zo3hnw000y3b6hi2hqzb0f",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -3,
+                            -0.5,
+                            82
+                        ],
+                        "type": "turret"
+                    },
+                    {
+                        "id": "cm4zpghsu00183b6h8bofpxon",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            5,
+                            3.5,
+                            7.1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -1.5,
+                            1.75,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            10.5,
+                            0,
+                            93
+                        ],
+                        "type": "wall2"
+                    },
+                    {
+                        "id": "cm4zpp7jr001a3b6hclyaqu37",
+                        "rotation": 4.71238898038469,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -2,
+                            0,
+                            97
+                        ],
+                        "type": "turret"
+                    },
+                    {
+                        "id": "cm4zpzk96001d3b6h8y5aoi2s",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            5,
+                            3.5,
+                            7.1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -2.5,
+                            1.75,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            9,
+                            0,
+                            83.5
+                        ],
+                        "type": "wall3"
+                    },
+                    {
+                        "id": "cm4zvptb8001f3b6heje1tsqu",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            1.85,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.925,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3,
+                            0,
+                            91.5
+                        ],
+                        "type": "barrel"
+                    },
+                    {
+                        "id": "cm4zvq1m5001h3b6hdzip43mk",
+                        "rotation": 1.0471975511965976,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            1,
+                            6
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.5,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -3.5,
+                            0,
+                            91
+                        ],
+                        "type": "cable"
+                    },
+                    {
+                        "id": "cm4zvqz04001i3b6h9b4xrawj",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3.5,
+                            2,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            5,
+                            1,
+                            95.5
+                        ],
+                        "type": "device"
+                    },
+                    {
+                        "id": "cm4zvrzcw001n3b6hhxuhep2q",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            1.85,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.925,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            5.5,
+                            0,
+                            84
+                        ],
+                        "type": "barrel"
+                    },
+                    {
+                        "id": "cm4zvtc9z001o3b6hqgrzg465",
+                        "rotation": 4.71238898038469,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            5,
+                            1.5,
+                            95.5
+                        ],
+                        "type": "turret"
+                    },
+                    {
+                        "id": "cm4zvu2px001p3b6h8mq0e6tf",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3,
+                            1.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            1.5,
+                            0.5,
+                            95.5
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4zw91av002e3b6hkbwf60ph",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.4,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            1,
+                            0,
+                            87.5
+                        ],
+                        "type": "dirt"
+                    }
+                ]
+            },
+            "savedAt": 1734893648524
+        },
+        {
+            "data": {
+                "id": "cm4f575pw00003b6hfw2efvhc",
+                "activeObjectId": null,
+                "cameraPosition": [
+                    0,
+                    0,
+                    5
+                ],
+                "gridVisible": false,
+                "axesVisible": false,
+                "worldCenterVisible": false,
+                "floorType": "floor2",
+                "name": "BuildingsLow",
+                "objects": [
+                    {
+                        "id": "cm4ze04cg000q3b6hl03z5702",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4.5,
+                            2,
+                            3
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3.5,
+                            1,
+                            97
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4ze1kh9000r3b6hnmbxscns",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4.5,
+                            2,
+                            3
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3.5,
+                            1,
+                            93
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4ze2mba000s3b6harbu2itw",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3,
+                            1,
+                            3
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            0.5,
+                            93
+                        ],
+                        "type": "device"
+                    },
+                    {
+                        "id": "cm4ze3843000t3b6hxot22nxk",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4.5,
+                            1,
+                            5.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3.5,
+                            0.5,
+                            88
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4ze3m30000u3b6hkyhgnpml",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            1.85,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.925,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            0,
+                            89
+                        ],
+                        "type": "barrel"
+                    },
+                    {
+                        "id": "cm4ze4218000v3b6hgvk26y9c",
+                        "rotation": 0.7330382858376184,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1.6,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            0.5,
+                            0,
+                            84
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm4ze59od000w3b6hzmhbb2uc",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3,
+                            1,
+                            3
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            0.5,
+                            97
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4ze750e000x3b6hzy4a2zfj",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            0.5,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            4.5,
+                            2,
+                            93
+                        ],
+                        "type": "device"
+                    },
+                    {
+                        "id": "cm4ze8j7u000y3b6hdmk0gmqk",
+                        "rotation": 4.71238898038469,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -1,
+                            0,
+                            97
+                        ],
+                        "type": "turret"
+                    },
+                    {
+                        "id": "cm4ze9mad000z3b6hwtq4ncui",
+                        "rotation": 4.39822971502571,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            1,
+                            6
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 0.7,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.5,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -4,
+                            0,
+                            89
+                        ],
+                        "type": "cable"
+                    },
+                    {
+                        "id": "cm4zeajxn00103b6hzy9srh26",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            5,
+                            3.5,
+                            7.1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -1.5,
+                            1.75,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            10,
+                            0,
+                            95.5
+                        ],
+                        "type": "wall2"
+                    },
+                    {
+                        "id": "cm4zebyhs00123b6hw8bjb842",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            1.85,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.925,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -0.5,
+                            0,
+                            82.5
+                        ],
+                        "type": "barrel"
+                    },
+                    {
+                        "id": "cm4zed1l900143b6h9fdgcy2j",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            8,
+                            4,
+                            8
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            1,
+                            2,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            11.5,
+                            0,
+                            85
+                        ],
+                        "type": "tanks"
+                    },
+                    {
+                        "id": "cm4zeerfi00153b6hqp0gwwlh",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4.5,
+                            1,
+                            1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3.5,
+                            0.5,
+                            84.5
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4zeg1oi00163b6h6raa9la8",
+                        "rotation": 4.71238898038469,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            1.85,
+                            4.5,
+                            1.85
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            4,
+                            0,
+                            88.5
+                        ],
+                        "type": "turret"
+                    }
+                ],
+                "activeObject": null
+            },
+            "savedAt": 1734859447282
+        },
+        {
+            "data": {
+                "id": "cm4f57mzh00003b6hsdr3q1op",
+                "activeObjectId": null,
+                "cameraPosition": [
+                    0,
+                    0,
+                    17
+                ],
+                "gridVisible": false,
+                "axesVisible": false,
+                "worldCenterVisible": false,
+                "floorType": "floor5",
+                "name": "Boss",
+                "objects": [
+                    {
+                        "id": "cm4mbu4xd000r3b6hxz8bgxxy",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            5,
+                            3.5,
+                            7.1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -1.5,
+                            1.75,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            9.5,
+                            0,
+                            98.5
+                        ],
+                        "type": "wall2"
+                    },
+                    {
+                        "id": "cm4mbuhjb000s3b6hg3xb3yjw",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            4,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -2,
+                            2,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            6,
+                            0,
+                            103
+                        ],
+                        "type": "tower1"
+                    },
+                    {
+                        "id": "cm4mbw409000q3b6hltvnwowj",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            6,
+                            0,
+                            87.5
+                        ],
+                        "type": "tower3"
+                    },
+                    {
+                        "id": "cm4mccc2i000q3b6hw28fd0wc",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            4,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -2,
+                            2,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            6,
+                            0,
+                            106.5
+                        ],
+                        "type": "tower1"
+                    },
+                    {
+                        "id": "cm4mcd356000s3b6haoahiv6f",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            5,
+                            3.5,
+                            7.1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -2.5,
+                            1.75,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8.5,
+                            0,
+                            90.5
+                        ],
+                        "type": "wall3"
+                    },
+                    {
+                        "id": "cm4mcec7c000u3b6h97247r0g",
+                        "rotation": 0.8552113334772214,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            1,
+                            6
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 0.9,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.5,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3,
+                            0,
+                            112
+                        ],
+                        "type": "cable"
+                    },
+                    {
+                        "id": "cm4mcfhhk000v3b6hm0fgyanj",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2.5,
+                            2,
+                            2.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            0.5,
+                            -0.5,
+                            91
+                        ],
+                        "type": "device"
+                    },
+                    {
+                        "id": "cm4mci1nn000w3b6hp7n4721e",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2.5,
+                            2,
+                            2.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -2.5,
+                            0.5,
+                            91
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4mcj01l000x3b6hsv2wzvg3",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3.5,
+                            2,
+                            2.5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -5.5,
+                            0.5,
+                            91
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4mcmosg000y3b6hh0hcui6l",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            1.85,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.925,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            5.5,
+                            0,
+                            97.5
+                        ],
+                        "type": "barrel"
+                    },
+                    {
+                        "id": "cm4mcp0br00123b6huos0qs49",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            5,
+                            3.5,
+                            7.1
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -1.5,
+                            1.75,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8.5,
+                            0,
+                            117
+                        ],
+                        "type": "wall2"
+                    },
+                    {
+                        "id": "cm4mcpmlo00153b6hge67skoe",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            4,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -2,
+                            2,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            5,
+                            0,
+                            119.5
+                        ],
+                        "type": "tower1"
+                    },
+                    {
+                        "id": "cm4mcqo2x00163b6hbhs06647",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            4,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            -2,
+                            2,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            5,
+                            0,
+                            122.5
+                        ],
+                        "type": "tower1"
+                    },
+                    {
+                        "id": "cm4mdas1j001a3b6hhbk9m3f5",
+                        "rotation": 0.33161255787892263,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            2,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            4.5,
+                            0,
+                            89
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm4mdbqvp001b3b6h3ggwfkkr",
+                        "rotation": 0.39269908169872414,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            2,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -4,
+                            0,
+                            125
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm4mdds4d001c3b6h662ekiu1",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            6,
+                            2,
+                            12
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            3,
+                            0,
+                            123
+                        ],
+                        "type": "grass"
+                    },
+                    {
+                        "id": "cm4mdh2id001d3b6h1z7tiis7",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            3.5,
+                            2,
+                            5
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            -5.5,
+                            0.5,
+                            86.5
+                        ],
+                        "type": "box"
+                    },
+                    {
+                        "id": "cm4me1dy0001j3b6h7o1dhog2",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 2.4,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            0,
+                            0,
+                            117
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm4mehzwd000v3b6hh4tufsts",
+                        "rotation": 3.141592653589793,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            4,
+                            0.5,
+                            4
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 2.2,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            0.25,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            0,
+                            0,
+                            86
+                        ],
+                        "type": "dirt"
+                    },
+                    {
+                        "id": "cm4p1xxqs000q3b6hwl0d7zkq",
+                        "rotation": 0,
+                        "offset": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "size": [
+                            2,
+                            2,
+                            2
+                        ],
+                        "invisible": false,
+                        "uniformScaler": 1,
+                        "mode": "complete",
+                        "anchor": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "scale": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "position": [
+                            8.5,
+                            0,
+                            129
+                        ],
+                        "type": "plant"
+                    }
+                ],
+                "activeObject": null
+            },
+            "savedAt": 1734806731270
+        }
+    ]
+}

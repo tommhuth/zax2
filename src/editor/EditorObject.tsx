@@ -1,6 +1,6 @@
 import { Html } from "@react-three/drei"
 import { ReactNode, useEffect, Suspense } from "react"
-import VectorInput from "./VectorInput"
+import VectorInput from "./ui/VectorInput"
 import { removeObject, setActiveObject, updateObject } from "./data/actions"
 import { EditorObject as EditorObjectType } from "./data/types"
 import { useEditorStore } from "./data/store"

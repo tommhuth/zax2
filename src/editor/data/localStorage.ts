@@ -1,15 +1,18 @@
 import { EditorStore } from "./types"
 
-interface StoredEditorMap {
+export interface StoredEditorMap {
     savedAt: number
     data: EditorStore
 }
+
+const MAP_LIST_KEY = "editorMapList"
+const ACTIVE_MAP_KEY = "editorActiveMap"
 
 export function getEditorMapList() {
     let stored: StoredEditorMap[] = []
 
     try {
-        let existing = JSON.parse(window.localStorage.getItem("editorMapList") as string)
+        let existing = JSON.parse(window.localStorage.getItem(MAP_LIST_KEY) as string)
 
         if (Array.isArray(existing)) {
             stored = existing
@@ -22,13 +25,13 @@ export function getEditorMapList() {
 }
 
 export function setEditorMapList(list: StoredEditorMap[]) {
-    window.localStorage.setItem("editorMapList", JSON.stringify(list))
+    window.localStorage.setItem(MAP_LIST_KEY, JSON.stringify(list))
 }
 
 export function getEditorActiveMap() {
-    return window.localStorage.getItem("editorActiveMap")
+    return window.localStorage.getItem(ACTIVE_MAP_KEY)
 }
 
 export function setEditorActiveMap(id: string | number) {
-    window.localStorage.setItem("editorActiveMap", id.toString())
+    window.localStorage.setItem(ACTIVE_MAP_KEY, id.toString())
 }

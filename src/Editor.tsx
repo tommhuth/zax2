@@ -4,12 +4,12 @@ import SharedModels from "@components/world/models/SharedModels"
 import EdgeOverlay from "@components/EdgeOverlay"
 import { FLOOR_SIZE, WORLD_CENTER_X, WORLD_PLAYER_START_Z } from "@data/const"
 import EditorObjects from "./editor/EditorObjects"
-import Dropzone from "./editor/Dropzone"
+import Dropzone from "./editor/ui/Dropzone"
 import Floor from "@components/world/actors/Floor"
 import { Suspense } from "react"
 import { setActiveObject } from "./editor/data/actions"
 import { useEditorStore } from "./editor/data/store"
-import Toolbar from "./editor/Toolbar"
+import Toolbar from "./editor/ui/Toolbar"
 
 export default function Editor() {
     let floorType = useEditorStore(i => i.floorType)

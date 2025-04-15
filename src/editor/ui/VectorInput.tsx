@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 import { Tuple3 } from "src/types.global"
-import { precision, roundToNearest } from "./data/utils"
+import { precision, roundToNearest } from "../data/utils"
 
 interface VectorInputProps {
     legend: string
