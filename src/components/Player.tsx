@@ -232,8 +232,11 @@ export default function Player() {
             player: { weapon },
             state
         } = store.getState()
+        let [gamepad] = navigator.getGamepads()
+        let trigger = gamepad?.buttons[7]
+        let active = controls.keys.space || trigger?.pressed
 
-        if (Date.now() > data.nextShotAt && controls.keys.space && setup && state === "running") {
+        if (Date.now() > data.nextShotAt && active && setup && state === "running") {
             startTransition(() => {
                 createBullet({
                     position: [

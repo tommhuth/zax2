@@ -12,6 +12,7 @@ export default function Controls() {
     let hitboxRef = useRef<Mesh>(null)
     let [isMovingUp, setIsMovingUp] = useState(false)
     let previousZ = useRef<null | number>(null)
+    let [, setEventGamepad] = useState<Gamepad | null>(null)
 
     useWindowEvent("keydown", (e: KeyboardEvent) => {
         keys[e.code.replace("Key", "").toLowerCase()] = true
@@ -19,6 +20,14 @@ export default function Controls() {
 
     useWindowEvent("keyup", (e: KeyboardEvent) => {
         keys[e.code.replace("Key", "").toLowerCase()] = false
+    })
+
+    useWindowEvent("gamepadconnected", (e: GamepadEvent) => {
+        setEventGamepad(e.gamepad)
+    })
+
+    useWindowEvent("gamepaddisconnected", () => {
+        setEventGamepad(null)
     })
 
     useEffect(() => {
@@ -56,6 +65,38 @@ export default function Controls() {
         }
 
         hitboxRef.current.position.z = playerPosition.z
+    })
+
+    useFrame((state, delta) => {
+        let [gamepad] = navigator.getGamepads()
+
+        if (!gamepad) {
+            return
+        }
+
+        let a = gamepad.buttons[0]
+        let [x, y] = gamepad.axes
+        let deadzone = .25
+
+        if (Math.abs(x) > deadzone) {
+            x += deadzone * -Math.sign(x)
+        } else {
+            x = 0
+        }
+
+        if (Math.abs(y) > deadzone * 2) {
+            y += deadzone * -Math.sign(y) * 2
+        } else {
+            y = 0
+        }
+
+        playerTargetPosition.x += -x * 20 * delta
+        playerTargetPosition.y += y * -14 * delta
+        playerTargetPosition.clamp(EDGE_MIN, EDGE_MAX)
+
+        if (a.pressed) {
+            document.body.click()
+        }
     })
 
     return (

@@ -76,10 +76,11 @@ export default function Ui() {
     let ready = useStore(i => i.ready)
     let state = useStore(i => i.state)
     let boss = useStore(i => i.boss)
+    let attempts = useStore(i => i.player.attempts)
 
     return (
         <>
-            <Map />
+            <Map key={attempts} />
 
             {ready && state === "intro" && <Intro />}
             {state === "gameover" && <GameOver />}

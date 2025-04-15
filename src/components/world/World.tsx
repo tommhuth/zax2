@@ -33,7 +33,7 @@ export default function World() {
 
     useLayoutEffect(() => {
         if (state === "gameover") {
-            let tid = setTimeout(() => setRestartEnabled(true), 8_000)
+            let tid = setTimeout(() => setRestartEnabled(true), 5_000)
 
             setRestartEnabled(false)
 

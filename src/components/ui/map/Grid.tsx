@@ -18,7 +18,7 @@ export default function Grid() {
             }}
         >
             {list(15).map((i, index, list) => {
-                return <Line index={index - list.length * .35} key={index} />
+                return <Line index={index - list.length * .5} key={index} />
             })}
         </svg>
     )
