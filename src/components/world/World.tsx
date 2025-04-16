@@ -27,11 +27,11 @@ export default function World() {
     let hasInitialized = useRef(false)
     let [restartEnabled, setRestartEnabled] = useState(false)
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         hasInitialized.current = false
     }, [attempts])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (state === "gameover") {
             let tid = setTimeout(() => setRestartEnabled(true), 5_000)
 

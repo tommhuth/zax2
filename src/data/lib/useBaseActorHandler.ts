@@ -67,7 +67,7 @@ export function useBaseActorHandler({
         return () => {
             let { world } = useStore.getState()
 
-            remove()
+            startTransition(remove)
             world.grid.removeClient(client)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

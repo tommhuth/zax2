@@ -1131,13 +1131,12 @@
     eslint "^6.8.0"
     eslint-plugin-babel "^5.3.0"
 
-"@huth/random@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@huth/random/-/random-4.0.0.tgz#62f436b0cc8215812305bd73a171f6914c9745d8"
-  integrity sha512-FZB9enqZVSiWQMipyd4awgagJrfjpN5aIR4p34yC4fOzaI94oa94d7UokCcVJx5Gql2r5bNxZroBFeRZNejBNA==
+"@huth/random@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@huth/random/-/random-5.0.0.tgz#026d08f6eb1ba90f7b9bd8677899fbb7e83232a3"
+  integrity sha512-qTFWjDxMuXQAcmOZy+8sJyJRhZ1cWDWePi6G5NjEVNRTolthoGB47pkUSRRt3pWGgFSYTWdpCWOzs05DoZWQpQ==
   dependencies:
     babel-eslint "^10.1.0"
-    cuid "^2.1.8"
     eslint "^6.8.0"
     eslint-plugin-babel "^5.3.0"
 
@@ -2397,11 +2396,6 @@ csstype@^3.0.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
-
-cuid@^2.1.8:
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/cuid/-/cuid-2.1.8.tgz#cbb88f954171e0d5747606c0139fb65c5101eac0"
-  integrity sha512-xiEMER6E7TlTPnDxrM4eRiC6TRgjNX9xzEZ5U/Se2YJKr7Mq4pJn/2XEHjl3STcSh96GmkHPcBXLES8M29wyyg==
 
 debounce@^1.2.1:
   version "1.2.1"

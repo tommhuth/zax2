@@ -23,13 +23,13 @@ export class SpatialHashGrid3D {
     }
 
     public get entries() {
-        let clients: Client[] = []
+        let result = new Set<Client>()
 
         for (let [, clients] of this.grid.entries()) {
-            clients.push(...clients)
+            clients.forEach(client => result.add(client))
         }
 
-        return clients
+        return Array.from(result)
     }
 
     public empty() {
