@@ -1,8 +1,8 @@
 import { InstancedMesh, Material, Object3D } from "three"
-import Counter from "../Counter"
 import { store } from "."
 import { MaterialName } from "../types"
 import { ZaxStore } from "./types.store"
+import Counter from "@data/lib/Counter"
 
 export function updateWorld(data: Partial<ZaxStore["world"]>) {
     store.setState({

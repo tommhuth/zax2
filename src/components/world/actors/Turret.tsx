@@ -8,15 +8,15 @@ import { Tuple3 } from "../../../types.global"
 import { store, useStore } from "../../../data/store"
 import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
-import { useCollisionDetection } from "../../../data/collisions"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
-import { useBaseActorHandler } from "../../../data/hooks"
 import DebugBox from "@components/DebugBox"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { removeTurret, damageTurret } from "@data/store/actors/turret.actions"
 import { increaseScore } from "@data/store/player"
 import TurretModel, { TurretRef } from "../models/TurretModel"
 import Muzzle, { MuzzleRef } from "../effects/Muzzle"
+import useCollisionDetection from "@data/lib/useCollisionDetection"
+import { useBaseActorHandler } from "@data/lib/useBaseActorHandler"
 
 function explode(position: Vector3, size: Tuple3) {
     createExplosion({

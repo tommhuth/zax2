@@ -1,8 +1,8 @@
 import { useMemo, useRef } from "react"
 import { Vector3 } from "three"
-import { useAnimationFrame } from "../../../data/hooks"
 import { useStore } from "../../../data/store"
 import { toIsometric } from "./utils"
+import { useAnimationFrame } from "@data/lib/hooks"
 
 export default function Line({ index }: { index: number }) {
     let gap = 3.5

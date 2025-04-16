@@ -1,13 +1,13 @@
 import { useMemo } from "react"
 import { clamp, glsl, list, ndelta, setBufferAttribute, setMatrixAt } from "../../../data/utils"
-import { useShader } from "../../../data/hooks"
 import { useFrame } from "@react-three/fiber"
 import InstancedMesh from "../models/InstancedMesh"
 import { useStore } from "../../../data/store"
 import dither from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
 import utils from "../../../shaders/utils.glsl"
-import { easeOutCubic } from "../../../data/shaping"
+import { useShader } from "@data/lib/useShader"
+import { easeOutCubic } from "@data/lib/shaping"
 
 export default function ShockwaveHandler() {
     let count = 20

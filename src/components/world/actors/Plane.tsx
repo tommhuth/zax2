@@ -9,19 +9,19 @@ import { store, useStore } from "../../../data/store"
 import { increaseScore } from "../../../data/store/player"
 import { createExplosion, createImpactDecal, createParticles, createScrap, increaseTrauma } from "../../../data/store/effects"
 import { planeColor } from "../../../data/theme"
-import { useCollisionDetection } from "../../../data/collisions"
 import { damp } from "three/src/math/MathUtils.js"
-import Counter from "../../../data/Counter"
-import { easeInOutCubic } from "../../../data/shaping"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 
 import DebugBox from "@components/DebugBox"
-import { useBaseActorHandler } from "@data/hooks"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { removePlane, damagePlane } from "@data/store/actors/plane.actions"
 import { damageTurret } from "@data/store/actors/turret.actions"
 import { damageBarrel } from "@data/store/actors/barrel.actions"
 import PlaneModel from "../models/PlaneModel"
+import Counter from "@data/lib/Counter"
+import useCollisionDetection from "@data/lib/useCollisionDetection"
+import { easeInOutCubic } from "@data/lib/shaping"
+import { useBaseActorHandler } from "@data/lib/useBaseActorHandler"
 
 function explode(position: Vector3) {
     createExplosion({
@@ -80,6 +80,7 @@ function Plane({
         size,
         aabb,
         health,
+        moving,
         keepAround: moving,
         remove: () => removePlane(id),
         destroy: (position) => {

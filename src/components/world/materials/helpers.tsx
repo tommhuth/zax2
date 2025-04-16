@@ -1,5 +1,5 @@
 import { BULLET_LIGHT_COUNT, LIGHT_SOURCES_COUNT } from "@data/const"
-import Counter from "@data/Counter"
+import Counter from "@data/lib/Counter"
 import { store } from "@data/store"
 import { bulletColor, explosionColor } from "@data/theme"
 import { glsl, list, ndelta } from "@data/utils"

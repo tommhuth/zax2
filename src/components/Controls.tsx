@@ -1,9 +1,9 @@
 import { useFrame } from "@react-three/fiber"
 import { startTransition, useEffect, useRef, useState } from "react"
 import { Mesh } from "three"
-import { useWindowEvent } from "../data/hooks"
 import { useStore } from "../data/store"
 import { EDGE_MAX, EDGE_MIN } from "../data/const"
+import { useWindowEvent } from "@data/lib/hooks"
 
 export default function Controls() {
     let { pointerPosition, keys, startPointerPosition } = useStore(i => i.controls)

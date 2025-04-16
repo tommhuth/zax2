@@ -1,11 +1,11 @@
 import { useRef } from "react"
 import { Vector3 } from "three"
 import { WORLD_TOP_EDGE } from "../../../data/const"
-import { useAnimationFrame } from "../../../data/hooks"
 import { Tuple3 } from "../../../types.global"
 import { useStore } from "../../../data/store"
 import { clamp } from "three/src/math/MathUtils.js"
 import { toIsometric } from "./utils"
+import { useAnimationFrame } from "@data/lib/hooks"
 
 let _position = new Vector3()
 

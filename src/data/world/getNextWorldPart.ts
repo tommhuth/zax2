@@ -1,9 +1,9 @@
 import { store } from "@data/store"
-import Cycler from "../Cycler"
 import { WorldPart, WorldPartType } from "../types"
 import { partValidator } from "./validator"
 import { removeOldestForcedWorldPart } from "@data/store/debug"
 import { makeWorldPartGenerator } from "./generators"
+import Cycler from "@data/lib/Cycler"
 
 const specialParts = [WorldPartType.START] as const
 

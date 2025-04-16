@@ -2,7 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber"
 import { useLayoutEffect, useRef } from "react"
 import { Group, MeshBasicMaterial, PlaneGeometry } from "three"
 import animate from "@huth/animate"
-import { easeInOutQuart } from "../data/shaping"
+import { easeInOutQuart } from "@data/lib/shaping"
 
 let material = new MeshBasicMaterial({ color: "#000", name: "edge" })
 let geometry = new PlaneGeometry(22, 150, 1, 1)

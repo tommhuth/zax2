@@ -9,8 +9,8 @@ import { removeExplosion } from "../../../data/store/effects"
 import FireballHandler from "./FireballHandler"
 import ShockwaveHandler from "./ShockwaveHandler"
 import { MeshRetroMaterial } from "../materials/MeshRetroMaterial"
-import Counter from "../../../data/Counter"
 import { damp } from "three/src/math/MathUtils.js"
+import Counter from "@data/lib/Counter"
 
 export default function ExplosionsHandler() {
     let decalCount = 15

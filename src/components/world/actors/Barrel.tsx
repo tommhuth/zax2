@@ -6,12 +6,12 @@ import { Tuple3 } from "../../../types.global"
 import { createExplosion, createImpactDecal, createParticles, createScrap, increaseTrauma } from "../../../data/store/effects"
 import { barellParticleColor } from "../../../data/theme"
 import { increaseScore } from "../../../data/store/player"
-import { useCollisionDetection } from "../../../data/collisions"
-import { useBaseActorHandler } from "../../../data/hooks"
 import DebugBox from "@components/DebugBox"
 import { removeBarrel, damageBarrel } from "@data/store/actors/barrel.actions"
 import { BarrelModel } from "../models/BarrelModel"
 import { list } from "@data/utils"
+import useCollisionDetection from "@data/lib/useCollisionDetection"
+import { useBaseActorHandler } from "@data/lib/useBaseActorHandler"
 
 function explode(position: Vector3, size: Tuple3, color: string) {
     createExplosion({

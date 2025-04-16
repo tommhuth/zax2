@@ -4,6 +4,8 @@
 
 -   (distance based) trauma
 -   level parts
+-   ui, css, font cleanup. tailwind?
+-   markup cleanup, raw canvas??
 
 53 mat + 22 instances
 

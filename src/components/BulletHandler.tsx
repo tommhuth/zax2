@@ -2,7 +2,6 @@ import { useFrame } from "@react-three/fiber"
 import { memo, startTransition, useEffect, useRef } from "react"
 import { ndelta, setColorAt, setMatrixAt, setMatrixNullAt } from "../data/utils"
 import { store, useStore } from "../data/store"
-import { getIntersection, getBulletCollisions, dispatchCollisionEvent } from "../data/collisions"
 import { Tuple3 } from "../types.global"
 import { CylinderGeometry, Mesh, SphereGeometry } from "three"
 import { removeBullet } from "@data/store/actors/bullet.actions"
@@ -10,6 +9,7 @@ import InstancedMesh from "./world/models/InstancedMesh"
 import { damp } from "three/src/math/MathUtils.js"
 import { setLastImpactLocation } from "@data/store/effects"
 import { BULLET_SIZE } from "@data/const"
+import { dispatchCollisionEvent, getBulletCollisions, getIntersection } from "@data/lib/collisions"
 
 
 const cylinder = new CylinderGeometry(1, 1, 1, 10, 1)

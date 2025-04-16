@@ -12,14 +12,14 @@ import { createExplosion, createImpactDecal, createParticles } from "../../../da
 import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
 import { BossState, Owner } from "../../../data/types"
-import { useCollisionDetection } from "../../../data/collisions"
 import DebugBox from "@components/DebugBox"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { increaseScore } from "@data/store/player"
 import { clamp, ndelta, setMatrixAt } from "@data/utils"
 import BossModel from "../models/BossModel"
 import Muzzle, { MuzzleRef } from "../effects/Muzzle"
-import Counter from "@data/Counter"
+import useCollisionDetection from "@data/lib/useCollisionDetection"
+import Counter from "@data/lib/Counter"
 
 let size: Tuple3 = [4.5, 4.75, 2]
 

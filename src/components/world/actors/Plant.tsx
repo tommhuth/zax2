@@ -5,7 +5,6 @@ import random from "@huth/random"
 import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
 import { store, useStore } from "@data/store"
-import { useCollisionDetection } from "@data/collisions"
 import { Vector3 } from "three"
 import { useFrame } from "@react-three/fiber"
 import { createParticles } from "@data/store/effects"
@@ -13,6 +12,7 @@ import { Owner } from "@data/types"
 import { damp } from "three/src/math/MathUtils.js"
 import DebugBox from "@components/DebugBox"
 import { plantColor } from "@data/theme"
+import useCollisionDetection from "@data/lib/useCollisionDetection"
 
 interface Leaf {
     position: Tuple3

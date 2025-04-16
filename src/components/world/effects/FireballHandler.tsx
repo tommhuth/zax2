@@ -1,5 +1,4 @@
 import InstancedMesh from "../models/InstancedMesh"
-import { useShader } from "../../../data/hooks"
 import { InstancedMesh as InstancedMeshThree } from "three"
 import { clamp, glsl, ndelta, setMatrixAt } from "../../../data/utils"
 import easings from "../../../shaders/easings.glsl"
@@ -7,10 +6,11 @@ import dither from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
 import utils from "../../../shaders/utils.glsl"
 import { useFrame } from "@react-three/fiber"
-import { blend, easeInOutCubic, easeOutCubic, easeOutQuart } from "../../../data/shaping"
 import { useStore } from "../../../data/store"
 import { Fireball } from "../../../data/types"
 import { Tuple3 } from "../../../types.global"
+import { blend, easeInOutCubic, easeOutCubic, easeOutQuart } from "@data/lib/shaping"
+import { useShader } from "@data/lib/useShader"
 
 type TransformReturn = { scale: number, position: Tuple3 }
 type FireballTransformer = (fireball: Fireball, delta: number, instance: InstancedMeshThree) => TransformReturn

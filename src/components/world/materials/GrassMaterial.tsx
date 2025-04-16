@@ -3,11 +3,11 @@ import { useFrame } from "@react-three/fiber"
 import dither from "../../../shaders/dither.glsl"
 import easings from "../../../shaders/easings.glsl"
 import noise from "../../../shaders/noise.glsl"
-import { useShader } from "../../../data/hooks"
 import { fogColor, grassColorEnd, grassColorStart } from "../../../data/theme"
 import { glsl } from "../../../data/utils"
 import { store } from "../../../data/store"
 import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater } from "./helpers"
+import { useShader } from "@data/lib/useShader"
 
 export const getGrassTransform = glsl` 
     vec3 getGrassTransform(vec3 localPosition, vec3 globalPosition, vec3 playerPosition, mat4 modelMatrix) {

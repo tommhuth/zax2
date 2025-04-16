@@ -3,9 +3,9 @@ import { Vector2 } from "three"
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { BossState } from "../types"
-import { SpatialHashGrid3D } from "../SpatialHashGrid3D"
 import { ZaxStore } from "./types.store"
 import { WORLD_CENTER_X } from "@data/const"
+import { SpatialHashGrid3D } from "@data/lib/SpatialHashGrid3D"
 
 const store = create(
     subscribeWithSelector<ZaxStore>(() => ({

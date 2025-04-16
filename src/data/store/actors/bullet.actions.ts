@@ -3,10 +3,10 @@ import { store } from "../index"
 import { ColorRepresentation, Matrix4, Quaternion, Vector3 } from "three"
 import { updateWorld } from "../utils"
 import { BULLET_LIGHT_COUNT, BULLET_SIZE } from "../../const"
-import Counter from "@data/Counter"
 import { Tuple3 } from "src/types.global"
 import { Owner } from "@data/types"
-import LineSegment from "@data/LineSegment"
+import Counter from "@data/lib/Counter"
+import LineSegment from "@data/lib/LineSegment"
 
 let _matrix4 = new Matrix4()
 let _translation = new Vector3()

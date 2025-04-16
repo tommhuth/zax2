@@ -9,8 +9,6 @@ import { store, useStore } from "../data/store"
 import { useShallow } from "zustand/react/shallow"
 import { damagePlayer, setPlayerObject } from "../data/store/player"
 import { removeHeatSeaker, setBossProp } from "../data/store/boss"
-import { useCollisionDetection } from "../data/collisions"
-import { easeInOutCubic, easeInQuad } from "../data/shaping"
 import { damp } from "three/src/math/MathUtils.js"
 import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_PLAYER_START_Z } from "../data/const"
 import DebugBox from "./DebugBox"
@@ -23,6 +21,8 @@ import { damageTurret } from "@data/store/actors/turret.actions"
 import { damageBarrel } from "@data/store/actors/barrel.actions"
 import PlayerModel from "./world/models/PlayerModel"
 import { setState } from "@data/store/utils"
+import useCollisionDetection from "@data/lib/useCollisionDetection"
+import { easeInOutCubic, easeInQuad } from "@data/lib/shaping"
 
 const OFFSCREEN_Y = -10
 const depth = 2

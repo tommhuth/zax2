@@ -4,9 +4,9 @@ import { useGLTF } from "@react-three/drei"
 import { GLTFModel } from "src/types.global"
 import { Group } from "three"
 import { useStore } from "@data/store"
-import { easeOutExpo } from "@data/shaping"
 import animate from "@huth/animate"
 import Exhaust from "../effects/Exhaust"
+import { easeOutExpo } from "@data/lib/shaping"
 
 export default function PlayerModel({ dead }: { dead: boolean }) {
     let { nodes } = useGLTF(playerModel) as GLTFModel<["player_1", "player_2", "player_3", "player_4"]>

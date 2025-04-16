@@ -1,5 +1,4 @@
 import { Color, IUniform, MeshLambertMaterial, Vector3 } from "three"
-import { ShaderPart, useShader } from "../../../data/hooks"
 import { backColor as defaultBackColor, bcolor, fogColor, rightColor as defaultRightColor, bulletColor, explosionColor } from "../../../data/theme"
 import easings from "../../../shaders/easings.glsl"
 import dithering from "../../../shaders/dither.glsl"
@@ -10,6 +9,7 @@ import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
 import { forwardRef } from "react"
 import { store, useStore } from "../../../data/store"
 import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater } from "./helpers"
+import { ShaderPart, useShader } from "@data/lib/useShader"
 
 export type MeshRetroMaterialProps = {
     colorCount?: number

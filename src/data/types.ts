@@ -1,8 +1,8 @@
 import { Box3, ColorRepresentation, InstancedMesh, Object3D, Vector3 } from "three"
 import { Tuple2, Tuple3 } from "../types.global"
-import Counter from "./Counter"
-import { Client } from "./SpatialHashGrid3D"
-import LineSegment from "./LineSegment"
+import { Client } from "./lib/SpatialHashGrid3D"
+import Counter from "./lib/Counter"
+import LineSegment from "./lib/LineSegment"
 
 export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" | "exhaust"
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue" | "muzzle"

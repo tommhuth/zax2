@@ -8,7 +8,7 @@ import { worlPartTypes } from "@data/world/getNextWorldPart"
 import { useRef, useState } from "react"
 import { setTimeScale } from "@data/store/effects"
 import { Vector3 } from "three"
-import { useAnimationFrame } from "@data/hooks"
+import { useAnimationFrame } from "@data/lib/hooks"
 
 
 function RealtimePosition({ position, label }: { position?: Vector3, label?: string }) {

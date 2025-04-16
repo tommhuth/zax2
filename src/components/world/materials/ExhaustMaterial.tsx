@@ -2,13 +2,13 @@ import { useFrame } from "@react-three/fiber"
 import { useRef } from "react"
 import { MeshBasicMaterial } from "three"
 import random from "@huth/random"
-import { useShader } from "../../../data/hooks"
 import { glsl } from "../../../data/utils"
 import dither from "../../../shaders/dither.glsl"
 import easings from "../../../shaders/easings.glsl"
 import noise from "../../../shaders/noise.glsl"
 import utils from "../../../shaders/utils.glsl"
 import { store } from "@data/store"
+import { useShader } from "@data/lib/useShader"
 
 export default function ExhaustMaterial() {
     let ref = useRef<MeshBasicMaterial>(null)

@@ -4,11 +4,11 @@ import DebugBox from "@components/DebugBox"
 import { Tuple3 } from "src/types.global"
 import { Vector3 } from "three"
 import { useStore } from "@data/store"
-import { useCollisionDetection } from "@data/collisions"
 import { createParticles } from "@data/store/effects"
 import { deviceColor } from "@data/theme"
 import { useWorldPart } from "../WorldPartWrapper"
 import ObstacleModel from "../models/ObstacleModel"
+import useCollisionDetection from "@data/lib/useCollisionDetection"
 
 interface ObstacleProps {
     size: Tuple3

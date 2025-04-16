@@ -1,5 +1,5 @@
+import { CollisionObjectType } from "@data/types"
 import { Tuple3 } from "src/types.global"
-import { CollisionObjectType } from "./types"
 
 export interface Client {
     position: Tuple3
@@ -79,7 +79,7 @@ export class SpatialHashGrid3D {
 
     public findNear(position: Tuple3, size: Tuple3) {
         let [min, max] = this.getCellBounds(position, size)
-        let result: Client[] = []
+        let result = new Set<Client>()
 
         for (let x = min[0]; x <= max[0]; x++) {
             for (let y = min[1]; y <= max[1]; y++) {
@@ -89,16 +89,14 @@ export class SpatialHashGrid3D {
 
                     if (cell) {
                         for (let client of cell) {
-                            if (!result.includes(client)) {
-                                result.push(client)
-                            }
+                            result.add(client)
                         }
                     }
                 }
             }
         }
 
-        return result
+        return Array.from(result)
     }
 
     public createClient(position: Tuple3, size: Tuple3, data: ClientData) {
@@ -123,9 +121,15 @@ export class SpatialHashGrid3D {
                     let cell = this.grid.get(key)
 
                     if (cell) {
-                        let cellUpdated = cell.filter(i => i !== client)
+                        let index = cell.indexOf(client)
 
-                        cellUpdated.length === 0 ? this.grid.delete(key) : this.grid.set(key, cellUpdated)
+                        if (index > -1) {
+                            cell.splice(index, 1)
+                        }
+
+                        if (cell.length === 0) {
+                            this.grid.delete(key)
+                        }
                     }
                 }
             }

@@ -7,9 +7,9 @@ import { startTransition, useEffect, useMemo, useRef } from "react"
 import { createExplosion, createImpactDecal, createParticles } from "../../../data/store/effects"
 import random from "@huth/random"
 import type { HeatSeaker } from "../../../data/types"
-import { useCollisionDetection } from "../../../data/collisions"
 import { floorBaseColor, floorHiColor } from "@data/theme"
 import { Tuple3 } from "src/types.global"
+import useCollisionDetection from "@data/lib/useCollisionDetection"
 
 let _direction = new Vector3()
 
