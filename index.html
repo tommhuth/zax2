@@ -3,33 +3,36 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta 
-        name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" 
-    />
-    <title>Zax</title>
-    <meta name="description" content="Pew pew pew">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>Zaxx</title>
+    <meta name="description" content="Retro shooter inspired by Zaxxon">
     <meta name="apple-mobile-web-app-title" content="Zax">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000">
+
     <style>
         @import "/assets/styles/app.scss";
     </style>
-
-    <link rel="preload" href="/fonts/edundot.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/joystix.woff2" as="font" type="font/woff2" crossorigin />
 </head>
 
 <body>
-    <div id="loading">
-        Loading<span>.</span><span>.</span><span>.</span> 
-    </div>
+    <h1 class="visually-hidden">Zaxx</h1>
+    <p class="visually-hidden">
+        <a href="https://github.com/tommhuth/zax2">Retro shooter</a> inspired by
+        Zaxxon, made using React Three Fiber.
+    </p>
 
     <div id="canvas"></div>
 
-    <script type="module" src="/src/root.tsx"></script> 
+    <script type="module" src="/src/root.tsx"></script>
+
+    <div id="loading">
+        Loading
+    </div>
 </body>
 
 </html>

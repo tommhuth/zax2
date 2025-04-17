@@ -1,0 +1,21 @@
+.toolbar-top {
+    z-index: 10000;
+    position: fixed;
+    top: 1em;
+    display: flex;
+    gap: 1em;
+    right: 2em;
+    place-items: center;
+}
+
+.toolbar-bottom {
+    position: fixed;
+    bottom: 0;
+    border-bottom: 2.5em transparent solid;
+    right: 2em;
+    left: 2em;
+    z-index: 10000;
+    display: flex;
+    border-radius: 4px;
+    place-content: center;
+}

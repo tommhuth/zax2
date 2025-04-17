@@ -8,15 +8,7 @@ export default function LayerSelect() {
     let objects = useEditorStore(i => i.objects)
 
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: ".125em",
-                position: "relative",
-                zIndex: 10000
-            }}
-        >
+        <div className="layer-select">
             <label>
                 <input
                     checked={layersVisible}
@@ -26,16 +18,8 @@ export default function LayerSelect() {
             </label>
 
             <ul
+                className="layer-select__list"
                 style={{
-                    maxHeight: "16.75em",
-                    overflow: "auto",
-                    position: "absolute",
-                    marginTop: "1em",
-                    border: "1px solid white",
-                    width: 300,
-                    top: "100%",
-                    right: 0,
-                    background: "rgba(0, 0, 0, .65)",
                     display: layersVisible && objects.length > 0 ? undefined : "none"
                 }}
             >
@@ -43,21 +27,14 @@ export default function LayerSelect() {
                     return (
                         <li
                             key={i.id}
+                            className="layer-select__item"
                             style={{
-                                textAlign: "right",
-                                padding: ".35em .65em",
-                                borderBottom: "1px solid rgba(255, 255, 255, .31)",
                                 background: activeObjectId !== i.id ? undefined : "white",
                                 color: activeObjectId !== i.id ? "white" : "black"
                             }}
                         >
                             <button
-                                style={{
-                                    fontSize: ".875em",
-                                    cursor: "pointer",
-                                    width: "100%",
-                                    textAlign: "right"
-                                }}
+                                className="layer-select__button"
                                 onClick={() => setActiveObject(activeObjectId === i.id ? null : i.id)}
                             >
                                 {i.type}

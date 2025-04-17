@@ -1,0 +1,38 @@
+.layer-select {
+    display: flex;
+    flex-direction: column;
+    gap: .125em;
+    position: relative;
+    z-index: 10000;
+    margin-left: 2em;
+    margin-right: 1em;
+
+    &__list {
+        max-height: 16.75em;
+        overflow: auto;
+        position: absolute;
+        margin-top: 1em;
+        border: 1px solid white;
+        width: 300px;
+        top: 100%;
+        right: 0;
+        background-color: rgba(0, 0, 0, .65);
+    }
+
+    &__item {
+        text-align: right;
+        padding: .35em .65em;
+        border-bottom: 1px solid rgba(255, 255, 255, .3);
+
+        &:hover {
+            background-color: black;
+        }
+    }
+
+    &__button {
+        font-size: .875em;
+        width: 100%;
+        text-align: right;
+
+    }
+}

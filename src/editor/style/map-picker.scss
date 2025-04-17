@@ -1,0 +1,64 @@
+.map-picker {
+    position: relative;
+    display: flex;
+
+    &__input {
+        padding: 0.75em 1em;
+        background: white;
+        color: black;
+        font-family: monospace;
+        width: 22em;
+    }
+
+    &__toggler {
+        background-color: white;
+        padding: 0 0.85em;
+        color: black;
+    }
+
+    &__list {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        border: 1px solid white;
+        background: rgba(0, 0, 0, 0.65);
+    }
+
+    &__item {
+        position: relative;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.31);
+    }
+
+    &__select {
+        padding: 1em;
+        font-family: monospace;
+        text-align: left;
+        width: 100%;
+
+        &:hover {
+            background-color: black;
+        }
+    }
+
+    &__delete {
+        padding: 0.85em 0.65em;
+        position: absolute;
+        right: 0.25em;
+        top: 50%;
+        width: 2em;
+        translate: 0 -50%;
+    }
+
+    &__create {
+        padding: 1em;
+        font-family: monospace;
+        width: 100%;
+        text-align: left;
+        font-weight: bold;
+
+        &:hover {
+            background-color: black;
+        }
+    }
+}

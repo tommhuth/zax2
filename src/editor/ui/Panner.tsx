@@ -19,13 +19,10 @@ export default function Panner() {
 
     return (
         <div
+            className="panner"
             style={{
-                display: "flex",
-                height: "1em",
-                flex: "0 0",
+                cursor: panning ? "grabbing" : "grab",
                 flexBasis: width,
-                position: "relative",
-                cursor: panning ? "grabbing" : "grab"
             }}
             onPointerDown={(e) => {
                 e.currentTarget.setPointerCapture(e.pointerId)
@@ -47,11 +44,8 @@ export default function Panner() {
             <div
                 style={{
                     left: map(z, min, max, 0, width),
-                    bottom: "100%",
-                    marginBottom: ".25em",
-                    translate: "-50% 0",
-                    position: "absolute",
                 }}
+                className="panner__current"
             >
                 {z}
             </div>
@@ -59,15 +53,11 @@ export default function Panner() {
                 return (
                     <div
                         key={index}
+                        className="panner__tick"
                         style={{
-                            flex: "0 0 ",
-                            flexBasis: width / barCount,
-                            boxSizing: "border-box",
                             borderLeftWidth: index === 10 ? 2 : 1,
-                            borderLeftColor: "white",
-                            borderLeftStyle: "solid",
                             opacity: index === Math.round(map(z, min, max, 0, barCount)) ? 1 : .35,
-                            height: "100%",
+                            flexBasis: width / barCount,
                         }}
                     />
                 )

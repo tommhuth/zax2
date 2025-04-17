@@ -27,9 +27,6 @@ export default function SaveFileButtons() {
         <>
             <button
                 type="button"
-                style={{
-                    cursor: "pointer"
-                }}
                 onClick={async () => {
                     const fileHandle = await window.showSaveFilePicker(pickerOptions)
                     const file = await fileHandle.createWritable()
@@ -48,10 +45,6 @@ export default function SaveFileButtons() {
 
             <button
                 type="button"
-                style={{
-                    cursor: "pointer",
-                    marginRight: "2em"
-                }}
                 onClick={async () => {
                     const [fileHandle] = await window.showOpenFilePicker(pickerOptions)
                     const file = await fileHandle.getFile()

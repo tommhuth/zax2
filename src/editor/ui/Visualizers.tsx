@@ -8,15 +8,7 @@ export default function Visualizers() {
 
     return (
         <>
-            <label
-                style={{
-                    display: "flex",
-                    placeContent: "center",
-                    marginRight: "2em",
-                    cursor: "pointer",
-                    gap: ".5em"
-                }}
-            >
+            <label className="grid">
                 <input
                     type="checkbox"
                     checked={gridVisible}
@@ -25,15 +17,7 @@ export default function Visualizers() {
                 Grid
             </label>
 
-            <label
-                style={{
-                    display: "flex",
-                    placeContent: "center",
-                    marginRight: "2em",
-                    cursor: "pointer",
-                    gap: ".5em"
-                }}
-            >
+            <label className="axis">
                 <input
                     type="checkbox"
                     checked={axesVisible}
@@ -42,15 +26,7 @@ export default function Visualizers() {
                 Axes
             </label>
 
-            <label
-                style={{
-                    display: "flex",
-                    placeContent: "center",
-                    marginRight: "2em",
-                    cursor: "pointer",
-                    gap: ".5em"
-                }}
-            >
+            <label className="center">
                 <input
                     type="checkbox"
                     checked={worldCenterVisible}

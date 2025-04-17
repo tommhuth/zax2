@@ -10,12 +10,7 @@ export default function FloorSelect() {
         <select
             onChange={e => setFloorType(e.currentTarget.value as EditorStore["floorType"])}
             value={floorType}
-            style={{
-                marginRight: "2em",
-                marginLeft: "auto",
-                width: "min-content",
-                cursor: "pointer"
-            }}
+            className="floor-select"
         >
             {list(6).map((index) => {
                 let value = "floor" + (index + 1)

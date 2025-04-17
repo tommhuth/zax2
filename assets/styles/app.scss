@@ -4,19 +4,9 @@
 
 canvas {
     image-rendering: crisp-edges;
-    image-rendering: pixelated;    
+    image-rendering: pixelated;
 }
 
-#root { 
-    top: 0; 
-    position: fixed;
-    display: block;
-    height: 100vh !important; 
-    width: 100% !important;
-    right: 0;
-    left: 0;
-} 
-  
 #loading {
     position: absolute;
     font-size: clamp(1em, min(1vw, 1vh), 1.25em);
@@ -28,49 +18,15 @@ canvas {
     place-content: center;
     place-items: center;
     color: #fff;
-
-    span {
-        animation: jump .5s infinite both;
-    }
-
-    span:nth-child(2) {
-        animation-delay: .1s;
-    }
-    span:nth-child(3) {
-        animation-delay: .2s;
-    }
 }
 
-#debug {
-    position: fixed;
-    top: 1em;
-    right: 1em; 
-    color: white;
-    z-index: 1000000;
-    padding: 1em;
-    padding: 1em;
-    border: 1px solid transparent;
-}
-  
-#shoot { 
-    right: 0; 
+#shoot {
+    right: 0;
     display: block;
     width: 30%;
     position: fixed;
     width: 50%;
     top: 0;
-    bottom: 0; 
-    z-index: 10000000;  
-}   
-
-@keyframes jump {
-    from {
-        translate: 0 0 0;
-    }
-    50% {
-        translate: 0 -.125em 0;
-    }
-    to {
-        translate: 0 0 0;
-    }
+    bottom: 0;
+    z-index: 10000000;
 }

@@ -1,0 +1,21 @@
+.panner {
+    display: flex;
+    height: 1em;
+    flex: 0 0;
+    position: relative;
+
+    &__current {
+        bottom: 100%;
+        margin-bottom: 0.25em;
+        translate: -50% 0;
+        position: absolute;
+    }
+
+    &__tick {
+        box-sizing: border-box;
+        flex: 0 0;
+        border-left-color: white;
+        border-left-style: solid;
+        height: 100%;
+    }
+}

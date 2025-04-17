@@ -10,17 +10,7 @@ import FloorSelect from "../ui/FloorSelect"
 export default function Toolbar() {
     return (
         <>
-            <div
-                style={{
-                    zIndex: 10000,
-                    position: "fixed",
-                    top: "1em",
-                    display: "flex",
-                    gap: "1em",
-                    right: "2em",
-                    placeItems: "center"
-                }}
-            >
+            <div className="toolbar-top">
                 <SaveFileButtons />
                 <LayerSelect />
                 <MapPicker />
@@ -28,19 +18,7 @@ export default function Toolbar() {
 
             <ObjectDropper />
 
-            <div
-                style={{
-                    position: "fixed",
-                    bottom: 0,
-                    borderBottom: "2.5em transparent solid",
-                    right: "2em",
-                    left: "2em",
-                    zIndex: 10000,
-                    display: "flex",
-                    borderRadius: 4,
-                    placeContent: "center",
-                }}
-            >
+            <div className="toolbar-bottom">
                 <GenerateMap />
                 <FloorSelect />
                 <Visualizers />

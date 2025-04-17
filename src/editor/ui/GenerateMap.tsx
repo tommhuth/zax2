@@ -4,12 +4,7 @@ import { useEditorStore } from "../data/store"
 export default function GenerateMap() {
     return (
         <button
-            style={{
-                marginRight: "2em",
-                width: "min-content",
-                whiteSpace: "nowrap",
-                cursor: "pointer"
-            }}
+            className="generate-map"
             onClick={() => {
                 let store = useEditorStore.getState()
                 let file = generateMap(store, store.name)

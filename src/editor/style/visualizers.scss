@@ -1,0 +1,9 @@
+.axis,
+.center,
+.grid {
+    display: flex;
+    place-content: center;
+    margin-right: 2em;
+    cursor: pointer;
+    gap: 0.5em;
+}

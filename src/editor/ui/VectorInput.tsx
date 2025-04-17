@@ -19,24 +19,21 @@ export default function VectorInput({
 
     return (
         <fieldset
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: ".5em",
-                position: "relative"
-            }}
+            className="vector-input"
         >
-            <legend style={{ opacity: .5 }}>{legend}</legend>
-            <div style={{ display: "flex" }}>
+            <legend className="vector-input__legend">
+                {legend}
+            </legend>
+
+            <div className="vector-input__tuple">
                 [
                 {value.map((v, index) => {
                     return (
                         <Fragment key={index}>
                             <input
+                                className="vector-input__input"
                                 style={{
                                     width,
-                                    textAlign: "right",
-                                    flex: "1 1",
                                     cursor: readOnly ? "default" : "ns-resize"
                                 }}
                                 type="number"
@@ -77,18 +74,10 @@ export default function VectorInput({
                 })}
                 ]
                 <button
-                    aria-label="Click and move to update x and z values"
+                    aria-label="Click and move to translate along x-z plane"
+                    className="vector-input__translate"
                     style={{
-                        margin: "-.75em -1em -.75em .5em",
-                        border: "1em solid transparent",
-                        borderTopWidth: ".75em",
-                        borderBottomWidth: ".75em",
-                        cursor: "move",
-                        lineHeight: 1,
                         display: readOnly ? "none" : undefined,
-                        position: "absolute",
-                        left: "100%",
-                        bottom: ".25em",
                     }}
                     onPointerUp={() => {
                         document.exitPointerLock()
@@ -113,7 +102,7 @@ export default function VectorInput({
                         e.currentTarget.requestPointerLock()
                     }}
                 >
-                    <span style={{ scale: "2", display: "block" }}>
+                    <span>
                         &harr;
                     </span>
                 </button>

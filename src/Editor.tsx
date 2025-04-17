@@ -1,3 +1,5 @@
+import "./editor/style/editor.scss"
+
 import Camera from "@components/Camera"
 import Canvas from "./Canvas"
 import SharedModels from "@components/world/models/SharedModels"

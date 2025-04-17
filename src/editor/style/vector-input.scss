@@ -1,0 +1,35 @@
+.vector-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    position: relative;
+
+    &__legend {
+        opacity: .5;
+    }
+
+    &__tuple {
+        display: flex;
+    }
+
+    &__input {
+        text-align: right;
+        flex: 1 1;
+    }
+
+    &__translate {
+        z-index: 10000;
+        position: absolute;
+        bottom: .25em;
+        display: flex;
+        gap: 1em;
+        margin-left: 2em;
+        left: 100%;
+        place-items: center;
+
+        span {
+            display: block;
+            scale: 2;
+        }
+    }
+}

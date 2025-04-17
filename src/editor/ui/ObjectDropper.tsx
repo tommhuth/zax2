@@ -118,49 +118,31 @@ export default function ObjectDropper() {
         <div
             onMouseEnter={() => setHovering("left")}
             onMouseLeave={() => setHovering(null)}
+            className="object-dropper"
             style={{
-                zIndex: 10000,
-                position: "fixed",
-                transition: "all .45s",
                 translate: !hovering ? "-85% 0" : undefined,
-                borderRight: "1em solid transparent",
-                top: "1em",
-                width: 200,
-                display: "flex",
-                flexDirection: "column",
             }}
         >
             {tools.map(([label, color, list]) => {
                 return (
-                    <div
-                        style={{
-                            position: "relative",
-                            marginBottom: ".25em",
-                        }}
+                    <fieldset
+                        className="object-dropper__group"
                         key={label}
                     >
-                        <div
-                            style={{
-                                writingMode: "vertical-lr",
-                                position: "absolute",
-                                left: "100%",
-                                marginLeft: ".25em",
-                                top: 0,
-                            }}
+                        <legend
+                            className="object-dropper__legend"
                         >
                             {label}
-                        </div>
-                        <menu>
+                        </legend>
+
+                        <ul>
                             {list.map(i => {
                                 return (
                                     <li
+                                        className="object-dropper__item"
                                         key={i.type}
                                         style={{
-                                            padding: ".5em 1.5em",
-                                            textAlign: "right",
-                                            marginBottom: "1px",
                                             backgroundColor: color,
-                                            cursor: "grab",
                                         }}
                                         draggable
                                         onDragStart={(e) => {
@@ -172,8 +154,8 @@ export default function ObjectDropper() {
                                     </li>
                                 )
                             })}
-                        </menu>
-                    </div>
+                        </ul>
+                    </fieldset>
                 )
             })}
         </div>

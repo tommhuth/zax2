@@ -69,48 +69,31 @@ export default function EditorObject({
                     <Html
                         center
                         style={{
-                            fontFamily: "monospace",
                             display: activeObjectId === id ? "flex" : "none",
-                            flexDirection: "column",
-                            gap: "1em",
-                            padding: "1em .75em",
-                            borderRadius: 4,
-                            backgroundColor: "rgba(0 0 0 / .25)",
-                            backdropFilter: "blur(.125em)"
                         }}
+                        className="editor-object"
                     >
                         <fieldset
-                            style={{
-                                flexDirection: "column",
-                                display: "flex",
-                                gap: ".75em",
-                            }}
+                            className="editor-object__fieldset"
                         >
                             <legend
-                                style={{
-                                    position: "absolute",
-                                    left: 0,
-                                    bottom: "100%",
-                                    margin: "0 0 .5em .75em",
-                                    textTransform: "uppercase"
-                                }}
+                                className="editor-object__legend"
                             >
                                 {name}
                             </legend>
 
                             <div
+                                className="editor-object__slider"
                                 style={{
                                     display: controls.includes("rotation") ? "flex" : "none",
-                                    flexDirection: "column",
-                                    gap: ".5em",
                                 }}
                             >
                                 <label
-                                    style={{ display: "flex", justifyContent: "space-between" }}
+                                    className="editor-object__slider-label"
                                 >
-                                    <span style={{ opacity: .5, }}>
+                                    <strong>
                                         Rotation
-                                    </span>
+                                    </strong>
                                     {(object.rotation * (180 / Math.PI)).toFixed(1)}&deg;
                                 </label>
                                 <input
@@ -126,6 +109,7 @@ export default function EditorObject({
                                     step={1}
                                 />
                             </div>
+
                             <VectorInput
                                 legend="Position"
                                 value={object.position}
@@ -133,6 +117,7 @@ export default function EditorObject({
                                     updateObject(id, { position: params })
                                 }}
                             />
+
                             {controls.includes("size") && (
                                 <VectorInput
                                     legend="Size"
@@ -142,20 +127,17 @@ export default function EditorObject({
                                     }}
                                 />
                             )}
+
                             {controls.includes("scale") && (
                                 <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: ".5em",
-                                    }}
+                                    className="editor-object__slider"
                                 >
                                     <label
-                                        style={{ display: "flex", justifyContent: "space-between" }}
+                                        className="editor-object__slider-label"
                                     >
-                                        <span style={{ opacity: .5, }}>
+                                        <strong>
                                             Scale
-                                        </span>
+                                        </strong>
                                         {Math.floor(object.uniformScaler * 100)}%
                                     </label>
                                     <input

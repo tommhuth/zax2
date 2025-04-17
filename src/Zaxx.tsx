@@ -22,14 +22,14 @@ export default function Zaxx() {
             <Canvas>
                 {Config.STATS && <Perf deepAnalyze />}
 
-                <Controls key={"controls-" + attempts} />
-                <Camera key={"camera-" + attempts} />
-                <EdgeOverlay key={"edgeoverlay-" + attempts} ready={ready} />
+                <Controls key={"Controls" + attempts} />
+                <Camera key={"Camera" + attempts} />
+                <EdgeOverlay key={"EdgeOverlay" + attempts} ready={ready} />
 
                 <group dispose={null}>
                     <SharedModels />
-                    <World key={"world-" + attempts} />
-                    <Player key={"player-" + attempts} />
+                    <World key={"World" + attempts} />
+                    <Player key={"Player" + attempts} />
                 </group>
             </Canvas>
         </>

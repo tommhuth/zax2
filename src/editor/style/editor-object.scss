@@ -1,0 +1,39 @@
+.editor-object {
+    font-family: monospace;
+    flex-direction: column;
+    gap: 1em;
+    padding: 1em 0.75em;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(0.125em);
+
+    &__fieldset {
+        flex-direction: column;
+        display: flex;
+        gap: 0.75em;
+    }
+
+    &__legend {
+        position: absolute;
+        left: 0;
+        bottom: 100%;
+        margin: 0 0 0.5em 0.75em;
+        text-transform: uppercase;
+    }
+
+    &__slider {
+        flex-direction: column;
+        display: flex;
+        gap: 0.5em;
+    }
+
+    &__slider-label {
+        display: flex;
+        justify-content: space-between;
+
+        strong {
+            opacity: .5;
+            font-weight: normal;
+        }
+    }
+}
