@@ -1,0 +1,85 @@
+.debug {
+    position: fixed;
+    left: 1em;
+    top: 1em;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 275px;
+
+    &__label {
+        display: flex;
+        gap: .5em;
+
+        &:has(input[type=range]) {
+            flex-direction: column;
+        }
+    }
+
+    &__world-controller {
+        margin-bottom: 1em;
+        margin-top: .5em;
+        display: flex;
+        flex-direction: column;
+        border: 2px solid white;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        position: relative;
+
+        &::after {
+            content: "↓";
+            pointer-events: none;
+            display: block;
+            z-index: 1;
+            position: absolute;
+            top: .45em;
+            right: .5em;
+        }
+    }
+
+    &__type-select {
+        border-bottom: 2px dotted white;
+        padding: 0.5em .5em;
+        appearance: none;
+    }
+
+    &__world-actions {
+        width: 100%;
+        display: flex;
+        white-space: nowrap;
+
+        button {
+            flex: 1 1;
+            text-align: left;
+            padding: 0.5em;
+
+            &:hover {
+                opacity: .65;
+            }
+
+            &:last-child {
+                text-align: right;
+            }
+        }
+    }
+
+    &__world-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
+        margin-top: 1em;
+    }
+
+    &__world-item {
+        padding: 0.125em 0.25em;
+
+        button {
+            text-decoration: inherit;
+        }
+
+        &:last-child {
+            opacity: .65;
+        }
+    }
+}

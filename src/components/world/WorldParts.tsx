@@ -8,8 +8,9 @@ import GrassPart from "./parts/Grass"
 import { WorldPartType } from "@data/types"
 import { useStore } from "@data/store"
 import Default from "./parts/Default"
+import { memo } from "react"
 
-export default function WorldParts() {
+function WorldParts() {
     let parts = useStore(i => i.world.parts)
 
     return parts.map(i => {
@@ -35,3 +36,5 @@ export default function WorldParts() {
         }
     })
 }
+
+export default memo(WorldParts)

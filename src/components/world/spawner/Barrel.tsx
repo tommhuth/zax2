@@ -1,7 +1,7 @@
 import { startTransition, useEffect } from "react"
 import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
-import { createBarrel } from "@data/store/actors/barrel.actions"
+import { createBarrel, removeBarrel } from "@data/store/actors/barrel.actions"
 
 interface BarrelSpawnerProps {
     position: Tuple3
@@ -17,13 +17,19 @@ export default function BarrelSpawner({
     let part = useWorldPart()
 
     useEffect(() => {
+        let id: string
+
         startTransition(() => {
-            createBarrel({
+            id = createBarrel({
                 position: [x, y, part.position.z + z],
                 rotation,
                 health
             })
         })
+
+        return () => {
+            startTransition(() => removeBarrel(id))
+        }
     }, [part.position.z, x, y, z, rotation, health])
 
     return null

@@ -1,7 +1,7 @@
 import { useEffect, startTransition } from "react"
 import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
-import { createTurret } from "@data/store/actors/turret.actions"
+import { createTurret, removeTurret } from "@data/store/actors/turret.actions"
 
 interface TurretSpawnerProps {
     position?: Tuple3
@@ -19,14 +19,20 @@ export default function TurretSpawner({
     let part = useWorldPart()
 
     useEffect(() => {
+        let id: string
+
         startTransition(() => {
-            createTurret({
+            id = createTurret({
                 fireFrequency,
                 position: [x, y, z + part.position.z],
                 rotation,
                 floorLevel
             })
         })
+
+        return () => {
+            startTransition(() => removeTurret(id))
+        }
     }, [fireFrequency, floorLevel, rotation, x, y, z, part.position.z])
 
     return null

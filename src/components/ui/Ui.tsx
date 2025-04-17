@@ -1,10 +1,10 @@
 import { useStore } from "../../data/store"
 import Map from "./map/Map"
-import Debug from "./Debug"
 import { useEffect, useRef } from "react"
 
 import "./Ui.scss"
 import { BossState } from "@data/types"
+import Debug from "./debug/Debug"
 
 function GameOver() {
     return (

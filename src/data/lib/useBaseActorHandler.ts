@@ -34,6 +34,7 @@ export function useBaseActorHandler({
 }: UseBaseActorHandlerOptions) {
     let [shouldExit, setShouldExit] = useState(false)
 
+    // actor frustum exit
     useFrame(() => {
         let { player, world } = useStore.getState()
         let outsideFrustum = player.object && position.z < player.object.position.z - world.diagonal * .85
@@ -43,6 +44,7 @@ export function useBaseActorHandler({
         }
     })
 
+    // update aabb and client
     useFrame(() => {
         let { world } = useStore.getState()
 
@@ -56,6 +58,16 @@ export function useBaseActorHandler({
         }
     })
 
+    // actor component unmount
+    useEffect(() => {
+        return () => {
+            let { world } = useStore.getState()
+
+            world.grid.removeClient(client)
+        }
+    }, [client])
+
+    // actor should exit from shouldExit with timeout
     useEffect(() => {
         if (shouldExit) {
             setTimeout(() => startTransition(remove), removeDelay)
@@ -63,16 +75,7 @@ export function useBaseActorHandler({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [shouldExit, removeDelay])
 
-    useEffect(() => {
-        return () => {
-            let { world } = useStore.getState()
-
-            startTransition(remove)
-            world.grid.removeClient(client)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
+    // health 0, trigger destory effect
     useLayoutEffect(() => {
         if (health <= 0) {
             startTransition(() => {

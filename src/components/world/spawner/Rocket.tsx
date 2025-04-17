@@ -1,7 +1,7 @@
 import { startTransition, useEffect } from "react"
 import { Tuple3 } from "../../../types.global"
 import { useWorldPart } from "../WorldPartWrapper"
-import { createRocket } from "@data/store/actors/rocket.actions"
+import { createRocket, removeRocket } from "@data/store/actors/rocket.actions"
 
 interface RocketSpawnerProps {
     position: Tuple3
@@ -13,9 +13,15 @@ export default function RocketSpawner({
     let part = useWorldPart()
 
     useEffect(() => {
+        let id: string
+
         startTransition(() => {
-            createRocket([x, y, z + part.position.z])
+            id = createRocket([x, y, z + part.position.z])
         })
+
+        return () => {
+            startTransition(() => removeRocket(id))
+        }
     }, [x, y, z, part.position.z])
 
     return null

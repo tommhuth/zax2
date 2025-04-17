@@ -34,6 +34,17 @@ export function addForcedWorldPart(part: WorldPartType) {
     })
 }
 
+export function removeForcedWorldPart(indexToRemove: number) {
+    let { debug } = store.getState()
+
+    store.setState({
+        debug: {
+            ...debug,
+            forcedWorldParts: debug.forcedWorldParts.filter((type, index) => index !== indexToRemove)
+        }
+    })
+}
+
 export function removeOldestForcedWorldPart() {
     let { debug } = store.getState()
 
