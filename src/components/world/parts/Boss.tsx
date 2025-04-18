@@ -1,4 +1,4 @@
-import { startTransition, useEffect } from "react"
+import { memo, startTransition, useEffect } from "react"
 import { useStore } from "../../../data/store"
 import { BossState, WorldPart } from "../../../data/types"
 import WorldPartWrapper from "../WorldPartWrapper"
@@ -14,10 +14,11 @@ import Plant from "../actors/Plant"
 import Obstacle from "../actors/Obstacle"
 import timeout from "@data/lib/timeout"
 
-export default function BossPart({
+function BossPart({
     id,
     position,
     size,
+    type
 }: WorldPart) {
     let pauseAt = position.z + 16
     let bossZ = pauseAt + 16
@@ -45,6 +46,7 @@ export default function BossPart({
             size={size}
             position={position}
             id={id}
+            type={type}
         >
             <Boss startPosition={[0, 0, bossZ]} />
 
@@ -180,3 +182,5 @@ export default function BossPart({
         </WorldPartWrapper>
     )
 }
+
+export default memo(BossPart)

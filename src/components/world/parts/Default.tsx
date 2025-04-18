@@ -7,17 +7,20 @@ import Cable from "../actors/Cable"
 import Obstacle from "../actors/Obstacle"
 import TurretSpawner from "../spawner/Turret"
 import BarrelSpawner from "../spawner/Barrel"
+import { memo } from "react"
 
-export default function Default({
+function Default({
     id,
     position,
     size,
+    type
 }: WorldPart) {
     return (
         <WorldPartWrapper
             size={size}
             position={position}
             id={id}
+            type={type}
         >
             <Floor
                 position={[position.x, 0, size[1] / 2]}
@@ -93,4 +96,4 @@ export default function Default({
     )
 }
 
-// 
+export default memo(Default)

@@ -10,17 +10,20 @@ import Plant from "../actors/Plant"
 import Grass from "../actors/Grass"
 import Obstacle from "../actors/Obstacle"
 import { WORLD_TOP_EDGE } from "@data/const"
+import { memo } from "react"
 
-export default function Airstrip({
+function Airstrip({
     id,
     position,
     size,
+    type
 }: WorldPart) {
     return (
         <WorldPartWrapper
             size={size}
             position={position}
             id={id}
+            type={type}
         >
             <Floor
                 position={[position.x, 0, size[1] / 2]}
@@ -160,3 +163,6 @@ export default function Airstrip({
         </WorldPartWrapper>
     )
 }
+
+
+export default memo(Airstrip)

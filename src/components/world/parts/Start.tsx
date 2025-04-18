@@ -5,17 +5,20 @@ import Dirt from "../actors/Dirt"
 import Grass from "../actors/Grass"
 import Plant from "../actors/Plant"
 import BarrelSpawner from "../spawner/Barrel"
+import { memo } from "react"
 
-export default function Start({
+function Start({
     id,
     position,
     size,
+    type
 }: WorldPart) {
     return (
         <WorldPartWrapper
             position={position}
             size={size}
             id={id}
+            type={type}
         >
             <Floor
                 position={[position.x, 0, size[1] / 2]}
@@ -85,3 +88,5 @@ export default function Start({
         </WorldPartWrapper>
     )
 }
+
+export default memo(Start)

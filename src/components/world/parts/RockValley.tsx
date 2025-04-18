@@ -6,17 +6,20 @@ import Grass from "@components/world/actors/Grass"
 import Obstacle from "@components/world/actors/Obstacle"
 import TurretSpawner from "../spawner/Turret"
 import Dirt from "../actors/Dirt"
+import { memo } from "react"
 
-export default function RockValley({
+function RockValley({
     id,
     position,
     size,
+    type
 }: WorldPart) {
     return (
         <WorldPartWrapper
             position={position}
             size={size}
             id={id}
+            type={type}
         >
             <Floor
                 position={[position.x, 0, size[1] / 2]}
@@ -88,3 +91,5 @@ export default function RockValley({
         </WorldPartWrapper>
     )
 }
+
+export default memo(RockValley)

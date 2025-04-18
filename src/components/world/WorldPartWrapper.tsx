@@ -1,16 +1,18 @@
 import { useFrame } from "@react-three/fiber"
-import { createContext, ReactNode, startTransition, useContext, useMemo } from "react"
+import { Children, createContext, ReactNode, startTransition, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { Vector3 } from "three"
 import { Tuple2 } from "../../types.global"
 import { store, useStore } from "../../data/store"
 import { removeWorldPart } from "../../data/store/world"
 import { WORLD_CENTER_X } from "../../data/const"
+import { WorldPartType } from "@data/types"
 
 interface WorldPartWrapperProps {
     position: Vector3
     id: string
     children?: ReactNode
     size: Tuple2
+    type: WorldPartType
 }
 
 interface WorldPartContext {

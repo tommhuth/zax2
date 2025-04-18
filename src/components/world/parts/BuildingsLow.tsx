@@ -7,17 +7,20 @@ import EdgeElement from "../actors/EdgeElement"
 import Cable from "../actors/Cable"
 import Dirt from "../actors/Dirt"
 import BarrelSpawner from "../spawner/Barrel"
+import { memo } from "react"
 
-export default function BuildingsLow({
+function BuildingsLow({
     id,
     position,
     size,
+    type
 }: WorldPart) {
     return (
         <WorldPartWrapper
             size={size}
             position={position}
             id={id}
+            type={type}
         >
             <Floor
                 position={[position.x, 0, size[1] / 2]}
@@ -121,3 +124,5 @@ export default function BuildingsLow({
         </WorldPartWrapper>
     )
 }
+
+export default memo(BuildingsLow)

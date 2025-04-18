@@ -7,17 +7,20 @@ import Plant from "../actors/Plant"
 import Obstacle from "../actors/Obstacle"
 import Grass from "../actors/Grass"
 import BarrelSpawner from "../spawner/Barrel"
+import { memo } from "react"
 
-export default function BuildingsGap({
+function BuildingsGap({
     id,
     position,
     size,
+    type
 }: WorldPart) {
     return (
         <WorldPartWrapper
             position={position}
             size={size}
             id={id}
+            type={type}
         >
             <Floor
                 position={[position.x, 0, size[1] / 2]}
@@ -111,4 +114,7 @@ export default function BuildingsGap({
             />
         </WorldPartWrapper>
     )
-} 
+}
+
+
+export default memo(BuildingsGap)

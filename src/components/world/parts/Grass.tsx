@@ -3,17 +3,20 @@ import WorldPartWrapper from "@components/world/WorldPartWrapper"
 import Floor from "@components/world/actors/Floor"
 import Grass from "@components/world/actors/Grass"
 import RocketSpawner from "../spawner/Rocket"
+import { memo } from "react"
 
-export default function GrassPart({
+function GrassPart({
     id,
     position,
     size,
+    type
 }: WorldPart) {
     return (
         <WorldPartWrapper
             position={position}
             size={size}
             id={id}
+            type={type}
         >
             <Floor
                 position={[position.x, 0, size[1] / 2]}
@@ -39,3 +42,5 @@ export default function GrassPart({
         </WorldPartWrapper>
     )
 }
+
+export default memo(GrassPart)
