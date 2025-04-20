@@ -5,7 +5,7 @@ import dithering from "../../../shaders/dither.glsl"
 import noise from "../../../shaders/noise.glsl"
 import utils from "../../../shaders/utils.glsl"
 import { glsl } from "../../../data/utils"
-import { MeshLambertMaterialProps, useFrame } from "@react-three/fiber"
+import { ThreeElements, useFrame } from "@react-three/fiber"
 import { forwardRef } from "react"
 import { store, useStore } from "../../../data/store"
 import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater } from "./helpers"
@@ -26,7 +26,7 @@ export type MeshRetroMaterialProps = {
         vertex?: ShaderPart
         fragment?: ShaderPart
     }
-} & Omit<MeshLambertMaterialProps, "onBeforeCompile" | "dithering" | "fog">
+} & Omit<ThreeElements["meshLambertMaterial"], "onBeforeCompile" | "dithering" | "fog">
 
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({

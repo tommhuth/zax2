@@ -11,7 +11,7 @@ export type MuzzleRef = { activate: () => void }
 
 let geometry = new SphereGeometry(1, 6, 6)
 
-interface MuzzleProps extends ComponentPropsWithRef<"instancedMesh"> {
+interface MuzzleProps extends Omit<ComponentPropsWithRef<"instancedMesh">, "args"> {
     decay?: number
 }
 

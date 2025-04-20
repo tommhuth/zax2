@@ -9,6 +9,7 @@ export default function Controls() {
     let { pointerPosition, keys, startPointerPosition } = useStore(i => i.controls)
     let playerTargetPosition = useStore(i => i.player.targetPosition)
     let playerPosition = useStore(i => i.player.position)
+    let materials = useStore(i => i.materials)
     let hitboxRef = useRef<Mesh>(null)
     let [isMovingUp, setIsMovingUp] = useState(false)
     let previousZ = useRef<null | number>(null)
@@ -102,7 +103,6 @@ export default function Controls() {
     return (
         <mesh
             ref={hitboxRef}
-            position-y={.1}
             visible={false}
             rotation-x={-Math.PI / 2}
             onPointerUp={() => {
@@ -131,9 +131,9 @@ export default function Controls() {
                     startPointerPosition.set(0, 0, e.point.z)
                 }
             }}
+            material={materials.white}
         >
             <planeGeometry args={[20, 20, 1, 1]} />
-            <meshBasicMaterial name="hitbox" />
         </mesh>
     )
 }

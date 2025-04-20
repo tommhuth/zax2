@@ -7,7 +7,7 @@ import Visualizers from "../ui/Visualizers"
 import Panner from "../ui/Panner"
 import FloorSelect from "../ui/FloorSelect"
 
-export default function Toolbar() {
+export default function EditorUi() {
     return (
         <>
             <div className="toolbar-top">

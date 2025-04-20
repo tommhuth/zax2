@@ -3,7 +3,6 @@ import "@components/world/preload"
 import Camera from "./components/Camera"
 import Player from "./components/Player"
 import World from "./components/world/World"
-import Ui from "./components/ui/Ui"
 import SharedModels from "./components/world/models/SharedModels"
 import EdgeOverlay from "./components/EdgeOverlay"
 import Controls from "./components/Controls"
@@ -17,21 +16,18 @@ export default function Zaxx() {
     let attempts = useStore(i => i.player.attempts)
 
     return (
-        <>
-            <Ui />
-            <Canvas>
-                {Config.STATS && <Perf deepAnalyze />}
+        <Canvas>
+            {Config.STATS && <Perf deepAnalyze />}
 
-                <Controls key={"Controls" + attempts} />
-                <Camera key={"Camera" + attempts} />
-                <EdgeOverlay key={"EdgeOverlay" + attempts} ready={ready} />
+            <Controls key={"Controls" + attempts} />
+            <Camera key={"Camera" + attempts} />
+            <EdgeOverlay key={"EdgeOverlay" + attempts} ready={ready} />
 
-                <group dispose={null}>
-                    <SharedModels />
-                    <World key={"World" + attempts} />
-                    <Player key={"Player" + attempts} />
-                </group>
-            </Canvas>
-        </>
+            <group dispose={null}>
+                <SharedModels />
+                <World key={"World" + attempts} />
+                <Player key={"Player" + attempts} />
+            </group>
+        </Canvas>
     )
-}
+} 

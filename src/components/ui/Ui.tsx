@@ -71,7 +71,7 @@ function PlayerUi() {
     )
 }
 
-export default function Ui() {
+export default function ZaxxUi() {
     let qs = new URLSearchParams(location.search)
     let ready = useStore(i => i.ready)
     let state = useStore(i => i.state)

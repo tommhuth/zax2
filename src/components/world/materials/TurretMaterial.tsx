@@ -1,7 +1,8 @@
-import { MeshRetroMaterial, MeshRetroMaterialProps } from "./MeshRetroMaterial"
+import { ColorRepresentation } from "three"
+import { MeshRetroMaterial } from "./MeshRetroMaterial"
 import { turretColor } from "@data/theme"
 
-export default function TurretMaterial(props: MeshRetroMaterialProps) {
+export default function TurretMaterial(props?: { emissiveIntensity?: number; color?: ColorRepresentation }) {
     return (
         <MeshRetroMaterial
             color={turretColor}

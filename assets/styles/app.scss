@@ -5,6 +5,10 @@
 canvas {
     image-rendering: crisp-edges;
     image-rendering: pixelated;
+    position: fixed;
+    left: 0;
+    top: 0;
+    opacity: 0;
 }
 
 #loading {
