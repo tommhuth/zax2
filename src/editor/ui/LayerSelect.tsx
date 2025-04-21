@@ -6,6 +6,7 @@ export default function LayerSelect() {
     let [layersVisible, setLayersVisible] = useState(false)
     let activeObjectId = useEditorStore(i => i.activeObjectId)
     let objects = useEditorStore(i => i.objects)
+    let count: Record<string, number> = {}
 
     return (
         <div className="layer-select">
@@ -24,6 +25,12 @@ export default function LayerSelect() {
                 }}
             >
                 {objects.sort((a, b) => a.id.localeCompare(b.id)).map(i => {
+                    if (count[i.type]) {
+                        count[i.type]++
+                    } else {
+                        count[i.type] = 1
+                    }
+
                     return (
                         <li
                             key={i.id}
@@ -37,7 +44,7 @@ export default function LayerSelect() {
                                 className="layer-select__button"
                                 onClick={() => setActiveObject(activeObjectId === i.id ? null : i.id)}
                             >
-                                {i.type}
+                                {i.type} {count[i.type] > 1 ? "#" + count[i.type] : null}
                             </button>
                         </li>
                     )

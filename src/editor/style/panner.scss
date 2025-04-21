@@ -14,8 +14,12 @@
     &__tick {
         box-sizing: border-box;
         flex: 0 0;
-        border-left-color: white;
-        border-left-style: solid;
+        border-left: 1px solid white;
         height: 100%;
+
+        &:hover {
+            border-left-color: yellow;
+            opacity: 1 !important;
+        }
     }
 }

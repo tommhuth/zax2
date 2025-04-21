@@ -106,9 +106,9 @@ const decorations: EditorObjectInit[] = [
 ]
 
 const tools = [
-    ["Actor", "red", actors],
-    ["World", "blue", world],
-    ["Decoration", "green", decorations]
+    ["Actor", "#ff57b3", actors],
+    ["World", "#00a2ff", world],
+    ["Decoration", "#00ffb3", decorations]
 ] as const
 
 export default function ObjectDropper() {
@@ -123,7 +123,7 @@ export default function ObjectDropper() {
                 translate: !hovering ? "-85% 0" : undefined,
             }}
         >
-            {tools.map(([label, color, list]) => {
+            {tools.map(([label, backgroundColor, list]) => {
                 return (
                     <fieldset
                         className="object-dropper__group"
@@ -142,7 +142,7 @@ export default function ObjectDropper() {
                                         className="object-dropper__item"
                                         key={i.type}
                                         style={{
-                                            backgroundColor: color,
+                                            backgroundColor,
                                         }}
                                         draggable
                                         onDragStart={(e) => {

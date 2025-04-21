@@ -37,7 +37,7 @@
         width: 100%;
 
         &:hover {
-            background-color: black;
+            background-color: rgba(#444, .5);
         }
     }
 
@@ -48,6 +48,10 @@
         top: 50%;
         width: 2em;
         translate: 0 -50%;
+
+        &:hover {
+            color: yellow
+        }
     }
 
     &__create {
@@ -58,7 +62,7 @@
         font-weight: bold;
 
         &:hover {
-            background-color: black;
+            background-color: rgba(#444, .5);
         }
     }
 }
