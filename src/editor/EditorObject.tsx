@@ -1,5 +1,5 @@
 import { Html } from "@react-three/drei"
-import { ReactNode, useEffect, Suspense } from "react"
+import { ReactNode, useEffect, Suspense, useRef } from "react"
 import VectorInput from "./ui/VectorInput"
 import { removeObject, setActiveObject, updateObject } from "./data/actions"
 import { EditorObject as EditorObjectType } from "./data/types"
@@ -20,6 +20,11 @@ export default function EditorObject({
 }: EditorObjectProps) {
     let activeObjectId = useEditorStore(i => i.activeObjectId)
     let object = useEditorStore(i => i.objects.find(i => i.id === id)) as EditorObjectType
+    let portal = useRef<HTMLDivElement>()
+
+    useEffect(() => {
+        portal.current = document.getElementById("ui") as HTMLDivElement
+    }, [])
 
     useEffect(() => {
         let onKeyDown = (e: KeyboardEvent) => {
@@ -71,6 +76,7 @@ export default function EditorObject({
                         style={{
                             display: activeObjectId === id ? "flex" : "none",
                         }}
+                        portal={portal}
                         className="editor-object"
                     >
                         <fieldset
