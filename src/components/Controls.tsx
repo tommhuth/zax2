@@ -143,19 +143,21 @@ export default function Controls() {
         }
     })
 
-    // mouse
+    // pointer
     useEffect(() => {
         if (state !== "running") {
             return
         }
 
         let movementEvents: PointerEvent[] = []
+        let shootEvents: PointerEvent[] = []
         let start: Tuple3 = [0, 0, 0]
         let previous: Tuple3 | null = null
         let pointerdown = async (e: PointerEvent) => {
             if (e.pointerType === "touch") {
                 if (e.clientX > window.innerWidth / 2) {
                     keys.space = true
+                    shootEvents.push(e)
                 } else if (movementEvents.length === 0) {
                     movementEvents.push(e)
                     start = toWorldCoords([e.clientX, e.clientY], camera)
@@ -186,7 +188,11 @@ export default function Controls() {
         }
         let pointerup = (e: PointerEvent) => {
             movementEvents = movementEvents.filter(i => i.pointerId !== e.pointerId)
-            keys.space = false
+            shootEvents = shootEvents.filter(i => i.pointerId !== e.pointerId)
+
+            if (shootEvents.length === 0) {
+                keys.space = false
+            }
         }
 
         window.addEventListener("pointerdown", pointerdown)
