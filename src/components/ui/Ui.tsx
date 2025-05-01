@@ -23,7 +23,6 @@ function BossUi() {
                 style={{
                     display: boss.state === BossState.ACTIVE ? "block" : "none"
                 }}
-                key="bosshealth"
             >
                 <div
                     className="boss-health__bar"
@@ -35,12 +34,11 @@ function BossUi() {
 
             <div
                 className={"level"}
-                key="level"
                 style={{
                     display: boss?.state === BossState.OUTRO ? "block" : "none"
                 }}
             >
-                <p>Level#{level}</p>
+                <p>Level {level}</p>
             </div>
         </>
     )
@@ -61,13 +59,14 @@ function PlayerUi() {
     }, [])
 
     return (
-        <div
-            className="player-ui"
-            key="player"
-        >
-            <div>{health.toFixed(0)}%</div>
-            <div ref={scoreRef} />
-        </div>
+        <>
+            <Map />
+
+            <div className="player-ui">
+                <div>{health.toFixed(0)}%</div>
+                <div ref={scoreRef} />
+            </div>
+        </>
     )
 }
 
@@ -76,28 +75,24 @@ export default function ZaxxUi() {
     let ready = useStore(i => i.ready)
     let state = useStore(i => i.state)
     let boss = useStore(i => i.boss)
-    let attempts = useStore(i => i.player.attempts)
 
     return (
         <>
-            <Map key={attempts} />
-
             {ready && state === "intro" && <Intro />}
             {state === "gameover" && <GameOver />}
             {state === "running" && <PlayerUi />}
             {state !== "gameover" && boss.state !== "unknown" && <BossUi />}
 
             {qs.has("debug") ? <Debug /> : null}
-            {!qs.has("editor") ? <div id="shoot" /> : null}
         </>
     )
 }
 
 function Intro() {
     return (
-        <h1 className="intro">
+        <div className="intro">
             Untitled <br />
             retro shooter
-        </h1>
+        </div>
     )
 }

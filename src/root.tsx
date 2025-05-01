@@ -1,7 +1,7 @@
 import { createRoot as createRootUi } from "react-dom/client"
 import { registerSW } from "virtual:pwa-register"
 import { lazy } from "react"
-import { createRoot, events, extend, RenderProps } from "@react-three/fiber"
+import { createRoot, extend, RenderProps } from "@react-three/fiber"
 import { getZoom } from "@components/Camera"
 import { getCanvasSize, getDpr } from "./Canvas"
 import { setActiveObject } from "./editor/data/actions"
@@ -31,7 +31,6 @@ function getConfiguration() {
     let [width, height] = getCanvasSize()
 
     return {
-        events,
         camera: {
             zoom: getZoom(),
             near: 1,

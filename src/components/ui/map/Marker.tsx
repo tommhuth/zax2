@@ -13,12 +13,14 @@ interface MarkerProps {
     targetPosition: Vector3
     color?: string
     offset?: Tuple3
+    visible?: boolean
 }
 
 export default function Marker({
     targetPosition,
     color = "red",
-    offset = [0, 0, 0]
+    offset = [0, 0, 0],
+    visible = true
 }: MarkerProps) {
     let circleRef = useRef<SVGCircleElement>(null)
     let lineRef = useRef<SVGLineElement>(null)
@@ -42,7 +44,8 @@ export default function Marker({
 
         if (
             distanceToPlayer < diagonal
-            && targetPosition.y < WORLD_TOP_EDGE * 1.75
+            && targetPosition.y < WORLD_TOP_EDGE * 2
+            && visible
         ) {
             circleRef.current?.setAttribute("cx", mapPosition.x.toFixed(1))
             circleRef.current?.setAttribute("cy", (mapPosition.y + height).toFixed(1))

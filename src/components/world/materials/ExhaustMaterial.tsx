@@ -13,6 +13,7 @@ import { useShader } from "@data/lib/useShader"
 export default function ExhaustMaterial() {
     let ref = useRef<MeshBasicMaterial>(null)
     let { onBeforeCompile, uniforms } = useShader({
+        name: "exhaust",
         shared: glsl`
             varying vec3 vPosition;
             varying vec3 vGlobalPosition;

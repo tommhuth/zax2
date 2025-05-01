@@ -52,8 +52,6 @@ const store = create(
             interval: 60_000 * 3,
         },
         controls: {
-            startPointerPosition: new Vector3(),
-            pointerPosition: new Vector3(),
             keys: {}
         },
         player: {

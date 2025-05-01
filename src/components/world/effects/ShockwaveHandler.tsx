@@ -15,6 +15,7 @@ export default function ShockwaveHandler() {
         return new Float32Array(list(count, 0))
     }, [count])
     let { onBeforeCompile } = useShader({
+        name: "shockwave",
         shared: glsl`
             varying float vTime;  
             varying vec3 vPosition;   

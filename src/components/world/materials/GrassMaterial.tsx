@@ -48,6 +48,7 @@ export const getGrassTransform = glsl`
 
 export default function GrassMaterial() {
     let { onBeforeCompile, uniforms } = useShader({
+        name: "grass",
         uniforms: {
             ...makeLightUniforms("#fc03b1"),
             uTime: {

@@ -200,31 +200,6 @@ export default function Player() {
         }
     }, [playerObject, targetPosition, state])
 
-
-    // input
-    useFrame((_, delta) => {
-        let xSpeed = 12
-        let ySpeed = 10
-        let nd = ndelta(delta)
-        let { state } = useStore.getState()
-
-        if (Object.entries(controls.keys).length && state === "running") {
-            if (controls.keys.a) {
-                targetPosition.x += xSpeed * nd
-            } else if (controls.keys.d) {
-                targetPosition.x -= xSpeed * nd
-            }
-
-            if (controls.keys.w) {
-                targetPosition.y += ySpeed * nd
-            } else if (controls.keys.s) {
-                targetPosition.y -= ySpeed * nd
-            }
-
-            targetPosition.clamp(EDGE_MIN, EDGE_MAX)
-        }
-    })
-
     // shoot
     useFrame(() => {
         let {

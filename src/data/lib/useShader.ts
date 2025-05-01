@@ -20,6 +20,7 @@ type ReturnUniformsRecord<T extends Record<string, IUniform> | undefined> = T ex
     : undefined;
 
 export interface UseShaderParams<T extends UniformsRecord> {
+    name?: string
     uniforms?: T | undefined
     shared?: string
     vertex?: ShaderPart
@@ -33,6 +34,7 @@ interface ReturnUseShader<T extends UniformsRecord | undefined> {
 }
 
 export function useShader<T extends UniformsRecord>({
+    name,
     uniforms: incomingUniforms,
     shared = "",
     vertex = {
@@ -48,7 +50,7 @@ export function useShader<T extends UniformsRecord>({
         return incomingUniforms || {}
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    let id = useMemo(() => random.id(), [])
+    let id = useMemo(() => name || random.id(), [name])
     let customProgramCacheKey = useCallback(() => id, [id])
     let onBeforeCompile = useCallback((shader: Shader) => {
         shader.uniforms = {

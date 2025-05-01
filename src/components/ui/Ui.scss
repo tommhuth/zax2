@@ -50,10 +50,37 @@
 .map {
     bottom: -48px;
     left: 0;
+    position: absolute;
+    height: 200px;
+    z-index: 100000000;
+    place-items: center;
+    place-content: center;
+    pointer-events: none;
+    width: clamp(8em, 30vw, 350px);
 
     @media (max-height: 600px),
     (max-width: 800px) {
         display: none;
+    }
+
+    &__objects,
+    &__grid {
+        overflow: visible;
+        width: 100%;
+    }
+
+    &__objects {
+        position: relative;
+        z-index: 1;
+    }
+
+    &__grid {
+        z-index: 0;
+        position: absolute;
+        left: 50%;
+        translate: -50% 0;
+        bottom: 0;
+        mask-image: radial-gradient(at center 60%, black, transparent 70%);
     }
 }
 
@@ -65,13 +92,6 @@
     translate: 0 50%;
     z-index: 1000000000;
     pointer-events: none;
-
-    h1 {
-        font-size: clamp(2.5em, 5vw, 4em);
-        line-height: .9;
-        margin-bottom: .75rem;
-        letter-spacing: -.01em;
-    }
 
     p {
         font-size: clamp(1.5em, 2vw, 2.5em);

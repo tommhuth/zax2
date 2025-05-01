@@ -1,18 +1,37 @@
-import { useFrame } from "@react-three/fiber"
-import { startTransition, useEffect, useRef, useState } from "react"
-import { Mesh } from "three"
+import { useFrame, useThree } from "@react-three/fiber"
+import { useEffect, useState } from "react"
+import { Camera, Plane, Raycaster, Vector2, Vector3 } from "three"
 import { useStore } from "../data/store"
 import { EDGE_MAX, EDGE_MIN } from "../data/const"
 import { useWindowEvent } from "@data/lib/hooks"
+import { ndelta } from "@data/utils"
+import { Tuple2, Tuple3 } from "src/types.global"
+
+const _floor = new Plane(new Vector3(0, 1, 0), 0)
+const _mouse = new Vector2()
+const _raycaster = new Raycaster()
+const _point = new Vector3()
+
+function toWorldCoords(
+    [x, y]: Tuple2,
+    camera: Camera,
+): Tuple3 {
+    _mouse.set(
+        (x / window.innerWidth) * 2 - 1,
+        -(y / window.innerHeight) * 2 + 1
+    )
+    _raycaster.setFromCamera(_mouse, camera)
+    _raycaster.ray.intersectPlane(_floor, _point)
+
+    _point.z -= camera.position.z
+
+    return _point.toArray()
+}
 
 export default function Controls() {
-    let { pointerPosition, keys, startPointerPosition } = useStore(i => i.controls)
+    let { keys } = useStore(i => i.controls)
     let playerTargetPosition = useStore(i => i.player.targetPosition)
-    let playerPosition = useStore(i => i.player.position)
-    let materials = useStore(i => i.materials)
-    let hitboxRef = useRef<Mesh>(null)
-    let [isMovingUp, setIsMovingUp] = useState(false)
-    let previousZ = useRef<null | number>(null)
+    let state = useStore(i => i.state)
     let [, setEventGamepad] = useState<Gamepad | null>(null)
 
     useWindowEvent("keydown", (e: KeyboardEvent) => {
@@ -31,43 +50,88 @@ export default function Controls() {
         setEventGamepad(null)
     })
 
-    useEffect(() => {
-        let shootDiv = document.getElementById("shoot") as HTMLElement
-        let onTouchStartShoot = () => {
-            keys.space = true
-        }
-        let onTouchEndShoot = () => {
-            delete keys.space
-        }
+    // keyboard input
+    useFrame((_, delta) => {
+        let xSpeed = 12
+        let ySpeed = 10
+        let nd = ndelta(delta)
+        let { state } = useStore.getState()
 
-        shootDiv.addEventListener("touchstart", onTouchStartShoot)
-        shootDiv.addEventListener("touchend", onTouchEndShoot)
-        shootDiv.addEventListener("touchcancel", onTouchEndShoot)
+        if (Object.entries(keys).length && state === "running") {
+            if (keys.a) {
+                playerTargetPosition.x += xSpeed * nd
+            } else if (keys.d) {
+                playerTargetPosition.x -= xSpeed * nd
+            }
 
-        return () => {
-            shootDiv.removeEventListener("touchstart", onTouchStartShoot)
-            shootDiv.removeEventListener("touchend", onTouchEndShoot)
-            shootDiv.removeEventListener("touchcancel", onTouchEndShoot)
+            if (keys.w) {
+                playerTargetPosition.y += ySpeed * nd
+            } else if (keys.s) {
+                playerTargetPosition.y -= ySpeed * nd
+            }
+
+            playerTargetPosition.clamp(EDGE_MIN, EDGE_MAX)
         }
-    }, [keys])
-
-    useFrame(() => {
-        if (previousZ.current !== null) {
-            // also move any pointer start position forward too
-            pointerPosition.z += playerPosition.z - previousZ.current
-        }
-
-        previousZ.current = playerPosition.z
     })
 
-    useFrame(() => {
-        if (!hitboxRef.current) {
+    let { camera } = useThree()
+
+    useEffect(() => {
+        if (state !== "running") {
             return
         }
 
-        hitboxRef.current.position.z = playerPosition.z
-    })
+        let movementEvents: PointerEvent[] = []
+        let start: Tuple3 = [0, 0, 0]
+        let previous: Tuple3 = [0, 0, 0]
+        let pointerdown = async (e: PointerEvent) => {
+            if (e.pointerType === "touch") {
+                if (e.clientX > window.innerWidth / 2) {
+                    keys.space = true
+                } else if (movementEvents.length === 0) {
+                    movementEvents.push(e)
+                    start = toWorldCoords([e.clientX, e.clientY], camera)
+                    previous = [...start]
+                }
+            } else {
+                keys.space = true
+            }
+        }
+        let pointermove = (e: PointerEvent) => {
+            if (!movementEvents.find(i => e.pointerId === i.pointerId) && e.pointerType === "touch") {
+                return
+            }
 
+
+            let current = toWorldCoords([e.clientX, e.clientY], camera)
+            let x = (current[0] - previous[0]) * (e.pointerType === "mouse" ? .35 : .75)
+            let y = (current[2] - previous[2]) * (e.pointerType === "mouse" ? .35 : .25)
+
+            playerTargetPosition.x += x
+            playerTargetPosition.y += y
+            playerTargetPosition.clamp(EDGE_MIN, EDGE_MAX)
+
+            previous = [current[0], 0, current[2]]
+        }
+        let pointerup = (e: PointerEvent) => {
+            movementEvents = movementEvents.filter(i => i.pointerId !== e.pointerId)
+            keys.space = false
+        }
+
+        window.addEventListener("pointerdown", pointerdown)
+        window.addEventListener("pointermove", pointermove)
+        window.addEventListener("pointerup", pointerup)
+        window.addEventListener("pointercancel", pointerup)
+
+        return () => {
+            window.removeEventListener("pointerdown", pointerdown)
+            window.removeEventListener("pointermove", pointermove)
+            window.removeEventListener("pointerup", pointerup)
+            window.removeEventListener("pointercancel", pointerup)
+        }
+    }, [state, keys, camera, playerTargetPosition])
+
+    // gamepad
     useFrame((state, delta) => {
         let [gamepad] = navigator.getGamepads()
 
@@ -100,40 +164,5 @@ export default function Controls() {
         }
     })
 
-    return (
-        <mesh
-            ref={hitboxRef}
-            visible={false}
-            rotation-x={-Math.PI / 2}
-            onPointerUp={() => {
-                startTransition(() => setIsMovingUp(false))
-            }}
-            onPointerMove={({ pointerType, point }) => {
-                if (pointerType === "touch") {
-                    let depthThreshold = 2
-
-                    if (Math.abs(startPointerPosition.z - point.z) > depthThreshold) {
-                        startTransition(() => setIsMovingUp(true))
-                    }
-
-                    if (isMovingUp) {
-                        playerTargetPosition.y += (point.z - pointerPosition.z)
-                    }
-
-                    playerTargetPosition.x += (point.x - pointerPosition.x) * 1.5
-                    playerTargetPosition.clamp(EDGE_MIN, EDGE_MAX)
-                    pointerPosition.copy(point)
-                }
-            }}
-            onPointerDown={(e) => {
-                if (e.pointerType === "touch") {
-                    pointerPosition.set(e.point.x, 0, e.point.z)
-                    startPointerPosition.set(0, 0, e.point.z)
-                }
-            }}
-            material={materials.white}
-        >
-            <planeGeometry args={[20, 20, 1, 1]} />
-        </mesh>
-    )
+    return null
 }

@@ -12,6 +12,7 @@ import TurretMaterial from "./TurretMaterial"
 import PlaneMaterial from "./PlaneMaterial"
 import RockMaterial from "./RockMaterial"
 import { glsl } from "@data/utils"
+import { store } from "@data/store"
 
 function MaterialLoader() {
     let materials = useMemo(() => {
@@ -20,7 +21,6 @@ function MaterialLoader() {
             platform: (
                 <MeshRetroMaterial
                     color={platformColor}
-                    name="rocket"
                 />
             ),
             plane: <PlaneMaterial />,
@@ -54,7 +54,7 @@ function MaterialLoader() {
                     rightColorIntensity={0}
                 />
             ),
-            device: <MeshRetroMaterial color={deviceColor} name="device" />,
+            device: <MeshRetroMaterial color={deviceColor} />,
             rock: <RockMaterial />,
             exhaust: <ExhaustMaterial />,
             floorBase: <MeshRetroMaterial color={floorBaseColor} />,
@@ -107,27 +107,25 @@ function MaterialLoader() {
         } satisfies Record<MaterialName, ReactNode>
     }, [])
 
-    return (
-        <>
-            {Object.entries(materials).map(([name, material]) => {
-                return (
-                    <MaterialHandler
-                        name={name as MaterialName}
-                        key={name}
-                    >
-                        {material}
-                    </MaterialHandler>
-                )
-            })}
-        </>
-    )
+    return Object.entries(materials).map(([name, material]) => {
+        return (
+            <MaterialHandler
+                name={name as MaterialName}
+                key={name}
+            >
+                {material}
+            </MaterialHandler>
+        )
+    })
 }
 
 let geometry = new BoxGeometry()
 
 function MaterialHandler({ children, name }: { children: React.ReactNode; name: MaterialName }) {
     let handleRef = useCallback((mesh: Mesh<BufferGeometry, Material>) => {
-        if (mesh) {
+        let existing = store.getState().materials[name]
+
+        if (mesh && existing !== mesh.material) {
             startTransition(() => setMaterial(name, mesh.material))
         }
     }, [name])

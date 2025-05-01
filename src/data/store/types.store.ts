@@ -54,8 +54,6 @@ export interface ZaxStore {
         interval: number
     },
     controls: {
-        startPointerPosition: Vector3
-        pointerPosition: Vector3
         keys: ControlsMap
     },
     player: {

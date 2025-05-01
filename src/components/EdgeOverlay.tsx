@@ -28,6 +28,7 @@ export default function EdgeOverlay({ ready = false }) {
 
         groupRef.current.children[0]?.position.setComponent(0, xRight + offset)
         groupRef.current.children[1]?.position.setComponent(0, xLeft - offset)
+        groupRef.current.position.setZ(camera.position.z + 50)
 
         return animate({
             from: {

@@ -42,10 +42,12 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     emissive,
     additionalShadowStrength = .2,
     children,
+    name,
     ...rest
 }, ref) => {
     let player = useStore(i => i.player.object)
     let { onBeforeCompile, uniforms, customProgramCacheKey } = useShader({
+        name,
         uniforms: {
             ...shader?.uniforms,
             ...makeLightUniforms(),

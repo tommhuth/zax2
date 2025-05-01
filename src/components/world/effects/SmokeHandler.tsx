@@ -37,6 +37,7 @@ export default function SmokeHandler() {
     let smokes = useRef<Smoke[]>([])
     let lastEmitted = useMemo<Record<string, number>>(() => ({}), [])
     let shader = useShader({
+        name: "smoke",
         shared: glsl`
             varying vec3 vGlobalPosition; 
             ${dither}

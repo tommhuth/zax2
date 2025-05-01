@@ -61,6 +61,7 @@ export const transformer: Record<Exclude<Fireball["type"], undefined>, FireballT
 export default function FireballHandler() {
     let count = 250
     let { onBeforeCompile, uniforms } = useShader({
+        name: "fireball",
         shared: glsl` 
             varying vec3 vGlobalPosition; 
             varying vec3 vGlobalNormal; 
