@@ -36,8 +36,12 @@ export default function Controls() {
     let [inputEnabled, setInputEnabled] = useState(false)
 
     useWindowEvent("keydown", (e: KeyboardEvent) => {
+        if (!inputEnabled) {
+            return
+        }
+
         keys[e.code.replace("Key", "").toLowerCase()] = true
-    })
+    }, [inputEnabled])
 
     useWindowEvent("keyup", (e: KeyboardEvent) => {
         keys[e.code.replace("Key", "").toLowerCase()] = false
@@ -47,7 +51,7 @@ export default function Controls() {
 
     useEffect(() => {
         if (state === "running") {
-            let tid = setTimeout(() => setInputEnabled(true), 2_000)
+            let tid = setTimeout(() => setInputEnabled(true), 3_500)
 
             return () => {
                 clearTimeout(tid)
@@ -145,7 +149,7 @@ export default function Controls() {
 
     // pointer
     useEffect(() => {
-        if (state !== "running") {
+        if (state !== "running" || !inputEnabled) {
             return
         }
 
@@ -154,43 +158,45 @@ export default function Controls() {
         let start: Tuple3 = [0, 0, 0]
         let previous: Tuple3 | null = null
         let pointerdown = async (e: PointerEvent) => {
-            if (e.pointerType === "touch") {
-                if (e.clientX > window.innerWidth / 2) {
+            let { pointerType, clientX, clientY } = e
+
+            if (pointerType === "touch") {
+                if (clientX > window.innerWidth / 2) {
                     keys.space = true
                     shootEvents.push(e)
                 } else if (movementEvents.length === 0) {
                     movementEvents.push(e)
-                    start = toWorldCoords([e.clientX, e.clientY], camera)
+                    start = toWorldCoords([clientX, clientY], camera)
                     previous = [...start]
                 }
             } else {
                 keys.space = true
             }
         }
-        let pointermove = (e: PointerEvent) => {
-            if (!movementEvents.find(i => e.pointerId === i.pointerId) && e.pointerType === "touch") {
+        let pointermove = ({ pointerId, pointerType, clientX, clientY }: PointerEvent) => {
+            if (!movementEvents.find(i => pointerId === i.pointerId) && pointerType === "touch") {
                 return
             }
 
-            let current = toWorldCoords([e.clientX, e.clientY], camera)
+            let current = toWorldCoords([clientX, clientY], camera)
 
             if (previous === null) {
                 previous = [...current]
             }
 
-            let x = (current[0] - previous[0]) * (e.pointerType === "mouse" ? .45 : 1.5)
-            let y = (current[2] - previous[2]) * (e.pointerType === "mouse" ? .35 : 1.25)
+            let x = (current[0] - previous[0]) * (pointerType === "mouse" ? .45 : 1.5)
+            let y = (current[2] - previous[2]) * (pointerType === "mouse" ? .35 : 1.25)
 
             playerTargetPosition.x += x
             playerTargetPosition.y += y
             playerTargetPosition.clamp(EDGE_MIN, EDGE_MAX)
             previous = [current[0], 0, current[2]]
         }
-        let pointerup = (e: PointerEvent) => {
-            movementEvents = movementEvents.filter(i => i.pointerId !== e.pointerId)
-            shootEvents = shootEvents.filter(i => i.pointerId !== e.pointerId)
+        let pointerup = ({ pointerId, pointerType }: PointerEvent) => {
+            movementEvents = movementEvents.filter(event => event.pointerId !== pointerId)
+            shootEvents = shootEvents.filter(event => event.pointerId !== pointerId)
 
-            if (shootEvents.length === 0) {
+            if (shootEvents.length === 0 || pointerType === "mouse") {
                 keys.space = false
             }
         }
@@ -208,7 +214,7 @@ export default function Controls() {
             window.removeEventListener("pointercancel", pointerup)
             window.removeEventListener("pointerleave", pointerup)
         }
-    }, [state, keys, camera, playerTargetPosition])
+    }, [state, inputEnabled, keys, camera, playerTargetPosition])
 
     return null
 }
