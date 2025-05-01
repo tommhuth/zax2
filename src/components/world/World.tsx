@@ -1,9 +1,9 @@
 import { useFrame } from "@react-three/fiber"
-import { startTransition, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { startTransition, useEffect, useLayoutEffect, useRef } from "react"
 import { store, useStore } from "../../data/store"
 import ParticleHandler from "./effects/ParticleHandler"
 import BulletHandler from "../BulletHandler"
-import { addWorldPart, reset } from "../../data/store/world"
+import { addWorldPart } from "../../data/store/world"
 import ExplosionsHandler from "./effects/ExplosionsHandler"
 import { Vector3 } from "three"
 import SmokeHandler from "./effects/SmokeHandler"
@@ -25,39 +25,11 @@ export default function World() {
     let state = useStore(i => i.state)
     let attempts = useStore(i => i.player.attempts)
     let hasInitialized = useRef(false)
-    let [restartEnabled, setRestartEnabled] = useState(false)
 
     useEffect(() => {
         hasInitialized.current = false
     }, [attempts])
 
-    useEffect(() => {
-        if (state === "gameover") {
-            let tid = setTimeout(() => setRestartEnabled(true), 5_000)
-
-            setRestartEnabled(false)
-
-            return () => {
-                clearTimeout(tid)
-            }
-        }
-    }, [state])
-
-    useEffect(() => {
-        let onClick = () => {
-            let { state } = useStore.getState()
-
-            if ((state === "gameover" && restartEnabled) || state === "intro") {
-                startTransition(() => reset("running"))
-            }
-        }
-
-        window.addEventListener("click", onClick)
-
-        return () => {
-            window.removeEventListener("click", onClick)
-        }
-    }, [restartEnabled])
 
     useLayoutEffect(() => {
         if (!loaded || !diagonal || state === "gameover") {

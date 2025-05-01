@@ -4,7 +4,6 @@
 
 -   (distance based) trauma
 -   level parts
--   clean up controls, data, and events, simplyfy
 -   ui, css, font cleanup. tailwind?
 
 53 mat + 22 instances

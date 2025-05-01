@@ -46,7 +46,7 @@ export default function EdgeOverlay({ ready = false }) {
                 groupRef.current?.children[1]?.position.setComponent(0, xRight)
             },
         })
-    }, [ready])
+    }, [ready, camera])
 
     return (
         <group ref={groupRef}>

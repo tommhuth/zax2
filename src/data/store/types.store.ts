@@ -53,10 +53,8 @@ export interface ZaxStore {
         lastActiveAt: Date
         interval: number
     },
-    controls: {
-        keys: ControlsMap
-    },
     player: {
+        keys: ControlsMap
         speed: number
         velocity: Vector3
         health: number

@@ -51,10 +51,8 @@ const store = create(
             lastActiveAt: new Date(),
             interval: 60_000 * 3,
         },
-        controls: {
-            keys: {}
-        },
         player: {
+            keys: {},
             position: new Vector3(),
             targetPosition: new Vector3(WORLD_CENTER_X, 0, 0),
             velocity: new Vector3(),

@@ -1131,10 +1131,10 @@
     eslint "^6.8.0"
     eslint-plugin-babel "^5.3.0"
 
-"@huth/random@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@huth/random/-/random-5.0.0.tgz#026d08f6eb1ba90f7b9bd8677899fbb7e83232a3"
-  integrity sha512-qTFWjDxMuXQAcmOZy+8sJyJRhZ1cWDWePi6G5NjEVNRTolthoGB47pkUSRRt3pWGgFSYTWdpCWOzs05DoZWQpQ==
+"@huth/random@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@huth/random/-/random-6.0.2.tgz#4cbff4ae39d175582c6f9f5fc87232e9370e7934"
+  integrity sha512-SjQulOFEwpYSPZbtMCRUUGyRDs0rBv+8+sV5RVt+n6wUtKL6oY9roLqv28Ua/gl9myHL2VWma4h5duU0sN7oyw==
   dependencies:
     babel-eslint "^10.1.0"
     eslint "^6.8.0"

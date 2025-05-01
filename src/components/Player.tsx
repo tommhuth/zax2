@@ -71,22 +71,22 @@ export default function Player() {
     let state = useStore(i => i.state)
     let bossState = useStore(i => i.boss.state)
     let [
-        setup,
-        controls,
-    ] = useStore(useShallow(i => [i.setup, i.controls]))
-    let [
         targetPosition,
         position,
         health,
         attempts,
-        playerObject
+        playerObject,
+        keys,
+        setup,
     ] = useStore(
-        useShallow(({ player }) => [
+        useShallow(({ player, setup }) => [
             player.targetPosition,
             player.position,
             player.health,
             player.attempts,
-            player.object
+            player.object,
+            player.keys,
+            setup,
         ])
     )
     let [dead, setDead] = useState(false)
@@ -209,7 +209,7 @@ export default function Player() {
         } = store.getState()
         let [gamepad] = navigator.getGamepads()
         let trigger = gamepad?.buttons[7]
-        let active = controls.keys.space || trigger?.pressed
+        let active = keys.space || trigger?.pressed
 
         if (Date.now() > data.nextShotAt && active && setup && state === "running") {
             startTransition(() => {
