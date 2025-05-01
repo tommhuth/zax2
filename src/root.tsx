@@ -12,9 +12,6 @@ import extensions from "./extensions"
 extend(extensions)
 
 const isEditorMode = window.location.hash.includes("editor")
-const Zaxx = lazy(() => import("./Zaxx"))
-const Editor = lazy(() => import("./Editor"))
-
 const canvasRoot = createRoot(document.getElementById("canvas") as HTMLCanvasElement)
 const uiRoot = createRootUi(document.getElementById("ui") as HTMLDivElement)
 
@@ -65,11 +62,15 @@ window.addEventListener("resize", () => {
 })
 
 if (isEditorMode) {
+    const Editor = lazy(() => import("./Editor"))
+
     document.title = "Zax Editor"
 
     configure(<Editor />, { events })
     uiRoot.render(<EditorUi />)
 } else {
+    const Zaxx = lazy(() => import("./Zaxx"))
+
     configure(<Zaxx />)
     uiRoot.render(<ZaxxUi />)
 }
