@@ -105,7 +105,7 @@ export default function Controls() {
 
             let current = toWorldCoords([e.clientX, e.clientY], camera)
             let x = (current[0] - previous[0]) * (e.pointerType === "mouse" ? .35 : 1.5)
-            let y = (current[2] - previous[2]) * (e.pointerType === "mouse" ? .35 : 2)
+            let y = (current[2] - previous[2]) * (e.pointerType === "mouse" ? .35 : 1.25)
 
             playerTargetPosition.x += x
             playerTargetPosition.y += y
