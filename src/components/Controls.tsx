@@ -44,6 +44,14 @@ export default function Controls() {
         }
     }, [ready])
 
+    useEffect(() => {
+        if (!inputEnabled) {
+            for (let key of Object.keys(keys)) {
+                keys[key] = false
+            }
+        }
+    }, [inputEnabled, keys])
+
     useWindowEvent("keydown", (e: KeyboardEvent) => {
         if (!inputEnabled) {
             return
