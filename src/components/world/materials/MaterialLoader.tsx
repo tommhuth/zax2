@@ -17,6 +17,9 @@ import { store } from "@data/store"
 function MaterialLoader() {
     let materials = useMemo(() => {
         return {
+            white: <meshBasicMaterial color={"#fff"} />,
+            black: <meshBasicMaterial color={"#000"} />,
+            cyan: <meshBasicMaterial color={"#0ff"} wireframe />,
             rocket: <RocketMaterial />,
             platform: (
                 <MeshRetroMaterial
@@ -60,7 +63,6 @@ function MaterialLoader() {
             floorBase: <MeshRetroMaterial color={floorBaseColor} />,
             floorHi: <MeshRetroMaterial color={floorHiColor} />,
             floorMark: <meshBasicMaterial color={floorMarkColor} />,
-            white: <meshBasicMaterial color={"#fff"} />,
             floorRock: <MeshRetroMaterial
                 fog={.25}
                 color={"#059"}
@@ -103,7 +105,7 @@ function MaterialLoader() {
                     emissive="#ffffff"
                     emissiveIntensity={.35}
                 />
-            )
+            ),
         } satisfies Record<MaterialName, ReactNode>
     }, [])
 

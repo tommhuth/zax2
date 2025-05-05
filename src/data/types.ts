@@ -4,7 +4,7 @@ import { Client } from "./lib/SpatialHashGrid3D"
 import Counter from "./lib/Counter"
 import LineSegment from "./lib/LineSegment"
 
-export type MaterialName = "device" | "plane" | "rocket" | "platform" | "grass" | "exhaust"
+export type MaterialName = "cyan" | "black" | "device" | "plane" | "rocket" | "platform" | "grass" | "exhaust"
     | "bossLightBlue" | "bossBlack" | "bossDarkBlue" | "bossBlue" | "bossSecondaryBlue" | "muzzle"
     | "bossWhite" | "buildingHi" | "buildingBase" | "buildingDark" | "barrel" | "rock" | "white"
     | "floorBase" | "floorHi" | "floorMark" | "floorRock" | "turret" | "turretDark"

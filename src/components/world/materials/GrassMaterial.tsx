@@ -8,6 +8,7 @@ import { glsl } from "../../../data/utils"
 import { store } from "../../../data/store"
 import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater } from "./helpers"
 import { useShader } from "@data/lib/useShader"
+import { OFFSCREEN } from "@data/const"
 
 export const getGrassTransform = glsl` 
     vec3 getGrassTransform(vec3 localPosition, vec3 globalPosition, vec3 playerPosition, mat4 modelMatrix) {
@@ -158,12 +159,12 @@ export default function GrassMaterial() {
         uniforms.uTime.value = effects.time
         uniforms.uTime.needsUpdate = true
 
-        uniforms.uPlayerPosition.value.copy(player.position)
+        uniforms.uPlayerPosition.value.copy(player.health ? player.position : OFFSCREEN)
         uniforms.uPlayerPosition.needsUpdate = true
     })
 
     return (
-        <meshPhongMaterial
+        <meshLambertMaterial
             side={DoubleSide}
             name="grass"
             transparent

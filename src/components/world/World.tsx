@@ -30,7 +30,6 @@ export default function World() {
         hasInitialized.current = false
     }, [attempts])
 
-
     useLayoutEffect(() => {
         if (!loaded || !diagonal || state === "gameover") {
             return

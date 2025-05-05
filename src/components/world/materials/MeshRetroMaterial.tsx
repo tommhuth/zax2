@@ -10,6 +10,7 @@ import { forwardRef } from "react"
 import { store, useStore } from "../../../data/store"
 import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater } from "./helpers"
 import { ShaderPart, useShader } from "@data/lib/useShader"
+import { OFFSCREEN } from "@data/const"
 
 export type MeshRetroMaterialProps = {
     colorCount?: number
@@ -27,7 +28,6 @@ export type MeshRetroMaterialProps = {
         fragment?: ShaderPart
     }
 } & Omit<ThreeElements["meshLambertMaterial"], "onBeforeCompile" | "dithering" | "fog">
-
 
 const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps>(({
     color = bcolor,
@@ -135,9 +135,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                         mix(gl_FragColor.rgb, light.color, light.strength),
                         clamp(dot((vGlobalNormal), light.direction), 0., 1.)
                     );
-                }  
-
-                vec3 baseFogColor = uFogColor; 
+                }   
 
                 vec3 n1 = vGlobalPosition * .1 + uTime * 1.4;
               
@@ -148,8 +146,8 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                 // base fog
                 gl_FragColor.rgb = mix(
                     gl_FragColor.rgb, 
-                    baseFogColor, 
-                    min(1., noiseEffect * heightScaler + heightMin) * uFog
+                    uFogColor, 
+                    min(1., noiseEffect * heightScaler + heightMin) * uFog 
                 );  
 
                 // custom lights
@@ -176,7 +174,9 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
 
     useFrame(() => {
         if (player) {
-            uniforms.uPlayerPosition.value.copy(player.position)
+            let { health } = store.getState().player
+
+            uniforms.uPlayerPosition.value.copy(health ? player.position : OFFSCREEN)
             uniforms.uPlayerPosition.needsUpdate = true
         }
 

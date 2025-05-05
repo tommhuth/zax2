@@ -61,12 +61,12 @@ export default function Lights() {
                 position={[0, 10, 0]}
                 intensity={.65}
                 castShadow
-                shadow-camera-near={0} // y
+                shadow-camera-near={-5} // y
                 shadow-camera-far={20}
-                shadow-camera-left={-8} // x
-                shadow-camera-right={14}
-                shadow-camera-top={diagonal * .75} // z
-                shadow-camera-bottom={-diagonal * 1}
+                shadow-camera-left={-10} // x
+                shadow-camera-right={16}
+                shadow-camera-top={diagonal * .85} // z
+                shadow-camera-bottom={-diagonal * 1.15}
                 shadow-mapSize={[512, 512]}
                 shadow-bias={-0.003}
             />

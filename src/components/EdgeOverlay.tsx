@@ -1,15 +1,36 @@
 import { useFrame, useThree } from "@react-three/fiber"
 import { useLayoutEffect, useRef } from "react"
-import { Group, MeshBasicMaterial, PlaneGeometry } from "three"
-import animate from "@huth/animate"
-import { easeInOutQuart } from "@data/lib/shaping"
+import { Group, PlaneGeometry } from "three"
+import { damp } from "three/src/math/MathUtils.js"
+import { ndelta } from "@data/utils"
+import { Tuple2 } from "src/types.global"
+import { useStore } from "@data/store"
 
-let material = new MeshBasicMaterial({ color: "#000", name: "edge" })
-let geometry = new PlaneGeometry(22, 150, 1, 1)
+let edgeWidth = 25
+let geometry = new PlaneGeometry(edgeWidth, 200, 1, 1)
+let xLeft = edgeWidth * .45
+let xRight = -edgeWidth * .45
+let gap = 10
+let baseOffset = -21
+let y = 20
+let positions: Tuple2 = [baseOffset + xLeft, baseOffset + xRight]
 
-export default function EdgeOverlay({ ready = false }) {
+export default function EdgeOverlay({ open = false }: { open: boolean }) {
     let groupRef = useRef<Group>(null)
     let { camera } = useThree()
+    let materials = useStore(i => i.materials)
+
+    useLayoutEffect(() => {
+        for (let [index, position] of positions.entries()) {
+            let element = groupRef.current?.children[index]
+
+            if (!element) {
+                break
+            }
+
+            element.position.x = position
+        }
+    }, [])
 
     useFrame(() => {
         if (groupRef.current) {
@@ -17,51 +38,36 @@ export default function EdgeOverlay({ ready = false }) {
         }
     })
 
-    useLayoutEffect(() => {
-        if (!groupRef.current || !ready) {
-            return
+    useFrame((state, delta) => {
+        for (let [index, position] of positions.entries()) {
+            let element = groupRef.current?.children[index]
+
+            if (!element) {
+                break
+            }
+
+            element.position.x = damp(
+                element.position.x,
+                position + (open ? (1 - index * 2) * gap : 0),
+                2.5,
+                ndelta(delta, true)
+            )
         }
-
-        let xRight = -31
-        let xLeft = 13
-        let offset = 12
-
-        groupRef.current.children[0]?.position.setComponent(0, xRight + offset)
-        groupRef.current.children[1]?.position.setComponent(0, xLeft - offset)
-        groupRef.current.position.setZ(camera.position.z + 50)
-
-        return animate({
-            from: {
-                xRight: xRight + offset,
-                xLeft: xLeft - offset,
-            },
-            to: {
-                xLeft,
-                xRight
-            },
-            easing: easeInOutQuart,
-            duration: 2000,
-            render({ xLeft, xRight }) {
-                groupRef.current?.children[0]?.position.setComponent(0, xLeft)
-                groupRef.current?.children[1]?.position.setComponent(0, xRight)
-            },
-        })
-    }, [ready, camera])
+    })
 
     return (
         <group ref={groupRef}>
             <mesh
                 rotation-x={-Math.PI / 2}
-                position-y={13}
-                rotation-y={-.65}
-                material={material}
+                position-y={y}
+                material={materials.black}
                 frustumCulled={false}
                 geometry={geometry}
             />
             <mesh
                 rotation-x={-Math.PI / 2}
-                position-y={12}
-                material={material}
+                position-y={y}
+                material={materials.black}
                 frustumCulled={false}
                 geometry={geometry}
             />

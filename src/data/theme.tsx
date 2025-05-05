@@ -34,10 +34,10 @@ export const playerColor = "#002277"
 
 
 
-export const fogColor = "#18264b" 
+export const fogColor = "#18264b"
 
-export const rightColor = "#00f" 
-export const backColor = "#00a" 
+export const rightColor = "#00f"
+export const backColor = "#00a"
 
 export const groundFogIntensity = .86
 export const floorFogIntensity = .727
@@ -46,10 +46,10 @@ export const explosionColor = "#fffbd4"
 
 export const shimmerColor = "#ffffff"
 
-export const plantColor = "#aa00ff" 
+export const plantColor = "#aa00ff"
 
- 
+
 export const grassColorStart = new Color("#aa00ff")
-export const grassColorEnd = new Color("#ff008c") 
+export const grassColorEnd = new Color("#ff008c")
 
 export const bulletColor = "#c3f1ff" 

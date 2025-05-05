@@ -113,6 +113,10 @@ export default function Debug() {
                 e.stopPropagation()
                 e.nativeEvent.stopImmediatePropagation()
             }}
+            onPointerDown={(e) => {
+                e.stopPropagation()
+                e.nativeEvent.stopImmediatePropagation()
+            }}
         >
             <div>State: <strong>{state}</strong></div>
 
@@ -202,8 +206,7 @@ export default function Debug() {
                                 className="debug__world-item"
                                 style={{
                                     textDecoration: previous ? "line-through" : undefined,
-                                    color: current ? "black" : undefined,
-                                    background: current ? "white" : undefined,
+                                    background: current ? "rgba(255,255,255,.25)" : undefined,
                                 }}
                             >
                                 <button

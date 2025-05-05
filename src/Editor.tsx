@@ -24,7 +24,7 @@ export default function Editor() {
             <EditorObjects />
             <Camera editorMode z={z} />
             <SharedModels />
-            <EdgeOverlay ready />
+            <EdgeOverlay open />
 
             <Suspense>
                 <Floor

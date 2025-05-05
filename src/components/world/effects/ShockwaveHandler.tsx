@@ -14,7 +14,7 @@ export default function ShockwaveHandler() {
     let opacityAttributes = useMemo(() => {
         return new Float32Array(list(count, 0))
     }, [count])
-    let { onBeforeCompile } = useShader({
+    let { onBeforeCompile, customProgramCacheKey } = useShader({
         name: "shockwave",
         shared: glsl`
             varying float vTime;  
@@ -97,6 +97,7 @@ export default function ShockwaveHandler() {
                 transparent
                 depthWrite={false}
                 onBeforeCompile={onBeforeCompile}
+                customProgramCacheKey={customProgramCacheKey}
             />
         </InstancedMesh>
     )

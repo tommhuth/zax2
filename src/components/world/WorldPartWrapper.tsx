@@ -4,7 +4,7 @@ import { Vector3 } from "three"
 import { Tuple2 } from "../../types.global"
 import { store, useStore } from "../../data/store"
 import { removeWorldPart } from "../../data/store/world"
-import { WORLD_CENTER_X } from "../../data/const"
+import { box, WORLD_CENTER_X } from "../../data/const"
 import { WorldPartType } from "@data/types"
 
 interface WorldPartWrapperProps {
@@ -36,6 +36,7 @@ export default function WorldPartWrapper({
     id,
 }: WorldPartWrapperProps) {
     let showColliders = useStore(i => i.debug.showColliders)
+    let materials = useStore(i => i.materials)
     let value = useMemo(() => {
         return {
             position,
@@ -65,10 +66,10 @@ export default function WorldPartWrapper({
             {showColliders && (
                 <mesh
                     position={[WORLD_CENTER_X, -1, position.z + depth / 2]}
-                >
-                    <boxGeometry args={[width, 2, depth, 1, 1, 1]} />
-                    <meshBasicMaterial wireframe color="green" name="debug" />
-                </mesh>
+                    geometry={box}
+                    scale={[width, .1, depth]}
+                    material={materials.cyan}
+                />
             )}
         </context.Provider>
     )

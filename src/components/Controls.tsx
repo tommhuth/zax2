@@ -1,12 +1,13 @@
 import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect, useState } from "react"
 import { Camera, Plane, Raycaster, Vector2, Vector3 } from "three"
-import { useStore } from "../data/store"
-import { EDGE_MAX, EDGE_MIN } from "../data/const"
+import { store, useStore } from "../data/store"
+import { EDGE_MAX, EDGE_MIN, WORLD_BOTTOM_EDGE, WORLD_LEFT_EDGE, WORLD_TOP_EDGE } from "../data/const"
 import { useWindowEvent } from "@data/lib/hooks"
-import { ndelta } from "@data/utils"
+import { clamp, ndelta } from "@data/utils"
 import { Tuple2, Tuple3 } from "src/types.global"
 import { reset } from "@data/store/world"
+import EdgeOverlay from "./EdgeOverlay"
 
 const _floor = new Plane(new Vector3(0, 1, 0), 0)
 const _mouse = new Vector2()
@@ -29,11 +30,19 @@ function toWorldCoords([x, y]: Tuple2, camera: Camera): Tuple3 {
 
 export default function Controls() {
     let keys = useStore(i => i.player.keys)
-    let playerTargetPosition = useStore(i => i.player.targetPosition)
+    let targetPosition = useStore(i => i.player.targetPosition)
     let state = useStore(i => i.state)
+    let ready = useStore(i => i.ready)
     let { camera } = useThree()
     let [restartEnabled, setRestartEnabled] = useState(false)
     let [inputEnabled, setInputEnabled] = useState(false)
+    let [open, setOpen] = useState(false)
+
+    useEffect(() => {
+        if (ready) {
+            setOpen(true)
+        }
+    }, [ready])
 
     useWindowEvent("keydown", (e: KeyboardEvent) => {
         if (!inputEnabled) {
@@ -49,6 +58,7 @@ export default function Controls() {
 
     useWindowEvent("gamepadconnected", () => { })
 
+    // enable input
     useEffect(() => {
         if (state === "running") {
             let tid = setTimeout(() => setInputEnabled(true), 3_500)
@@ -61,6 +71,7 @@ export default function Controls() {
         }
     }, [state])
 
+    // enable restart
     useEffect(() => {
         if (state === "gameover") {
             let tid = setTimeout(() => setRestartEnabled(true), 4_000)
@@ -75,20 +86,25 @@ export default function Controls() {
 
     // (re)start
     useEffect(() => {
-        let onpointerdown = () => {
+        let onPointerDown = () => {
             let { state } = useStore.getState()
+            let canRestart = (state === "gameover" && restartEnabled) || state === "intro"
 
-            if ((state === "gameover" && restartEnabled) || state === "intro") {
-                reset("running")
+            if (canRestart && open) {
+                setOpen(false)
+                setTimeout(() => {
+                    setOpen(true)
+                    reset("running")
+                }, 900)
             }
         }
 
-        window.addEventListener("pointerdown", onpointerdown)
+        window.addEventListener("pointerdown", onPointerDown)
 
         return () => {
-            window.removeEventListener("pointerdown", onpointerdown)
+            window.removeEventListener("pointerdown", onPointerDown)
         }
-    }, [restartEnabled])
+    }, [restartEnabled, open])
 
     // gamepad
     useFrame((state, delta) => {
@@ -114,9 +130,9 @@ export default function Controls() {
             y = 0
         }
 
-        playerTargetPosition.x += -x * 20 * delta
-        playerTargetPosition.y += y * -14 * delta
-        playerTargetPosition.clamp(EDGE_MIN, EDGE_MAX)
+        targetPosition.x += -x * 20 * delta
+        targetPosition.y += y * -14 * delta
+        targetPosition.clamp(EDGE_MIN, EDGE_MAX)
 
         if (a.pressed) {
             document.body.click()
@@ -132,18 +148,18 @@ export default function Controls() {
 
         if (Object.entries(keys).length && state === "running" && inputEnabled) {
             if (keys.a) {
-                playerTargetPosition.x += xSpeed * nd
+                targetPosition.x += xSpeed * nd
             } else if (keys.d) {
-                playerTargetPosition.x -= xSpeed * nd
+                targetPosition.x -= xSpeed * nd
             }
 
             if (keys.w) {
-                playerTargetPosition.y += ySpeed * nd
+                targetPosition.y += ySpeed * nd
             } else if (keys.s) {
-                playerTargetPosition.y -= ySpeed * nd
+                targetPosition.y -= ySpeed * nd
             }
 
-            playerTargetPosition.clamp(EDGE_MIN, EDGE_MAX)
+            targetPosition.clamp(EDGE_MIN, EDGE_MAX)
         }
     })
 
@@ -153,19 +169,19 @@ export default function Controls() {
             return
         }
 
-        let movementEvents: PointerEvent[] = []
+        let movementEvent: PointerEvent | null = null
         let shootEvents: PointerEvent[] = []
         let start: Tuple3 = [0, 0, 0]
         let previous: Tuple3 | null = null
-        let pointerdown = async (e: PointerEvent) => {
+        let onPointerDown = async (e: PointerEvent) => {
             let { pointerType, clientX, clientY } = e
 
             if (pointerType === "touch") {
                 if (clientX > window.innerWidth / 2) {
                     keys.space = true
                     shootEvents.push(e)
-                } else if (movementEvents.length === 0) {
-                    movementEvents.push(e)
+                } else if (movementEvent === null) {
+                    movementEvent = e
                     start = toWorldCoords([clientX, clientY], camera)
                     previous = [...start]
                 }
@@ -173,48 +189,57 @@ export default function Controls() {
                 keys.space = true
             }
         }
-        let pointermove = ({ pointerId, pointerType, clientX, clientY }: PointerEvent) => {
-            if (!movementEvents.find(i => pointerId === i.pointerId) && pointerType === "touch") {
-                return
+        let onPointerMove = ({ pointerId, pointerType, clientX, clientY }: PointerEvent) => {
+            let [currentX, , currentZ] = toWorldCoords([clientX, clientY], camera)
+
+            if (pointerType === "touch" && movementEvent?.pointerId === pointerId) {
+                if (previous === null) {
+                    previous = [currentX, 0, currentZ]
+                }
+
+                targetPosition.x += (currentX - previous[0]) * 1.2
+                targetPosition.y += (currentZ - previous[2])
+                previous = [currentX, 0, currentZ]
+            } else if (pointerType === "mouse") {
+                let center = [0, WORLD_BOTTOM_EDGE, 26]
+                let { world } = store.getState()
+
+                targetPosition.x = clamp((currentX - center[0]) / 5, -1, 1) * WORLD_LEFT_EDGE
+                targetPosition.y = clamp((currentZ - center[2]) / (world.diagonal * .25), 0, 1)
+                    * (WORLD_TOP_EDGE - WORLD_BOTTOM_EDGE)
+                    + WORLD_BOTTOM_EDGE
             }
 
-            let current = toWorldCoords([clientX, clientY], camera)
-
-            if (previous === null) {
-                previous = [...current]
-            }
-
-            let x = (current[0] - previous[0]) * (pointerType === "mouse" ? .45 : 1.5)
-            let y = (current[2] - previous[2]) * (pointerType === "mouse" ? .35 : 1.25)
-
-            playerTargetPosition.x += x
-            playerTargetPosition.y += y
-            playerTargetPosition.clamp(EDGE_MIN, EDGE_MAX)
-            previous = [current[0], 0, current[2]]
+            targetPosition.clamp(EDGE_MIN, EDGE_MAX)
         }
-        let pointerup = ({ pointerId, pointerType }: PointerEvent) => {
-            movementEvents = movementEvents.filter(event => event.pointerId !== pointerId)
+        let onPointerUp = ({ pointerId, pointerType }: PointerEvent) => {
             shootEvents = shootEvents.filter(event => event.pointerId !== pointerId)
+
+            if (movementEvent?.pointerId === pointerId) {
+                movementEvent = null
+            }
 
             if (shootEvents.length === 0 || pointerType === "mouse") {
                 keys.space = false
             }
         }
 
-        window.addEventListener("pointerdown", pointerdown)
-        window.addEventListener("pointermove", pointermove)
-        window.addEventListener("pointerup", pointerup)
-        window.addEventListener("pointercancel", pointerup)
-        window.addEventListener("pointerleave", pointerup)
+        window.addEventListener("pointerdown", onPointerDown)
+        window.addEventListener("pointermove", onPointerMove)
+        window.addEventListener("pointerup", onPointerUp)
+        window.addEventListener("pointercancel", onPointerUp)
+        window.addEventListener("pointerleave", onPointerUp)
 
         return () => {
-            window.removeEventListener("pointerdown", pointerdown)
-            window.removeEventListener("pointermove", pointermove)
-            window.removeEventListener("pointerup", pointerup)
-            window.removeEventListener("pointercancel", pointerup)
-            window.removeEventListener("pointerleave", pointerup)
+            window.removeEventListener("pointerdown", onPointerDown)
+            window.removeEventListener("pointermove", onPointerMove)
+            window.removeEventListener("pointerup", onPointerUp)
+            window.removeEventListener("pointercancel", onPointerUp)
+            window.removeEventListener("pointerleave", onPointerUp)
         }
-    }, [state, inputEnabled, keys, camera, playerTargetPosition])
+    }, [state, inputEnabled, keys, camera, targetPosition])
 
-    return null
+    return (
+        <EdgeOverlay open={open} />
+    )
 }

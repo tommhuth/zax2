@@ -1,4 +1,4 @@
-import { Vector3 } from "three"
+import { BoxGeometry, Vector3 } from "three"
 import { EditorStore } from "src/editor/data/types"
 
 export const WORLD_START_Z = 100
@@ -10,6 +10,7 @@ export const WORLD_RIGHT_EDGE = -4
 export const WORLD_TOP_EDGE = 5
 export const WORLD_BOTTOM_EDGE = 1
 
+export const OFFSCREEN = new Vector3(0, 0, -100)
 export const EDGE_MIN = new Vector3(WORLD_RIGHT_EDGE, WORLD_BOTTOM_EDGE, -Infinity)
 export const EDGE_MAX = new Vector3(WORLD_LEFT_EDGE, WORLD_TOP_EDGE, Infinity)
 
@@ -34,4 +35,6 @@ export const FLOOR_SIZE: Record<EditorStore["floorType"], number> = {
     floor4: 48,
     floor5: 50.6,
     floor6: 56.8,
-} 
+}
+
+export const box = new BoxGeometry(1, 1, 1, 1, 1, 1)
