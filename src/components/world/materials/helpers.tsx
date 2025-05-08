@@ -86,7 +86,6 @@ export function useLightsUpdater(uniforms: LightUniforms) {
         let bullets = store.getState().world.bullets
 
         for (let i = 0; i < BULLET_LIGHT_COUNT; i++) {
-
             let uniform = uniforms.uBulletLights.value[i]
 
             uniform.radius = damp(uniform.radius, 0, 1, ndelta(delta))

@@ -6,12 +6,6 @@ import Debug from "./debug/Debug"
 
 import "./Ui.scss"
 
-function GameOver() {
-    return (
-        <div className="game-over">Game over</div>
-    )
-}
-
 function BossUi() {
     let boss = useStore(i => i.boss)
     let level = useStore(i => i.player.level)
@@ -78,21 +72,22 @@ export default function ZaxxUi() {
 
     return (
         <>
-            {ready && state === "intro" && <Intro />}
-            {state === "gameover" && <GameOver />}
+            {ready && state === "intro" && (
+                <div className="intro">
+                    Untitled <br />
+                    retro shooter
+                </div>
+            )}
+
+            {state === "gameover" && (
+                <div className="game-over">Game over</div>
+            )}
+
             {state === "running" && <PlayerUi />}
+
             {state !== "gameover" && boss.state !== "unknown" && <BossUi />}
 
             {qs.has("debug") ? <Debug /> : null}
         </>
     )
-}
-
-function Intro() {
-    return (
-        <div className="intro">
-            Untitled <br />
-            retro shooter
-        </div>
-    )
-}
+} 

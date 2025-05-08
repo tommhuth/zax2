@@ -15,21 +15,36 @@ interface PlaneModelProps {
 
 export default forwardRef<Mesh, PlaneModelProps>(
     function PlaneModel({ position, rotation = [0, 0, 0], moving = true, disabled = false }, ref) {
-        let { nodes } = useGLTF(planeModel) as GLTFModel<["plane"]>
+        let { nodes } = useGLTF(planeModel) as GLTFModel<["plane_1", "plane_2", "plane_3"]>
         let materials = useStore(i => i.materials)
 
         return (
             <>
-                <mesh
-                    castShadow
-                    receiveShadow
-                    rotation={[rotation[0], rotation[1] + Math.PI, rotation[2]]}
+                <group
                     position={position.toArray()}
                     ref={ref}
-                    material={materials.plane}
                     dispose={null}
-                    geometry={nodes.plane.geometry}
-                />
+                    rotation={[rotation[0], rotation[1] + Math.PI, rotation[2]]}
+                >
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={nodes.plane_1.geometry}
+                        material={materials.plane}
+                    />
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={nodes.plane_2.geometry}
+                        material={materials.bossBlack}
+                    />
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={nodes.plane_3.geometry}
+                        material={materials.turret}
+                    />
+                </group>
 
                 {moving && (
                     <Exhaust

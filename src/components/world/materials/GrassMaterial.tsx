@@ -10,7 +10,7 @@ import { lightFragment, lightFragmentHead, makeLightUniforms, useLightsUpdater }
 import { useShader } from "@data/lib/useShader"
 import { OFFSCREEN } from "@data/const"
 
-export const getGrassTransform = glsl` 
+const getGrassTransform = glsl` 
     vec3 getGrassTransform(vec3 localPosition, vec3 globalPosition, vec3 playerPosition, mat4 modelMatrix) {
         vec3 transform = vec3(localPosition);
         float height = 1.75;
@@ -90,7 +90,23 @@ export default function GrassMaterial() {
                 vPosition = transformed;
 
                 transformed = getGrassTransform(position, vGlobalPosition, uPlayerPosition, modelMatrix);
+ 
+                vec3 bulletPush = vec3(0., 0., 0.);
+                float n = (noise(vGlobalPosition * .3) + 1.) / 2.;
+                float heightScale = clamp(vPosition.y / 1.25, 0., 1.);
 
+                for (int i = 0; i < uBulletLights.length(); i++) { 
+                    BulletLight light = uBulletLights[i];
+             
+                    float scale = 1. - clamp(length(light.position - vGlobalPosition) / 2.5, 0., 1.);
+                    vec3 direction = normalize(vGlobalPosition - light.position);
+
+                    bulletPush += direction * scale * smoothstep(.85, 1., light.strength) * n;
+                }    
+ 
+                bulletPush.y = 0.;
+ 
+                transformed += inverse(mat3(modelMatrix)) * (bulletPush * heightScale * 1.25); 
                 vGlobalPosition = (modelMatrix * vec4(transformed, 1.)).xyz;
             `
         },

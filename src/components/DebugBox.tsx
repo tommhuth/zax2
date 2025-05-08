@@ -1,3 +1,4 @@
+import { box } from "@data/const"
 import { useStore } from "@data/store"
 import { useFrame } from "@react-three/fiber"
 import { useRef } from "react"
@@ -39,8 +40,7 @@ export default function DebugBox({
             position-y={position?.y}
             position-z={position?.z}
             material={materials.cyan}
-        >
-            <boxGeometry />
-        </mesh>
+            geometry={box}
+        />
     )
 }

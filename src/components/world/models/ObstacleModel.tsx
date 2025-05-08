@@ -35,7 +35,7 @@ export default function ObstacleModel({ rotation, position, type, size }: Obstac
             position={position}
             rotation-y={rotation}
             scale={size}
-            castShadow
+            castShadow={type !== "rockface"}
             receiveShadow
         />
     )

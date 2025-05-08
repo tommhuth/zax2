@@ -137,7 +137,7 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
                     );
                 }   
 
-                vec3 n1 = vGlobalPosition * .1 + uTime * 1.4;
+                vec3 n1 = vGlobalPosition * .075 + uTime * 1.1;
               
                 float noiseEffect = easeInOutSine((noise(n1) + 1.) / 2.) * .8;
                 float heightScaler = 1. - clamp((vGlobalPosition.y) / 2., 0., 1.);  
@@ -157,13 +157,17 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
 
                 getDirectionalLightInfo(directionalLights[0], directLight);
 
-                gl_FragColor.rgb -= (1. - getShadow( 
-                    directionalShadowMap[0], 
-                    directionalLightShadows[0].shadowMapSize, 
-                    directionalLightShadows[0].shadowBias, 
-                    directionalLightShadows[0].shadowRadius, 
-                    vDirectionalShadowCoord[0] 
-                )) * uAdditionalShadowStrength * clamp(dot(-vGlobalNormal, vec3(0., -1., 0.)), 0., 1.);
+                gl_FragColor.rgb = mix(
+                    gl_FragColor.rgb * .5, 
+                    gl_FragColor.rgb,
+                    getShadow( 
+                        directionalShadowMap[0], 
+                        directionalLightShadows[0].shadowMapSize, 
+                        directionalLightShadows[0].shadowBias, 
+                        directionalLightShadows[0].shadowRadius, 
+                        vDirectionalShadowCoord[0] 
+                    )
+                );
 
                 if (uDither > .0) { 
                     gl_FragColor.rgb = dither(gl_FragCoord.xy, gl_FragColor.rgb, uColorCount, uDither);
@@ -201,3 +205,23 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
 })
 
 export { MeshRetroMaterial }
+
+
+/*
+gl_FragColor.rgb -= (1. - getShadow( 
+    directionalShadowMap[0], 
+    directionalLightShadows[0].shadowMapSize, 
+    directionalLightShadows[0].shadowBias, 
+    directionalLightShadows[0].shadowRadius, 
+    vDirectionalShadowCoord[0] 
+)) * uAdditionalShadowStrength * clamp(dot(-vGlobalNormal, vec3(0., -1., 0.)), 0., 1.);
+
+
+gl_FragColor.rgb -= (1. - getShadow( 
+    directionalShadowMap[0], 
+    directionalLightShadows[0].shadowMapSize, 
+    directionalLightShadows[0].shadowBias, 
+    directionalLightShadows[0].shadowRadius, 
+    vDirectionalShadowCoord[0] 
+)) *.2 ;
+ */

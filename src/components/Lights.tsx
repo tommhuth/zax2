@@ -53,7 +53,8 @@ export default function Lights() {
         <>
             <ambientLight
                 color={"#ffffff"}
-                intensity={.1} />
+                intensity={.1}
+            />
 
             <directionalLight
                 ref={shadowLightRef}
@@ -68,7 +69,8 @@ export default function Lights() {
                 shadow-camera-top={diagonal * .85} // z
                 shadow-camera-bottom={-diagonal * 1.15}
                 shadow-mapSize={[512, 512]}
-                shadow-bias={-0.003}
+                shadow-bias={-0.01}
+                shadow-normalBias={.01}
             />
             <directionalLight
                 position={[-6, 15, -15]}

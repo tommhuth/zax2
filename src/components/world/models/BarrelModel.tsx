@@ -27,28 +27,24 @@ export function BarrelModel({ position, type: typeOverride }: BarrelModelProps) 
             dispose={null}
         >
             <mesh
-                castShadow
                 receiveShadow
                 geometry={nodes.barrel1.geometry}
                 material={materials.barrel}
                 visible={type === "barrel1"}
             />
             <mesh
-                castShadow
                 receiveShadow
                 geometry={nodes.barrel2.geometry}
                 material={materials.barrel}
                 visible={type === "barrel2"}
             />
             <mesh
-                castShadow
                 receiveShadow
                 geometry={nodes.barrel3.geometry}
                 material={materials.barrel}
                 visible={type === "barrel3"}
             />
             <mesh
-                castShadow
                 receiveShadow
                 geometry={nodes.barrel4.geometry}
                 material={materials.barrel}

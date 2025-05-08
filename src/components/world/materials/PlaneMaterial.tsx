@@ -8,11 +8,12 @@ export default function PlaneMaterial() {
             name="plane"
             colorCount={5}
             emissive={planeColor}
-            emissiveIntensity={.25}
-            rightColorIntensity={.5}
+            emissiveIntensity={.4}
+            rightColorIntensity={.4}
             rightColor="#f00"
             backColor="#f00"
-            backColorIntensity={.1}
+            fog={.25}
+            backColorIntensity={.0}
             dither={.005}
         />
     )
