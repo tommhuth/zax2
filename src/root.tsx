@@ -30,7 +30,7 @@ function getConfiguration() {
     return {
         camera: {
             zoom: getZoom(),
-            near: -5,
+            near: -15,
             far: 150,
             position: [0, 0, 0],
         },
