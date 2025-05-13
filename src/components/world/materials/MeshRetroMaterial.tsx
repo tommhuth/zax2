@@ -204,24 +204,4 @@ const MeshRetroMaterial = forwardRef<MeshLambertMaterial, MeshRetroMaterialProps
     )
 })
 
-export { MeshRetroMaterial }
-
-
-/*
-gl_FragColor.rgb -= (1. - getShadow( 
-    directionalShadowMap[0], 
-    directionalLightShadows[0].shadowMapSize, 
-    directionalLightShadows[0].shadowBias, 
-    directionalLightShadows[0].shadowRadius, 
-    vDirectionalShadowCoord[0] 
-)) * uAdditionalShadowStrength * clamp(dot(-vGlobalNormal, vec3(0., -1., 0.)), 0., 1.);
-
-
-gl_FragColor.rgb -= (1. - getShadow( 
-    directionalShadowMap[0], 
-    directionalLightShadows[0].shadowMapSize, 
-    directionalLightShadows[0].shadowBias, 
-    directionalLightShadows[0].shadowRadius, 
-    vDirectionalShadowCoord[0] 
-)) *.2 ;
- */
+export { MeshRetroMaterial } 

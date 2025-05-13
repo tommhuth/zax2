@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber"
 import { removeHeatSeaker } from "../../../data/store/boss"
 import { ndelta, setMatrixAt, setMatrixNullAt } from "../../../data/utils"
 import { startTransition, useEffect, useMemo, useRef } from "react"
-import { createExplosion, createImpactDecal, createParticles } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, increaseTrauma } from "../../../data/store/effects"
 import random from "@huth/random"
 import type { HeatSeaker } from "../../../data/types"
 import { floorBaseColor, floorHiColor } from "@data/theme"
@@ -123,6 +123,7 @@ export default function HeatSeaker({
             grid.removeClient(client)
             setMatrixNullAt(instances.sphere.mesh, index)
             startTransition(() => {
+                increaseTrauma(.35, position)
                 createExplosion({
                     position: position.toArray(),
                     shockwave: false,

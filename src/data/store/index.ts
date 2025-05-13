@@ -1,5 +1,4 @@
 import { Frustum, Vector3 } from "three"
-import { Vector2 } from "three"
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { BossState } from "../types"
@@ -32,7 +31,7 @@ const store = create(
         effects: {
             explosions: [],
             particles: [],
-            trauma: new Vector2(),
+            trauma: 0,
             lastImpactLocation: [0, 0, -Infinity],
             timeScale: 1,
             time: 0,

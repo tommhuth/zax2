@@ -8,7 +8,7 @@ import { Group, InstancedMesh, SphereGeometry, Vector3 } from "three"
 import { store, useStore } from "../../../data/store"
 import { Tuple3 } from "../../../types.global"
 import HeatSeaker from "./HeatSeaker"
-import { createExplosion, createImpactDecal, createParticles } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, increaseTrauma } from "../../../data/store/effects"
 import random from "@huth/random"
 import { useFrame } from "@react-three/fiber"
 import { BossState, Owner } from "../../../data/types"
@@ -142,6 +142,7 @@ export default function Boss({ startPosition: [startX, startY, startZ] }: BossPr
 
             if (damageBoss(5)) {
                 increaseScore(50_000)
+                increaseTrauma(1, data.position)
             } else {
                 increaseScore(50)
             }

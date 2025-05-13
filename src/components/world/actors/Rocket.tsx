@@ -128,10 +128,9 @@ export default function Rocket({
 
             if (damageRocket(id, 35)) {
                 increaseScore(1_000)
-                increaseTrauma(1.5)
+                increaseTrauma(1.5, position)
             } else {
                 increaseScore(250)
-                increaseTrauma(.05)
             }
 
             createParticles({

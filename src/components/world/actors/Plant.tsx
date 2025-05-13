@@ -7,7 +7,7 @@ import { useWorldPart } from "../WorldPartWrapper"
 import { store, useStore } from "@data/store"
 import { Vector3 } from "three"
 import { useFrame } from "@react-three/fiber"
-import { createParticles } from "@data/store/effects"
+import { createParticles, increaseTrauma } from "@data/store/effects"
 import { Owner } from "@data/types"
 import { damp } from "three/src/math/MathUtils.js"
 import DebugBox from "@components/DebugBox"
@@ -167,6 +167,7 @@ export default function Plant({
         },
         player: () => {
             setHealth(Math.max(health - 5, 0))
+            increaseTrauma(.1, position)
         }
     })
 

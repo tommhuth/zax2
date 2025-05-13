@@ -6,6 +6,7 @@ import { setTrauma } from "../data/store/effects"
 import random from "@huth/random"
 import { clamp, damp } from "three/src/math/MathUtils.js"
 import { CAMERA_OFFSET, CAMERA_DIRECTION, WORLD_PLAYER_START_Z } from "../data/const"
+import { ndelta } from "@data/utils"
 
 let _matrix = new Matrix4()
 
@@ -61,6 +62,7 @@ export default function Camera({ editorMode = false, z = 0 }) {
 
     useFrame((_, delta) => {
         let { player, effects, state } = store.getState()
+        let nd = ndelta(delta)
 
         if (player.object && setup && !editorMode) {
             let centerOffsetZ = 4 // magic number to adjust for off center x
@@ -69,12 +71,12 @@ export default function Camera({ editorMode = false, z = 0 }) {
                 + CAMERA_DIRECTION.z
                 + offsetZ
 
-            camera.position.z = damp(camera.position.z, targetZ, 2, delta)
+            camera.position.z = damp(camera.position.z, targetZ, 2, nd)
             camera.position.x = CAMERA_DIRECTION.x
                 + CAMERA_OFFSET.x
-                + effects.trauma.x * random.float(-1, 1)
+                + effects.trauma * random.float(-1, 1)
 
-            setTrauma(damp(effects.trauma.x, 0, 3, delta))
+            setTrauma(damp(effects.trauma, 0, 2, nd))
         }
     })
 

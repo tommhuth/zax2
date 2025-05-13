@@ -66,7 +66,7 @@ export default function Barrel({
 
             if (damageBarrel(id, 100)) {
                 increaseScore(150)
-                increaseTrauma(.35)
+                increaseTrauma(.5, position)
             }
         }
     })

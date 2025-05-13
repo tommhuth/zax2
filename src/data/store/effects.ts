@@ -3,7 +3,7 @@ import { Tuple2, Tuple3 } from "../../types.global"
 import { store } from "."
 import { ColorRepresentation, Vector3 } from "three"
 import { Explosion, Fireball, Instance, Particle } from "../types"
-import { list, setColorAt, setMatrixAt } from "../utils"
+import { clamp, list, setColorAt, setMatrixAt } from "../utils"
 import { ZaxStore } from "./types.store"
 
 function updateEffects(data: Partial<ZaxStore["effects"]>) {
@@ -132,41 +132,43 @@ export function createExplosion({
 }
 
 export function setLastImpactLocation(x: number, y: number, z: number) {
-    store.setState({
-        effects: {
-            ...store.getState().effects,
-            lastImpactLocation: [x, y, z]
-        },
+    updateEffects({
+        lastImpactLocation: [x, y, z]
     })
 }
 export function setTime(time: number) {
-    store.setState({
-        effects: {
-            ...store.getState().effects,
-            time
-        },
+    updateEffects({
+        time
     })
 }
 
 export function setTimeScale(timeScale: number) {
-    store.setState({
-        effects: {
-            ...store.getState().effects,
-            timeScale
-        },
+    updateEffects({
+        timeScale
     })
 }
 
 const MAX_TRAUMA = 2
 
 export function setTrauma(amount: number) {
-    store.getState().effects.trauma.set(amount, amount)
-        .clampScalar(0, MAX_TRAUMA)
+    updateEffects({
+        trauma: clamp(amount, 0, MAX_TRAUMA)
+    })
 }
 
-export function increaseTrauma(amount: number) {
-    store.getState().effects.trauma.addScalar(amount)
-        .clampScalar(0, MAX_TRAUMA)
+export function increaseTrauma(
+    amount: number,
+    origin?: Vector3,
+    attenuationDistance = 8
+) {
+    let { player, effects } = store.getState()
+    let strength = 1
+
+    if (origin) {
+        strength = 1 - clamp(player.position.distanceTo(origin) / attenuationDistance, 0, 1)
+    }
+
+    setTrauma(effects.trauma + amount * strength)
 }
 
 export function createImpactDecal(

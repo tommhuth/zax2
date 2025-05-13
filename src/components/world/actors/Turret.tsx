@@ -6,7 +6,7 @@ import { Vector3 } from "three"
 import { Owner, Turret as TurretType } from "../../../data/types"
 import { Tuple3 } from "../../../types.global"
 import { store, useStore } from "../../../data/store"
-import { createExplosion, createImpactDecal, createParticles, createScrap } from "../../../data/store/effects"
+import { createExplosion, createImpactDecal, createParticles, createScrap, increaseTrauma } from "../../../data/store/effects"
 import { turretColor, turretParticleColor } from "../../../data/theme"
 import { WORLD_BOTTOM_EDGE, WORLD_TOP_EDGE } from "../../../data/const"
 import DebugBox from "@components/DebugBox"
@@ -79,6 +79,7 @@ function Turret({
 
             if (damageTurret(id, 25)) {
                 increaseScore(2_000)
+                increaseTrauma(.65, position)
             } else {
                 increaseScore(50)
             }

@@ -101,10 +101,9 @@ function Plane({
 
             if (damagePlane(id, 50)) {
                 increaseScore(1_000)
-                increaseTrauma(.25)
+                increaseTrauma(.5, position)
             } else {
                 increaseScore(100)
-                increaseTrauma(.05)
             }
 
             createParticles({

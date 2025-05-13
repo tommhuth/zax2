@@ -12,7 +12,7 @@ import { removeHeatSeaker, setBossProp } from "../data/store/boss"
 import { damp } from "three/src/math/MathUtils.js"
 import { BULLET_SIZE, EDGE_MAX, EDGE_MIN, WORLD_PLAYER_START_Z } from "../data/const"
 import DebugBox from "./DebugBox"
-import { createExplosion, createParticles, setTimeScale } from "@data/store/effects"
+import { createExplosion, createParticles, increaseTrauma, setTimeScale } from "@data/store/effects"
 import random from "@huth/random"
 import { createBullet } from "@data/store/actors/bullet.actions"
 import { damagePlane } from "@data/store/actors/plane.actions"
@@ -147,30 +147,37 @@ export default function Player() {
         bullet: ({ bullet }) => {
             if (bullet.owner === Owner.ENEMY) {
                 damagePlayer(5)
+                increaseTrauma(.2)
             }
         },
         obstacle: () => {
             damagePlayer(100)
+            increaseTrauma(.85)
         },
         turret: (data) => {
             damageTurret(data.id, 100)
             damagePlayer(100)
+            increaseTrauma(.65)
         },
         barrel: (data) => {
             damageBarrel(data.id, 100)
             damagePlayer(20)
+            increaseTrauma(.5)
         },
         plane: (data) => {
             damagePlane(data.id, 100)
             damagePlayer(50)
+            increaseTrauma(.65)
         },
         rocket: (data) => {
             damageRocket(data.id, 100)
             damagePlayer(50)
+            increaseTrauma(.85)
         },
         heatSeaker: (data) => {
             removeHeatSeaker(data.id)
             damagePlayer(25)
+            increaseTrauma(.25)
         },
     })
 

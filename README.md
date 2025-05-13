@@ -2,9 +2,8 @@
 
 ## Todo
 
--   (distance based) trauma
 -   level parts
--   ui, css, font cleanup. tailwind?
+-   replace map with old bar thing
 
 53 mat + 22 instances
 
