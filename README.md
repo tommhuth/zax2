@@ -3,7 +3,7 @@
 ## Todo
 
 -   level parts
--   replace map with old bar thing
+-   see boss lol
 
 53 mat + 22 instances
 

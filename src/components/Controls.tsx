@@ -171,7 +171,74 @@ export default function Controls() {
         }
     })
 
-    // pointer
+
+    useEffect(() => {
+        if (state !== "running" || !inputEnabled) {
+            return
+        }
+
+        let heightc = document.querySelector(".height-controller") as HTMLElement
+        let start: number | null = null
+        let previous: number | null = null
+        let onPointerDown = (e: PointerEvent) => {
+            if (e.pointerType !== "touch") {
+                return
+            }
+
+            let target = e.currentTarget as HTMLElement
+
+            e.stopImmediatePropagation()
+            e.stopPropagation()
+            target.setPointerCapture(e.pointerId)
+            start = e.clientY
+        }
+        let onPointerMove = (e: PointerEvent) => {
+            if (e.pointerType !== "touch" || start === null) {
+                return
+            }
+
+            if (previous === null) {
+                previous = e.clientY
+            }
+
+            e.stopImmediatePropagation()
+            e.stopPropagation()
+            let { targetPosition } = store.getState().player
+            let y = (e.clientY - previous)
+
+            targetPosition.y += -y * .025
+            targetPosition.clamp(EDGE_MIN, EDGE_MAX)
+
+            previous = e.clientY
+        }
+        let onPointerUp = (e: PointerEvent) => {
+            if (e.pointerType !== "touch") {
+                return
+            }
+
+            e.stopImmediatePropagation()
+            e.stopPropagation()
+
+            start = null
+            previous = null
+        }
+
+        heightc.addEventListener("pointerdown", onPointerDown)
+        heightc.addEventListener("pointermove", onPointerMove)
+        heightc.addEventListener("pointerup", onPointerUp)
+        heightc.addEventListener("pointercancel", onPointerUp)
+        heightc.addEventListener("pointerleave", onPointerUp)
+
+        return () => {
+            heightc.removeEventListener("pointerdown", onPointerDown)
+            heightc.removeEventListener("pointermove", onPointerMove)
+            heightc.removeEventListener("pointerup", onPointerUp)
+            heightc.removeEventListener("pointercancel", onPointerUp)
+            heightc.removeEventListener("pointerleave", onPointerUp)
+        }
+    }, [state, inputEnabled])
+
+    // pointer world
     useEffect(() => {
         if (state !== "running" || !inputEnabled) {
             return

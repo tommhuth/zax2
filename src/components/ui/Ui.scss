@@ -3,6 +3,58 @@
     --offsety: 6vw;
 }
 
+.height-controller {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 1em;
+    height: clamp(10em, 25vh, 14em);
+    background-color: transparent;
+    position: fixed;
+    left: 5vw;
+    top: 50%;
+    translate: 0 -50%;
+
+    &__h,
+    &__l {
+        position: absolute;
+        left: 0;
+        text-align: center;
+        width: 100%;
+        font-size: 1.125em;
+    }
+
+    &__h {
+        bottom: 100%;
+        margin-bottom: 1.5em;
+    }
+
+    &__l {
+        top: 100%;
+        margin-top: 1.5em;
+    }
+
+    &__tick {
+        width: 100%;
+        height: .25em;
+        flex: none;
+        background-color: white;
+        z-index: 1;
+        position: relative;
+        transform: skewY(30deg);
+    }
+
+    &__current {
+        width: 100%;
+        position: absolute;
+        z-index: 0;
+        bottom: 0;
+        transform: skewY(30deg);
+        left: 0;
+        background-color: white;
+    }
+}
+
 .player-ui {
     position: fixed;
     left: var(--offsetx);

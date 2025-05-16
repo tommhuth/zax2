@@ -99,7 +99,7 @@ export function useEditorObject(id: string) {
 
     return {
         width,
-        height,
+        height: Math.max(height, .1),
         depth,
         rotation,
         mode,

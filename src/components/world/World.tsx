@@ -17,7 +17,7 @@ import WorldParts from "./WorldParts"
 
 const startType = window.localStorage.getItem("initPartType") as DynamicWorldPartType | null
 
-window.localStorage.removeItem("initPartType")
+// window.localStorage.removeItem("initPartType")
 
 export default function World() {
     let diagonal = useStore(i => i.world.diagonal)
