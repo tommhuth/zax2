@@ -94,7 +94,8 @@ export default function Debug() {
         debug,
         health,
         object,
-        position
+        position,
+        nextBossAt
     ] = useStore(
         useShallow(i => [
             i.state,
@@ -103,6 +104,7 @@ export default function Debug() {
             i.player.health,
             i.player.object,
             i.player.position,
+            i.boss.nextBossAt
         ])
     )
 
@@ -119,6 +121,7 @@ export default function Debug() {
             }}
         >
             <div>State: <strong>{state}</strong></div>
+            <div>Boss at: <strong>{nextBossAt.toLocaleString("en")}</strong></div>
 
             <RealtimePosition position={object?.position} />
             <Sliders />

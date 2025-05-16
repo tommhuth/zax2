@@ -69,8 +69,8 @@ export default function Lights() {
                 shadow-camera-top={diagonal * .85} // z
                 shadow-camera-bottom={-diagonal * 1.15}
                 shadow-mapSize={[512, 512]}
-                shadow-bias={-0.01}
-                shadow-normalBias={.01}
+                shadow-bias={0.001}
+                shadow-normalBias={.075}
             />
             <directionalLight
                 position={[-6, 15, -15]}

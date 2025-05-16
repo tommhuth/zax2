@@ -3,11 +3,14 @@ import { store } from "."
 import { Tuple3 } from "../../types.global"
 import { Vector3 } from "three"
 import { BossState } from "../types"
+import { BOSS_SCORE_INTERVAL } from "@data/const"
 
 export function registerBoss(pauseAt: number) {
+    let { boss, player } = store.getState()
+
     store.setState({
         boss: {
-            ...store.getState().boss,
+            ...boss,
             pauseAt,
             health: 100,
             maxHealth: 100,
@@ -49,6 +52,7 @@ export function defeatBoss() {
         boss: {
             ...boss,
             state: BossState.DEAD,
+            nextBossAt: player.score + BOSS_SCORE_INTERVAL
         }
     })
 }

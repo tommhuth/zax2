@@ -52,6 +52,7 @@ export interface ZaxStore {
         time: number
         lastActiveAt: Date
         interval: number
+        nextBossAt: number
     },
     player: {
         keys: ControlsMap

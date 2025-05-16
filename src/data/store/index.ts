@@ -3,7 +3,7 @@ import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { BossState } from "../types"
 import { ZaxStore } from "./types.store"
-import { WORLD_CENTER_X } from "@data/const"
+import { BOSS_SCORE_INTERVAL, WORLD_CENTER_X } from "@data/const"
 import { SpatialHashGrid3D } from "@data/lib/SpatialHashGrid3D"
 
 const store = create(
@@ -49,6 +49,7 @@ const store = create(
             time: 0,
             lastActiveAt: new Date(),
             interval: 60_000 * 3,
+            nextBossAt: BOSS_SCORE_INTERVAL
         },
         player: {
             keys: {},

@@ -67,6 +67,7 @@ export default forwardRef<Group, BossModelProps>(
                         material={materials.bossDarkBlue}
                     />
                     <mesh
+                        receiveShadow
                         castShadow
                         geometry={boss.Cube012_3.geometry}
                         material={materials.bossBlue}
@@ -76,6 +77,7 @@ export default forwardRef<Group, BossModelProps>(
                         material={materials.bossSecondaryBlue}
                     />
                     <mesh
+                        castShadow
                         geometry={boss.Cube012_5.geometry}
                         material={materials.bossWhite}
                     />

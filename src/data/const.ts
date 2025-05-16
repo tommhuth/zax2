@@ -4,6 +4,8 @@ import { EditorStore } from "src/editor/data/types"
 export const WORLD_START_Z = 100
 export const WORLD_PLAYER_START_Z = WORLD_START_Z - 20
 
+export const BOSS_SCORE_INTERVAL = 10_000
+
 export const WORLD_CENTER_X = 0
 export const WORLD_LEFT_EDGE = 5
 export const WORLD_RIGHT_EDGE = -4

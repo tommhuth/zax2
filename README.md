@@ -3,9 +3,6 @@
 ## Todo
 
 -   level parts
--   see boss lol
-
-53 mat + 22 instances
 
 ## Resources
 

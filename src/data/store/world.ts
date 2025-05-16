@@ -1,9 +1,10 @@
+import { BOSS_SCORE_INTERVAL } from "@data/const"
 import { store } from "."
 import { State, WorldPart } from "../types"
 import { getNextWorldPart } from "../world/getNextWorldPart"
 
 export function reset(state?: State) {
-    let { world, effects, player } = store.getState()
+    let { world, effects, player, boss } = store.getState()
 
     world.grid.empty()
     store.setState({
@@ -27,6 +28,10 @@ export function reset(state?: State) {
             health: 100,
             score: 0,
             attempts: player.attempts + 1,
+        },
+        boss: {
+            ...boss,
+            nextBossAt: BOSS_SCORE_INTERVAL
         }
     })
 }

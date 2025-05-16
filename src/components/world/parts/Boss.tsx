@@ -68,7 +68,6 @@ function BossPart({
                 type={"box"}
             />
 
-
             <Grass
                 position={[4.5, 0, 9]}
                 rotation={0.332}
@@ -105,8 +104,6 @@ function BossPart({
 
             <BarrelSpawner
                 position={[5.5, 0, 17.5]}
-
-
             />
 
             <EdgeElement
@@ -171,7 +168,6 @@ function BossPart({
             <Grass
                 position={[-4, 0, 45]}
                 rotation={0.393}
-
             />
 
             <Plant
