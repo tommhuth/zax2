@@ -1,11 +1,9 @@
-Zaxxon for the browser, even comes with a basic [editor](https://zax.huth.io/#editor)
+The classic Zaxxon game remade for the browser, even comes with a basic [editor](https://zax.huth.io/#editor). 
 
-## Todo
-
+**Todo**
 -   level parts
 
-## Resources
-
+**Resources**
 -   https://pngtree.com/freepng/impact-rupture-crack-crack_3940413.html
 -   https://www.kenney.nl/assets/space-kit
 -   https://cults3d.com/en/3d-model/art/low-poly-space-plane-toy
