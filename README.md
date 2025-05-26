@@ -1,4 +1,4 @@
-# Zax
+Zaxxon for the browser, even comes with a basic [editor](https://zax.huth.io/#editor)
 
 ## Todo
 
